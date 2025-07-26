@@ -10,6 +10,7 @@ import { Languages } from './components/languages';
 import { Certifications } from './components/certifications';
 import PdfDownloadButton from './components/pdf_download_button_dynamic';
 import { Projects } from './components/projects';
+import { CVTips } from './components/cv_tips';
 import { Experience, Education, Language, Certification, Project } from './types/cv';
 
 /**
@@ -718,6 +719,11 @@ export default function Home() {
           >
             Preencher com dados de exemplo
           </button>
+        </div>
+        
+        {/* CV Tips section */}
+        <div className="max-w-6xl mx-auto">
+          <CVTips />
         </div>
       </div>
     </div>
