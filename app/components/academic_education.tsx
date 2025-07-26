@@ -1,112 +1,127 @@
 'use client';
 
-// Interface for education entry
-interface Education {
-  type: string;
-  status: string;
-  course: string;
-  institution: string;
-  startMonth: string;
-  startYear: string;
-  description: string;
-}
+import { Education } from '../types/cv';
+import { FormSection } from './ui/form-section';
+import { FormField } from './ui/form-field';
+import { IconButton } from './ui/icon-button';
+import { EmptyState } from './ui/empty-state';
+import { Icons } from './ui/icons';
 
-// Props interface for the AcademicEducation component
+/**
+ * Props interface for the AcademicEducation component
+ */
 interface AcademicEducationProps {
+  /** Array of education entries */
   education: Education[];
-  step: number;
-  STEPS: string[];
-  onEducationChange: (idx: number, field: string, value: any) => void;
+  /** Handler for updating education fields */
+  onEducationChange: (idx: number, field: string, value: string) => void;
+  /** Handler for adding new education entry */
   onAddEducation: () => void;
+  /** Handler for removing education entry */
   onRemoveEducation: (idx: number) => void;
-  onStepChange: (newStep: number) => void;
 }
 
+/**
+ * Available education types for dropdown selection
+ */
+const EDUCATION_TYPES = [
+  'Ensino Secundário',
+  'Técnico',
+  'Licenciatura',
+  'Pós-graduação',
+  'Mestrado',
+  'Doutoramento'
+];
+
+/**
+ * Available education status options for dropdown selection
+ */
+const EDUCATION_STATUS = [
+  'Completo',
+  'Em andamento',
+  'Interrompido'
+];
+
+/**
+ * Array of month abbreviations for date selection
+ */
+const MONTHS = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+/**
+ * AcademicEducation component manages the education section of the CV form
+ * @param education - Array of education entries
+ * @param onEducationChange - Function to handle education field updates
+ * @param onAddEducation - Function to add new education entry
+ * @param onRemoveEducation - Function to remove education entry
+ * @returns JSX element representing the academic education form section
+ */
 export function AcademicEducation({
   education,
-  step,
-  STEPS,
   onEducationChange,
   onAddEducation,
-  onRemoveEducation,
-  onStepChange
+  onRemoveEducation
 }: AcademicEducationProps) {
   return (
     <form className="space-y-8 flex flex-col items-center">
-      <div className="w-full">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold flex items-center gap-2 mb-4">
-            <span className="text-blue-600">
-              <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='w-7 h-7'>
-                <path strokeLinecap='round' strokeLinejoin='round' d='M12 6v6m0 0v6m0-6h6m-6 0H6' />
-              </svg>
-            </span>
-            Formação Académica
-          </h2>
-          <button
-            type="button"
-            onClick={onAddEducation}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2"
-          >
-            <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='w-5 h-5'>
-              <path strokeLinecap='round' strokeLinejoin='round' d='M12 4.5v15m7.5-7.5h-15' />
-            </svg>
+      <FormSection 
+        title="Formação Académica" 
+        icon={Icons.academicEducation}
+        actionButton={
+          <IconButton onClick={onAddEducation}>
+            {Icons.add}
             Adicionar Formação
-          </button>
-        </div>
+          </IconButton>
+        }
+      >
+        {/* Display empty state when no education entries exist */}
         {education.length === 0 && (
-          <div className="flex flex-col items-center justify-center border border-dashed border-gray-300 rounded-lg p-8 text-gray-400 mb-4">
-            <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='w-10 h-10 mb-2'>
-              <path strokeLinecap='round' strokeLinejoin='round' d='M12 4.5v15m7.5-7.5h-15' />
-            </svg>
-            Nenhuma formação adicionada
-          </div>
+          <EmptyState message="Nenhuma formação adicionada" />
         )}
+        
+        {/* Render each education entry */}
         {education.map((ed, idx) => (
-          <div key={idx} className="bg-white rounded-lg shadow p-6 mb-6 relative">
-            <button
-              type="button"
-              onClick={() => onRemoveEducation(idx)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-red-500"
+          <div key={idx} className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 relative mb-6">
+            {/* Remove button positioned at top right */}
+            <IconButton 
+              onClick={() => onRemoveEducation(idx)} 
+              variant="danger" 
+              size="sm"
+              className="absolute top-2 right-4"
             >
-              <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='w-5 h-5'>
-                <path strokeLinecap='round' strokeLinejoin='round' d='M6 18L18 6M6 6l12 12' />
-              </svg>
-            </button>
+              {Icons.remove}
+            </IconButton>
+            
+            {/* Education type and status fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Tipo de Formação</label>
+              <FormField label="Tipo de Formação">
                 <select
                   className="w-full p-2 border border-gray-300 rounded-lg bg-white"
                   value={ed.type}
                   onChange={e => onEducationChange(idx, 'type', e.target.value)}
                 >
                   <option value="">Selecione</option>
-                  <option value="Ensino Secundário">Ensino Secundário</option>
-                  <option value="Técnico">Técnico</option>
-                  <option value="Licenciatura">Licenciatura</option>
-                  <option value="Pós-graduação">Pós-graduação</option>
-                  <option value="Mestrado">Mestrado</option>
-                  <option value="Doutoramento">Doutoramento</option>
+                  {EDUCATION_TYPES.map(type => (
+                    <option key={type} value={type}>{type}</option>
+                  ))}
                 </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Estado</label>
+              </FormField>
+              <FormField label="Estado">
                 <select
                   className="w-full p-2 border border-gray-300 rounded-lg bg-white"
                   value={ed.status}
                   onChange={e => onEducationChange(idx, 'status', e.target.value)}
                 >
                   <option value="">Selecione</option>
-                  <option value="Completo">Completo</option>
-                  <option value="Em andamento">Em andamento</option>
-                  <option value="Interrompido">Interrompido</option>
+                  {EDUCATION_STATUS.map(status => (
+                    <option key={status} value={status}>{status}</option>
+                  ))}
                 </select>
-              </div>
+              </FormField>
             </div>
+            
+            {/* Course and institution fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Curso</label>
+              <FormField label="Curso">
                 <input
                   type="text"
                   className="w-full p-2 border border-gray-300 rounded-lg bg-white"
@@ -114,9 +129,8 @@ export function AcademicEducation({
                   value={ed.course}
                   onChange={e => onEducationChange(idx, 'course', e.target.value)}
                 />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Instituição</label>
+              </FormField>
+              <FormField label="Instituição">
                 <input
                   type="text"
                   className="w-full p-2 border border-gray-300 rounded-lg bg-white"
@@ -124,24 +138,24 @@ export function AcademicEducation({
                   value={ed.institution}
                   onChange={e => onEducationChange(idx, 'institution', e.target.value)}
                 />
-              </div>
+              </FormField>
             </div>
+            
+            {/* Start date fields */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Mês Início</label>
+              <FormField label="Mês Início">
                 <select
                   className="w-full p-2 border border-gray-300 rounded-lg bg-white"
                   value={ed.startMonth}
                   onChange={e => onEducationChange(idx, 'startMonth', e.target.value)}
                 >
                   <option value="">Selecione</option>
-                  {['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'].map(m => (
-                    <option key={m} value={m}>{m}</option>
+                  {MONTHS.map(month => (
+                    <option key={month} value={month}>{month}</option>
                   ))}
                 </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Ano Início</label>
+              </FormField>
+              <FormField label="Ano Início">
                 <input
                   type="text"
                   className="w-full p-2 border border-gray-300 rounded-lg bg-white"
@@ -149,36 +163,21 @@ export function AcademicEducation({
                   value={ed.startYear}
                   onChange={e => onEducationChange(idx, 'startYear', e.target.value)}
                 />
-              </div>
+              </FormField>
             </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-1">Descrição (Opcional)</label>
+            
+            {/* Description field */}
+            <FormField label="Descrição">
               <textarea
                 className="w-full p-2 border border-gray-300 rounded-lg bg-white"
                 placeholder="Ex: Tese sobre inteligência artificial, disciplinas relevantes, projetos académicos..."
                 value={ed.description}
                 onChange={e => onEducationChange(idx, 'description', e.target.value)}
               />
-            </div>
+            </FormField>
           </div>
         ))}
-      </div>
-      <div className="flex justify-between w-full">
-        <button
-          type="button"
-          className="bg-gray-100 text-gray-500 px-6 py-2 rounded-lg font-semibold"
-          onClick={() => onStepChange(Math.max(1, step - 1))}
-        >
-          Anterior
-        </button>
-        <button
-          type="button"
-          className="bg-blue-600 text-white px-8 py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
-          onClick={() => onStepChange(Math.min(STEPS.length, step + 1))}
-        >
-          Próximo
-        </button>
-      </div>
+      </FormSection>
     </form>
   );
 } 
