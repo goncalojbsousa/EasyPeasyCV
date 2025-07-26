@@ -6,6 +6,7 @@ import { FormField } from './ui/form-field';
 import { IconButton } from './ui/icon-button';
 import { EmptyState } from './ui/empty-state';
 import { Icons } from './ui/icons';
+import { useState, useEffect, useRef } from 'react';
 
 /**
  * Props interface for the AcademicEducation component
@@ -61,6 +62,33 @@ export function AcademicEducation({
   onAddEducation,
   onRemoveEducation
 }: AcademicEducationProps) {
+  const [openDropdowns, setOpenDropdowns] = useState<{[key: string]: boolean}>({});
+  const dropdownRefs = useRef<{[key: string]: HTMLDivElement | null}>({});
+
+  // Fecha dropdowns ao clicar fora
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      Object.keys(openDropdowns).forEach(key => {
+        if (openDropdowns[key] && dropdownRefs.current[key]) {
+          if (!dropdownRefs.current[key]?.contains(event.target as Node)) {
+            setOpenDropdowns(prev => ({ ...prev, [key]: false }));
+          }
+        }
+      });
+    }
+    
+    if (Object.values(openDropdowns).some(Boolean)) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [openDropdowns]);
+
+  const toggleDropdown = (key: string) => {
+    setOpenDropdowns(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
   return (
     <form className="space-y-8 flex flex-col items-center">
       <FormSection 
@@ -94,28 +122,64 @@ export function AcademicEducation({
             {/* Education type and status fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
               <FormField label="Tipo de Formação">
-                <select
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white"
-                  value={ed.type}
-                  onChange={e => onEducationChange(idx, 'type', e.target.value)}
-                >
-                  <option value="">Selecione</option>
-                  {EDUCATION_TYPES.map(type => (
-                    <option key={type} value={type}>{type}</option>
-                  ))}
-                </select>
+                <div ref={el => { dropdownRefs.current[`type-${idx}`] = el; }} className="relative">
+                  <button
+                    type="button"
+                    className="w-full flex items-center justify-between p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left"
+                    onClick={() => toggleDropdown(`type-${idx}`)}
+                    tabIndex={0}
+                  >
+                    <span>{ed.type || 'Selecione'}</span>
+                    <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`type-${idx}`] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+                  </button>
+                  {openDropdowns[`type-${idx}`] && (
+                    <div className="absolute left-0 mt-2 w-full bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50">
+                      {EDUCATION_TYPES.map(type => (
+                        <button
+                          key={type}
+                          type="button"
+                          className={`w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 transition-colors duration-150 ${ed.type === type ? 'bg-blue-50 font-semibold text-blue-700' : ''}`}
+                          onClick={() => {
+                            onEducationChange(idx, 'type', type);
+                            setOpenDropdowns(prev => ({ ...prev, [`type-${idx}`]: false }));
+                          }}
+                        >
+                          {type}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </FormField>
               <FormField label="Estado">
-                <select
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white"
-                  value={ed.status}
-                  onChange={e => onEducationChange(idx, 'status', e.target.value)}
-                >
-                  <option value="">Selecione</option>
-                  {EDUCATION_STATUS.map(status => (
-                    <option key={status} value={status}>{status}</option>
-                  ))}
-                </select>
+                <div ref={el => { dropdownRefs.current[`status-${idx}`] = el; }} className="relative">
+                  <button
+                    type="button"
+                    className="w-full flex items-center justify-between p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left"
+                    onClick={() => toggleDropdown(`status-${idx}`)}
+                    tabIndex={0}
+                  >
+                    <span>{ed.status || 'Selecione'}</span>
+                    <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`status-${idx}`] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+                  </button>
+                  {openDropdowns[`status-${idx}`] && (
+                    <div className="absolute left-0 mt-2 w-full bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50">
+                      {EDUCATION_STATUS.map(status => (
+                        <button
+                          key={status}
+                          type="button"
+                          className={`w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 transition-colors duration-150 ${ed.status === status ? 'bg-blue-50 font-semibold text-blue-700' : ''}`}
+                          onClick={() => {
+                            onEducationChange(idx, 'status', status);
+                            setOpenDropdowns(prev => ({ ...prev, [`status-${idx}`]: false }));
+                          }}
+                        >
+                          {status}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </FormField>
             </div>
             
@@ -124,7 +188,7 @@ export function AcademicEducation({
               <FormField label="Curso">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
                   placeholder="Ex: Licenciatura em Engenharia Informática"
                   value={ed.course}
                   onChange={e => onEducationChange(idx, 'course', e.target.value)}
@@ -133,7 +197,7 @@ export function AcademicEducation({
               <FormField label="Instituição">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
                   placeholder="Ex: Universidade do Porto"
                   value={ed.institution}
                   onChange={e => onEducationChange(idx, 'institution', e.target.value)}
@@ -144,21 +208,39 @@ export function AcademicEducation({
             {/* Start date fields */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-4">
               <FormField label="Mês Início">
-                <select
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white"
-                  value={ed.startMonth}
-                  onChange={e => onEducationChange(idx, 'startMonth', e.target.value)}
-                >
-                  <option value="">Selecione</option>
-                  {MONTHS.map(month => (
-                    <option key={month} value={month}>{month}</option>
-                  ))}
-                </select>
+                <div ref={el => { dropdownRefs.current[`startMonth-${idx}`] = el; }} className="relative">
+                  <button
+                    type="button"
+                    className="w-full flex items-center justify-between p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left"
+                    onClick={() => toggleDropdown(`startMonth-${idx}`)}
+                    tabIndex={0}
+                  >
+                    <span>{ed.startMonth || 'Selecione'}</span>
+                    <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`startMonth-${idx}`] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+                  </button>
+                  {openDropdowns[`startMonth-${idx}`] && (
+                    <div className="absolute left-0 mt-2 w-full bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50">
+                      {MONTHS.map(month => (
+                        <button
+                          key={month}
+                          type="button"
+                          className={`w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 transition-colors duration-150 ${ed.startMonth === month ? 'bg-blue-50 font-semibold text-blue-700' : ''}`}
+                          onClick={() => {
+                            onEducationChange(idx, 'startMonth', month);
+                            setOpenDropdowns(prev => ({ ...prev, [`startMonth-${idx}`]: false }));
+                          }}
+                        >
+                          {month}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </FormField>
               <FormField label="Ano Início">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
                   placeholder="Ano"
                   value={ed.startYear}
                   onChange={e => onEducationChange(idx, 'startYear', e.target.value)}
@@ -169,7 +251,7 @@ export function AcademicEducation({
             {/* Description field */}
             <FormField label="Descrição">
               <textarea
-                className="w-full p-2 border border-gray-300 rounded-lg bg-white"
+                className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
                 placeholder="Ex: Tese sobre inteligência artificial, disciplinas relevantes, projetos académicos..."
                 value={ed.description}
                 onChange={e => onEducationChange(idx, 'description', e.target.value)}

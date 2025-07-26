@@ -5,6 +5,7 @@ import { FormSection } from './ui/form-section';
 import { FormField } from './ui/form-field';
 import { IconButton } from './ui/icon-button';
 import { Icons } from './ui/icons';
+import { useState, useEffect, useRef } from 'react';
 
 /**
  * Props interface for the PersonalInformation component
@@ -63,6 +64,26 @@ export function PersonalInformation({
   validationErrors = {},
   showValidationErrors = true
 }: PersonalInformationProps) {
+  const [openDropdownIdx, setOpenDropdownIdx] = useState<number | null>(null);
+  const dropdownRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  // Fecha dropdown ao clicar fora
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (openDropdownIdx !== null && dropdownRefs.current[openDropdownIdx]) {
+        if (!dropdownRefs.current[openDropdownIdx]?.contains(event.target as Node)) {
+          setOpenDropdownIdx(null);
+        }
+      }
+    }
+    if (openDropdownIdx !== null) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [openDropdownIdx]);
+
   return (
     <form className="space-y-8">
       <FormSection title="Informações Pessoais" icon={Icons.personalInfo}>
@@ -72,7 +93,7 @@ export function PersonalInformation({
             <input 
               type="text" 
               placeholder="Ex: Gonçalo Sousa" 
-              className={`w-full p-2 border rounded-lg bg-white ${showValidationErrors && validationErrors.name ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
+              className={`w-full p-2 border rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all ${showValidationErrors && validationErrors.name ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
               value={personalInfo.name} 
               onChange={e => onPersonalInfoChange('name', e.target.value)}
               data-error={showValidationErrors && validationErrors.name ? "true" : "false"}
@@ -82,7 +103,7 @@ export function PersonalInformation({
             <input 
               type="text" 
               placeholder="Ex: Desenvolvedor Full Stack" 
-              className={`w-full p-2 border rounded-lg bg-white ${showValidationErrors && validationErrors.desiredRole ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
+              className={`w-full p-2 border rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all ${showValidationErrors && validationErrors.desiredRole ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
               value={personalInfo.desiredRole} 
               onChange={e => onPersonalInfoChange('desiredRole', e.target.value)}
               data-error={showValidationErrors && validationErrors.desiredRole ? "true" : "false"}
@@ -96,7 +117,7 @@ export function PersonalInformation({
             <input 
               type="text" 
               placeholder="Ex: 1234-567" 
-              className="w-full p-2 border border-gray-300 rounded-lg bg-white" 
+              className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all" 
               value={personalInfo.postalCode} 
               onChange={e => onPersonalInfoChange('postalCode', e.target.value)} 
             />
@@ -105,7 +126,7 @@ export function PersonalInformation({
             <input 
               type="text" 
               placeholder="Ex: Viana do Castelo" 
-              className="w-full p-2 border border-gray-300 rounded-lg bg-white" 
+              className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all" 
               value={personalInfo.city} 
               onChange={e => onPersonalInfoChange('city', e.target.value)} 
             />
@@ -118,7 +139,7 @@ export function PersonalInformation({
             <input 
               type="email" 
               placeholder="Ex: email@exemplo.com" 
-              className={`w-full p-2 border rounded-lg bg-white ${showValidationErrors && validationErrors.email ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
+              className={`w-full p-2 border rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all ${showValidationErrors && validationErrors.email ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
               value={personalInfo.email} 
               onChange={e => onPersonalInfoChange('email', e.target.value)}
               data-error={showValidationErrors && validationErrors.email ? "true" : "false"}
@@ -126,7 +147,7 @@ export function PersonalInformation({
           </FormField>
           <FormField label="Código do País">
             <select 
-              className="w-full p-2 border border-gray-300 rounded-lg bg-white" 
+              className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all" 
               value={personalInfo.countryCode} 
               onChange={e => onPersonalInfoChange('countryCode', e.target.value)}
             >
@@ -139,7 +160,7 @@ export function PersonalInformation({
             <input 
               type="text" 
               placeholder="Ex: 912345678" 
-              className="w-full p-2 border border-gray-300 rounded-lg bg-white" 
+              className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all" 
               value={personalInfo.phone} 
               onChange={e => onPersonalInfoChange('phone', e.target.value)} 
             />
@@ -156,17 +177,34 @@ export function PersonalInformation({
             return (
               <div key={idx} className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
                 {/* Link type selection */}
-                <div>
+                <div ref={el => { dropdownRefs.current[idx] = el; }} className="relative">
                   <label className="block text-xs font-medium mb-1">Tipo de Link</label>
-                  <select
-                    className="w-full p-2 border border-gray-300 rounded-lg bg-white"
-                    value={link.type}
-                    onChange={e => onLinkTypeChange(idx, e.target.value)}
+                  <button
+                    type="button"
+                    className="w-full flex items-center justify-between p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left"
+                    onClick={() => setOpenDropdownIdx(openDropdownIdx === idx ? null : idx)}
+                    tabIndex={0}
                   >
-                    {LINK_TYPES.map(t => (
-                      <option key={t.label} value={t.label}>{t.label}</option>
-                    ))}
-                  </select>
+                    <span>{link.type}</span>
+                    <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdownIdx === idx ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+                  </button>
+                  {openDropdownIdx === idx && (
+                    <div className="absolute left-0 mt-2 w-full bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50 animate-fade-in">
+                      {LINK_TYPES.map(t => (
+                        <button
+                          key={t.label}
+                          type="button"
+                          className={`w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 transition-colors duration-150 ${link.type === t.label ? 'bg-blue-50 font-semibold text-blue-700' : ''}`}
+                          onClick={() => {
+                            onLinkTypeChange(idx, t.label);
+                            setOpenDropdownIdx(null);
+                          }}
+                        >
+                          {t.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 {/* Link URL input with prefix */}
                 <div className="flex gap-2 items-center">
@@ -179,9 +217,20 @@ export function PersonalInformation({
                       <input
                         type="text"
                         placeholder={linkType.label === 'LinkedIn' ? 'Ex: seuperfil' : linkType.label === 'GitHub' ? 'Ex: utilizador' : 'Ex: seuwebsite.com'}
-                        className={`w-full p-2 border border-gray-300 ${linkType.prefix ? 'rounded-r-lg' : 'rounded-lg'} bg-white`}
-                        value={link.value}
-                        onChange={e => onLinkValueChange(idx, e.target.value)}
+                        className={`w-full p-2 border border-gray-300 ${linkType.prefix ? 'rounded-r-lg' : 'rounded-lg'} bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all`}
+                        value={linkType.prefix && link.value.startsWith('https://www.' + linkType.prefix) ? link.value.replace('https://www.' + linkType.prefix, '') : linkType.prefix && link.value.startsWith('https://' + linkType.prefix) ? link.value.replace('https://' + linkType.prefix, '') : linkType.prefix && link.value.startsWith(linkType.prefix) ? link.value.replace(linkType.prefix, '') : link.value}
+                        onChange={e => {
+                          let newValue = e.target.value;
+                          // Se o utilizador inserir o prefixo completo, remove-o
+                          if (linkType.prefix && newValue.startsWith('https://www.' + linkType.prefix)) {
+                            newValue = newValue.replace('https://www.' + linkType.prefix, '');
+                          } else if (linkType.prefix && newValue.startsWith('https://' + linkType.prefix)) {
+                            newValue = newValue.replace('https://' + linkType.prefix, '');
+                          } else if (linkType.prefix && newValue.startsWith(linkType.prefix)) {
+                            newValue = newValue.replace(linkType.prefix, '');
+                          }
+                          onLinkValueChange(idx, newValue);
+                        }}
                       />
                     </div>
                   </div>

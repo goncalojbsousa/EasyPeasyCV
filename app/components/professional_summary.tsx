@@ -37,7 +37,7 @@ export function ProfessionalSummary({
       <FormSection title="Resumo Profissional" icon={Icons.professionalSummary}>
         <FormField label="Resumo Profissional" required>
           <textarea
-            className={`w-full p-4 border rounded-lg bg-white min-h-[120px] ${showValidationErrors && validationErrors.resume ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
+            className={`w-full p-4 border rounded-lg bg-white min-h-[120px] shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all ${showValidationErrors && validationErrors.resume ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
             placeholder="Desenvolvedor Fullstack com experiência no desenvolvimento de aplicações web escaláveis, responsivas e centradas no utilizador. Trabalho com TypeScript, React, Next.js, Node.js, PostgreSQL e Prisma, com forte atenção à performance, usabilidade e qualidade do código..."
             value={resume}
             onChange={e => onResumeChange(e.target.value)}

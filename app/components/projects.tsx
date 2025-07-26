@@ -70,7 +70,7 @@ export function Projects({
               <FormField label="Nome do Projeto">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
                   placeholder="Ex: Portfolio Website"
                   value={proj.name}
                   onChange={e => onProjectChange(idx, 'name', e.target.value)}
@@ -79,7 +79,7 @@ export function Projects({
               <FormField label="Ano">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
                   placeholder="Ex: 2023"
                   value={proj.year}
                   onChange={e => onProjectChange(idx, 'year', e.target.value)}
@@ -92,7 +92,7 @@ export function Projects({
               <FormField label="Tecnologias">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
                   placeholder="Ex: React, Node.js, MongoDB"
                   value={proj.tech}
                   onChange={e => onProjectChange(idx, 'tech', e.target.value)}
@@ -101,7 +101,7 @@ export function Projects({
               <FormField label="Link">
                 <input
                   type="url"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
                   placeholder="Ex: https://github.com/utilizador/projeto"
                   value={proj.link}
                   onChange={e => onProjectChange(idx, 'link', e.target.value)}
@@ -112,7 +112,7 @@ export function Projects({
             {/* Project description field */}
             <FormField label="Descrição">
               <textarea
-                className="w-full p-2 border border-gray-300 rounded-lg bg-white"
+                className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
                 placeholder="Breve descrição do projeto, objetivos, resultados..."
                 value={proj.description}
                 onChange={e => onProjectChange(idx, 'description', e.target.value)}

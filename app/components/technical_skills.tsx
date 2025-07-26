@@ -30,7 +30,7 @@ export function TechnicalSkills({
         <FormField label="Habilidades" helperText="separado por vírgula">
           <input
             type="text"
-            className="w-full p-2 border border-gray-300 rounded-lg bg-white"
+            className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
             placeholder="Ex: JavaScript, React, Node.js, SQL"
             value={skills}
             onChange={e => onSkillsChange(e.target.value)}

@@ -6,6 +6,7 @@ import { FormField } from './ui/form-field';
 import { IconButton } from './ui/icon-button';
 import { EmptyState } from './ui/empty-state';
 import { Icons } from './ui/icons';
+import { useState, useEffect, useRef } from 'react';
 
 /**
  * Props interface for the Languages component
@@ -22,6 +23,17 @@ interface LanguagesProps {
 }
 
 /**
+ * Available language levels for dropdown selection
+ */
+const LANGUAGE_LEVELS = [
+  'Básico',
+  'Intermediário',
+  'Avançado',
+  'Fluente',
+  'Nativo'
+];
+
+/**
  * Languages component manages the languages section of the CV form
  * @param languages - Array of language entries
  * @param onLanguageChange - Function to handle language field updates
@@ -35,6 +47,33 @@ export function Languages({
   onAddLanguage,
   onRemoveLanguage
 }: LanguagesProps) {
+  const [openDropdowns, setOpenDropdowns] = useState<{[key: string]: boolean}>({});
+  const dropdownRefs = useRef<{[key: string]: HTMLDivElement | null}>({});
+
+  // Fecha dropdowns ao clicar fora
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      Object.keys(openDropdowns).forEach(key => {
+        if (openDropdowns[key] && dropdownRefs.current[key]) {
+          if (!dropdownRefs.current[key]?.contains(event.target as Node)) {
+            setOpenDropdowns(prev => ({ ...prev, [key]: false }));
+          }
+        }
+      });
+    }
+    
+    if (Object.values(openDropdowns).some(Boolean)) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [openDropdowns]);
+
+  const toggleDropdown = (key: string) => {
+    setOpenDropdowns(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
   return (
     <form className="space-y-8 flex flex-col items-center">
       <FormSection 
@@ -70,25 +109,41 @@ export function Languages({
               <FormField label="Idioma">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
                   placeholder="Ex: Inglês"
                   value={lang.name}
                   onChange={e => onLanguageChange(idx, 'name', e.target.value)}
                 />
               </FormField>
               <FormField label="Nível">
-                <select
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white"
-                  value={lang.level}
-                  onChange={e => onLanguageChange(idx, 'level', e.target.value)}
-                >
-                  <option value="">Selecione</option>
-                  <option value="Básico">Básico</option>
-                  <option value="Intermediário">Intermediário</option>
-                  <option value="Avançado">Avançado</option>
-                  <option value="Fluente">Fluente</option>
-                  <option value="Nativo">Nativo</option>
-                </select>
+                <div ref={el => { dropdownRefs.current[`level-${idx}`] = el; }} className="relative">
+                  <button
+                    type="button"
+                    className="w-full flex items-center justify-between p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left"
+                    onClick={() => toggleDropdown(`level-${idx}`)}
+                    tabIndex={0}
+                  >
+                    <span>{lang.level || 'Selecione'}</span>
+                    <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`level-${idx}`] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+                  </button>
+                  {openDropdowns[`level-${idx}`] && (
+                    <div className="absolute left-0 mt-2 w-full bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50">
+                      {LANGUAGE_LEVELS.map(level => (
+                        <button
+                          key={level}
+                          type="button"
+                          className={`w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 transition-colors duration-150 ${lang.level === level ? 'bg-blue-50 font-semibold text-blue-700' : ''}`}
+                          onClick={() => {
+                            onLanguageChange(idx, 'level', level);
+                            setOpenDropdowns(prev => ({ ...prev, [`level-${idx}`]: false }));
+                          }}
+                        >
+                          {level}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </FormField>
             </div>
           </div>

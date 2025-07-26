@@ -6,6 +6,7 @@ import { FormField } from './ui/form-field';
 import { IconButton } from './ui/icon-button';
 import { EmptyState } from './ui/empty-state';
 import { Icons } from './ui/icons';
+import { useState, useEffect, useRef } from 'react';
 
 /**
  * Props interface for the ProfessionalExperience component
@@ -40,6 +41,33 @@ export function ProfessionalExperience({
   onAddExperience,
   onRemoveExperience
 }: ProfessionalExperienceProps) {
+  const [openDropdowns, setOpenDropdowns] = useState<{[key: string]: boolean}>({});
+  const dropdownRefs = useRef<{[key: string]: HTMLDivElement | null}>({});
+
+  // Fecha dropdowns ao clicar fora
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      Object.keys(openDropdowns).forEach(key => {
+        if (openDropdowns[key] && dropdownRefs.current[key]) {
+          if (!dropdownRefs.current[key]?.contains(event.target as Node)) {
+            setOpenDropdowns(prev => ({ ...prev, [key]: false }));
+          }
+        }
+      });
+    }
+    
+    if (Object.values(openDropdowns).some(Boolean)) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [openDropdowns]);
+
+  const toggleDropdown = (key: string) => {
+    setOpenDropdowns(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
   return (
     <form className="space-y-8 flex flex-col items-center">
       <FormSection 
@@ -75,7 +103,7 @@ export function ProfessionalExperience({
               <FormField label="Cargo">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
                   placeholder="Ex: Desenvolvedor Full Stack"
                   value={exp.role}
                   onChange={e => onExperienceChange(idx, 'role', e.target.value)}
@@ -84,7 +112,7 @@ export function ProfessionalExperience({
               <FormField label="Empresa">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
                   placeholder="Ex: Amazon"
                   value={exp.company}
                   onChange={e => onExperienceChange(idx, 'company', e.target.value)}
@@ -95,21 +123,39 @@ export function ProfessionalExperience({
             {/* Date range fields */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-4">
               <FormField label="Mês Início">
-                <select
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white"
-                  value={exp.startMonth}
-                  onChange={e => onExperienceChange(idx, 'startMonth', e.target.value)}
-                >
-                  <option value="">Selecione</option>
-                  {MONTHS.map(month => (
-                    <option key={month} value={month}>{month}</option>
-                  ))}
-                </select>
+                <div ref={el => { dropdownRefs.current[`startMonth-${idx}`] = el; }} className="relative">
+                  <button
+                    type="button"
+                    className="w-full flex items-center justify-between p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left"
+                    onClick={() => toggleDropdown(`startMonth-${idx}`)}
+                    tabIndex={0}
+                  >
+                    <span>{exp.startMonth || 'Selecione'}</span>
+                    <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`startMonth-${idx}`] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+                  </button>
+                  {openDropdowns[`startMonth-${idx}`] && (
+                    <div className="absolute left-0 mt-2 w-full bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50">
+                      {MONTHS.map(month => (
+                        <button
+                          key={month}
+                          type="button"
+                          className={`w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 transition-colors duration-150 ${exp.startMonth === month ? 'bg-blue-50 font-semibold text-blue-700' : ''}`}
+                          onClick={() => {
+                            onExperienceChange(idx, 'startMonth', month);
+                            setOpenDropdowns(prev => ({ ...prev, [`startMonth-${idx}`]: false }));
+                          }}
+                        >
+                          {month}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </FormField>
               <FormField label="Ano Início">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
                   placeholder="Ano"
                   value={exp.startYear}
                   onChange={e => onExperienceChange(idx, 'startYear', e.target.value)}
@@ -119,21 +165,39 @@ export function ProfessionalExperience({
               {!exp.current && (
                 <>
                   <FormField label="Mês Fim">
-                    <select
-                      className="w-full p-2 border border-gray-300 rounded-lg bg-white"
-                      value={exp.endMonth}
-                      onChange={e => onExperienceChange(idx, 'endMonth', e.target.value)}
-                    >
-                      <option value="">Selecione</option>
-                      {MONTHS.map(month => (
-                        <option key={month} value={month}>{month}</option>
-                      ))}
-                    </select>
+                    <div ref={el => { dropdownRefs.current[`endMonth-${idx}`] = el; }} className="relative">
+                      <button
+                        type="button"
+                        className="w-full flex items-center justify-between p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left"
+                        onClick={() => toggleDropdown(`endMonth-${idx}`)}
+                        tabIndex={0}
+                      >
+                        <span>{exp.endMonth || 'Selecione'}</span>
+                        <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`endMonth-${idx}`] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+                      </button>
+                      {openDropdowns[`endMonth-${idx}`] && (
+                        <div className="absolute left-0 mt-2 w-full bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50">
+                          {MONTHS.map(month => (
+                            <button
+                              key={month}
+                              type="button"
+                              className={`w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 transition-colors duration-150 ${exp.endMonth === month ? 'bg-blue-50 font-semibold text-blue-700' : ''}`}
+                              onClick={() => {
+                                onExperienceChange(idx, 'endMonth', month);
+                                setOpenDropdowns(prev => ({ ...prev, [`endMonth-${idx}`]: false }));
+                              }}
+                            >
+                              {month}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </FormField>
                   <FormField label="Ano Fim">
                     <input
                       type="text"
-                      className="w-full p-2 border border-gray-300 rounded-lg bg-white"
+                      className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
                       placeholder="Ano"
                       value={exp.endYear}
                       onChange={e => onExperienceChange(idx, 'endYear', e.target.value)}
@@ -160,7 +224,7 @@ export function ProfessionalExperience({
               <FormField label="Tecnologias Utilizadas">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
                   placeholder="Ex: TypeScript, Next.js, Tailwind CSS"
                   value={exp.tech}
                   onChange={e => onExperienceChange(idx, 'tech', e.target.value)}
@@ -172,7 +236,7 @@ export function ProfessionalExperience({
             <div className="mb-4">
               <FormField label="Atividades Desenvolvidas">
                 <textarea
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
                   placeholder="Descreva suas responsabilidades (um item por linha)"
                   value={exp.activities}
                   onChange={e => onExperienceChange(idx, 'activities', e.target.value)}
@@ -183,7 +247,7 @@ export function ProfessionalExperience({
             {/* Achievements and results field */}
             <FormField label="Conquistas" helperText="com métricas">
               <textarea
-                className="w-full p-2 border border-gray-300 rounded-lg bg-white"
+                className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
                 placeholder="Ex: Reestruturei a arquitetura da aplicação usando Next.js com SSR, o que melhorou o SEO e aumentou a retenção de usuários em 25%."
                 value={exp.results}
                 onChange={e => onExperienceChange(idx, 'results', e.target.value)}
