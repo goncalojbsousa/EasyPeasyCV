@@ -70,6 +70,10 @@ export interface Education {
   startMonth: string;
   /** Start year */
   startYear: string;
+  /** End month (abbreviated) */
+  endMonth: string;
+  /** End year */
+  endYear: string;
   /** Description of education and achievements */
   description: string;
 }

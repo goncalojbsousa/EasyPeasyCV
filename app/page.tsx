@@ -48,6 +48,7 @@ export default function Home() {
   const [validationErrors, setValidationErrors] = useState<{[key: string]: boolean}>({});
   const [showValidationErrors, setShowValidationErrors] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   /**
@@ -123,6 +124,16 @@ export default function Home() {
       return () => clearTimeout(timer);
     }
   }, [dataLoaded]);
+
+  // Hide success message after 3 seconds
+  useEffect(() => {
+    if (showSuccessMessage) {
+      const timer = setTimeout(() => {
+        setShowSuccessMessage(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showSuccessMessage]);
 
   // Preload PDF component to avoid delay
   useEffect(() => {
@@ -207,8 +218,8 @@ export default function Home() {
   /**
    * Add a new social media link
    */
-  const handleAddLink = () => {
-    setLinks([...links, { type: 'LinkedIn', value: '' }]);
+  const handleAddLink = (type: string = 'LinkedIn', value: string = '') => {
+    setLinks([...links, { type, value }]);
   };
 
   /**
@@ -251,7 +262,7 @@ export default function Home() {
    */
   const handleAddEducation = () => {
     setEducation([...education, {
-      type: '', status: '', course: '', institution: '', startMonth: '', startYear: '', description: ''
+      type: '', status: '', course: '', institution: '', startMonth: '', startYear: '', endMonth: '', endYear: '', description: ''
     }]);
   };
   /**
@@ -424,17 +435,19 @@ export default function Home() {
       phone: '912345678',
     });
     setLinks([
-      { type: 'LinkedIn', value: 'https://www.linkedin.com/in/johndoe' },
-      { type: 'GitHub', value: 'https://github.com/johndoe' },
+      { type: 'LinkedIn', value: 'linkedin.com/in/johndoe' },
+      { type: 'GitHub', value: 'github.com/johndoe' },
+      { type: 'GitLab', value: 'gitlab.com/johndoe' },
+      { type: 'Portfolio', value: 'johndoe.dev' },
     ]);
     setResume('Experienced software engineer with a passion for building scalable and maintainable applications. Proficient in React, Node.js, and modern web technologies. Strong problem-solving skills and a commitment to delivering high-quality code.');
     setExperiences([
       {
         role: 'Senior Software Engineer',
         company: 'Tech Solutions Inc.',
-        startMonth: '01',
+        startMonth: 'Jan',
         startYear: '2020',
-        endMonth: '06',
+        endMonth: 'Jun',
         endYear: '2023',
         current: false,
         tech: 'React, Node.js, TypeScript, MongoDB',
@@ -444,9 +457,9 @@ export default function Home() {
       {
         role: 'Software Engineer',
         company: 'Innovative Corp.',
-        startMonth: '07',
+        startMonth: 'Jul',
         startYear: '2018',
-        endMonth: '12',
+        endMonth: 'Dez',
         endYear: '2019',
         current: false,
         tech: 'React, Redux, PostgreSQL',
@@ -456,28 +469,30 @@ export default function Home() {
     ]);
     setEducation([
       {
-        type: 'Bachelor of Science in Computer Science',
-        status: 'Completed',
+        type: 'Licenciatura',
+        status: 'Completo',
         course: 'Computer Science',
         institution: 'University of Lisbon',
-        startMonth: '09',
+        startMonth: 'Set',
         startYear: '2014',
+        endMonth: 'Jun',
+        endYear: '2018',
         description: 'Relevant coursework: Data Structures, Algorithms, Operating Systems, Computer Networks.',
       },
     ]);
     setSkills('React, Node.js, TypeScript, MongoDB, PostgreSQL, Redux, Git, Docker, AWS, Linux');
     setLanguages([
-      { name: 'English', level: 'Advanced' },
-      { name: 'Portuguese', level: 'Native' },
+      { name: 'English', level: 'Avançado' },
+      { name: 'Portuguese', level: 'Nativo' },
     ]);
     setCertifications([
       {
         name: 'AWS Certified Solutions Architect - Associate',
         issuer: 'Amazon Web Services',
-        completionDate: '2023-01-01',
+        completionDate: '2023-01-15',
         hours: '20',
         validationLink: 'https://www.aws.com/certification/solutions-architect-associate',
-        description: 'Certification in designing scalable, fault-tolerant, and cost-effective systems on AWS.',
+        description: 'Foco em sistemas escaláveis e tolerantes a falhas.',
       },
     ]);
     setProjects([
@@ -485,14 +500,14 @@ export default function Home() {
         name: 'E-commerce Platform',
         description: 'Full-stack e-commerce application built with React, Node.js, and PostgreSQL.',
         tech: 'React, Node.js, PostgreSQL, Redux, Stripe, JWT',
-        link: 'https://e-commerce-platform.com',
+        link: 'github.com/johndoe/ecommerce-platform',
         year: '2022',
       },
       {
         name: 'Task Management App',
         description: 'Simple React application for managing daily tasks and deadlines.',
         tech: 'React, Redux, LocalStorage',
-        link: 'https://task-management-app.com',
+        link: 'github.com/johndoe/task-manager',
         year: '2023',
       },
     ]);
@@ -510,6 +525,13 @@ export default function Home() {
       if (!handleGeneratePDF(lang)) {
         e.preventDefault();
         e.stopPropagation();
+      } else {
+        // Close dropdown after a short delay to allow PDF generation to start
+        setTimeout(() => {
+          setIsDropdownOpen(false);
+          // Show success message
+          setShowSuccessMessage(true);
+        }, 100);
       }
     };
 
@@ -611,6 +633,13 @@ export default function Home() {
         {dataLoaded && (
           <div className="p-3 bg-green-50 border border-green-200 rounded-lg shadow-sm">
             <p className="text-green-700 text-sm">Dados carregados automaticamente do navegador.</p>
+          </div>
+        )}
+        
+        {/* Success message notification */}
+        {showSuccessMessage && (
+          <div className="p-3 bg-green-50 border border-green-200 rounded-lg shadow-sm">
+            <p className="text-green-700 text-sm">Currículo gerado com sucesso! O download deve começar automaticamente.</p>
           </div>
         )}
         

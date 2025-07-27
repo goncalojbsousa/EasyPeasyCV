@@ -205,7 +205,7 @@ export function AcademicEducation({
               </FormField>
             </div>
             
-            {/* Start date fields */}
+            {/* Date fields - Start and End dates in parallel */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-4">
               <FormField label="Mês Início">
                 <div ref={el => { dropdownRefs.current[`startMonth-${idx}`] = el; }} className="relative">
@@ -246,6 +246,51 @@ export function AcademicEducation({
                   onChange={e => onEducationChange(idx, 'startYear', e.target.value)}
                 />
               </FormField>
+              
+              {/* End date fields - only show if status is "Completo" */}
+              {(ed.status === 'Completo' || ed.status === 'Completed') && (
+                <>
+                  <FormField label="Mês Fim">
+                    <div ref={el => { dropdownRefs.current[`endMonth-${idx}`] = el; }} className="relative">
+                      <button
+                        type="button"
+                        className="w-full flex items-center justify-between p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left"
+                        onClick={() => toggleDropdown(`endMonth-${idx}`)}
+                        tabIndex={0}
+                      >
+                        <span>{ed.endMonth || 'Selecione'}</span>
+                        <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`endMonth-${idx}`] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+                      </button>
+                      {openDropdowns[`endMonth-${idx}`] && (
+                        <div className="absolute left-0 mt-2 w-full bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50">
+                          {MONTHS.map(month => (
+                            <button
+                              key={month}
+                              type="button"
+                              className={`w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 transition-colors duration-150 ${ed.endMonth === month ? 'bg-blue-50 font-semibold text-blue-700' : ''}`}
+                              onClick={() => {
+                                onEducationChange(idx, 'endMonth', month);
+                                setOpenDropdowns(prev => ({ ...prev, [`endMonth-${idx}`]: false }));
+                              }}
+                            >
+                              {month}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </FormField>
+                  <FormField label="Ano Fim">
+                    <input
+                      type="text"
+                      className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
+                      placeholder="Ano"
+                      value={ed.endYear}
+                      onChange={e => onEducationChange(idx, 'endYear', e.target.value)}
+                    />
+                  </FormField>
+                </>
+              )}
             </div>
             
             {/* Description field */}

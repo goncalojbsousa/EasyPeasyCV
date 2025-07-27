@@ -20,7 +20,7 @@ interface PersonalInformationProps {
   /** Handler for updating link values */
   onLinkValueChange: (idx: number, newValue: string) => void;
   /** Handler for adding new link */
-  onAddLink: () => void;
+  onAddLink: (type: string, value: string) => void;
   /** Handler for removing link */
   onRemoveLink: (idx: number) => void;
   /** Handler for updating personal information fields */
@@ -37,7 +37,18 @@ interface PersonalInformationProps {
 const LINK_TYPES = [
   { label: 'LinkedIn', prefix: 'linkedin.com/in/' },
   { label: 'GitHub', prefix: 'github.com/' },
+  { label: 'GitLab', prefix: 'gitlab.com/' },
   { label: 'Portfolio', prefix: '' },
+  { label: 'Outro', prefix: '' },
+];
+
+/**
+ * Available country codes
+ */
+const COUNTRY_CODES = [
+  { label: 'Portugal (+351)', value: 'Portugal (+351)' },
+  { label: 'Brasil (+55)', value: 'Brasil (+55)' },
+  { label: 'Espanha (+34)', value: 'Espanha (+34)' },
 ];
 
 /**
@@ -65,7 +76,11 @@ export function PersonalInformation({
   showValidationErrors = true
 }: PersonalInformationProps) {
   const [openDropdownIdx, setOpenDropdownIdx] = useState<number | null>(null);
+  const [newLinkType, setNewLinkType] = useState('LinkedIn');
+  const [newLinkValue, setNewLinkValue] = useState('');
+  const [openCountryDropdown, setOpenCountryDropdown] = useState(false);
   const dropdownRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const countryDropdownRef = useRef<HTMLDivElement | null>(null);
 
   // Fecha dropdown ao clicar fora
   useEffect(() => {
@@ -75,14 +90,72 @@ export function PersonalInformation({
           setOpenDropdownIdx(null);
         }
       }
+      if (openCountryDropdown && countryDropdownRef.current) {
+        if (!countryDropdownRef.current.contains(event.target as Node)) {
+          setOpenCountryDropdown(false);
+        }
+      }
     }
-    if (openDropdownIdx !== null) {
+    if (openDropdownIdx !== null || openCountryDropdown) {
       document.addEventListener('mousedown', handleClickOutside);
     }
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [openDropdownIdx]);
+  }, [openDropdownIdx, openCountryDropdown]);
+
+  const handleAddLink = () => {
+    if (newLinkValue.trim()) {
+      // Create the full URL with prefix
+      const prefix = getLinkPrefix(newLinkType);
+      const fullValue = prefix ? `${prefix}${newLinkValue}` : newLinkValue;
+      
+      // Add the link with the correct type and value
+      onAddLink(newLinkType, fullValue);
+      
+      // Reset the form
+      setNewLinkValue('');
+    }
+  };
+
+  const getLinkPrefix = (type: string) => {
+    const linkType = LINK_TYPES.find(t => t.label === type);
+    return linkType?.prefix || '';
+  };
+
+  const getLinkPlaceholder = (type: string) => {
+    switch (type) {
+      case 'LinkedIn':
+        return 'Ex: meuperfil';
+      case 'GitHub':
+        return 'Ex: utilizador';
+      case 'GitLab':
+        return 'Ex: utilizador';
+      case 'Portfolio':
+        return 'Ex: meuwebsite.com';
+      case 'Outro':
+        return 'Ex: meuwebsite.com';
+      default:
+        return 'Ex: meuperfil';
+    }
+  };
+
+  const translateLinkType = (type: string) => {
+    switch (type) {
+      case 'LinkedIn':
+        return 'LinkedIn';
+      case 'GitHub':
+        return 'GitHub';
+      case 'GitLab':
+        return 'GitLab';
+      case 'Portfolio':
+        return 'Portfolio';
+      case 'Outro':
+        return 'Outro';
+      default:
+        return type;
+    }
+  };
 
   return (
     <form className="space-y-8">
@@ -146,15 +219,34 @@ export function PersonalInformation({
             />
           </FormField>
           <FormField label="Código do País">
-            <select 
-              className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all" 
-              value={personalInfo.countryCode} 
-              onChange={e => onPersonalInfoChange('countryCode', e.target.value)}
-            >
-              <option>Portugal (+351)</option>
-              <option>Brasil (+55)</option>
-              <option>Espanha (+34)</option>
-            </select>
+            <div className="relative" ref={countryDropdownRef}>
+              <button
+                type="button"
+                className="w-full flex items-center justify-between p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left"
+                onClick={() => setOpenCountryDropdown(!openCountryDropdown)}
+                tabIndex={0}
+              >
+                <span>{personalInfo.countryCode || 'Selecionar país'}</span>
+                <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openCountryDropdown ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+              </button>
+              {openCountryDropdown && (
+                <div className="absolute left-0 mt-2 w-full bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50 animate-fade-in">
+                  {COUNTRY_CODES.map(country => (
+                    <button
+                      key={country.value}
+                      type="button"
+                      className={`w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 transition-colors duration-150 ${personalInfo.countryCode === country.value ? 'bg-blue-50 font-semibold text-blue-700' : ''}`}
+                      onClick={() => {
+                        onPersonalInfoChange('countryCode', country.value);
+                        setOpenCountryDropdown(false);
+                      }}
+                    >
+                      {country.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </FormField>
           <FormField label="Telefone">
             <input 
@@ -171,88 +263,103 @@ export function PersonalInformation({
       {/* Social media and portfolio links section */}
       <div>
         <label className="block text-sm font-medium mb-2">Links e Redes Sociais</label>
-        <div className="flex flex-col gap-4">
-          {links.map((link, idx) => {
-            const linkType = LINK_TYPES.find(t => t.label === link.type) || LINK_TYPES[0];
-            return (
-              <div key={idx} className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
-                {/* Link type selection */}
-                <div ref={el => { dropdownRefs.current[idx] = el; }} className="relative">
-                  <label className="block text-xs font-medium mb-1">Tipo de Link</label>
+        
+        {/* Display existing links as tags */}
+        {links.length > 0 && (
+          <div className="mb-4 flex flex-wrap gap-2">
+            {links.map((link, idx) => {
+              const linkType = LINK_TYPES.find(t => t.label === link.type) || LINK_TYPES[0];
+              const displayValue = linkType.prefix && link.value.startsWith('https://www.' + linkType.prefix) 
+                ? link.value.replace('https://www.' + linkType.prefix, '') 
+                : linkType.prefix && link.value.startsWith('https://' + linkType.prefix) 
+                ? link.value.replace('https://' + linkType.prefix, '') 
+                : linkType.prefix && link.value.startsWith(linkType.prefix) 
+                ? link.value.replace(linkType.prefix, '') 
+                : link.value;
+              
+              return (
+                <div key={idx} className="flex items-center gap-2 bg-gray-100 border border-gray-200 rounded-full px-3 py-1 text-sm">
+                  <span className="font-medium text-gray-700">{translateLinkType(link.type)}:</span>
+                  <span className="text-gray-600">{displayValue}</span>
                   <button
                     type="button"
-                    className="w-full flex items-center justify-between p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left"
-                    onClick={() => setOpenDropdownIdx(openDropdownIdx === idx ? null : idx)}
-                    tabIndex={0}
+                    onClick={() => onRemoveLink(idx)}
+                    className="text-gray-400 hover:text-red-500 transition-colors ml-1"
                   >
-                    <span>{link.type}</span>
-                    <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdownIdx === idx ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
                   </button>
-                  {openDropdownIdx === idx && (
-                    <div className="absolute left-0 mt-2 w-full bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50 animate-fade-in">
-                      {LINK_TYPES.map(t => (
-                        <button
-                          key={t.label}
-                          type="button"
-                          className={`w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 transition-colors duration-150 ${link.type === t.label ? 'bg-blue-50 font-semibold text-blue-700' : ''}`}
-                          onClick={() => {
-                            onLinkTypeChange(idx, t.label);
-                            setOpenDropdownIdx(null);
-                          }}
-                        >
-                          {t.label}
-                        </button>
-                      ))}
-                    </div>
-                  )}
                 </div>
-                {/* Link URL input with prefix */}
-                <div className="flex gap-2 items-center">
-                  <div className="flex-1">
-                    <label className="block text-xs font-medium mb-1">URL</label>
-                    <div className="flex">
-                      {linkType.prefix && (
-                        <span className="inline-flex items-center px-2 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500 text-sm">{linkType.prefix}</span>
-                      )}
-                      <input
-                        type="text"
-                        placeholder={linkType.label === 'LinkedIn' ? 'Ex: seuperfil' : linkType.label === 'GitHub' ? 'Ex: utilizador' : 'Ex: seuwebsite.com'}
-                        className={`w-full p-2 border border-gray-300 ${linkType.prefix ? 'rounded-r-lg' : 'rounded-lg'} bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all`}
-                        value={linkType.prefix && link.value.startsWith('https://www.' + linkType.prefix) ? link.value.replace('https://www.' + linkType.prefix, '') : linkType.prefix && link.value.startsWith('https://' + linkType.prefix) ? link.value.replace('https://' + linkType.prefix, '') : linkType.prefix && link.value.startsWith(linkType.prefix) ? link.value.replace(linkType.prefix, '') : link.value}
-                        onChange={e => {
-                          let newValue = e.target.value;
-                          // Se o utilizador inserir o prefixo completo, remove-o
-                          if (linkType.prefix && newValue.startsWith('https://www.' + linkType.prefix)) {
-                            newValue = newValue.replace('https://www.' + linkType.prefix, '');
-                          } else if (linkType.prefix && newValue.startsWith('https://' + linkType.prefix)) {
-                            newValue = newValue.replace('https://' + linkType.prefix, '');
-                          } else if (linkType.prefix && newValue.startsWith(linkType.prefix)) {
-                            newValue = newValue.replace(linkType.prefix, '');
-                          }
-                          onLinkValueChange(idx, newValue);
-                        }}
-                      />
-                    </div>
-                  </div>
-                  {/* Remove link button */}
-                  {links.length > 1 && (
-                    <IconButton onClick={() => onRemoveLink(idx)} variant="danger" size="sm" className="mt-4">
-                      {Icons.remove}
-                    </IconButton>
-                  )}
-                </div>
+              );
+            })}
+          </div>
+        )}
+        
+        {/* Fixed input section for adding new links */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+          {/* Link type selection */}
+          <div className="relative" ref={(el) => { dropdownRefs.current[0] = el; }}>
+            <label className="block text-xs font-medium mb-1">Tipo de Link</label>
+            <button
+              type="button"
+              className="w-full flex items-center justify-between p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left"
+              onClick={() => setOpenDropdownIdx(openDropdownIdx === 0 ? null : 0)}
+              tabIndex={0}
+            >
+              <span>{newLinkType}</span>
+              <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdownIdx === 0 ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+            </button>
+            {openDropdownIdx === 0 && (
+              <div className="absolute left-0 mt-2 w-full bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50 animate-fade-in">
+                {LINK_TYPES.map(t => (
+                  <button
+                    key={t.label}
+                    type="button"
+                    className={`w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 transition-colors duration-150 ${newLinkType === t.label ? 'bg-blue-50 font-semibold text-blue-700' : ''}`}
+                    onClick={() => {
+                      setNewLinkType(t.label);
+                      setOpenDropdownIdx(null);
+                    }}
+                  >
+                    {t.label}
+                  </button>
+                ))}
               </div>
-            );
-          })}
-          {/* Add new link button */}
-          <button
-            type="button"
-            onClick={onAddLink}
-            className="flex items-center gap-1 text-blue-600 hover:underline text-sm mt-2"
-          >
-            {Icons.add}
-            Adicionar Link
-          </button>
+            )}
+          </div>
+          
+          {/* Link URL input with prefix */}
+          <div className="flex gap-2 items-end">
+            <div className="flex-1">
+              <label className="block text-xs font-medium mb-1">URL</label>
+              <div className="flex">
+                {getLinkPrefix(newLinkType) && (
+                  <span className="inline-flex items-center px-2 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500 text-sm">{getLinkPrefix(newLinkType)}</span>
+                )}
+                <input
+                  type="text"
+                  placeholder={getLinkPlaceholder(newLinkType)}
+                  value={newLinkValue}
+                  onChange={(e) => setNewLinkValue(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleAddLink()}
+                  className={`w-full p-2 border border-gray-300 ${getLinkPrefix(newLinkType) ? 'rounded-r-lg' : 'rounded-lg'} bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all`}
+                />
+              </div>
+            </div>
+            
+            {/* Add link button */}
+            <button
+              type="button"
+              onClick={handleAddLink}
+              disabled={!newLinkValue.trim()}
+              className="flex items-center justify-center w-10 h-10 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg transition-colors shadow-sm"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </form>
