@@ -6,6 +6,7 @@ import { FormField } from './ui/form-field';
 import { IconButton } from './ui/icon-button';
 import { EmptyState } from './ui/empty-state';
 import { Icons } from './ui/icons';
+import { useLanguage } from '../contexts/LanguageContext';
 import { useState, useEffect, useRef } from 'react';
 
 /**
@@ -48,7 +49,7 @@ const EDUCATION_STATUS = [
 /**
  * Array of month abbreviations for date selection
  */
-const MONTHS = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 /**
  * AcademicEducation component manages the education section of the CV form
@@ -65,7 +66,27 @@ export function AcademicEducation({
   onRemoveEducation,
   onReorderEducation
 }: AcademicEducationProps) {
+  const { t } = useLanguage();
   const [openDropdowns, setOpenDropdowns] = useState<{[key: string]: boolean}>({});
+  
+  // Function to get translated month
+  const getTranslatedMonth = (month: string) => {
+    const monthMap: { [key: string]: string } = {
+      'Jan': t('month.jan'),
+      'Feb': t('month.feb'),
+      'Mar': t('month.mar'),
+      'Apr': t('month.apr'),
+      'May': t('month.may'),
+      'Jun': t('month.jun'),
+      'Jul': t('month.jul'),
+      'Aug': t('month.aug'),
+      'Sep': t('month.sep'),
+      'Oct': t('month.oct'),
+      'Nov': t('month.nov'),
+      'Dec': t('month.dec'),
+    };
+    return monthMap[month] || month;
+  };
   const dropdownRefs = useRef<{[key: string]: HTMLDivElement | null}>({});
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
@@ -75,7 +96,7 @@ export function AcademicEducation({
     if (ed.course && ed.type) return `${ed.course} | ${ed.type}`;
     if (ed.course) return ed.course;
     if (ed.type) return ed.type;
-    return `Formação ${idx + 1}`;
+    return `${t('education.title')} ${idx + 1}`;
   };
 
   // Fecha dropdowns ao clicar fora
@@ -151,12 +172,12 @@ export function AcademicEducation({
   return (
     <form className="space-y-8 flex flex-col items-center">
       <FormSection 
-        title="Formação Académica" 
+        title={t('section.academic.education')} 
         icon={Icons.academicEducation}
       >
         {/* Display empty state when no education entries exist */}
         {education.length === 0 && (
-          <EmptyState message="Nenhuma formação adicionada" />
+          <EmptyState message={t('empty.education')} />
         )}
         
         {/* Render each education entry */}

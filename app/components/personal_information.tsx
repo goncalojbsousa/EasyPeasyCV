@@ -4,6 +4,7 @@ import { PersonalInfo, Link } from '../types/cv';
 import { FormSection } from './ui/form-section';
 import { FormField } from './ui/form-field';
 import { Icons } from './ui/icons';
+import { useLanguage } from '../contexts/LanguageContext';
 import { useState, useEffect, useRef } from 'react';
 
 /**
@@ -36,7 +37,7 @@ const LINK_TYPES = [
   { label: 'GitHub', prefix: 'github.com/' },
   { label: 'GitLab', prefix: 'gitlab.com/' },
   { label: 'Portfolio', prefix: '' },
-  { label: 'Outro', prefix: '' },
+  { label: 'Other', prefix: '' },
 ];
 
 /**
@@ -71,6 +72,7 @@ export function PersonalInformation({
   validationErrors = {},
   showValidationErrors = true
 }: PersonalInformationProps) {
+  const { t, cvType } = useLanguage();
   const [openDropdownIdx, setOpenDropdownIdx] = useState<number | null>(null);
   const [newLinkType, setNewLinkType] = useState('LinkedIn');
   const [newLinkValue, setNewLinkValue] = useState('');
@@ -124,34 +126,47 @@ export function PersonalInformation({
   const getLinkPlaceholder = (type: string) => {
     switch (type) {
       case 'LinkedIn':
-        return 'Ex: meuperfil';
+        return t('link.placeholder.linkedin');
       case 'GitHub':
-        return 'Ex: utilizador';
+        return t('link.placeholder.github');
       case 'GitLab':
-        return 'Ex: utilizador';
+        return t('link.placeholder.gitlab');
       case 'Portfolio':
-        return 'Ex: meuwebsite.com';
-      case 'Outro':
-        return 'Ex: meuwebsite.com';
+        return t('link.placeholder.portfolio');
+      case 'Other':
+        return t('link.placeholder.other');
       default:
-        return 'Ex: meuperfil';
+        return t('link.placeholder.linkedin');
     }
   };
 
   const translateLinkType = (type: string) => {
     switch (type) {
       case 'LinkedIn':
-        return 'LinkedIn';
+        return t('link.type.linkedin');
       case 'GitHub':
-        return 'GitHub';
+        return t('link.type.github');
       case 'GitLab':
-        return 'GitLab';
+        return t('link.type.gitlab');
       case 'Portfolio':
-        return 'Portfolio';
-      case 'Outro':
-        return 'Outro';
+        return t('link.type.portfolio');
+      case 'Other':
+        return t('link.type.other');
       default:
         return type;
+    }
+  };
+
+  const translateCountryCode = (code: string) => {
+    switch (code) {
+      case 'Portugal (+351)':
+        return t('country.portugal');
+      case 'Brasil (+55)':
+        return t('country.brazil');
+      case 'Espanha (+34)':
+        return t('country.spain');
+      default:
+        return code;
     }
   };
 
@@ -217,23 +232,23 @@ export function PersonalInformation({
 
   return (
     <form className="space-y-8">
-      <FormSection title="Informações Pessoais" icon={Icons.personalInfo}>
+      <FormSection title={t('section.personal.info')} icon={Icons.personalInfo}>
         {/* Name and desired role fields */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
-          <FormField label="Nome completo" required>
+          <FormField label={t('field.full.name')} required>
             <input 
               type="text" 
-              placeholder="Ex: Gonçalo Sousa" 
+              placeholder={t('placeholder.full.name')} 
               className={`w-full p-3 sm:p-2 border rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm ${showValidationErrors && validationErrors.name ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
               value={personalInfo.name} 
               onChange={e => onPersonalInfoChange('name', e.target.value)}
               data-error={showValidationErrors && validationErrors.name ? "true" : "false"}
             />
           </FormField>
-          <FormField label="Cargo Desejado" required>
+          <FormField label={t(`cvType.field.desired.role`)} required>
             <input 
               type="text" 
-              placeholder="Ex: Desenvolvedor Full Stack" 
+              placeholder={t(`cvType.placeholder.desired.role`)} 
               className={`w-full p-2 border rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm ${showValidationErrors && validationErrors.desiredRole ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
               value={personalInfo.desiredRole} 
               onChange={e => onPersonalInfoChange('desiredRole', e.target.value)}
@@ -244,19 +259,19 @@ export function PersonalInformation({
         
         {/* Postal code and city fields */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
-          <FormField label="Código Postal">
+          <FormField label={t('field.postal.code')}>
             <input 
               type="text" 
-              placeholder="Ex: 1234-567" 
+              placeholder={t('placeholder.postal.code')} 
               className="w-full p-3 sm:p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm" 
               value={personalInfo.postalCode} 
               onChange={e => onPersonalInfoChange('postalCode', e.target.value)} 
             />
           </FormField>
-          <FormField label="Cidade">
+          <FormField label={t('field.city')}>
             <input 
               type="text" 
-              placeholder="Ex: Viana do Castelo" 
+              placeholder={t('placeholder.city')} 
               className="w-full p-3 sm:p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm" 
               value={personalInfo.city} 
               onChange={e => onPersonalInfoChange('city', e.target.value)} 
@@ -266,17 +281,17 @@ export function PersonalInformation({
         
         {/* Email, country code, and phone fields */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-6">
-          <FormField label="Email" required>
+          <FormField label={t('field.email')} required>
             <input 
               type="email" 
-              placeholder="Ex: email@exemplo.com" 
+              placeholder={t('placeholder.email')} 
               className={`w-full p-3 sm:p-2 border rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm ${showValidationErrors && validationErrors.email ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
               value={personalInfo.email} 
               onChange={e => onPersonalInfoChange('email', e.target.value)}
               data-error={showValidationErrors && validationErrors.email ? "true" : "false"}
             />
           </FormField>
-          <FormField label="Código do País">
+          <FormField label={t('field.country.code')}>
             <div className="relative" ref={countryDropdownRef}>
               <button
                 type="button"
@@ -284,7 +299,7 @@ export function PersonalInformation({
                 onClick={() => setOpenCountryDropdown(!openCountryDropdown)}
                 tabIndex={0}
               >
-                <span>{personalInfo.countryCode || 'Selecionar país'}</span>
+                <span>{personalInfo.countryCode ? translateCountryCode(personalInfo.countryCode) : t('select.country')}</span>
                 <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openCountryDropdown ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
               </button>
               {openCountryDropdown && (
@@ -299,17 +314,17 @@ export function PersonalInformation({
                         setOpenCountryDropdown(false);
                       }}
                     >
-                      {country.label}
+                      {translateCountryCode(country.label)}
                     </button>
                   ))}
                 </div>
               )}
             </div>
           </FormField>
-          <FormField label="Telefone">
+          <FormField label={t('field.phone')}>
             <input 
               type="text" 
-              placeholder="Ex: 912345678" 
+              placeholder={t('placeholder.phone')} 
               className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm" 
               value={personalInfo.phone} 
               onChange={e => onPersonalInfoChange('phone', e.target.value)} 
@@ -319,7 +334,7 @@ export function PersonalInformation({
 
         {/* Social media and portfolio links section */}
         <div className="border-t border-gray-200 pt-6">
-          <label className="block text-sm font-medium mb-2">Links e Redes Sociais</label>
+          <label className="block text-sm font-medium mb-2">{t('field.links.social')}</label>
           
           {/* Display existing links as tags */}
           {links.length > 0 && (
@@ -384,14 +399,14 @@ export function PersonalInformation({
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-end">
             {/* Link type selection */}
             <div className="relative" ref={(el) => { dropdownRefs.current[0] = el; }}>
-              <label className="block text-sm font-medium mb-1">Tipo de Link</label>
+              <label className="block text-sm font-medium mb-1">{t('field.link.type')}</label>
               <button
                 type="button"
                 className="w-full flex items-center justify-between p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left text-sm"
                 onClick={() => setOpenDropdownIdx(openDropdownIdx === 0 ? null : 0)}
                 tabIndex={0}
               >
-                <span>{newLinkType}</span>
+                <span>{translateLinkType(newLinkType)}</span>
                 <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdownIdx === 0 ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
               </button>
               {openDropdownIdx === 0 && (
@@ -406,7 +421,7 @@ export function PersonalInformation({
                         setOpenDropdownIdx(null);
                       }}
                     >
-                      {t.label}
+                      {translateLinkType(t.label)}
                     </button>
                   ))}
                 </div>
@@ -416,7 +431,7 @@ export function PersonalInformation({
             {/* Link URL input with prefix */}
             <div className="flex flex-col sm:flex-row gap-2 items-end">
               <div className="flex-1 w-full">
-                <label className="block text-sm font-medium mb-1">URL</label>
+                <label className="block text-sm font-medium mb-1">{t('field.url')}</label>
                 <div className="flex">
                   {getLinkPrefix(newLinkType) && (
                     <span className="inline-flex items-center px-2 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500 text-xs sm:text-sm">{getLinkPrefix(newLinkType)}</span>

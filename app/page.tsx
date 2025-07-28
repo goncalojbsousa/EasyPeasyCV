@@ -11,6 +11,10 @@ import { Certifications } from './components/certifications';
 import PdfDownloadButton from './components/pdf_download_button_dynamic';
 import { Projects } from './components/projects';
 import { CVTips } from './components/cv_tips';
+import { LanguageSelector } from './components/ui/language-selector';
+import { CVTypeSelector } from './components/ui/cv-type-selector';
+import { Footer } from './components/footer';
+import { useLanguage } from './contexts/LanguageContext';
 import { Experience, Education, Language, Certification, Project } from './types/cv';
 
 /**
@@ -19,6 +23,8 @@ import { Experience, Education, Language, Certification, Project } from './types
  * @returns JSX element representing the main CV builder application
  */
 export default function Home() {
+  const { t } = useLanguage();
+  
   // State management for all form sections
   const [personalInfo, setPersonalInfo] = useState({
     name: '',
@@ -570,10 +576,12 @@ export default function Home() {
       <header className="bg-white px-4 sm:px-6 py-3 sm:py-4 shadow fixed top-0 left-0 right-0 z-50">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-blue-600">CV Builder</h1>
-            <p className="text-xs sm:text-sm">Crie um currículo profissional em minutos</p>
+            <h1 className="text-xl sm:text-2xl font-bold text-blue-600">{t('app.title')}</h1>
+            <p className="text-xs sm:text-sm">{t('app.subtitle')}</p>
           </div>
-          <div className="flex flex-col items-end w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row items-end gap-2 w-full sm:w-auto">
+            <CVTypeSelector />
+            <LanguageSelector />
             <div className="relative w-full sm:w-auto" ref={dropdownRef}>
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -582,8 +590,8 @@ export default function Home() {
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                 </svg>
-                <span className="hidden sm:inline">Gerar Currículo</span>
-                <span className="sm:hidden">Gerar CV</span>
+                <span className="hidden sm:inline">{t('generate.resume')}</span>
+                <span className="sm:hidden">{t('generate.cv')}</span>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className={`w-3 h-3 sm:w-4 sm:h-4 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                 </svg>
@@ -593,7 +601,7 @@ export default function Home() {
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-full sm:w-56 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
                   <div className="px-4 py-2 text-sm text-gray-500 border-b border-gray-100">
-                    Escolher idioma:
+                    {t('select.language')}
                   </div>
                   <div className="py-1">
                     <PdfDownloadButtonWithValidation lang="pt">
@@ -606,7 +614,7 @@ export default function Home() {
                           <circle cx="12" cy="16" r="5" fill="#ff5"></circle>
                           <path d="M14.562,13.529l-5.125-.006v3.431h0c.004,.672,.271,1.307,.753,1.787,.491,.489,1.132,.759,1.805,.759,.684,0,1.328-.267,1.813-.75,.485-.484,.753-1.126,.753-1.808v-3.413Z" fill="#ea3323"></path>
                         </svg>
-                        <span className="font-medium text-sm sm:text-base">Português</span>
+                        <span className="font-medium text-sm sm:text-base">{t('language.portuguese')}</span>
                       </div>
                     </PdfDownloadButtonWithValidation>
                     <PdfDownloadButtonWithValidation lang="en">
@@ -626,7 +634,7 @@ export default function Home() {
                           <path d="M27,4H5c-2.209,0-4,1.791-4,4V24c0,2.209,1.791,4,4,4H27c2.209,0,4-1.791,4-4V8c0-2.209-1.791-4-4-4Zm3,20c0,1.654-1.346,3-3,3H5c-1.654,0-3-1.346-3-3V8c0-1.654,1.346-3,3-3H27c1.654,0,3,1.346,3,3V24Z" opacity=".15"></path>
                           <path d="M27,5H5c-1.657,0-3,1.343-3,3v1c0-1.657,1.343-3,3-3H27c1.657,0,3,1.343,3,3v-1c0-1.657-1.343-3-3-3Z" fill="#fff" opacity=".2"></path>
                         </svg>
-                        <span className="font-medium text-sm sm:text-base">English</span>
+                        <span className="font-medium text-sm sm:text-base">{t('language.english')}</span>
                       </div>
                     </PdfDownloadButtonWithValidation>
                   </div>
@@ -642,26 +650,26 @@ export default function Home() {
         {/* Data loaded notification */}
         {dataLoaded && (
           <div className="p-3 bg-green-50 border border-green-200 rounded-lg shadow-sm">
-            <p className="text-green-700 text-sm">Dados carregados automaticamente do navegador.</p>
+            <p className="text-green-700 text-sm">{t('data.loaded')}</p>
           </div>
         )}
         
         {/* Success message notification */}
         {showSuccessMessage && (
           <div className="p-3 bg-green-50 border border-green-200 rounded-lg shadow-sm">
-            <p className="text-green-700 text-sm">Currículo gerado com sucesso! O download deve começar automaticamente.</p>
+            <p className="text-green-700 text-sm">{t('cv.generated')}</p>
           </div>
         )}
         
         {/* Validation errors notification */}
         {showValidationErrors && Object.keys(validationErrors).length > 0 && (
           <div className="p-4 bg-red-50 border border-red-200 rounded-lg shadow-sm">
-            <p className="text-red-700 text-sm font-medium">Por favor, preencha todos os campos obrigatórios:</p>
+            <p className="text-red-700 text-sm font-medium">{t('validation.required')}</p>
             <ul className="text-red-600 text-xs mt-1 list-disc list-inside">
-              {validationErrors.name && <li>Nome completo</li>}
-              {validationErrors.email && <li>Email</li>}
-              {validationErrors.desiredRole && <li>Cargo desejado</li>}
-              {validationErrors.resume && <li>Resumo profissional</li>}
+              {validationErrors.name && <li>{t('validation.name')}</li>}
+              {validationErrors.email && <li>{t('validation.email')}</li>}
+              {validationErrors.desiredRole && <li>{t('validation.role')}</li>}
+              {validationErrors.resume && <li>{t('validation.resume')}</li>}
             </ul>
           </div>
         )}
@@ -738,12 +746,12 @@ export default function Home() {
         
         {/* Example data button */}
         <div className="max-w-6xl mx-auto mt-8 mb-8 flex justify-center">
-          <button
-            onClick={fillWithExampleData}
-            className="bg-green-600 text-white px-4 sm:px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-200 shadow-lg text-sm sm:text-base w-full sm:w-auto"
-            type="button"
-          >
-            Preencher com dados de exemplo
+                      <button
+              onClick={fillWithExampleData}
+              className="bg-green-600 text-white px-4 sm:px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-200 shadow-lg text-sm sm:text-base w-full sm:w-auto"
+              type="button"
+            >
+                            {t('fill.example')}
           </button>
         </div>
         
@@ -752,6 +760,9 @@ export default function Home() {
           <CVTips />
         </div>
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

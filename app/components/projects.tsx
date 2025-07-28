@@ -6,6 +6,7 @@ import { FormField } from './ui/form-field';
 import { IconButton } from './ui/icon-button';
 import { EmptyState } from './ui/empty-state';
 import { Icons } from './ui/icons';
+import { useLanguage } from '../contexts/LanguageContext';
 import { useState } from 'react';
 
 /**
@@ -39,6 +40,7 @@ export function Projects({
   onRemoveProject,
   onReorderProjects
 }: ProjectsProps) {
+  const { t, cvType } = useLanguage();
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   
@@ -162,7 +164,7 @@ export function Projects({
                 <input
                   type="text"
                   className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
-                  placeholder="Ex: Portfolio Website"
+                  placeholder={t(`cvType.placeholder.project.name`)}
                   value={proj.name}
                   onChange={e => onProjectChange(idx, 'name', e.target.value)}
                 />
@@ -180,11 +182,11 @@ export function Projects({
             
             {/* Technologies and project link fields */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
-              <FormField label="Tecnologias">
+              <FormField label={t(`cvType.field.technologies`)}>
                 <input
                   type="text"
                   className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
-                  placeholder="Ex: React, Node.js, MongoDB"
+                  placeholder={t(`cvType.placeholder.technologies`)}
                   value={proj.tech}
                   onChange={e => onProjectChange(idx, 'tech', e.target.value)}
                 />
@@ -204,7 +206,7 @@ export function Projects({
             <FormField label="Descrição">
               <textarea
                 className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
-                placeholder="Breve descrição do projeto, objetivos, resultados..."
+                                  placeholder={t(`cvType.placeholder.project.description`)}
                 value={proj.description}
                 onChange={e => onProjectChange(idx, 'description', e.target.value)}
               />

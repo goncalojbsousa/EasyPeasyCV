@@ -3,6 +3,7 @@
 import { FormSection } from './ui/form-section';
 import { FormField } from './ui/form-field';
 import { Icons } from './ui/icons';
+import { useLanguage } from '../contexts/LanguageContext';
 
 /**
  * Props interface for the TechnicalSkills component
@@ -24,14 +25,15 @@ export function TechnicalSkills({
   skills,
   onSkillsChange
 }: TechnicalSkillsProps) {
+  const { t, cvType } = useLanguage();
   return (
     <form className="space-y-8 flex flex-col items-center">
-      <FormSection title="Habilidades Técnicas" icon={Icons.technicalSkills}>
-        <FormField label="Habilidades" helperText="separado por vírgula">
+      <FormSection title={t('section.technical.skills')} icon={Icons.technicalSkills}>
+        <FormField label={t(`cvType.field.technical.skills`)} helperText={t('field.technical.skills.helper')}>
           <input
             type="text"
                           className="w-full p-3 sm:p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
-            placeholder="Ex: JavaScript, React, Node.js, SQL"
+            placeholder={t(`cvType.placeholder.technical.skills`)}
             value={skills}
             onChange={e => onSkillsChange(e.target.value)}
           />

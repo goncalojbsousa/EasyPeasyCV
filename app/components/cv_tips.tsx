@@ -1,42 +1,45 @@
 'use client';
 
+import { useLanguage } from '../contexts/LanguageContext';
+
 export function CVTips() {
+  const { t } = useLanguage();
   const tips = [
     {
-      title: "Usa um formato simples (sem gráficos nem tabelas)",
-      description: "Os sistemas ATS têm dificuldade em ler elementos visuais. Utiliza apenas texto com uma estrutura clara."
+      title: t('tip.format.simple'),
+      description: t('tip.format.simple.desc')
     },
     {
-      title: "Utiliza palavras-chave exatas do anúncio",
-      description: "Copia os termos usados no anúncio da oferta (tecnologias, funções, competências). O ATS procura correspondências exatas."
+      title: t('tip.keywords'),
+      description: t('tip.keywords.desc')
     },
     {
-      title: "Evita cabeçalhos personalizados",
-      description: "Utiliza termos comuns como 'Experiência Profissional', 'Educação', 'Competências'."
+      title: t('tip.headers'),
+      description: t('tip.headers.desc')
     },
     {
-      title: "Guarda o currículo em formato .docx ou .pdf (simples)",
-      description: "Alguns ATS têm problemas com PDFs mal formatados ou versões antigas do Word."
+      title: t('tip.format.file'),
+      description: t('tip.format.file.desc')
     },
     {
-      title: "Não uses siglas sem escrever também o significado",
-      description: "Exemplo: escreve 'JavaScript (JS)' ou 'Base de Dados (BD)' para garantir que é reconhecido."
+      title: t('tip.acronyms'),
+      description: t('tip.acronyms.desc')
     },
     {
-      title: "Coloca as informações por ordem cronológica inversa",
-      description: "Começa pela experiência mais recente, pois é isso que o ATS e o recrutador querem ver."
+      title: t('tip.chronological'),
+      description: t('tip.chronological.desc')
     },
     {
-      title: "Inclui títulos de cargos comuns",
-      description: "Utiliza nomes genéricos como 'Desenvolvedor Backend', 'Analista de Sistemas', etc., mesmo que o nome oficial da função fosse diferente."
+      title: t('tip.job.titles'),
+      description: t('tip.job.titles.desc')
     },
     {
-      title: "Evita erros ortográficos",
-      description: "O ATS pode não reconhecer palavras mal escritas, o que pode levar à exclusão do currículo."
+      title: t('tip.spelling'),
+      description: t('tip.spelling.desc')
     },
     {
-      title: "Inclui uma secção de competências técnicas",
-      description: "Lista as tecnologias, linguagens e ferramentas que utilizaste (ex: Java, Git, SQL, Docker)."
+      title: t('tip.technical.skills'),
+      description: t('tip.technical.skills.desc')
     }
   ];
 
@@ -49,8 +52,8 @@ export function CVTips() {
           </svg>
         </div>
         <div>
-          <h2 className="text-lg sm:text-xl font-bold text-gray-900">Dicas para um Currículo que Passe em Sistemas ATS</h2>
-          <p className="text-xs sm:text-sm text-gray-600">Siga estas recomendações para aumentar as suas hipóteses de ser selecionado</p>
+          <h2 className="text-lg sm:text-xl font-bold text-gray-900">{t('tips.title')}</h2>
+          <p className="text-xs sm:text-sm text-gray-600">{t('tips.subtitle')}</p>
         </div>
       </div>
       <div className="space-y-3 sm:space-y-4">
@@ -71,10 +74,9 @@ export function CVTips() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
             </svg>
             <div>
-              <p className="text-xs sm:text-sm text-blue-800 font-medium">Dica Extra</p>
+              <p className="text-xs sm:text-sm text-blue-800 font-medium">{t('tips.extra.title')}</p>
               <p className="text-xs sm:text-sm text-blue-700 mt-1">
-                O currículo gerado por esta aplicação já segue estas boas práticas, 
-                mas certifique-se de personalizar o conteúdo de acordo com cada oferta específica.
+                {t('tips.extra.content')}
               </p>
             </div>
           </div>

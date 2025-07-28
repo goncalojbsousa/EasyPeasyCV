@@ -3,6 +3,7 @@
 import { FormSection } from './ui/form-section';
 import { FormField } from './ui/form-field';
 import { Icons } from './ui/icons';
+import { useLanguage } from '../contexts/LanguageContext';
 
 /**
  * Props interface for the ProfessionalSummary component
@@ -32,13 +33,14 @@ export function ProfessionalSummary({
   validationErrors = {},
   showValidationErrors = true
 }: ProfessionalSummaryProps) {
+  const { t, cvType } = useLanguage();
   return (
     <form className="space-y-8 flex flex-col items-center w-full">
-      <FormSection title="Resumo Profissional" icon={Icons.professionalSummary}>
-        <FormField label="Resumo Profissional" required>
+      <FormSection title={t('section.professional.summary')} icon={Icons.professionalSummary}>
+        <FormField label={t('field.professional.summary')} required>
           <textarea
             className={`w-full p-3 sm:p-4 border rounded-lg bg-white min-h-[120px] shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm ${showValidationErrors && validationErrors.resume ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
-            placeholder="Desenvolvedor Fullstack com experiência no desenvolvimento de aplicações web escaláveis, responsivas e centradas no utilizador. Trabalho com TypeScript, React, Next.js, Node.js, PostgreSQL e Prisma, com forte atenção à performance, usabilidade e qualidade do código..."
+            placeholder={t(`cvType.placeholder.professional.summary`)}
             value={resume}
             onChange={e => onResumeChange(e.target.value)}
             data-error={showValidationErrors && validationErrors.resume ? "true" : "false"}

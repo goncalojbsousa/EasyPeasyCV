@@ -6,6 +6,7 @@ import { FormField } from './ui/form-field';
 import { IconButton } from './ui/icon-button';
 import { EmptyState } from './ui/empty-state';
 import { Icons } from './ui/icons';
+import { useLanguage } from '../contexts/LanguageContext';
 import { useState, useEffect, useRef } from 'react';
 
 
@@ -28,7 +29,7 @@ interface ProfessionalExperienceProps {
 /**
  * Array of month abbreviations for date selection
  */
-const MONTHS = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 /**
  * ProfessionalExperience component manages the professional experience section of the CV form
@@ -45,7 +46,27 @@ export function ProfessionalExperience({
   onRemoveExperience,
   onReorderExperiences
 }: ProfessionalExperienceProps) {
+  const { t, cvType } = useLanguage();
   const [openDropdowns, setOpenDropdowns] = useState<{[key: string]: boolean}>({});
+  
+  // Function to get translated month
+  const getTranslatedMonth = (month: string) => {
+    const monthMap: { [key: string]: string } = {
+      'Jan': t('month.jan'),
+      'Feb': t('month.feb'),
+      'Mar': t('month.mar'),
+      'Apr': t('month.apr'),
+      'May': t('month.may'),
+      'Jun': t('month.jun'),
+      'Jul': t('month.jul'),
+      'Aug': t('month.aug'),
+      'Sep': t('month.sep'),
+      'Oct': t('month.oct'),
+      'Nov': t('month.nov'),
+      'Dec': t('month.dec'),
+    };
+    return monthMap[month] || month;
+  };
   const dropdownRefs = useRef<{[key: string]: HTMLDivElement | null}>({});
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
@@ -55,7 +76,7 @@ export function ProfessionalExperience({
     if (exp.role && exp.company) return `${exp.role} | ${exp.company}`;
     if (exp.role) return exp.role;
     if (exp.company) return exp.company;
-    return `Experiência ${idx + 1}`;
+    return `${t('experience.title')} ${idx + 1}`;
   };
 
   // Fecha dropdowns ao clicar fora
@@ -131,12 +152,12 @@ export function ProfessionalExperience({
   return (
     <form className="space-y-8 flex flex-col items-center">
       <FormSection 
-        title="Experiência Profissional" 
+        title={t('section.professional.experience')} 
         icon={Icons.professionalExperience}
       >
         {/* Display empty state when no experiences exist */}
         {experiences.length === 0 && (
-          <EmptyState message="Nenhuma experiência adicionada" />
+          <EmptyState message={t('empty.experience')} />
         )}
         
         {/* Render each experience entry */}
@@ -192,20 +213,20 @@ export function ProfessionalExperience({
             
             {/* Job title and company fields */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
-              <FormField label="Cargo">
+              <FormField label={t('field.role')}>
                 <input
                   type="text"
                   className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
-                  placeholder="Ex: Desenvolvedor Full Stack"
+                  placeholder={t(`cvType.placeholder.role`)}
                   value={exp.role}
                   onChange={e => onExperienceChange(idx, 'role', e.target.value)}
                 />
               </FormField>
-              <FormField label="Empresa">
+              <FormField label={t('field.company')}>
                 <input
                   type="text"
                   className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
-                  placeholder="Ex: Amazon"
+                  placeholder={t('placeholder.company')}
                   value={exp.company}
                   onChange={e => onExperienceChange(idx, 'company', e.target.value)}
                 />
@@ -214,7 +235,7 @@ export function ProfessionalExperience({
             
             {/* Date range fields */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-4">
-              <FormField label="Mês Início">
+              <FormField label={t('field.start.month')}>
                 <div ref={el => { dropdownRefs.current[`startMonth-${idx}`] = el; }} className="relative">
                   <button
                     type="button"
@@ -222,7 +243,7 @@ export function ProfessionalExperience({
                     onClick={() => toggleDropdown(`startMonth-${idx}`)}
                     tabIndex={0}
                   >
-                    <span>{exp.startMonth || 'Selecione'}</span>
+                    <span>{exp.startMonth ? getTranslatedMonth(exp.startMonth) : t('select.month')}</span>
                     <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`startMonth-${idx}`] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
                   </button>
                   {openDropdowns[`startMonth-${idx}`] && (
@@ -237,14 +258,14 @@ export function ProfessionalExperience({
                             setOpenDropdowns(prev => ({ ...prev, [`startMonth-${idx}`]: false }));
                           }}
                         >
-                          {month}
+                          {getTranslatedMonth(month)}
                         </button>
                       ))}
                     </div>
                   )}
                 </div>
               </FormField>
-              <FormField label="Ano Início">
+              <FormField label={t('field.start.year')}>
                 <input
                   type="text"
                   className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
@@ -256,7 +277,7 @@ export function ProfessionalExperience({
               {/* End date fields (hidden when current job is selected) */}
               {!exp.current && (
                 <>
-                  <FormField label="Mês Fim">
+                  <FormField label={t('field.end.month')}>
                     <div ref={el => { dropdownRefs.current[`endMonth-${idx}`] = el; }} className="relative">
                       <button
                         type="button"
@@ -264,7 +285,7 @@ export function ProfessionalExperience({
                         onClick={() => toggleDropdown(`endMonth-${idx}`)}
                         tabIndex={0}
                       >
-                        <span>{exp.endMonth || 'Selecione'}</span>
+                        <span>{exp.endMonth ? getTranslatedMonth(exp.endMonth) : t('select.month')}</span>
                         <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`endMonth-${idx}`] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
                       </button>
                       {openDropdowns[`endMonth-${idx}`] && (
@@ -279,14 +300,14 @@ export function ProfessionalExperience({
                                 setOpenDropdowns(prev => ({ ...prev, [`endMonth-${idx}`]: false }));
                               }}
                             >
-                              {month}
+                              {getTranslatedMonth(month)}
                             </button>
                           ))}
                         </div>
                       )}
                     </div>
                   </FormField>
-                  <FormField label="Ano Fim">
+                  <FormField label={t('field.end.year')}>
                     <input
                       type="text"
                       className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
@@ -308,16 +329,16 @@ export function ProfessionalExperience({
                 id={`current-${idx}`}
                 className="mr-2"
               />
-              <label htmlFor={`current-${idx}`} className="text-sm">Atual</label>
+              <label htmlFor={`current-${idx}`} className="text-sm">{t('field.current')}</label>
             </div>
             
             {/* Technologies used field */}
             <div className="mb-4">
-              <FormField label="Tecnologias Utilizadas">
+                              <FormField label={t(`cvType.field.technologies`)}>
                 <input
                   type="text"
                   className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
-                  placeholder="Ex: TypeScript, Next.js, Tailwind CSS"
+                  placeholder={t(`cvType.placeholder.technologies`)}
                   value={exp.tech}
                   onChange={e => onExperienceChange(idx, 'tech', e.target.value)}
                 />
@@ -326,10 +347,10 @@ export function ProfessionalExperience({
             
             {/* Activities and responsibilities field */}
             <div className="mb-4">
-              <FormField label="Atividades Desenvolvidas">
+              <FormField label={t('field.activities')}>
                 <textarea
                   className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
-                  placeholder="Descreva suas responsabilidades (um item por linha)"
+                  placeholder={t(`cvType.placeholder.activities`)}
                   value={exp.activities}
                   onChange={e => onExperienceChange(idx, 'activities', e.target.value)}
                 />
@@ -337,10 +358,10 @@ export function ProfessionalExperience({
             </div>
             
             {/* Achievements and results field */}
-            <FormField label="Conquistas" helperText="com métricas">
+            <FormField label={t('field.achievements')} helperText={t('field.achievements.helper')}>
               <textarea
                 className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
-                placeholder="Ex: Reestruturei a arquitetura da aplicação usando Next.js com SSR, o que melhorou o SEO e aumentou a retenção de usuários em 25%."
+                                  placeholder={t(`cvType.placeholder.achievements`)}
                 value={exp.results}
                 onChange={e => onExperienceChange(idx, 'results', e.target.value)}
               />
@@ -353,7 +374,7 @@ export function ProfessionalExperience({
         <div className="flex justify-start mt-4">
           <IconButton onClick={onAddExperience}>
             {Icons.add}
-            Adicionar Experiência
+            {t('add.experience')}
           </IconButton>
         </div>
       </FormSection>

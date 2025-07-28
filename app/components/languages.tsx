@@ -6,6 +6,7 @@ import { FormField } from './ui/form-field';
 import { IconButton } from './ui/icon-button';
 import { EmptyState } from './ui/empty-state';
 import { Icons } from './ui/icons';
+import { useLanguage } from '../contexts/LanguageContext';
 import { useState, useEffect, useRef } from 'react';
 
 /**
@@ -47,6 +48,7 @@ export function Languages({
   onAddLanguage,
   onRemoveLanguage
 }: LanguagesProps) {
+  const { t } = useLanguage();
   const [openDropdowns, setOpenDropdowns] = useState<{[key: string]: boolean}>({});
   const dropdownRefs = useRef<{[key: string]: HTMLDivElement | null}>({});
 
@@ -77,12 +79,12 @@ export function Languages({
   return (
     <form className="space-y-8 flex flex-col items-center">
       <FormSection 
-        title="Idiomas" 
+        title={t('section.languages')} 
         icon={Icons.languages}
       >
         {/* Display empty state when no languages exist */}
         {languages.length === 0 && (
-          <EmptyState message="Nenhum idioma adicionado" />
+          <EmptyState message={t('empty.language')} />
         )}
         
         {/* Render each language entry */}
