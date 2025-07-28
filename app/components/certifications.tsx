@@ -20,6 +20,8 @@ interface CertificationsProps {
   onAddCertification: () => void;
   /** Handler for removing certification entry */
   onRemoveCertification: (idx: number) => void;
+  /** Handler for reordering certification entries */
+  onReorderCertifications?: (fromIndex: number, toIndex: number) => void;
 }
 
 /**
@@ -317,19 +319,71 @@ export function Certifications({
   certifications,
   onCertificationChange,
   onAddCertification,
-  onRemoveCertification
+  onRemoveCertification,
+  onReorderCertifications
 }: CertificationsProps) {
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  
+  // Helper function to generate smart titles for certification cards
+  const getCertificationTitle = (cert: Certification, idx: number) => {
+    if (cert.name && cert.issuer) return `${cert.name} | ${cert.issuer}`;
+    if (cert.name) return cert.name;
+    if (cert.issuer) return cert.issuer;
+    return `Certificação ${idx + 1}`;
+  };
+
+  // Drag and drop handlers
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', index.toString());
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    
+    // Enhanced auto-scroll with variable speed based on distance from edge
+    const scrollThreshold = 150; // pixels from top/bottom
+    const maxScrollSpeed = 15;
+    
+    if (e.clientY < scrollThreshold) {
+      // Scroll up with variable speed
+      const distanceFromEdge = scrollThreshold - e.clientY;
+      const scrollSpeed = Math.min(maxScrollSpeed, Math.max(5, distanceFromEdge / 10));
+      window.scrollBy(0, -scrollSpeed);
+    } else if (e.clientY > window.innerHeight - scrollThreshold) {
+      // Scroll down with variable speed
+      const distanceFromEdge = e.clientY - (window.innerHeight - scrollThreshold);
+      const scrollSpeed = Math.min(maxScrollSpeed, Math.max(5, distanceFromEdge / 10));
+      window.scrollBy(0, scrollSpeed);
+    }
+  };
+
+  const handleDragEnter = (index: number) => {
+    setDragOverIndex(index);
+  };
+
+  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault();
+    if (draggedIndex !== null && draggedIndex !== dropIndex && onReorderCertifications) {
+      onReorderCertifications(draggedIndex, dropIndex);
+    }
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  };
+
   return (
     <form className="space-y-8 flex flex-col items-center">
       <FormSection 
         title="Certificações/Cursos" 
         icon={Icons.certifications}
-        actionButton={
-          <IconButton onClick={onAddCertification}>
-            {Icons.add}
-            Adicionar Certificação/Curso
-          </IconButton>
-        }
       >
         {/* Display empty state when no certifications exist */}
         {certifications.length === 0 && (
@@ -338,23 +392,61 @@ export function Certifications({
         
         {/* Render each certification entry */}
         {certifications.map((cert, idx) => (
-          <div key={idx} className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 relative mb-6">
-            {/* Remove button positioned at top right */}
-            <IconButton 
-              onClick={() => onRemoveCertification(idx)} 
-              variant="danger" 
-              size="sm"
-              className="absolute top-2 right-4"
-            >
-              {Icons.remove}
-            </IconButton>
+          <div 
+            key={idx} 
+            className={`bg-white border border-gray-200 rounded-lg shadow-sm relative mb-6 transition-all ${
+              draggedIndex === idx ? 'opacity-50 scale-95' : ''
+            }`}
+            onDragOver={certifications.length > 1 ? handleDragOver : undefined}
+            onDragEnter={certifications.length > 1 ? () => handleDragEnter(idx) : undefined}
+            onDrop={certifications.length > 1 ? (e) => handleDrop(e, idx) : undefined}
+          >
+            {/* Drop indicator - shows between items */}
+            {dragOverIndex === idx && draggedIndex !== idx && (
+              <div className="absolute left-0 -top-3 w-full h-0.5 bg-blue-500 rounded-full z-10"></div>
+            )}
+            {/* Card header with title */}
+            <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 rounded-t-lg">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  {certifications.length > 1 && (
+                    <div 
+                      className="text-gray-400 cursor-move hover:text-gray-600 transition-colors"
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, idx)}
+                      onDragOver={handleDragOver}
+                      onDragEnter={() => handleDragEnter(idx)}
+                      onDrop={(e) => handleDrop(e, idx)}
+                      onDragEnd={handleDragEnd}
+                    >
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                      </svg>
+                    </div>
+                  )}
+                  <h3 className="text-sm font-semibold text-gray-700">
+                    {getCertificationTitle(cert, idx)}
+                  </h3>
+                </div>
+                <IconButton 
+                  onClick={() => onRemoveCertification(idx)} 
+                  variant="danger" 
+                  size="sm"
+                >
+                  {Icons.remove}
+                </IconButton>
+              </div>
+            </div>
+            
+            {/* Card content */}
+            <div className="p-4">
             
             {/* Certification name and issuer fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
               <FormField label="Certificação">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
                   placeholder="Ex: Certificação AWS Cloud Practitioner"
                   value={cert.name}
                   onChange={e => onCertificationChange(idx, 'name', e.target.value)}
@@ -363,7 +455,7 @@ export function Certifications({
               <FormField label="Emissor/Instituição">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
                   placeholder="Ex: Udemy, Alura, AWS"
                   value={cert.issuer}
                   onChange={e => onCertificationChange(idx, 'issuer', e.target.value)}
@@ -383,7 +475,7 @@ export function Certifications({
               <FormField label="Carga Horária">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
                   placeholder="Ex: 40 horas"
                   value={cert.hours}
                   onChange={e => onCertificationChange(idx, 'hours', e.target.value)}
@@ -392,7 +484,7 @@ export function Certifications({
               <FormField label="Link de Validação">
                 <input
                   type="url"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
                   placeholder="Ex: https://certificado.instituicao.com/123456"
                   value={cert.validationLink}
                   onChange={e => onCertificationChange(idx, 'validationLink', e.target.value)}
@@ -403,14 +495,23 @@ export function Certifications({
             {/* Description field */}
             <FormField label="Descrição">
               <textarea
-                className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
+                className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
                 placeholder="Ex: Curso focado em desenvolvimento de APIs REST com Node.js..."
                 value={cert.description}
                 onChange={e => onCertificationChange(idx, 'description', e.target.value)}
               />
             </FormField>
+            </div>
           </div>
         ))}
+        
+        {/* Add certification button at bottom */}
+        <div className="flex justify-start mt-4">
+          <IconButton onClick={onAddCertification}>
+            {Icons.add}
+            Adicionar Certificação/Curso
+          </IconButton>
+        </div>
       </FormSection>
     </form>
   );

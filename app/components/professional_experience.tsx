@@ -8,6 +8,7 @@ import { EmptyState } from './ui/empty-state';
 import { Icons } from './ui/icons';
 import { useState, useEffect, useRef } from 'react';
 
+
 /**
  * Props interface for the ProfessionalExperience component
  */
@@ -20,6 +21,8 @@ interface ProfessionalExperienceProps {
   onAddExperience: () => void;
   /** Handler for removing experience entry */
   onRemoveExperience: (idx: number) => void;
+  /** Handler for reordering experiences */
+  onReorderExperiences?: (fromIndex: number, toIndex: number) => void;
 }
 
 /**
@@ -39,10 +42,21 @@ export function ProfessionalExperience({
   experiences,
   onExperienceChange,
   onAddExperience,
-  onRemoveExperience
+  onRemoveExperience,
+  onReorderExperiences
 }: ProfessionalExperienceProps) {
   const [openDropdowns, setOpenDropdowns] = useState<{[key: string]: boolean}>({});
   const dropdownRefs = useRef<{[key: string]: HTMLDivElement | null}>({});
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+
+  // Helper function to generate smart titles for experience cards
+  const getExperienceTitle = (exp: Experience, idx: number) => {
+    if (exp.role && exp.company) return `${exp.role} | ${exp.company}`;
+    if (exp.role) return exp.role;
+    if (exp.company) return exp.company;
+    return `Experiência ${idx + 1}`;
+  };
 
   // Fecha dropdowns ao clicar fora
   useEffect(() => {
@@ -68,17 +82,57 @@ export function ProfessionalExperience({
     setOpenDropdowns(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
+  // Drag and drop handlers
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', index.toString());
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    
+    // Enhanced auto-scroll with variable speed based on distance from edge
+    const scrollThreshold = 150; // pixels from top/bottom
+    const maxScrollSpeed = 15;
+    
+    if (e.clientY < scrollThreshold) {
+      // Scroll up with variable speed
+      const distanceFromEdge = scrollThreshold - e.clientY;
+      const scrollSpeed = Math.min(maxScrollSpeed, Math.max(5, distanceFromEdge / 10));
+      window.scrollBy(0, -scrollSpeed);
+    } else if (e.clientY > window.innerHeight - scrollThreshold) {
+      // Scroll down with variable speed
+      const distanceFromEdge = e.clientY - (window.innerHeight - scrollThreshold);
+      const scrollSpeed = Math.min(maxScrollSpeed, Math.max(5, distanceFromEdge / 10));
+      window.scrollBy(0, scrollSpeed);
+    }
+  };
+
+  const handleDragEnter = (index: number) => {
+    setDragOverIndex(index);
+  };
+
+  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault();
+    if (draggedIndex !== null && draggedIndex !== dropIndex && onReorderExperiences) {
+      onReorderExperiences(draggedIndex, dropIndex);
+    }
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  };
+
   return (
     <form className="space-y-8 flex flex-col items-center">
       <FormSection 
         title="Experiência Profissional" 
         icon={Icons.professionalExperience}
-        actionButton={
-          <IconButton onClick={onAddExperience}>
-            {Icons.add}
-            Adicionar Experiência
-          </IconButton>
-        }
       >
         {/* Display empty state when no experiences exist */}
         {experiences.length === 0 && (
@@ -86,24 +140,62 @@ export function ProfessionalExperience({
         )}
         
         {/* Render each experience entry */}
-        {experiences.map((exp, idx) => (
-          <div key={idx} className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 relative mb-6">
-            {/* Remove button positioned at top right */}
-            <IconButton 
-              onClick={() => onRemoveExperience(idx)} 
-              variant="danger" 
-              size="sm"
-              className="absolute top-2 right-4"
-            >
-              {Icons.remove}
-            </IconButton>
+                {experiences.map((exp, idx) => (
+          <div
+            key={idx}
+            className={`bg-white border border-gray-200 rounded-lg shadow-sm relative mb-6 transition-all ${
+              draggedIndex === idx ? 'opacity-50 scale-95' : ''
+            }`}
+            onDragOver={experiences.length > 1 ? handleDragOver : undefined}
+            onDragEnter={experiences.length > 1 ? () => handleDragEnter(idx) : undefined}
+            onDrop={experiences.length > 1 ? (e) => handleDrop(e, idx) : undefined}
+          >
+            {/* Drop indicator - shows between items */}
+            {dragOverIndex === idx && draggedIndex !== idx && (
+              <div className="absolute left-0 -top-3 w-full h-0.5 bg-blue-500 rounded-full z-10"></div>
+            )}
+            {/* Card header with title */}
+            <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 rounded-t-lg">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  {experiences.length > 1 && (
+                    <div 
+                      className="text-gray-400 cursor-move hover:text-gray-600 transition-colors"
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, idx)}
+                      onDragOver={handleDragOver}
+                      onDragEnter={() => handleDragEnter(idx)}
+                      onDrop={(e) => handleDrop(e, idx)}
+                      onDragEnd={handleDragEnd}
+                    >
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                      </svg>
+                    </div>
+                  )}
+                  <h3 className="text-sm font-semibold text-gray-700">
+                    {getExperienceTitle(exp, idx)}
+                  </h3>
+                </div>
+                <IconButton 
+                  onClick={() => onRemoveExperience(idx)} 
+                  variant="danger" 
+                  size="sm"
+                >
+                  {Icons.remove}
+                </IconButton>
+              </div>
+            </div>
+            
+            {/* Card content */}
+            <div className="p-4">
             
             {/* Job title and company fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
               <FormField label="Cargo">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
                   placeholder="Ex: Desenvolvedor Full Stack"
                   value={exp.role}
                   onChange={e => onExperienceChange(idx, 'role', e.target.value)}
@@ -112,7 +204,7 @@ export function ProfessionalExperience({
               <FormField label="Empresa">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
                   placeholder="Ex: Amazon"
                   value={exp.company}
                   onChange={e => onExperienceChange(idx, 'company', e.target.value)}
@@ -155,7 +247,7 @@ export function ProfessionalExperience({
               <FormField label="Ano Início">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
                   placeholder="Ano"
                   value={exp.startYear}
                   onChange={e => onExperienceChange(idx, 'startYear', e.target.value)}
@@ -168,7 +260,7 @@ export function ProfessionalExperience({
                     <div ref={el => { dropdownRefs.current[`endMonth-${idx}`] = el; }} className="relative">
                       <button
                         type="button"
-                        className="w-full flex items-center justify-between p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left"
+                        className="w-full flex items-center justify-between p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left text-sm"
                         onClick={() => toggleDropdown(`endMonth-${idx}`)}
                         tabIndex={0}
                       >
@@ -197,7 +289,7 @@ export function ProfessionalExperience({
                   <FormField label="Ano Fim">
                     <input
                       type="text"
-                      className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
+                      className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
                       placeholder="Ano"
                       value={exp.endYear}
                       onChange={e => onExperienceChange(idx, 'endYear', e.target.value)}
@@ -224,7 +316,7 @@ export function ProfessionalExperience({
               <FormField label="Tecnologias Utilizadas">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
                   placeholder="Ex: TypeScript, Next.js, Tailwind CSS"
                   value={exp.tech}
                   onChange={e => onExperienceChange(idx, 'tech', e.target.value)}
@@ -236,7 +328,7 @@ export function ProfessionalExperience({
             <div className="mb-4">
               <FormField label="Atividades Desenvolvidas">
                 <textarea
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
                   placeholder="Descreva suas responsabilidades (um item por linha)"
                   value={exp.activities}
                   onChange={e => onExperienceChange(idx, 'activities', e.target.value)}
@@ -247,14 +339,23 @@ export function ProfessionalExperience({
             {/* Achievements and results field */}
             <FormField label="Conquistas" helperText="com métricas">
               <textarea
-                className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
+                className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
                 placeholder="Ex: Reestruturei a arquitetura da aplicação usando Next.js com SSR, o que melhorou o SEO e aumentou a retenção de usuários em 25%."
                 value={exp.results}
                 onChange={e => onExperienceChange(idx, 'results', e.target.value)}
               />
             </FormField>
+            </div>
           </div>
         ))}
+        
+        {/* Add experience button at bottom */}
+        <div className="flex justify-start mt-4">
+          <IconButton onClick={onAddExperience}>
+            {Icons.add}
+            Adicionar Experiência
+          </IconButton>
+        </div>
       </FormSection>
     </form>
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { PersonalInformation } from './components/personal_information';
 import { ProfessionalSummary } from './components/professional_summary';
 import { ProfessionalExperience } from './components/professional_experience';
@@ -51,25 +51,7 @@ export default function Home() {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  /**
-   * Function to save data to localStorage
-   * Stores all form data with a timestamp for freshness checking
-   */
-  const saveToLocalStorage = () => {
-    const data = {
-      personalInfo,
-      links,
-      resume,
-      experiences,
-      education,
-      skills,
-      languages,
-      certifications,
-      projects,
-      timestamp: Date.now()
-    };
-    localStorage.setItem('cv-builder-data', JSON.stringify(data));
-  };
+
 
   /**
    * Function to load data from localStorage
@@ -81,32 +63,27 @@ export default function Home() {
       if (saved) {
         const data = JSON.parse(saved);
         
-        // Check if data is not too old (7 days)
-        const isDataFresh = data.timestamp && (Date.now() - data.timestamp) < 7 * 24 * 60 * 60 * 1000;
-        
-        if (isDataFresh) {
-          setPersonalInfo(data.personalInfo || {
-            name: '',
-            desiredRole: '',
-            city: '',
-            postalCode: '',
-            email: '',
-            countryCode: 'Portugal (+351)',
-            phone: '',
-          });
-          setLinks(data.links || [{ type: 'LinkedIn', value: '' }]);
-          setResume(data.resume || '');
-          setExperiences(data.experiences || []);
-          setEducation(data.education || []);
-          setSkills(data.skills || '');
-          setLanguages(data.languages || []);
-          setCertifications(data.certifications || []);
-          setProjects(data.projects || []);
-          setDataLoaded(true);
-        }
+        setPersonalInfo(data.personalInfo || {
+          name: '',
+          desiredRole: '',
+          city: '',
+          postalCode: '',
+          email: '',
+          countryCode: 'Portugal (+351)',
+          phone: '',
+        });
+        setLinks(data.links || [{ type: 'LinkedIn', value: '' }]);
+        setResume(data.resume || '');
+        setExperiences(data.experiences || []);
+        setEducation(data.education || []);
+        setSkills(data.skills || '');
+        setLanguages(data.languages || []);
+        setCertifications(data.certifications || []);
+        setProjects(data.projects || []);
+        setDataLoaded(true);
       }
-    } catch (error) {
-      console.log('Error loading saved data:', error);
+    } catch {
+      // Silently handle error loading saved data
     }
   };
 
@@ -140,8 +117,8 @@ export default function Home() {
     const preloadPDF = async () => {
       try {
         await import('./components/pdf_download_button');
-      } catch (error) {
-        console.log('PDF component preload failed:', error);
+      } catch {
+        // Silently handle PDF component preload failure
       }
     };
     preloadPDF();
@@ -164,13 +141,32 @@ export default function Home() {
     }
   }, [personalInfo.name, personalInfo.email, personalInfo.desiredRole, resume]);
 
+  /**
+   * Function to save data to localStorage
+   * Stores all form data
+   */
+  const saveToLocalStorage = useCallback(() => {
+    const data = {
+      personalInfo,
+      links,
+      resume,
+      experiences,
+      education,
+      skills,
+      languages,
+      certifications,
+      projects
+    };
+    localStorage.setItem('cv-builder-data', JSON.stringify(data));
+  }, [personalInfo, links, resume, experiences, education, skills, languages, certifications, projects]);
+
   // Auto-save data when any field changes
   useEffect(() => {
     // Only save if initial data has been loaded (avoid overwriting saved data)
     if (personalInfo.name !== '' || resume !== '' || experiences.length > 0 || education.length > 0) {
       saveToLocalStorage();
     }
-  }, [personalInfo, links, resume, experiences, education, skills, languages, certifications, projects]);
+  }, [saveToLocalStorage, personalInfo.name, resume, experiences.length, education.length]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -189,31 +185,7 @@ export default function Home() {
     };
   }, [isDropdownOpen]);
 
-  /**
-   * Handle social media link type changes
-   * @param idx - Index of the link to update
-   * @param newType - New link type
-   */
-  const handleLinkTypeChange = (idx: number, newType: string) => {
-    setLinks(links =>
-      links.map((link, i) =>
-        i === idx ? { ...link, type: newType, value: '' } : link
-      )
-    );
-  };
 
-  /**
-   * Handle social media link value changes
-   * @param idx - Index of the link to update
-   * @param newValue - New link value
-   */
-  const handleLinkValueChange = (idx: number, newValue: string) => {
-    setLinks(links =>
-      links.map((link, i) =>
-        i === idx ? { ...link, value: newValue } : link
-      )
-    );
-  };
 
   /**
    * Add a new social media link
@@ -254,6 +226,66 @@ export default function Home() {
    */
   const handleExperienceChange = (idx: number, field: string, value: string | boolean) => {
     setExperiences(experiences.map((exp, i) => i === idx ? { ...exp, [field]: value } : exp));
+  };
+
+  /**
+   * Reorder professional experiences
+   * @param fromIndex - Index of the experience to move
+   * @param toIndex - Index where to move the experience
+   */
+  const handleReorderExperiences = (fromIndex: number, toIndex: number) => {
+    const newExperiences = [...experiences];
+    const [movedExperience] = newExperiences.splice(fromIndex, 1);
+    newExperiences.splice(toIndex, 0, movedExperience);
+    setExperiences(newExperiences);
+  };
+
+  /**
+   * Reorder education entries
+   * @param fromIndex - Index of the education to move
+   * @param toIndex - Index where to move the education
+   */
+  const handleReorderEducation = (fromIndex: number, toIndex: number) => {
+    const newEducation = [...education];
+    const [movedEducation] = newEducation.splice(fromIndex, 1);
+    newEducation.splice(toIndex, 0, movedEducation);
+    setEducation(newEducation);
+  };
+
+  /**
+   * Reorder certification entries
+   * @param fromIndex - Index of the certification to move
+   * @param toIndex - Index where to move the certification
+   */
+  const handleReorderCertifications = (fromIndex: number, toIndex: number) => {
+    const newCertifications = [...certifications];
+    const [movedCertification] = newCertifications.splice(fromIndex, 1);
+    newCertifications.splice(toIndex, 0, movedCertification);
+    setCertifications(newCertifications);
+  };
+
+  /**
+   * Reorder project entries
+   * @param fromIndex - Index of the project to move
+   * @param toIndex - Index where to move the project
+   */
+  const handleReorderProjects = (fromIndex: number, toIndex: number) => {
+    const newProjects = [...projects];
+    const [movedProject] = newProjects.splice(fromIndex, 1);
+    newProjects.splice(toIndex, 0, movedProject);
+    setProjects(newProjects);
+  };
+
+  /**
+   * Reorder link entries
+   * @param fromIndex - Index of the link to move
+   * @param toIndex - Index where to move the link
+   */
+  const handleReorderLinks = (fromIndex: number, toIndex: number) => {
+    const newLinks = [...links];
+    const [movedLink] = newLinks.splice(fromIndex, 1);
+    newLinks.splice(toIndex, 0, movedLink);
+    setLinks(newLinks);
   };
 
   // Academic Education handlers
@@ -381,7 +413,7 @@ export default function Home() {
    * @param lang - Language for the PDF (pt or en)
    * @returns True if validation passes, false otherwise
    */
-  const handleGeneratePDF = (lang: string) => {
+  const handleGeneratePDF = () => {
     if (!validateForm()) {
       // Show validation errors
       setShowValidationErrors(true);
@@ -396,30 +428,7 @@ export default function Home() {
     return true; // Return true to allow PDF generation
   };
 
-  /**
-   * Clear all saved data and reset form
-   */
-  const clearSavedData = () => {
-    localStorage.removeItem('cv-builder-data');
-    // Reset all form data
-    setPersonalInfo({
-      name: '',
-      desiredRole: '',
-      city: '',
-      postalCode: '',
-      email: '',
-      countryCode: 'Portugal (+351)',
-      phone: '',
-    });
-    setLinks([{ type: 'LinkedIn', value: '' }]);
-    setResume('');
-    setExperiences([]);
-    setEducation([]);
-    setSkills('');
-    setLanguages([]);
-    setCertifications([]);
-    setProjects([]);
-  };
+
 
   /**
    * Fill form with example data for demonstration purposes
@@ -522,7 +531,7 @@ export default function Home() {
    */
   const PdfDownloadButtonWithValidation = ({ lang, children }: { lang: string; children: React.ReactNode }) => {
     const handleClick = (e: React.MouseEvent) => {
-      if (!handleGeneratePDF(lang)) {
+      if (!handleGeneratePDF()) {
         e.preventDefault();
         e.stopPropagation();
       } else {
@@ -556,7 +565,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+          <div className="min-h-screen bg-gray-100">
       {/* Header with title and PDF generation dropdown */}
       <header className="bg-white px-6 py-4 shadow fixed top-0 left-0 right-0 z-50">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
@@ -657,87 +666,74 @@ export default function Home() {
         )}
         
         {/* Personal Information section */}
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
-          <PersonalInformation
-            links={links}
-            personalInfo={personalInfo}
-            onLinkTypeChange={handleLinkTypeChange}
-            onLinkValueChange={handleLinkValueChange}
-            onAddLink={handleAddLink}
-            onRemoveLink={handleRemoveLink}
-            onPersonalInfoChange={handlePersonalInfoChange}
-            validationErrors={validationErrors}
-            showValidationErrors={showValidationErrors}
-          />
-        </div>
+        <PersonalInformation
+          links={links}
+          personalInfo={personalInfo}
+          onAddLink={handleAddLink}
+          onRemoveLink={handleRemoveLink}
+          onPersonalInfoChange={handlePersonalInfoChange}
+          onReorderLinks={handleReorderLinks}
+          validationErrors={validationErrors}
+          showValidationErrors={showValidationErrors}
+        />
         
         {/* Professional Summary section */}
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
-          <ProfessionalSummary
-            resume={resume}
-            onResumeChange={handleResumeChange}
-            validationErrors={validationErrors}
-            showValidationErrors={showValidationErrors}
-          />
-        </div>
+        <ProfessionalSummary
+          resume={resume}
+          onResumeChange={handleResumeChange}
+          validationErrors={validationErrors}
+          showValidationErrors={showValidationErrors}
+        />
         
         {/* Professional Experience section */}
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
-          <ProfessionalExperience
-            experiences={experiences}
-            onExperienceChange={handleExperienceChange}
-            onAddExperience={handleAddExperience}
-            onRemoveExperience={handleRemoveExperience}
-          />
-        </div>
+        <ProfessionalExperience
+          experiences={experiences}
+          onExperienceChange={handleExperienceChange}
+          onAddExperience={handleAddExperience}
+          onRemoveExperience={handleRemoveExperience}
+          onReorderExperiences={handleReorderExperiences}
+        />
         
         {/* Academic Education section */}
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
-          <AcademicEducation
-            education={education}
-            onEducationChange={handleEducationChange}
-            onAddEducation={handleAddEducation}
-            onRemoveEducation={handleRemoveEducation}
-          />
-        </div>
+        <AcademicEducation
+          education={education}
+          onEducationChange={handleEducationChange}
+          onAddEducation={handleAddEducation}
+          onRemoveEducation={handleRemoveEducation}
+          onReorderEducation={handleReorderEducation}
+        />
         
         {/* Technical Skills section */}
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
-          <TechnicalSkills
-            skills={skills}
-            onSkillsChange={setSkills}
-          />
-        </div>
+        <TechnicalSkills
+          skills={skills}
+          onSkillsChange={setSkills}
+        />
         
         {/* Languages section */}
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
-          <Languages
-            languages={languages}
-            onLanguageChange={handleLanguageChange}
-            onAddLanguage={handleAddLanguage}
-            onRemoveLanguage={handleRemoveLanguage}
-          />
-        </div>
+        <Languages
+          languages={languages}
+          onLanguageChange={handleLanguageChange}
+          onAddLanguage={handleAddLanguage}
+          onRemoveLanguage={handleRemoveLanguage}
+        />
         
         {/* Certifications section */}
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
-          <Certifications
-            certifications={certifications}
-            onCertificationChange={handleCertificationChange}
-            onAddCertification={handleAddCertification}
-            onRemoveCertification={handleRemoveCertification}
-          />
-        </div>
+        <Certifications
+          certifications={certifications}
+          onCertificationChange={handleCertificationChange}
+          onAddCertification={handleAddCertification}
+          onRemoveCertification={handleRemoveCertification}
+          onReorderCertifications={handleReorderCertifications}
+        />
         
         {/* Projects section */}
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
-          <Projects
-            projects={projects}
-            onProjectChange={handleProjectChange}
-            onAddProject={handleAddProject}
-            onRemoveProject={handleRemoveProject}
-          />
-        </div>
+        <Projects
+          projects={projects}
+          onProjectChange={handleProjectChange}
+          onAddProject={handleAddProject}
+          onRemoveProject={handleRemoveProject}
+          onReorderProjects={handleReorderProjects}
+        />
         
         {/* Example data button */}
         <div className="max-w-6xl mx-auto mt-8 mb-8 flex justify-center">

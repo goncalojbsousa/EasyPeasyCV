@@ -79,12 +79,6 @@ export function Languages({
       <FormSection 
         title="Idiomas" 
         icon={Icons.languages}
-        actionButton={
-          <IconButton onClick={onAddLanguage}>
-            {Icons.add}
-            Adicionar Idioma
-          </IconButton>
-        }
       >
         {/* Display empty state when no languages exist */}
         {languages.length === 0 && (
@@ -109,7 +103,7 @@ export function Languages({
               <FormField label="Idioma">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
                   placeholder="Ex: Inglês"
                   value={lang.name}
                   onChange={e => onLanguageChange(idx, 'name', e.target.value)}
@@ -148,6 +142,14 @@ export function Languages({
             </div>
           </div>
         ))}
+        
+        {/* Add language button at bottom */}
+        <div className="flex justify-start mt-4">
+          <IconButton onClick={onAddLanguage}>
+            {Icons.add}
+            Adicionar Idioma
+          </IconButton>
+        </div>
       </FormSection>
     </form>
   );

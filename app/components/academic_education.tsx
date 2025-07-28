@@ -20,6 +20,8 @@ interface AcademicEducationProps {
   onAddEducation: () => void;
   /** Handler for removing education entry */
   onRemoveEducation: (idx: number) => void;
+  /** Handler for reordering education entries */
+  onReorderEducation?: (fromIndex: number, toIndex: number) => void;
 }
 
 /**
@@ -60,10 +62,21 @@ export function AcademicEducation({
   education,
   onEducationChange,
   onAddEducation,
-  onRemoveEducation
+  onRemoveEducation,
+  onReorderEducation
 }: AcademicEducationProps) {
   const [openDropdowns, setOpenDropdowns] = useState<{[key: string]: boolean}>({});
   const dropdownRefs = useRef<{[key: string]: HTMLDivElement | null}>({});
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+
+  // Helper function to generate smart titles for education cards
+  const getEducationTitle = (ed: Education, idx: number) => {
+    if (ed.course && ed.type) return `${ed.course} | ${ed.type}`;
+    if (ed.course) return ed.course;
+    if (ed.type) return ed.type;
+    return `Formação ${idx + 1}`;
+  };
 
   // Fecha dropdowns ao clicar fora
   useEffect(() => {
@@ -89,17 +102,57 @@ export function AcademicEducation({
     setOpenDropdowns(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
+  // Drag and drop handlers
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', index.toString());
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    
+    // Enhanced auto-scroll with variable speed based on distance from edge
+    const scrollThreshold = 150; // pixels from top/bottom
+    const maxScrollSpeed = 15;
+    
+    if (e.clientY < scrollThreshold) {
+      // Scroll up with variable speed
+      const distanceFromEdge = scrollThreshold - e.clientY;
+      const scrollSpeed = Math.min(maxScrollSpeed, Math.max(5, distanceFromEdge / 10));
+      window.scrollBy(0, -scrollSpeed);
+    } else if (e.clientY > window.innerHeight - scrollThreshold) {
+      // Scroll down with variable speed
+      const distanceFromEdge = e.clientY - (window.innerHeight - scrollThreshold);
+      const scrollSpeed = Math.min(maxScrollSpeed, Math.max(5, distanceFromEdge / 10));
+      window.scrollBy(0, scrollSpeed);
+    }
+  };
+
+  const handleDragEnter = (index: number) => {
+    setDragOverIndex(index);
+  };
+
+  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault();
+    if (draggedIndex !== null && draggedIndex !== dropIndex && onReorderEducation) {
+      onReorderEducation(draggedIndex, dropIndex);
+    }
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  };
+
   return (
     <form className="space-y-8 flex flex-col items-center">
       <FormSection 
         title="Formação Académica" 
         icon={Icons.academicEducation}
-        actionButton={
-          <IconButton onClick={onAddEducation}>
-            {Icons.add}
-            Adicionar Formação
-          </IconButton>
-        }
       >
         {/* Display empty state when no education entries exist */}
         {education.length === 0 && (
@@ -108,16 +161,54 @@ export function AcademicEducation({
         
         {/* Render each education entry */}
         {education.map((ed, idx) => (
-          <div key={idx} className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 relative mb-6">
-            {/* Remove button positioned at top right */}
-            <IconButton 
-              onClick={() => onRemoveEducation(idx)} 
-              variant="danger" 
-              size="sm"
-              className="absolute top-2 right-4"
-            >
-              {Icons.remove}
-            </IconButton>
+          <div 
+            key={idx} 
+            className={`bg-white border border-gray-200 rounded-lg shadow-sm relative mb-6 transition-all ${
+              draggedIndex === idx ? 'opacity-50 scale-95' : ''
+            }`}
+            onDragOver={education.length > 1 ? handleDragOver : undefined}
+            onDragEnter={education.length > 1 ? () => handleDragEnter(idx) : undefined}
+            onDrop={education.length > 1 ? (e) => handleDrop(e, idx) : undefined}
+          >
+            {/* Drop indicator - shows between items */}
+            {dragOverIndex === idx && draggedIndex !== idx && (
+              <div className="absolute left-0 -top-3 w-full h-0.5 bg-blue-500 rounded-full z-10"></div>
+            )}
+            {/* Card header with title */}
+            <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 rounded-t-lg">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  {education.length > 1 && (
+                    <div 
+                      className="text-gray-400 cursor-move hover:text-gray-600 transition-colors"
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, idx)}
+                      onDragOver={handleDragOver}
+                      onDragEnter={() => handleDragEnter(idx)}
+                      onDrop={(e) => handleDrop(e, idx)}
+                      onDragEnd={handleDragEnd}
+                    >
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                      </svg>
+                    </div>
+                  )}
+                  <h3 className="text-sm font-semibold text-gray-700">
+                    {getEducationTitle(ed, idx)}
+                  </h3>
+                </div>
+                <IconButton 
+                  onClick={() => onRemoveEducation(idx)} 
+                  variant="danger" 
+                  size="sm"
+                >
+                  {Icons.remove}
+                </IconButton>
+              </div>
+            </div>
+            
+            {/* Card content */}
+            <div className="p-4">
             
             {/* Education type and status fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
@@ -188,7 +279,7 @@ export function AcademicEducation({
               <FormField label="Curso">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
                   placeholder="Ex: Licenciatura em Engenharia Informática"
                   value={ed.course}
                   onChange={e => onEducationChange(idx, 'course', e.target.value)}
@@ -197,7 +288,7 @@ export function AcademicEducation({
               <FormField label="Instituição">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
                   placeholder="Ex: Universidade do Porto"
                   value={ed.institution}
                   onChange={e => onEducationChange(idx, 'institution', e.target.value)}
@@ -211,7 +302,7 @@ export function AcademicEducation({
                 <div ref={el => { dropdownRefs.current[`startMonth-${idx}`] = el; }} className="relative">
                   <button
                     type="button"
-                    className="w-full flex items-center justify-between p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left"
+                    className="w-full flex items-center justify-between p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left text-sm"
                     onClick={() => toggleDropdown(`startMonth-${idx}`)}
                     tabIndex={0}
                   >
@@ -240,7 +331,7 @@ export function AcademicEducation({
               <FormField label="Ano Início">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
+                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
                   placeholder="Ano"
                   value={ed.startYear}
                   onChange={e => onEducationChange(idx, 'startYear', e.target.value)}
@@ -254,7 +345,7 @@ export function AcademicEducation({
                     <div ref={el => { dropdownRefs.current[`endMonth-${idx}`] = el; }} className="relative">
                       <button
                         type="button"
-                        className="w-full flex items-center justify-between p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left"
+                        className="w-full flex items-center justify-between p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left text-sm"
                         onClick={() => toggleDropdown(`endMonth-${idx}`)}
                         tabIndex={0}
                       >
@@ -283,7 +374,7 @@ export function AcademicEducation({
                   <FormField label="Ano Fim">
                     <input
                       type="text"
-                      className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
+                      className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
                       placeholder="Ano"
                       value={ed.endYear}
                       onChange={e => onEducationChange(idx, 'endYear', e.target.value)}
@@ -296,14 +387,23 @@ export function AcademicEducation({
             {/* Description field */}
             <FormField label="Descrição">
               <textarea
-                className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all"
+                className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
                 placeholder="Ex: Tese sobre inteligência artificial, disciplinas relevantes, projetos académicos..."
                 value={ed.description}
                 onChange={e => onEducationChange(idx, 'description', e.target.value)}
               />
             </FormField>
+            </div>
           </div>
         ))}
+        
+        {/* Add education button at bottom */}
+        <div className="flex justify-start mt-4">
+          <IconButton onClick={onAddEducation}>
+            {Icons.add}
+            Adicionar Formação
+          </IconButton>
+        </div>
       </FormSection>
     </form>
   );
