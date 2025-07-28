@@ -28,9 +28,9 @@ export function FormSection({ title, icon, children, actionButton }: FormSection
   return (
     <div className="w-full bg-white border border-gray-200 rounded-lg shadow-sm">
       {/* Section header with gray background */}
-      <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 rounded-t-lg">
-        <div className="flex justify-between items-center">
-          <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-800">
+      <div className="bg-gray-50 px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 rounded-t-lg">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+          <h2 className="text-lg sm:text-xl font-semibold flex items-center gap-2 text-gray-800">
             <span className="text-blue-600">
               {icon}
             </span>
@@ -40,7 +40,7 @@ export function FormSection({ title, icon, children, actionButton }: FormSection
         </div>
       </div>
       {/* Section content */}
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
         {children}
       </div>
     </div>

@@ -157,7 +157,7 @@ export function Projects({
             <div className="p-4">
             
             {/* Project name and year fields */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
               <FormField label="Nome do Projeto">
                 <input
                   type="text"
@@ -179,7 +179,7 @@ export function Projects({
             </div>
             
             {/* Technologies and project link fields */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
               <FormField label="Tecnologias">
                 <input
                   type="text"

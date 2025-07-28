@@ -219,12 +219,12 @@ export function PersonalInformation({
     <form className="space-y-8">
       <FormSection title="Informações Pessoais" icon={Icons.personalInfo}>
         {/* Name and desired role fields */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
           <FormField label="Nome completo" required>
             <input 
               type="text" 
               placeholder="Ex: Gonçalo Sousa" 
-              className={`w-full p-2 border rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm ${showValidationErrors && validationErrors.name ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
+              className={`w-full p-3 sm:p-2 border rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm ${showValidationErrors && validationErrors.name ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
               value={personalInfo.name} 
               onChange={e => onPersonalInfoChange('name', e.target.value)}
               data-error={showValidationErrors && validationErrors.name ? "true" : "false"}
@@ -243,12 +243,12 @@ export function PersonalInformation({
         </div>
         
         {/* Postal code and city fields */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
           <FormField label="Código Postal">
             <input 
               type="text" 
               placeholder="Ex: 1234-567" 
-              className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm" 
+              className="w-full p-3 sm:p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm" 
               value={personalInfo.postalCode} 
               onChange={e => onPersonalInfoChange('postalCode', e.target.value)} 
             />
@@ -257,7 +257,7 @@ export function PersonalInformation({
             <input 
               type="text" 
               placeholder="Ex: Viana do Castelo" 
-              className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm" 
+              className="w-full p-3 sm:p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm" 
               value={personalInfo.city} 
               onChange={e => onPersonalInfoChange('city', e.target.value)} 
             />
@@ -265,12 +265,12 @@ export function PersonalInformation({
         </div>
         
         {/* Email, country code, and phone fields */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-6">
           <FormField label="Email" required>
             <input 
               type="email" 
               placeholder="Ex: email@exemplo.com" 
-              className={`w-full p-2 border rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm ${showValidationErrors && validationErrors.email ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
+              className={`w-full p-3 sm:p-2 border rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm ${showValidationErrors && validationErrors.email ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
               value={personalInfo.email} 
               onChange={e => onPersonalInfoChange('email', e.target.value)}
               data-error={showValidationErrors && validationErrors.email ? "true" : "false"}
@@ -381,7 +381,7 @@ export function PersonalInformation({
           )}
           
           {/* Fixed input section for adding new links */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-end">
             {/* Link type selection */}
             <div className="relative" ref={(el) => { dropdownRefs.current[0] = el; }}>
               <label className="block text-sm font-medium mb-1">Tipo de Link</label>
@@ -414,12 +414,12 @@ export function PersonalInformation({
             </div>
             
             {/* Link URL input with prefix */}
-            <div className="flex gap-2 items-end">
-              <div className="flex-1">
+            <div className="flex flex-col sm:flex-row gap-2 items-end">
+              <div className="flex-1 w-full">
                 <label className="block text-sm font-medium mb-1">URL</label>
                 <div className="flex">
                   {getLinkPrefix(newLinkType) && (
-                    <span className="inline-flex items-center px-2 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500 text-sm">{getLinkPrefix(newLinkType)}</span>
+                    <span className="inline-flex items-center px-2 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500 text-xs sm:text-sm">{getLinkPrefix(newLinkType)}</span>
                   )}
                   <input
                     type="text"
@@ -437,9 +437,9 @@ export function PersonalInformation({
                 type="button"
                 onClick={handleAddLink}
                 disabled={!newLinkValue.trim()}
-                className="flex items-center justify-center w-10 h-10 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg transition-colors shadow-sm"
+                className="flex items-center justify-center w-10 h-10 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg transition-colors shadow-sm flex-shrink-0"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
               </button>

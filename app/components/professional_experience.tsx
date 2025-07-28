@@ -191,7 +191,7 @@ export function ProfessionalExperience({
             <div className="p-4">
             
             {/* Job title and company fields */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
               <FormField label="Cargo">
                 <input
                   type="text"
@@ -213,7 +213,7 @@ export function ProfessionalExperience({
             </div>
             
             {/* Date range fields */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-4">
               <FormField label="Mês Início">
                 <div ref={el => { dropdownRefs.current[`startMonth-${idx}`] = el; }} className="relative">
                   <button

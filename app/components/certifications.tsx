@@ -442,7 +442,7 @@ export function Certifications({
             <div className="p-4">
             
             {/* Certification name and issuer fields */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
               <FormField label="Certificação">
                 <input
                   type="text"
@@ -464,7 +464,7 @@ export function Certifications({
             </div>
             
             {/* Completion date, hours, and validation link fields */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-4">
               <FormField label="Data de Conclusão">
                 <DatePicker
                   value={cert.completionDate}

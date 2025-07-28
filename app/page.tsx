@@ -567,37 +567,38 @@ export default function Home() {
   return (
           <div className="min-h-screen bg-gray-100">
       {/* Header with title and PDF generation dropdown */}
-      <header className="bg-white px-6 py-4 shadow fixed top-0 left-0 right-0 z-50">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
+      <header className="bg-white px-4 sm:px-6 py-3 sm:py-4 shadow fixed top-0 left-0 right-0 z-50">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
           <div>
-            <h1 className="text-2xl font-bold text-blue-600">CV Builder</h1>
-            <p className="text-sm">Crie um currículo profissional em minutos</p>
+            <h1 className="text-xl sm:text-2xl font-bold text-blue-600">CV Builder</h1>
+            <p className="text-xs sm:text-sm">Crie um currículo profissional em minutos</p>
           </div>
-          <div className="flex flex-col items-end">
-            <div className="relative" ref={dropdownRef}>
+          <div className="flex flex-col items-end w-full sm:w-auto">
+            <div className="relative w-full sm:w-auto" ref={dropdownRef}>
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 flex items-center gap-2 shadow-lg"
+                className="bg-blue-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center gap-2 shadow-lg w-full sm:w-auto text-sm sm:text-base"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                 </svg>
-                Gerar Currículo
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className={`w-4 h-4 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`}>
+                <span className="hidden sm:inline">Gerar Currículo</span>
+                <span className="sm:hidden">Gerar CV</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className={`w-3 h-3 sm:w-4 sm:h-4 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                 </svg>
               </button>
 
               {/* Language selection dropdown */}
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
+                <div className="absolute right-0 mt-2 w-full sm:w-56 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
                   <div className="px-4 py-2 text-sm text-gray-500 border-b border-gray-100">
                     Escolher idioma:
                   </div>
                   <div className="py-1">
                     <PdfDownloadButtonWithValidation lang="pt">
                       <div className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 transition-colors duration-150 cursor-pointer">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 32 32">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="sm:w-6 sm:h-6">
                           <path d="M5,4H13V28H5c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" fill="#2b6519"></path>
                           <path d="M16,4h15V28h-15c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" transform="rotate(180 21.5 16)" fill="#ea3323"></path>
                           <path d="M27,4H5c-2.209,0-4,1.791-4,4V24c0,2.209,1.791,4,4,4H27c2.209,0,4-1.791,4-4V8c0-2.209-1.791-4-4-4Zm3,20c0,1.654-1.346,3-3,3H5c-1.654,0-3-1.346-3-3V8c0-1.654,1.346-3,3-3H27c1.654,0,3,1.346,3,3V24Z" opacity=".15"></path>
@@ -605,12 +606,12 @@ export default function Home() {
                           <circle cx="12" cy="16" r="5" fill="#ff5"></circle>
                           <path d="M14.562,13.529l-5.125-.006v3.431h0c.004,.672,.271,1.307,.753,1.787,.491,.489,1.132,.759,1.805,.759,.684,0,1.328-.267,1.813-.75,.485-.484,.753-1.126,.753-1.808v-3.413Z" fill="#ea3323"></path>
                         </svg>
-                        <span className="font-medium">Português</span>
+                        <span className="font-medium text-sm sm:text-base">Português</span>
                       </div>
                     </PdfDownloadButtonWithValidation>
                     <PdfDownloadButtonWithValidation lang="en">
                       <div className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 transition-colors duration-150 cursor-pointer">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 32 32">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="sm:w-6 sm:h-6">
                           <rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="#071b65"></rect>
                           <path d="M5.101,4h-.101c-1.981,0-3.615,1.444-3.933,3.334L26.899,28h.101c1.981,0,3.615-1.444,3.933-3.334L5.101,4Z" fill="#fff"></path>
                           <path d="M22.25,19h-2.5l9.934,7.947c.387-.353,.704-.777,.929-1.257l-8.363-6.691Z" fill="#b92932"></path>
@@ -625,7 +626,7 @@ export default function Home() {
                           <path d="M27,4H5c-2.209,0-4,1.791-4,4V24c0,2.209,1.791,4,4,4H27c2.209,0,4-1.791,4-4V8c0-2.209-1.791-4-4-4Zm3,20c0,1.654-1.346,3-3,3H5c-1.654,0-3-1.346-3-3V8c0-1.654,1.346-3,3-3H27c1.654,0,3,1.346,3,3V24Z" opacity=".15"></path>
                           <path d="M27,5H5c-1.657,0-3,1.343-3,3v1c0-1.657,1.343-3,3-3H27c1.657,0,3,1.343,3,3v-1c0-1.657-1.343-3-3-3Z" fill="#fff" opacity=".2"></path>
                         </svg>
-                        <span className="font-medium">English</span>
+                        <span className="font-medium text-sm sm:text-base">English</span>
                       </div>
                     </PdfDownloadButtonWithValidation>
                   </div>
@@ -637,7 +638,7 @@ export default function Home() {
       </header>
       
       {/* Main content area */}
-      <div className="max-w-6xl mx-auto pt-28 pb-8 flex flex-col gap-8">
+      <div className="max-w-6xl mx-auto pt-36 sm:pt-28 pb-8 px-4 sm:px-6 flex flex-col gap-6 sm:gap-8">
         {/* Data loaded notification */}
         {dataLoaded && (
           <div className="p-3 bg-green-50 border border-green-200 rounded-lg shadow-sm">
@@ -739,7 +740,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto mt-8 mb-8 flex justify-center">
           <button
             onClick={fillWithExampleData}
-            className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-200 shadow-lg"
+            className="bg-green-600 text-white px-4 sm:px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-200 shadow-lg text-sm sm:text-base w-full sm:w-auto"
             type="button"
           >
             Preencher com dados de exemplo
@@ -747,7 +748,7 @@ export default function Home() {
         </div>
         
         {/* CV Tips section */}
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto w-full">
           <CVTips />
         </div>
       </div>
