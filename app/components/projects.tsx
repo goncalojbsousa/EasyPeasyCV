@@ -26,11 +26,13 @@ interface ProjectsProps {
 }
 
 /**
- * Projects component manages the projects section of the CV form
+ * Projects component
+ * Manages project portfolio entries with drag-and-drop reordering
  * @param projects - Array of project entries
  * @param onProjectChange - Function to handle project field updates
  * @param onAddProject - Function to add new project entry
  * @param onRemoveProject - Function to remove project entry
+ * @param onReorderProjects - Function to reorder project entries
  * @returns JSX element representing the projects form section
  */
 export function Projects({
@@ -195,7 +197,7 @@ export function Projects({
                 <input
                   type="url"
                   className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
-                  placeholder="Ex: https://github.com/utilizador/projeto"
+                  placeholder="Ex: https://github.com/user/project"
                   value={proj.link}
                   onChange={e => onProjectChange(idx, 'link', e.target.value)}
                 />

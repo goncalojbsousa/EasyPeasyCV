@@ -2,13 +2,13 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-// Tipos para as línguas disponíveis
+// Types for available languages
 export type Language = 'pt' | 'en';
 
-// Tipos de currículo disponíveis
+// Available CV types
 export type CVType = 'development' | 'marketing' | 'sales' | 'hr' | 'finance' | 'design' | 'health' | 'education' | 'admin' | 'other';
 
-// Interface para o contexto
+// Context interface
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
@@ -17,50 +17,67 @@ interface LanguageContextType {
   t: (key: string) => string;
 }
 
-// Criação do contexto
+// Context creation
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-// Props para o provider
+// Provider props
 interface LanguageProviderProps {
   children: ReactNode;
 }
 
-// Provider do contexto
+// Context provider
 export function LanguageProvider({ children }: LanguageProviderProps) {
   const [language, setLanguageState] = useState<Language>('pt');
   const [cvType, setCVTypeState] = useState<CVType>('development');
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  // Carregar língua e tipo de CV do localStorage na inicialização
+  // Load language and CV type from localStorage on initialization
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('cv-builder-language') as Language;
-    if (savedLanguage && (savedLanguage === 'pt' || savedLanguage === 'en')) {
-      setLanguageState(savedLanguage);
-    }
-    
-    const savedCVType = localStorage.getItem('cv-builder-type') as CVType;
-    if (savedCVType && ['development', 'marketing', 'sales', 'hr', 'finance', 'design', 'health', 'education', 'admin', 'other'].includes(savedCVType)) {
-      setCVTypeState(savedCVType);
+    try {
+      // Check if we're in the browser
+      if (typeof window !== 'undefined') {
+        const savedLanguage = localStorage.getItem('cv-builder-language') as Language;
+        if (savedLanguage && (savedLanguage === 'pt' || savedLanguage === 'en')) {
+          setLanguageState(savedLanguage);
+        } else {
+          // Detect browser language if no language is saved
+          const browserLanguage = navigator.language || navigator.languages?.[0] || 'en';
+          const detectedLanguage = browserLanguage.startsWith('pt') ? 'pt' : 'en';
+          setLanguageState(detectedLanguage);
+          localStorage.setItem('cv-builder-language', detectedLanguage);
+        }
+        
+        const savedCVType = localStorage.getItem('cv-builder-type') as CVType;
+        if (savedCVType && ['development', 'marketing', 'sales', 'hr', 'finance', 'design', 'health', 'education', 'admin', 'other'].includes(savedCVType)) {
+          setCVTypeState(savedCVType);
+        }
+      }
+      
+      setIsInitialized(true);
+    } catch (error) {
+      console.error('Error initializing language:', error);
+      setIsInitialized(true);
     }
   }, []);
 
-  // Função para alterar língua
+  // Function to change language
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
     localStorage.setItem('cv-builder-language', lang);
   };
 
-  // Função para alterar tipo de CV
+  // Function to change CV type
   const setCVType = (type: CVType) => {
     setCVTypeState(type);
     localStorage.setItem('cv-builder-type', type);
   };
 
-  // Função de tradução
+  // Translation function
   const t = (key: string): string => {
     const translations = language === 'pt' ? ptTranslations : enTranslations;
     const baseTranslation = translations[key] || key;
     
-    // Se a chave contém o tipo de CV, retorna a tradução específica
+    // If the key contains CV type, return the specific translation
     if (key.includes('cvType.')) {
       const cvTypeKey = key.replace('cvType.', `${cvType}.`);
       const cvTypeTranslation = translations[cvTypeKey];
@@ -79,7 +96,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   );
 }
 
-// Hook personalizado para usar o contexto
+// Custom hook to use the context
 export function useLanguage() {
   const context = useContext(LanguageContext);
   if (context === undefined) {
@@ -88,13 +105,15 @@ export function useLanguage() {
   return context;
 }
 
-// Traduções em português
+// Portuguese translations
 const ptTranslations: Record<string, string> = {
   // Header
   'app.title': 'CV Builder',
   'app.subtitle': 'Crie um currículo profissional em minutos',
   'generate.cv': 'Gerar CV',
   'generate.resume': 'Gerar Currículo',
+  'preview.cv': 'Preview do CV',
+  'preview': 'Preview',
   'select.language': 'Escolher idioma:',
   'language.portuguese': 'Português',
   'language.english': 'English',
@@ -197,11 +216,11 @@ const ptTranslations: Record<string, string> = {
   'placeholder.certification': 'Ex: Certificação AWS Cloud Practitioner',
   'placeholder.issuer': 'Ex: Udemy, Alura, AWS',
   'placeholder.hours': 'Ex: 40 horas',
-  'placeholder.validation.link': 'Ex: https://certificado.instituicao.com/123456',
+  'placeholder.validation.link': 'Ex: https://certificate.institution.com/123456',
   'placeholder.project.name': 'Ex: Portfolio Website',
   'placeholder.project.year': 'Ex: 2023',
   'placeholder.project.tech': 'Ex: React, Node.js, MongoDB',
-  'placeholder.project.link': 'Ex: https://github.com/utilizador/projeto',
+  'placeholder.project.link': 'Ex: https://github.com/user/project',
   'placeholder.project.description': 'Breve descrição do projeto, objetivos, resultados...',
   'placeholder.activities': 'Descreva suas responsabilidades (um item por linha)',
   'placeholder.achievements': 'Ex: Reestruturei a arquitetura da aplicação usando Next.js com SSR, o que melhorou o SEO e aumentou a retenção de usuários em 25%.',
@@ -463,13 +482,15 @@ const ptTranslations: Record<string, string> = {
   'other.placeholder.achievements': 'Ex: Alcançei objetivos específicos da área\nImplementei melhorias com resultados positivos',
 };
 
-// Traduções em inglês
+// English translations
 const enTranslations: Record<string, string> = {
   // Header
   'app.title': 'CV Builder',
   'app.subtitle': 'Create a professional resume in minutes',
   'generate.cv': 'Generate CV',
   'generate.resume': 'Generate Resume',
+  'preview.cv': 'CV Preview',
+  'preview': 'Preview',
   'select.language': 'Choose language:',
   'language.portuguese': 'Português',
   'language.english': 'English',

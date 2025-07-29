@@ -3,12 +3,17 @@
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useState, useRef, useEffect } from 'react';
 
+/**
+ * Language Selector component
+ * Allows users to switch between Portuguese and English languages
+ * @returns JSX element representing a dropdown for language selection
+ */
 export function LanguageSelector() {
   const { language, setLanguage, t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Fechar dropdown ao clicar fora
+  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {

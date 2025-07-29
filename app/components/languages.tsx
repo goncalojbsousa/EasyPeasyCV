@@ -42,6 +42,12 @@ const LANGUAGE_LEVELS = [
  * @param onRemoveLanguage - Function to remove language entry
  * @returns JSX element representing the languages form section
  */
+/**
+ * Languages component
+ * Manages language proficiency entries
+ * @param props - Component props including language data and handlers
+ * @returns JSX element representing the languages form section
+ */
 export function Languages({
   languages,
   onLanguageChange,

@@ -1,3 +1,7 @@
+# CV Builder
+
+A modern, responsive CV builder application built with Next.js, React, and TypeScript. Features real-time preview, PDF generation, and multi-language support.
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

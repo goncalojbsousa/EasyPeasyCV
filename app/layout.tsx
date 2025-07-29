@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { LanguageProvider } from './contexts/LanguageContext';
+import { LanguageHtmlAttribute } from './components/language-html-attribute';
 
 
 /**
@@ -12,10 +13,11 @@ export const metadata: Metadata = {
 };
 
 /**
- * Root layout component for the CV Builder application
+ * Root Layout component
+ * Main layout wrapper for the Next.js application with language context
  * Provides the base HTML structure and metadata
  * @param children - Child components to render
- * @returns JSX element representing the root layout
+ * @returns JSX element representing the root layout structure
  */
 export default function RootLayout({
   children,
@@ -23,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt">
+    <html>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <meta name="theme-color" content="#2563eb" />
@@ -32,6 +34,7 @@ export default function RootLayout({
       </head>
       <body>
         <LanguageProvider>
+          <LanguageHtmlAttribute />
           {children}
         </LanguageProvider>
       </body>

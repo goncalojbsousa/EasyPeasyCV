@@ -20,6 +20,12 @@ interface PdfDownloadButtonProps extends CvData {
  * @param pdfProps - All CV data properties for PDF generation
  * @returns PDF download link component
  */
+/**
+ * PDF Download Button component
+ * Generates and downloads a PDF version of the CV
+ * @param props - Component props including CV data and language
+ * @returns JSX element representing a button that triggers PDF download
+ */
 export default function PdfDownloadButton(props: PdfDownloadButtonProps) {
   const { children, ...pdfProps } = props;
   return (

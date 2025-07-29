@@ -20,7 +20,8 @@ interface ProfessionalSummaryProps {
 }
 
 /**
- * ProfessionalSummary component manages the professional summary section of the CV form
+ * Professional Summary component
+ * Manages the professional summary/resume text content
  * @param resume - Professional summary text content
  * @param onResumeChange - Function to handle resume text updates
  * @param validationErrors - Object containing validation error states

@@ -315,6 +315,12 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
  * @param onRemoveCertification - Function to remove certification entry
  * @returns JSX element representing the certifications form section
  */
+/**
+ * Certifications component
+ * Manages certification and course entries with drag-and-drop reordering
+ * @param props - Component props including certification data and handlers
+ * @returns JSX element representing the certifications form section
+ */
 export function Certifications({
   certifications,
   onCertificationChange,

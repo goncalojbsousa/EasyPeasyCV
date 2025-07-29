@@ -1,7 +1,7 @@
 /**
  * Footer component for the CV Builder application
- * Displays the GitHub repository link
- * @returns JSX element representing the footer
+ * Displays copyright information and links
+ * @returns JSX element representing the application footer
  */
 export function Footer() {
   return (

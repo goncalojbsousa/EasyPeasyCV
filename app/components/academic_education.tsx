@@ -52,11 +52,13 @@ const EDUCATION_STATUS = [
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 /**
- * AcademicEducation component manages the education section of the CV form
+ * Academic Education component
+ * Manages educational background entries with drag-and-drop reordering
  * @param education - Array of education entries
  * @param onEducationChange - Function to handle education field updates
  * @param onAddEducation - Function to add new education entry
  * @param onRemoveEducation - Function to remove education entry
+ * @param onReorderEducation - Function to reorder education entries
  * @returns JSX element representing the academic education form section
  */
 export function AcademicEducation({

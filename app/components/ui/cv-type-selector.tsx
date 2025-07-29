@@ -3,12 +3,17 @@
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useState, useRef, useEffect } from 'react';
 
+/**
+ * CV Type Selector component
+ * Allows users to select different CV types (development, marketing, sales, etc.)
+ * @returns JSX element representing a dropdown for CV type selection
+ */
 export function CVTypeSelector() {
   const { cvType, setCVType, t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Fechar dropdown ao clicar fora
+  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {

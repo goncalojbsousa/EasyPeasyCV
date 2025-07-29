@@ -50,14 +50,14 @@ const COUNTRY_CODES = [
 ];
 
 /**
- * PersonalInformation component manages the personal information and links section of the CV form
+ * Personal Information component
+ * Manages personal details, contact information, and social media links
  * @param links - Array of social media and portfolio links
  * @param personalInfo - Personal information data
- * @param onLinkTypeChange - Function to handle link type updates
- * @param onLinkValueChange - Function to handle link value updates
  * @param onAddLink - Function to add new link
  * @param onRemoveLink - Function to remove link
  * @param onPersonalInfoChange - Function to handle personal info field updates
+ * @param onReorderLinks - Function to reorder links
  * @param validationErrors - Object containing validation error states
  * @param showValidationErrors - Whether to display validation errors
  * @returns JSX element representing the personal information form section

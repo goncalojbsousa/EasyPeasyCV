@@ -2,6 +2,11 @@
 
 import { useLanguage } from '../contexts/LanguageContext';
 
+/**
+ * CV Tips component
+ * Displays helpful tips for creating a professional CV
+ * @returns JSX element representing CV tips and advice
+ */
 export function CVTips() {
   const { t } = useLanguage();
   const tips = [

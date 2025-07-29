@@ -32,11 +32,13 @@ interface ProfessionalExperienceProps {
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 /**
- * ProfessionalExperience component manages the professional experience section of the CV form
+ * Professional Experience component
+ * Manages work experience entries with drag-and-drop reordering
  * @param experiences - Array of professional experience entries
  * @param onExperienceChange - Function to handle experience field updates
  * @param onAddExperience - Function to add new experience entry
  * @param onRemoveExperience - Function to remove experience entry
+ * @param onReorderExperiences - Function to reorder experience entries
  * @returns JSX element representing the professional experience form section
  */
 export function ProfessionalExperience({

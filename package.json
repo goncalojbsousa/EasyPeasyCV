@@ -1,5 +1,7 @@
 {
   "name": "cv-builder",
+  "description": "A modern CV builder application with real-time preview and PDF generation",
+  "version": "0.1.0",
   "version": "0.1.0",
   "private": true,
   "scripts": {

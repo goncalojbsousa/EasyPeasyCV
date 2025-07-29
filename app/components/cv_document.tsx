@@ -73,6 +73,12 @@ const styles = StyleSheet.create({
  * @param lang - Language for the document (pt or en)
  * @returns PDF document component
  */
+/**
+ * CV Document component
+ * Renders the complete CV structure for PDF generation using @react-pdf/renderer
+ * @param props - Component props including all CV data and language
+ * @returns JSX element representing the complete CV document structure
+ */
 export function CvDocument({
   personalInfo,
   links,
@@ -202,7 +208,7 @@ export function CvDocument({
     }
   };
 
-  // Helper to translate "Atual" (Current)
+  // Helper to translate "Current"
   const translateCurrent = (lang: string) => {
     return lang === 'en' ? 'Current' : 'Atual';
   };

@@ -8,12 +8,13 @@ import { AcademicEducation } from './components/academic_education';
 import { TechnicalSkills } from './components/technical_skills';
 import { Languages } from './components/languages';
 import { Certifications } from './components/certifications';
-import PdfDownloadButton from './components/pdf_download_button_dynamic';
+import PdfDownloadButton from './components/pdf_download_button';
 import { Projects } from './components/projects';
 import { CVTips } from './components/cv_tips';
 import { LanguageSelector } from './components/ui/language-selector';
 import { CVTypeSelector } from './components/ui/cv-type-selector';
 import { Footer } from './components/footer';
+import { PdfPreview } from './components/pdf_preview';
 import { useLanguage } from './contexts/LanguageContext';
 import { Experience, Education, Language, Certification, Project } from './types/cv';
 
@@ -23,7 +24,7 @@ import { Experience, Education, Language, Certification, Project } from './types
  * @returns JSX element representing the main CV builder application
  */
 export default function Home() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   
   // State management for all form sections
   const [personalInfo, setPersonalInfo] = useState({
@@ -35,9 +36,7 @@ export default function Home() {
     countryCode: 'Portugal (+351)',
     phone: '',
   });
-  const [links, setLinks] = useState([
-    { type: 'LinkedIn', value: '' },
-  ]);
+  const [links, setLinks] = useState([]);
   const [resume, setResume] = useState('');
   
   // Custom setResume function for handling resume text changes
@@ -55,6 +54,7 @@ export default function Home() {
   const [showValidationErrors, setShowValidationErrors] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [showPdfPreview, setShowPdfPreview] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
 
@@ -78,7 +78,7 @@ export default function Home() {
           countryCode: 'Portugal (+351)',
           phone: '',
         });
-        setLinks(data.links || [{ type: 'LinkedIn', value: '' }]);
+        setLinks(data.links || []);
         setResume(data.resume || '');
         setExperiences(data.experiences || []);
         setEducation(data.education || []);
@@ -582,6 +582,17 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row items-end gap-2 w-full sm:w-auto">
             <CVTypeSelector />
             <LanguageSelector />
+            <button
+              onClick={() => setShowPdfPreview(true)}
+              className="bg-green-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-200 flex items-center justify-center gap-2 shadow-lg w-full sm:w-auto text-sm sm:text-base"
+            >
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              <span className="hidden sm:inline">{t('preview.cv')}</span>
+              <span className="sm:hidden">{t('preview')}</span>
+            </button>
             <div className="relative w-full sm:w-auto" ref={dropdownRef}>
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -763,6 +774,22 @@ export default function Home() {
       
       {/* Footer */}
       <Footer />
+      
+      {/* PDF Preview Modal */}
+      <PdfPreview
+        personalInfo={personalInfo}
+        links={links}
+        resume={resume}
+        experiences={experiences}
+        education={education}
+        skills={skills}
+        languages={languages}
+        certifications={certifications}
+        projects={projects}
+        show={showPdfPreview}
+        onClose={() => setShowPdfPreview(false)}
+        lang={language}
+      />
     </div>
   );
 }
