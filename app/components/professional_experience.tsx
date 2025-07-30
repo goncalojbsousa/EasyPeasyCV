@@ -81,7 +81,7 @@ export function ProfessionalExperience({
     return `${t('experience.title')} ${idx + 1}`;
   };
 
-  // Fecha dropdowns ao clicar fora
+  // Close dropdowns when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       Object.keys(openDropdowns).forEach(key => {
@@ -166,7 +166,7 @@ export function ProfessionalExperience({
                 {experiences.map((exp, idx) => (
           <div
             key={idx}
-            className={`bg-white border border-gray-200 rounded-lg shadow-sm relative mb-6 transition-all ${
+            className={`bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-lg shadow-sm relative mb-6 transition-all duration-300 ${
               draggedIndex === idx ? 'opacity-50 scale-95' : ''
             }`}
             onDragOver={experiences.length > 1 ? handleDragOver : undefined}
@@ -178,12 +178,12 @@ export function ProfessionalExperience({
               <div className="absolute left-0 -top-3 w-full h-0.5 bg-blue-500 rounded-full z-10"></div>
             )}
             {/* Card header with title */}
-            <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 rounded-t-lg">
+            <div className="bg-gray-50 dark:bg-zinc-800 px-4 py-3 border-b border-gray-200 dark:border-zinc-700 rounded-t-lg transition-colors duration-300">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
                   {experiences.length > 1 && (
                     <div 
-                      className="text-gray-400 cursor-move hover:text-gray-600 transition-colors"
+                      className="text-gray-400 dark:text-zinc-500 cursor-move hover:text-gray-600 dark:hover:text-zinc-300 transition-colors"
                       draggable
                       onDragStart={(e) => handleDragStart(e, idx)}
                       onDragOver={handleDragOver}
@@ -196,7 +196,7 @@ export function ProfessionalExperience({
                       </svg>
                     </div>
                   )}
-                  <h3 className="text-sm font-semibold text-gray-700">
+                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                     {getExperienceTitle(exp, idx)}
                   </h3>
                 </div>
@@ -218,7 +218,7 @@ export function ProfessionalExperience({
               <FormField label={t('field.role')}>
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
+                  className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                   placeholder={t(`cvType.placeholder.role`)}
                   value={exp.role}
                   onChange={e => onExperienceChange(idx, 'role', e.target.value)}
@@ -227,7 +227,7 @@ export function ProfessionalExperience({
               <FormField label={t('field.company')}>
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
+                  className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                   placeholder={t('placeholder.company')}
                   value={exp.company}
                   onChange={e => onExperienceChange(idx, 'company', e.target.value)}
@@ -241,7 +241,7 @@ export function ProfessionalExperience({
                 <div ref={el => { dropdownRefs.current[`startMonth-${idx}`] = el; }} className="relative">
                   <button
                     type="button"
-                    className="w-full flex items-center justify-between p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left"
+                    className="w-full flex items-center justify-between p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left text-gray-900 dark:text-gray-100"
                     onClick={() => toggleDropdown(`startMonth-${idx}`)}
                     tabIndex={0}
                   >
@@ -249,12 +249,12 @@ export function ProfessionalExperience({
                     <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`startMonth-${idx}`] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
                   </button>
                   {openDropdowns[`startMonth-${idx}`] && (
-                    <div className="absolute left-0 mt-2 w-full bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50">
+                    <div className="absolute left-0 mt-2 w-full bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-1 z-50">
                       {MONTHS.map(month => (
                         <button
                           key={month}
                           type="button"
-                          className={`w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 transition-colors duration-150 ${exp.startMonth === month ? 'bg-blue-50 font-semibold text-blue-700' : ''}`}
+                          className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-150 ${exp.startMonth === month ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
                           onClick={() => {
                             onExperienceChange(idx, 'startMonth', month);
                             setOpenDropdowns(prev => ({ ...prev, [`startMonth-${idx}`]: false }));
@@ -270,7 +270,7 @@ export function ProfessionalExperience({
               <FormField label={t('field.start.year')}>
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
+                  className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                   placeholder="Ano"
                   value={exp.startYear}
                   onChange={e => onExperienceChange(idx, 'startYear', e.target.value)}
@@ -283,7 +283,7 @@ export function ProfessionalExperience({
                     <div ref={el => { dropdownRefs.current[`endMonth-${idx}`] = el; }} className="relative">
                       <button
                         type="button"
-                        className="w-full flex items-center justify-between p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left text-sm"
+                        className="w-full flex items-center justify-between p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left text-sm text-gray-900 dark:text-gray-100"
                         onClick={() => toggleDropdown(`endMonth-${idx}`)}
                         tabIndex={0}
                       >
@@ -291,12 +291,12 @@ export function ProfessionalExperience({
                         <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`endMonth-${idx}`] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
                       </button>
                       {openDropdowns[`endMonth-${idx}`] && (
-                        <div className="absolute left-0 mt-2 w-full bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50">
+                        <div className="absolute left-0 mt-2 w-full bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-1 z-50">
                           {MONTHS.map(month => (
                             <button
                               key={month}
                               type="button"
-                              className={`w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 transition-colors duration-150 ${exp.endMonth === month ? 'bg-blue-50 font-semibold text-blue-700' : ''}`}
+                              className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-150 ${exp.endMonth === month ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
                               onClick={() => {
                                 onExperienceChange(idx, 'endMonth', month);
                                 setOpenDropdowns(prev => ({ ...prev, [`endMonth-${idx}`]: false }));
@@ -310,13 +310,13 @@ export function ProfessionalExperience({
                     </div>
                   </FormField>
                   <FormField label={t('field.end.year')}>
-                    <input
-                      type="text"
-                      className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
-                      placeholder="Ano"
-                      value={exp.endYear}
-                      onChange={e => onExperienceChange(idx, 'endYear', e.target.value)}
-                    />
+                                      <input
+                    type="text"
+                    className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                    placeholder="Ano"
+                    value={exp.endYear}
+                    onChange={e => onExperienceChange(idx, 'endYear', e.target.value)}
+                  />
                   </FormField>
                 </>
               )}
@@ -331,7 +331,7 @@ export function ProfessionalExperience({
                 id={`current-${idx}`}
                 className="mr-2"
               />
-              <label htmlFor={`current-${idx}`} className="text-sm">{t('field.current')}</label>
+              <label htmlFor={`current-${idx}`} className="text-sm text-gray-900 dark:text-gray-100">{t('field.current')}</label>
             </div>
             
             {/* Technologies used field */}
@@ -339,7 +339,7 @@ export function ProfessionalExperience({
                               <FormField label={t(`cvType.field.technologies`)}>
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
+                  className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                   placeholder={t(`cvType.placeholder.technologies`)}
                   value={exp.tech}
                   onChange={e => onExperienceChange(idx, 'tech', e.target.value)}
@@ -351,7 +351,7 @@ export function ProfessionalExperience({
             <div className="mb-4">
               <FormField label={t('field.activities')}>
                 <textarea
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
+                  className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                   placeholder={t(`cvType.placeholder.activities`)}
                   value={exp.activities}
                   onChange={e => onExperienceChange(idx, 'activities', e.target.value)}
@@ -362,7 +362,7 @@ export function ProfessionalExperience({
             {/* Achievements and results field */}
             <FormField label={t('field.achievements')} helperText={t('field.achievements.helper')}>
               <textarea
-                className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
+                className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                                   placeholder={t(`cvType.placeholder.achievements`)}
                 value={exp.results}
                 onChange={e => onExperienceChange(idx, 'results', e.target.value)}

@@ -40,7 +40,7 @@ export function ProfessionalSummary({
       <FormSection title={t('section.professional.summary')} icon={Icons.professionalSummary}>
         <FormField label={t('field.professional.summary')} required>
           <textarea
-            className={`w-full p-3 sm:p-4 border rounded-lg bg-white min-h-[120px] shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm ${showValidationErrors && validationErrors.resume ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
+            className={`w-full p-3 sm:p-4 border rounded-lg bg-white dark:bg-zinc-800 min-h-[120px] shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100 ${showValidationErrors && validationErrors.resume ? 'border-red-500 bg-red-50 dark:bg-red-900/20' : 'border-gray-300 dark:border-zinc-600'}`}
             placeholder={t(`cvType.placeholder.professional.summary`)}
             value={resume}
             onChange={e => onResumeChange(e.target.value)}

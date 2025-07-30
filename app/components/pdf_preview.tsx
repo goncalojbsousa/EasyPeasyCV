@@ -124,15 +124,15 @@ export function PdfPreview({
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-2" onClick={onClose}>
-      <div className="bg-white rounded-lg shadow-2xl max-w-7xl w-full h-[98vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-2xl max-w-7xl w-full h-[98vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-800">
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-zinc-700">
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
             Preview do PDF
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 transition-colors"
+            className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -141,12 +141,12 @@ export function PdfPreview({
         </div>
 
         {/* PDF Content */}
-        <div className="flex-1 overflow-hidden p-2 bg-gray-50">
+        <div className="flex-1 overflow-hidden p-2 bg-gray-50 dark:bg-zinc-800">
           {loading ? (
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                <p className="text-gray-600">A gerar PDF...</p>
+                <p className="text-gray-600 dark:text-gray-400">A gerar PDF...</p>
               </div>
             </div>
           ) : error ? (
@@ -172,10 +172,10 @@ export function PdfPreview({
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                    <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
                       PDF Gerado com Sucesso!
                     </h3>
-                    <p className="text-gray-600 mb-6">
+                    <p className="text-gray-600 dark:text-gray-400 mb-6">
                       A visualização direta do PDF pode não funcionar no telemóvel.
                     </p>
                     <div className="space-y-3">
@@ -193,7 +193,7 @@ export function PdfPreview({
                         href={pdfUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
+                        className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 dark:bg-zinc-700 text-gray-700 dark:text-gray-300 rounded-lg font-semibold hover:bg-gray-200 dark:hover:bg-zinc-600 transition-colors"
                       >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -201,7 +201,7 @@ export function PdfPreview({
                         Abrir PDF numa nova aba
                       </a>
                     </div>
-                    <p className="text-xs text-gray-500 mt-4">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">
                       Tamanho: {(pdfSize / 1024).toFixed(1)} KB
                     </p>
                   </div>

@@ -107,7 +107,7 @@ export function FloatingActionBar({
   return (
     <div className="lg:hidden fixed bottom-6 right-6 z-50 flex flex-col gap-3">
       {/* CV Type Selector */}
-      <div className="bg-white rounded-full shadow-lg border border-gray-200 p-2">
+      <div className="bg-white dark:bg-zinc-900 rounded-full shadow-lg border border-gray-200 dark:border-zinc-700 p-2">
         <CompactCVTypeSelector />
       </div>
 
@@ -137,13 +137,13 @@ export function FloatingActionBar({
 
         {/* Language selection dropdown */}
         {isDropdownOpen && (
-          <div className="absolute bottom-full right-0 mb-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 py-2">
-            <div className="px-4 py-2 text-sm text-gray-500 border-b border-gray-100">
+          <div className="absolute bottom-full right-0 mb-2 w-56 bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-2">
+            <div className="px-4 py-2 text-sm text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-zinc-700">
               {t('select.language')}
             </div>
             <div className="py-1">
               <PdfDownloadButtonWithValidation lang="pt">
-                <div className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 transition-colors duration-150 cursor-pointer">
+                <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-150 cursor-pointer">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6">
                     <path d="M5,4H13V28H5c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" fill="#2b6519"></path>
                     <path d="M16,4h15V28h-15c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" transform="rotate(180 21.5 16)" fill="#ea3323"></path>
@@ -156,7 +156,7 @@ export function FloatingActionBar({
                 </div>
               </PdfDownloadButtonWithValidation>
               <PdfDownloadButtonWithValidation lang="en">
-                <div className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 transition-colors duration-150 cursor-pointer">
+                <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-150 cursor-pointer">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6">
                     <rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="#071b65"></rect>
                     <path d="M5.101,4h-.101c-1.981,0-3.615,1.444-3.933,3.334L26.899,28h.101c1.981,0,3.615-1.444,3.933-3.334L5.101,4Z" fill="#fff"></path>

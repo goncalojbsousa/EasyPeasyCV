@@ -100,15 +100,15 @@ export function CompactCVTypeSelector() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center w-10 h-10 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors duration-200"
+        className="flex items-center justify-center w-10 h-10 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded-full transition-colors duration-200"
         title={`${t('cv.type.selector')}: ${t(`cv.type.${cvType}`)}`}
       >
         {getCVTypeIcon(cvType)}
       </button>
 
       {isOpen && (
-        <div className="absolute bottom-full right-0 mb-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 py-2">
-          <div className="px-4 py-2 text-xs text-gray-500 border-b border-gray-100">
+                  <div className="absolute bottom-full right-0 mb-2 w-56 bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-2">
+          <div className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-zinc-700">
             {t('cv.type.selector')}
           </div>
           <div className="py-1">
@@ -116,7 +116,7 @@ export function CompactCVTypeSelector() {
               <button
                 key={type}
                 onClick={() => handleCVTypeChange(type)}
-                className={`w-full flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-blue-50 transition-colors duration-150 ${cvType === type ? 'bg-blue-50 font-semibold text-blue-700' : ''}`}
+                className={`w-full flex items-center gap-2 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-150 ${cvType === type ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
               >
                 {getCVTypeIcon(type)}
                 <span className="font-medium text-sm">{t(`cv.type.${type}`)}</span>

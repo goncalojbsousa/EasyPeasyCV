@@ -40,7 +40,7 @@ export function IconButton({
   // CSS classes for different visual variants
   const variantClasses = {
     primary: "bg-blue-600 text-white hover:bg-blue-700",
-    danger: "text-gray-400 hover:text-red-500"
+    danger: "text-gray-400 dark:text-zinc-500 hover:text-red-500 dark:hover:text-red-400"
   };
   
   // CSS classes for different size variants

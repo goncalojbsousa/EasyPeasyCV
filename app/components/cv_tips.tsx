@@ -49,7 +49,7 @@ export function CVTips() {
   ];
 
   return (
-    <div className="bg-gradient-to-br from-blue-50 to-indigo-100 border border-blue-200 rounded-lg shadow-sm p-4 sm:p-6">
+    <div className="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800 rounded-lg shadow-sm p-4 sm:p-6">
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
         <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 text-white">
@@ -57,30 +57,30 @@ export function CVTips() {
           </svg>
         </div>
         <div>
-          <h2 className="text-lg sm:text-xl font-bold text-gray-900">{t('tips.title')}</h2>
-          <p className="text-xs sm:text-sm text-gray-600">{t('tips.subtitle')}</p>
+                <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100">{t('tips.title')}</h2>
+      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{t('tips.subtitle')}</p>
         </div>
       </div>
       <div className="space-y-3 sm:space-y-4">
         {tips.map((tip, index) => (
-          <div key={index} className="bg-white rounded-lg p-3 sm:p-4 border border-blue-100 shadow-sm">
-            <h3 className="font-semibold text-gray-900 mb-2 flex items-start gap-2">
+          <div key={index} className="bg-white dark:bg-zinc-900 rounded-lg p-3 sm:p-4 border border-blue-100 dark:border-blue-900 shadow-sm">
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2 flex items-start gap-2">
               <span className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
                 {index + 1}
               </span>
               <span className="text-sm sm:text-base">{tip.title}</span>
             </h3>
-            <p className="text-gray-700 text-xs sm:text-sm ml-7 sm:ml-8">{tip.description}</p>
+            <p className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm ml-7 sm:ml-8">{tip.description}</p>
           </div>
         ))}
-        <div className="mt-6 p-3 sm:p-4 bg-blue-50 rounded-lg border border-blue-200">
+        <div className="mt-6 p-3 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
           <div className="flex items-start gap-3">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 mt-0.5 flex-shrink-0">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
             </svg>
             <div>
-              <p className="text-xs sm:text-sm text-blue-800 font-medium">{t('tips.extra.title')}</p>
-              <p className="text-xs sm:text-sm text-blue-700 mt-1">
+              <p className="text-xs sm:text-sm text-blue-800 dark:text-blue-300 font-medium">{t('tips.extra.title')}</p>
+              <p className="text-xs sm:text-sm text-blue-700 dark:text-blue-400 mt-1">
                 {t('tips.extra.content')}
               </p>
             </div>

@@ -2,3 +2,4 @@
 
 /* Import Tailwind CSS base styles */
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));

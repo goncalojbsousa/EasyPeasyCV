@@ -17,6 +17,7 @@ import { FloatingActionBar } from './components/ui/floating-action-bar';
 import { DesktopActionsCard } from './components/ui/desktop-actions-card';
 import { useLanguage } from './contexts/LanguageContext';
 import { Experience, Education, Language, Certification, Project } from './types/cv';
+import { ThemeToggle } from './components/theme-toggle';
 
 /**
  * Main CV Builder application component
@@ -25,7 +26,7 @@ import { Experience, Education, Language, Certification, Project } from './types
  */
 export default function Home() {
   const { t, language } = useLanguage();
-  
+
   // State management for all form sections
   const [personalInfo, setPersonalInfo] = useState({
     name: '',
@@ -36,9 +37,9 @@ export default function Home() {
     countryCode: 'Portugal (+351)',
     phone: '',
   });
-  const [links, setLinks] = useState<{type: string, value: string}[]>([]);
+  const [links, setLinks] = useState<{ type: string, value: string }[]>([]);
   const [resume, setResume] = useState('');
-  
+
   // Custom setResume function for handling resume text changes
   const handleResumeChange = (value: string) => {
     setResume(value);
@@ -49,7 +50,7 @@ export default function Home() {
   const [languages, setLanguages] = useState<Language[]>([]);
   const [certifications, setCertifications] = useState<Certification[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
-  const [validationErrors, setValidationErrors] = useState<{[key: string]: boolean}>({});
+  const [validationErrors, setValidationErrors] = useState<{ [key: string]: boolean }>({});
   const [showValidationErrors, setShowValidationErrors] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
@@ -67,7 +68,7 @@ export default function Home() {
       const saved = localStorage.getItem('cv-builder-data');
       if (saved) {
         const data = JSON.parse(saved);
-        
+
         setPersonalInfo(data.personalInfo || {
           name: '',
           desiredRole: '',
@@ -141,15 +142,15 @@ export default function Home() {
 
   // Continuously validate required fields (without showing errors)
   useEffect(() => {
-    const errors: {[key: string]: boolean} = {};
-    
+    const errors: { [key: string]: boolean } = {};
+
     if (!personalInfo.name.trim()) errors.name = true;
     if (!personalInfo.email.trim()) errors.email = true;
     if (!personalInfo.desiredRole.trim()) errors.desiredRole = true;
     if (!resume.trim()) errors.resume = true;
-    
+
     setValidationErrors(errors);
-    
+
     // Hide errors if all fields are filled
     if (Object.keys(errors).length === 0) {
       setShowValidationErrors(false);
@@ -189,6 +190,8 @@ export default function Home() {
 
   /**
    * Add a new social media link
+   * @param type - Type of social media link (LinkedIn, GitHub, etc.)
+   * @param value - URL value for the link
    */
   const handleAddLink = (type: string = 'LinkedIn', value: string = '') => {
     setLinks([...links, { type, value }]);
@@ -290,7 +293,7 @@ export default function Home() {
 
   // Academic Education handlers
   /**
-   * Add a new education entry
+   * Add a new education entry with empty fields
    */
   const handleAddEducation = () => {
     setEducation([...education, {
@@ -424,7 +427,7 @@ export default function Home() {
       }
       return false; // Return false to prevent PDF generation
     }
-    
+
     return true; // Return true to allow PDF generation
   };
 
@@ -439,7 +442,7 @@ export default function Home() {
       try {
         const { pdf } = await import('@react-pdf/renderer');
         const { CvDocument } = await import('./components/cv_document');
-        
+
         const pdfDoc = (
           <CvDocument
             personalInfo={personalInfo}
@@ -457,10 +460,10 @@ export default function Home() {
 
         const blob = await pdf(pdfDoc).toBlob();
         const url = URL.createObjectURL(blob);
-        
+
         // Open PDF in new tab
         window.open(url, '_blank');
-        
+
         // Cleanup URL after a delay
         setTimeout(() => URL.revokeObjectURL(url), 1000);
       } catch (error) {
@@ -571,160 +574,161 @@ export default function Home() {
 
 
   return (
-          <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 dark:bg-zinc-900 transition-colors duration-300">
       {/* Header with title and PDF generation dropdown */}
-      <header className="bg-white px-4 sm:px-6 py-3 sm:py-4 shadow fixed top-0 left-0 right-0 z-50">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+      <header className="bg-white dark:bg-zinc-800 shadow fixed top-0 left-0 right-0 z-50 transition-colors duration-300">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
           <div>
             <h1 className="text-xl sm:text-2xl font-bold text-blue-600">{t('app.title')}</h1>
             <p className="text-xs sm:text-sm">{t('app.subtitle')}</p>
           </div>
-          <div className="flex flex-col sm:flex-row items-end gap-2 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
             <LanguageSelector />
+            <ThemeToggle />
           </div>
         </div>
       </header>
-      
+
       {/* Main content area */}
       <div className="max-w-7xl mx-auto pt-36 sm:pt-28 pb-24 px-4 sm:px-6">
         <div className="lg:grid lg:grid-cols-[1fr_320px] lg:gap-8">
           {/* Form content */}
           <div className="flex flex-col gap-6 sm:gap-8">
-        {/* Data loaded notification */}
-        {dataLoaded && (
-          <div className="p-3 bg-green-50 border border-green-200 rounded-lg shadow-sm">
-            <p className="text-green-700 text-sm">{t('data.loaded')}</p>
-          </div>
-        )}
-        
-        {/* Success message notification */}
-        {showSuccessMessage && (
-          <div className="p-3 bg-green-50 border border-green-200 rounded-lg shadow-sm">
-            <p className="text-green-700 text-sm">{t('cv.generated')}</p>
-          </div>
-        )}
-        
-        {/* Validation errors notification */}
-        {showValidationErrors && Object.keys(validationErrors).length > 0 && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-lg shadow-sm">
-            <p className="text-red-700 text-sm font-medium">{t('validation.required')}</p>
-            <ul className="text-red-600 text-xs mt-1 list-disc list-inside">
-              {validationErrors.name && <li>{t('validation.name')}</li>}
-              {validationErrors.email && <li>{t('validation.email')}</li>}
-              {validationErrors.desiredRole && <li>{t('validation.role')}</li>}
-              {validationErrors.resume && <li>{t('validation.resume')}</li>}
-            </ul>
-          </div>
-        )}
-        
-        {/* Personal Information section */}
-        <PersonalInformation
-          links={links}
-          personalInfo={personalInfo}
-          onAddLink={handleAddLink}
-          onRemoveLink={handleRemoveLink}
-          onPersonalInfoChange={handlePersonalInfoChange}
-          onReorderLinks={handleReorderLinks}
-          validationErrors={validationErrors}
-          showValidationErrors={showValidationErrors}
-        />
-        
-        {/* Professional Summary section */}
-        <ProfessionalSummary
-          resume={resume}
-          onResumeChange={handleResumeChange}
-          validationErrors={validationErrors}
-          showValidationErrors={showValidationErrors}
-        />
-        
-        {/* Professional Experience section */}
-        <ProfessionalExperience
-          experiences={experiences}
-          onExperienceChange={handleExperienceChange}
-          onAddExperience={handleAddExperience}
-          onRemoveExperience={handleRemoveExperience}
-          onReorderExperiences={handleReorderExperiences}
-        />
-        
-        {/* Academic Education section */}
-        <AcademicEducation
-          education={education}
-          onEducationChange={handleEducationChange}
-          onAddEducation={handleAddEducation}
-          onRemoveEducation={handleRemoveEducation}
-          onReorderEducation={handleReorderEducation}
-        />
-        
-        {/* Technical Skills section */}
-        <TechnicalSkills
-          skills={skills}
-          onSkillsChange={setSkills}
-        />
-        
-        {/* Languages section */}
-        <Languages
-          languages={languages}
-          onLanguageChange={handleLanguageChange}
-          onAddLanguage={handleAddLanguage}
-          onRemoveLanguage={handleRemoveLanguage}
-        />
-        
-        {/* Certifications section */}
-        <Certifications
-          certifications={certifications}
-          onCertificationChange={handleCertificationChange}
-          onAddCertification={handleAddCertification}
-          onRemoveCertification={handleRemoveCertification}
-          onReorderCertifications={handleReorderCertifications}
-        />
-        
-        {/* Projects section */}
-        <Projects
-          projects={projects}
-          onProjectChange={handleProjectChange}
-          onAddProject={handleAddProject}
-          onRemoveProject={handleRemoveProject}
-          onReorderProjects={handleReorderProjects}
-        />
-        
-        {/* Example data button */}
-        <div className="max-w-6xl mx-auto mt-8 mb-8 flex justify-center">
-                      <button
-              onClick={fillWithExampleData}
-              className="bg-green-600 text-white px-4 sm:px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-200 shadow-lg text-sm sm:text-base w-full sm:w-auto"
-              type="button"
-            >
-                            {t('fill.example')}
-          </button>
-        </div>
-        
-        {/* CV Tips section */}
-        <div className="w-full">
-          <CVTips />
-        </div>
+            {/* Data loaded notification */}
+            {dataLoaded && (
+              <div className="p-3 bg-green-50 border border-green-200 rounded-lg shadow-sm transition-colors duration-300">
+                <p className="text-green-700 text-sm">{t('data.loaded')}</p>
+              </div>
+            )}
+
+            {/* Success message notification */}
+            {showSuccessMessage && (
+              <div className="p-3 bg-green-50 border border-green-200 rounded-lg shadow-sm transition-colors duration-300">
+                <p className="text-green-700 text-sm">{t('cv.generated')}</p>
+              </div>
+            )}
+
+            {/* Validation errors notification */}
+            {showValidationErrors && Object.keys(validationErrors).length > 0 && (
+              <div className="p-4 bg-red-50 border border-red-200 rounded-lg shadow-sm transition-colors duration-300">
+                <p className="text-red-700 text-sm font-medium">{t('validation.required')}</p>
+                <ul className="text-red-600 text-xs mt-1 list-disc list-inside">
+                  {validationErrors.name && <li>{t('validation.name')}</li>}
+                  {validationErrors.email && <li>{t('validation.email')}</li>}
+                  {validationErrors.desiredRole && <li>{t('validation.role')}</li>}
+                  {validationErrors.resume && <li>{t('validation.resume')}</li>}
+                </ul>
+              </div>
+            )}
+
+            {/* Personal Information section */}
+            <PersonalInformation
+              links={links}
+              personalInfo={personalInfo}
+              onAddLink={handleAddLink}
+              onRemoveLink={handleRemoveLink}
+              onPersonalInfoChange={handlePersonalInfoChange}
+              onReorderLinks={handleReorderLinks}
+              validationErrors={validationErrors}
+              showValidationErrors={showValidationErrors}
+            />
+
+            {/* Professional Summary section */}
+            <ProfessionalSummary
+              resume={resume}
+              onResumeChange={handleResumeChange}
+              validationErrors={validationErrors}
+              showValidationErrors={showValidationErrors}
+            />
+
+            {/* Professional Experience section */}
+            <ProfessionalExperience
+              experiences={experiences}
+              onExperienceChange={handleExperienceChange}
+              onAddExperience={handleAddExperience}
+              onRemoveExperience={handleRemoveExperience}
+              onReorderExperiences={handleReorderExperiences}
+            />
+
+            {/* Academic Education section */}
+            <AcademicEducation
+              education={education}
+              onEducationChange={handleEducationChange}
+              onAddEducation={handleAddEducation}
+              onRemoveEducation={handleRemoveEducation}
+              onReorderEducation={handleReorderEducation}
+            />
+
+            {/* Technical Skills section */}
+            <TechnicalSkills
+              skills={skills}
+              onSkillsChange={setSkills}
+            />
+
+            {/* Languages section */}
+            <Languages
+              languages={languages}
+              onLanguageChange={handleLanguageChange}
+              onAddLanguage={handleAddLanguage}
+              onRemoveLanguage={handleRemoveLanguage}
+            />
+
+            {/* Certifications section */}
+            <Certifications
+              certifications={certifications}
+              onCertificationChange={handleCertificationChange}
+              onAddCertification={handleAddCertification}
+              onRemoveCertification={handleRemoveCertification}
+              onReorderCertifications={handleReorderCertifications}
+            />
+
+            {/* Projects section */}
+            <Projects
+              projects={projects}
+              onProjectChange={handleProjectChange}
+              onAddProject={handleAddProject}
+              onRemoveProject={handleRemoveProject}
+              onReorderProjects={handleReorderProjects}
+            />
+
+            {/* Example data button */}
+            <div className="max-w-6xl mx-auto mt-8 mb-8 flex justify-center">
+              <button
+                onClick={fillWithExampleData}
+                className="bg-green-600 text-white px-4 sm:px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-200 shadow-lg text-sm sm:text-base w-full sm:w-auto"
+                type="button"
+              >
+                {t('fill.example')}
+              </button>
+            </div>
+
+            {/* CV Tips section */}
+            <div className="w-full">
+              <CVTips />
+            </div>
           </div>
 
           {/* Desktop Actions Card */}
-                  <DesktopActionsCard
-          personalInfo={personalInfo}
-          links={links}
-          resume={resume}
-          experiences={experiences}
-          education={education}
-          skills={skills}
-          languages={languages}
-          certifications={certifications}
-          projects={projects}
-          onShowPdfPreview={handleShowPdfPreview}
-          onGeneratePDF={handleGeneratePDF}
-          onShowSuccessMessage={() => setShowSuccessMessage(true)}
-        />
+          <DesktopActionsCard
+            personalInfo={personalInfo}
+            links={links}
+            resume={resume}
+            experiences={experiences}
+            education={education}
+            skills={skills}
+            languages={languages}
+            certifications={certifications}
+            projects={projects}
+            onShowPdfPreview={handleShowPdfPreview}
+            onGeneratePDF={handleGeneratePDF}
+            onShowSuccessMessage={() => setShowSuccessMessage(true)}
+          />
         </div>
       </div>
-      
+
       {/* Footer */}
       <Footer />
-      
+
       {/* PDF Preview Modal */}
       <PdfPreview
         personalInfo={personalInfo}
@@ -742,20 +746,20 @@ export default function Home() {
       />
 
       {/* Floating Action Bar (Mobile/Tablet) */}
-              <FloatingActionBar
-          personalInfo={personalInfo}
-          links={links}
-          resume={resume}
-          experiences={experiences}
-          education={education}
-          skills={skills}
-          languages={languages}
-          certifications={certifications}
-          projects={projects}
-          onShowPdfPreview={handleShowPdfPreview}
-          onGeneratePDF={handleGeneratePDF}
-          onShowSuccessMessage={() => setShowSuccessMessage(true)}
-        />
+      <FloatingActionBar
+        personalInfo={personalInfo}
+        links={links}
+        resume={resume}
+        experiences={experiences}
+        education={education}
+        skills={skills}
+        languages={languages}
+        certifications={certifications}
+        projects={projects}
+        onShowPdfPreview={handleShowPdfPreview}
+        onGeneratePDF={handleGeneratePDF}
+        onShowSuccessMessage={() => setShowSuccessMessage(true)}
+      />
     </div>
   );
 }

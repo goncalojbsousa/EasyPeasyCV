@@ -113,7 +113,7 @@ export function Projects({
         {projects.map((proj, idx) => (
           <div 
             key={idx} 
-            className={`bg-white border border-gray-200 rounded-lg shadow-sm relative mb-6 transition-all ${
+            className={`bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-lg shadow-sm relative mb-6 transition-all duration-300 ${
               draggedIndex === idx ? 'opacity-50 scale-95' : ''
             }`}
             onDragOver={projects.length > 1 ? handleDragOver : undefined}
@@ -125,12 +125,12 @@ export function Projects({
               <div className="absolute left-0 -top-3 w-full h-0.5 bg-blue-500 rounded-full z-10"></div>
             )}
             {/* Card header with title */}
-            <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 rounded-t-lg">
+            <div className="bg-gray-50 dark:bg-zinc-800 px-4 py-3 border-b border-gray-200 dark:border-zinc-700 rounded-t-lg transition-colors duration-300">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
                   {projects.length > 1 && (
                     <div 
-                      className="text-gray-400 cursor-move hover:text-gray-600 transition-colors"
+                      className="text-gray-400 dark:text-zinc-500 cursor-move hover:text-gray-600 dark:hover:text-zinc-300 transition-colors"
                       draggable
                       onDragStart={(e) => handleDragStart(e, idx)}
                       onDragOver={handleDragOver}
@@ -143,7 +143,7 @@ export function Projects({
                       </svg>
                     </div>
                   )}
-                  <h3 className="text-sm font-semibold text-gray-700">
+                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                     {getProjectTitle(proj, idx)}
                   </h3>
                 </div>
@@ -165,7 +165,7 @@ export function Projects({
               <FormField label="Nome do Projeto">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
+                  className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                   placeholder={t(`cvType.placeholder.project.name`)}
                   value={proj.name}
                   onChange={e => onProjectChange(idx, 'name', e.target.value)}
@@ -174,7 +174,7 @@ export function Projects({
               <FormField label="Ano">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
+                  className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                   placeholder="Ex: 2023"
                   value={proj.year}
                   onChange={e => onProjectChange(idx, 'year', e.target.value)}
@@ -187,7 +187,7 @@ export function Projects({
               <FormField label={t(`cvType.field.technologies`)}>
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
+                  className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                   placeholder={t(`cvType.placeholder.technologies`)}
                   value={proj.tech}
                   onChange={e => onProjectChange(idx, 'tech', e.target.value)}
@@ -196,7 +196,7 @@ export function Projects({
               <FormField label="Link">
                 <input
                   type="url"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
+                  className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                   placeholder="Ex: https://github.com/user/project"
                   value={proj.link}
                   onChange={e => onProjectChange(idx, 'link', e.target.value)}
@@ -207,7 +207,7 @@ export function Projects({
             {/* Project description field */}
             <FormField label="Descrição">
               <textarea
-                className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
+                className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                                   placeholder={t(`cvType.placeholder.project.description`)}
                 value={proj.description}
                 onChange={e => onProjectChange(idx, 'description', e.target.value)}

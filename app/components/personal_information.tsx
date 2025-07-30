@@ -82,7 +82,7 @@ export function PersonalInformation({
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
-  // Fecha dropdown ao clicar fora
+  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (openDropdownIdx !== null && dropdownRefs.current[openDropdownIdx]) {
@@ -239,7 +239,7 @@ export function PersonalInformation({
             <input 
               type="text" 
               placeholder={t('placeholder.full.name')} 
-              className={`w-full p-3 sm:p-2 border rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm ${showValidationErrors && validationErrors.name ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
+              className={`w-full p-3 sm:p-2 border rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100 ${showValidationErrors && validationErrors.name ? 'border-red-500 bg-red-50 dark:bg-red-900/20' : 'border-gray-300 dark:border-zinc-600'}`}
               value={personalInfo.name} 
               onChange={e => onPersonalInfoChange('name', e.target.value)}
               data-error={showValidationErrors && validationErrors.name ? "true" : "false"}
@@ -249,7 +249,7 @@ export function PersonalInformation({
             <input 
               type="text" 
               placeholder={t(`cvType.placeholder.desired.role`)} 
-              className={`w-full p-2 border rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm ${showValidationErrors && validationErrors.desiredRole ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
+              className={`w-full p-2 border rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100 ${showValidationErrors && validationErrors.desiredRole ? 'border-red-500 bg-red-50 dark:bg-red-900/20' : 'border-gray-300 dark:border-zinc-600'}`}
               value={personalInfo.desiredRole} 
               onChange={e => onPersonalInfoChange('desiredRole', e.target.value)}
               data-error={showValidationErrors && validationErrors.desiredRole ? "true" : "false"}
@@ -263,7 +263,7 @@ export function PersonalInformation({
             <input 
               type="text" 
               placeholder={t('placeholder.postal.code')} 
-              className="w-full p-3 sm:p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm" 
+              className="w-full p-3 sm:p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100" 
               value={personalInfo.postalCode} 
               onChange={e => onPersonalInfoChange('postalCode', e.target.value)} 
             />
@@ -272,7 +272,7 @@ export function PersonalInformation({
             <input 
               type="text" 
               placeholder={t('placeholder.city')} 
-              className="w-full p-3 sm:p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm" 
+              className="w-full p-3 sm:p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100" 
               value={personalInfo.city} 
               onChange={e => onPersonalInfoChange('city', e.target.value)} 
             />
@@ -285,7 +285,7 @@ export function PersonalInformation({
             <input 
               type="email" 
               placeholder={t('placeholder.email')} 
-              className={`w-full p-3 sm:p-2 border rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm ${showValidationErrors && validationErrors.email ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
+              className={`w-full p-3 sm:p-2 border rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100 ${showValidationErrors && validationErrors.email ? 'border-red-500 bg-red-50 dark:bg-red-900/20' : 'border-gray-300 dark:border-zinc-600'}`}
               value={personalInfo.email} 
               onChange={e => onPersonalInfoChange('email', e.target.value)}
               data-error={showValidationErrors && validationErrors.email ? "true" : "false"}
@@ -295,7 +295,7 @@ export function PersonalInformation({
             <div className="relative" ref={countryDropdownRef}>
               <button
                 type="button"
-                className="w-full flex items-center justify-between p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left text-sm"
+                className="w-full flex items-center justify-between p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left text-sm text-gray-900 dark:text-gray-100"
                 onClick={() => setOpenCountryDropdown(!openCountryDropdown)}
                 tabIndex={0}
               >
@@ -303,12 +303,12 @@ export function PersonalInformation({
                 <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openCountryDropdown ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
               </button>
               {openCountryDropdown && (
-                <div className="absolute left-0 mt-2 w-full bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50 animate-fade-in">
+                <div className="absolute left-0 mt-2 w-full bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-1 z-50 animate-fade-in">
                   {COUNTRY_CODES.map(country => (
                     <button
                       key={country.value}
                       type="button"
-                      className={`w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 transition-colors duration-150 ${personalInfo.countryCode === country.value ? 'bg-blue-50 font-semibold text-blue-700' : ''}`}
+                      className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-150 ${personalInfo.countryCode === country.value ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
                       onClick={() => {
                         onPersonalInfoChange('countryCode', country.value);
                         setOpenCountryDropdown(false);
@@ -325,7 +325,7 @@ export function PersonalInformation({
             <input 
               type="text" 
               placeholder={t('placeholder.phone')} 
-              className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm" 
+              className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100" 
               value={personalInfo.phone} 
               onChange={e => onPersonalInfoChange('phone', e.target.value)} 
             />
@@ -333,8 +333,8 @@ export function PersonalInformation({
         </div>
 
         {/* Social media and portfolio links section */}
-        <div className="border-t border-gray-200 pt-6">
-          <label className="block text-sm font-medium mb-2">{t('field.links.social')}</label>
+        <div className="border-t border-gray-200 dark:border-zinc-700 pt-6">
+          <label className="block text-sm font-medium mb-2 text-gray-900 dark:text-gray-100">{t('field.links.social')}</label>
           
           {/* Display existing links as tags */}
           {links.length > 0 && (
@@ -352,7 +352,7 @@ export function PersonalInformation({
                 return (
                   <div 
                     key={idx} 
-                    className={`flex items-center gap-2 bg-gray-100 border border-gray-200 rounded-full px-3 py-1 text-sm transition-all relative ${
+                    className={`flex items-center gap-2 bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-600 rounded-full px-3 py-1 text-sm transition-all relative ${
                       draggedIndex === idx ? 'opacity-50 scale-95' : ''
                     }`}
                     onDragOver={links.length > 1 ? handleDragOver : undefined}
@@ -365,7 +365,7 @@ export function PersonalInformation({
                     )}
                     {links.length > 1 && (
                       <div 
-                        className="text-gray-400 cursor-move hover:text-gray-600 transition-colors"
+                        className="text-gray-400 dark:text-zinc-500 cursor-move hover:text-gray-600 dark:hover:text-zinc-300 transition-colors"
                         draggable
                         onDragStart={(e) => handleDragStart(e, idx)}
                         onDragOver={handleDragOver}
@@ -378,12 +378,12 @@ export function PersonalInformation({
                         </svg>
                       </div>
                     )}
-                    <span className="font-medium text-gray-700">{translateLinkType(link.type)}:</span>
-                    <span className="text-gray-600">{displayValue}</span>
+                    <span className="font-medium text-gray-700 dark:text-gray-300">{translateLinkType(link.type)}:</span>
+                    <span className="text-gray-600 dark:text-gray-400">{displayValue}</span>
                     <button
                       type="button"
                       onClick={() => onRemoveLink(idx)}
-                      className="text-gray-400 hover:text-red-500 transition-colors ml-1"
+                      className="text-gray-400 dark:text-zinc-500 hover:text-red-500 dark:hover:text-red-400 transition-colors ml-1"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -402,7 +402,7 @@ export function PersonalInformation({
               <label className="block text-sm font-medium mb-1">{t('field.link.type')}</label>
               <button
                 type="button"
-                className="w-full flex items-center justify-between p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left text-sm"
+                className="w-full flex items-center justify-between p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left text-sm text-gray-900 dark:text-gray-100"
                 onClick={() => setOpenDropdownIdx(openDropdownIdx === 0 ? null : 0)}
                 tabIndex={0}
               >
@@ -410,12 +410,12 @@ export function PersonalInformation({
                 <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdownIdx === 0 ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
               </button>
               {openDropdownIdx === 0 && (
-                <div className="absolute left-0 mt-2 w-full bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50 animate-fade-in">
+                <div className="absolute left-0 mt-2 w-full bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-1 z-50 animate-fade-in">
                   {LINK_TYPES.map(t => (
                     <button
                       key={t.label}
                       type="button"
-                      className={`w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 transition-colors duration-150 ${newLinkType === t.label ? 'bg-blue-50 font-semibold text-blue-700' : ''}`}
+                      className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-150 ${newLinkType === t.label ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
                       onClick={() => {
                         setNewLinkType(t.label);
                         setOpenDropdownIdx(null);
@@ -434,7 +434,7 @@ export function PersonalInformation({
                 <label className="block text-sm font-medium mb-1">{t('field.url')}</label>
                 <div className="flex">
                   {getLinkPrefix(newLinkType) && (
-                    <span className="inline-flex items-center px-2 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500 text-xs sm:text-sm">{getLinkPrefix(newLinkType)}</span>
+                    <span className="inline-flex items-center px-2 bg-gray-100 dark:bg-zinc-700 border border-r-0 border-gray-300 dark:border-zinc-600 rounded-l-lg text-gray-500 dark:text-gray-400 text-xs sm:text-sm">{getLinkPrefix(newLinkType)}</span>
                   )}
                   <input
                     type="text"
@@ -442,7 +442,7 @@ export function PersonalInformation({
                     value={newLinkValue}
                     onChange={(e) => setNewLinkValue(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleAddLink()}
-                    className={`w-full p-2 border border-gray-300 ${getLinkPrefix(newLinkType) ? 'rounded-r-lg' : 'rounded-lg'} bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm`}
+                    className={`w-full p-2 border border-gray-300 dark:border-zinc-600 ${getLinkPrefix(newLinkType) ? 'rounded-r-lg' : 'rounded-lg'} bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100`}
                   />
                 </div>
               </div>

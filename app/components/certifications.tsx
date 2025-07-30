@@ -27,6 +27,13 @@ interface CertificationsProps {
 /**
  * Custom Date Picker Component
  */
+/**
+ * Custom Date Picker Component
+ * Provides a calendar interface for date selection
+ * @param value - Current selected date value
+ * @param onChange - Callback function when date is selected
+ * @param placeholder - Placeholder text for the input
+ */
 function DatePicker({ value, onChange, placeholder }: { value: string; onChange: (value: string) => void; placeholder: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -44,16 +51,19 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Format date to ISO string format (YYYY-MM-DD)
   const formatDate = (date: Date) => {
     return date.toISOString().split('T')[0];
   };
 
+  // Format date for display in Portuguese locale
   const formatDisplayDate = (dateString: string) => {
     if (!dateString) return '';
     const date = new Date(dateString);
     return date.toLocaleDateString('pt-PT');
   };
 
+  // Generate array of days for the current month including empty cells for alignment
   const getDaysInMonth = (date: Date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
@@ -77,12 +87,14 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
     return days;
   };
 
+  // Handle date selection and close dropdown
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
     onChange(formatDate(date));
     setIsOpen(false);
   };
 
+  // Navigate to previous month
   const goToPreviousMonth = () => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
   };
@@ -93,18 +105,22 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
     return { start: currentYear - 10, end: currentYear + 10 };
   });
 
+  // Navigate to next month
   const goToNextMonth = () => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
   };
 
+  // Navigate to previous decade in year picker
   const goToPreviousYear = () => {
     setYearRange(prev => ({ start: prev.start - 10, end: prev.end - 10 }));
   };
 
+  // Navigate to next decade in year picker
   const goToNextYear = () => {
     setYearRange(prev => ({ start: prev.start + 10, end: prev.end + 10 }));
   };
 
+  // Set current date to today and close dropdowns
   const goToToday = () => {
     const today = new Date();
     setCurrentDate(today);
@@ -114,6 +130,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
     setShowYearPicker(false);
   };
 
+  // Clear selected date and close dropdowns
   const clearDate = () => {
     setSelectedDate(null);
     onChange('');
@@ -121,6 +138,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
     setShowYearPicker(false);
   };
 
+  // Select year and close year picker
   const selectYear = (year: number) => {
     setCurrentDate(new Date(year, currentDate.getMonth(), 1));
     setShowYearPicker(false);
@@ -132,6 +150,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
     'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
   ];
 
+  // Generate array of years for the year picker
   const generateYearRange = () => {
     const years = [];
     for (let year = yearRange.start; year <= yearRange.end; year++) {
@@ -145,7 +164,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
       <div className="relative">
         <input
           type="text"
-          className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all pr-10"
+          className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all pr-10 text-gray-900 dark:text-gray-100"
           placeholder={placeholder}
           value={formatDisplayDate(value)}
           readOnly
@@ -153,7 +172,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
         />
         <button
           type="button"
-          className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-zinc-500 hover:text-gray-600 dark:hover:text-zinc-300 transition-colors"
           onClick={() => setIsOpen(!isOpen)}
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -163,13 +182,13 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
       </div>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-1 w-80 bg-white rounded-lg shadow-xl border border-gray-200 p-4 z-50">
+        <div className="absolute top-full left-0 mt-1 w-80 bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 p-4 z-50">
           {/* Calendar Header */}
           <div className="flex items-center justify-between mb-4">
             <button
               type="button"
               onClick={goToPreviousMonth}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded-lg transition-colors"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -179,14 +198,14 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
               <button
                 type="button"
                 onClick={() => setShowYearPicker(!showYearPicker)}
-                className="text-lg font-semibold text-gray-900 hover:text-blue-600 transition-colors px-2 py-1 rounded"
+                className="text-lg font-semibold text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors px-2 py-1 rounded"
               >
                 {monthNames[currentDate.getMonth()]}
               </button>
               <button
                 type="button"
                 onClick={() => setShowYearPicker(!showYearPicker)}
-                className="text-lg font-semibold text-gray-900 hover:text-blue-600 transition-colors px-2 py-1 rounded"
+                className="text-lg font-semibold text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors px-2 py-1 rounded"
               >
                 {currentDate.getFullYear()}
               </button>
@@ -194,7 +213,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
             <button
               type="button"
               onClick={goToNextMonth}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded-lg transition-colors"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -204,24 +223,24 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
 
           {/* Year Picker */}
           {showYearPicker && (
-            <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+            <div className="mb-4 p-3 bg-gray-50 dark:bg-zinc-700 rounded-lg">
               <div className="flex items-center justify-between mb-3">
                 <button
                   type="button"
                   onClick={goToPreviousYear}
-                  className="p-1 hover:bg-gray-200 rounded transition-colors"
+                  className="p-1 hover:bg-gray-200 dark:hover:bg-zinc-600 rounded transition-colors"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
                 </button>
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {yearRange.start} - {yearRange.end}
                 </span>
                 <button
                   type="button"
                   onClick={goToNextYear}
-                  className="p-1 hover:bg-gray-200 rounded transition-colors"
+                  className="p-1 hover:bg-gray-200 dark:hover:bg-zinc-600 rounded transition-colors"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -238,7 +257,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
                       p-2 text-sm rounded transition-all duration-150
                       ${year === currentDate.getFullYear()
                         ? 'bg-blue-600 text-white font-semibold shadow-md'
-                        : 'hover:bg-gray-200 text-gray-700 hover:text-gray-900'
+                        : 'hover:bg-gray-200 dark:hover:bg-zinc-600 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
                       }
                     `}
                   >
@@ -252,7 +271,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
           {/* Days of Week */}
           <div className="grid grid-cols-7 gap-1 mb-2">
             {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(day => (
-              <div key={day} className="text-center text-sm font-medium text-gray-500 py-2">
+              <div key={day} className="text-center text-sm font-medium text-gray-500 dark:text-zinc-400 py-2">
                 {day}
               </div>
             ))}
@@ -270,9 +289,9 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
                   ${day && selectedDate && day.toDateString() === selectedDate.toDateString()
                     ? 'bg-blue-600 text-white font-semibold shadow-md'
                     : day && day.toDateString() === new Date().toDateString()
-                    ? 'bg-blue-100 text-blue-700 font-semibold hover:bg-blue-200'
+                    ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-semibold hover:bg-blue-200 dark:hover:bg-blue-900/50'
                     : day
-                    ? 'hover:bg-gray-100 text-gray-700 hover:text-gray-900'
+                    ? 'hover:bg-gray-100 dark:hover:bg-zinc-700 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
                     : ''
                   }
                 `}
@@ -285,18 +304,18 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
           </div>
 
           {/* Calendar Footer */}
-          <div className="flex justify-between mt-4 pt-4 border-t border-gray-200">
+          <div className="flex justify-between mt-4 pt-4 border-t border-gray-200 dark:border-zinc-700">
             <button
               type="button"
               onClick={clearDate}
-              className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded transition-colors"
+              className="px-3 py-1 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded transition-colors"
             >
               Limpar
             </button>
             <button
               type="button"
               onClick={goToToday}
-              className="px-3 py-1 text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded transition-colors"
+              className="px-3 py-1 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition-colors"
             >
               Hoje
             </button>
@@ -400,7 +419,7 @@ export function Certifications({
         {certifications.map((cert, idx) => (
           <div 
             key={idx} 
-            className={`bg-white border border-gray-200 rounded-lg shadow-sm relative mb-6 transition-all ${
+            className={`bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-lg shadow-sm relative mb-6 transition-all duration-300 ${
               draggedIndex === idx ? 'opacity-50 scale-95' : ''
             }`}
             onDragOver={certifications.length > 1 ? handleDragOver : undefined}
@@ -412,12 +431,12 @@ export function Certifications({
               <div className="absolute left-0 -top-3 w-full h-0.5 bg-blue-500 rounded-full z-10"></div>
             )}
             {/* Card header with title */}
-            <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 rounded-t-lg">
+            <div className="bg-gray-50 dark:bg-zinc-800 px-4 py-3 border-b border-gray-200 dark:border-zinc-700 rounded-t-lg transition-colors duration-300">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
                   {certifications.length > 1 && (
                     <div 
-                      className="text-gray-400 cursor-move hover:text-gray-600 transition-colors"
+                      className="text-gray-400 dark:text-zinc-500 cursor-move hover:text-gray-600 dark:hover:text-zinc-300 transition-colors"
                       draggable
                       onDragStart={(e) => handleDragStart(e, idx)}
                       onDragOver={handleDragOver}
@@ -430,7 +449,7 @@ export function Certifications({
                       </svg>
                     </div>
                   )}
-                  <h3 className="text-sm font-semibold text-gray-700">
+                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                     {getCertificationTitle(cert, idx)}
                   </h3>
                 </div>
@@ -452,7 +471,7 @@ export function Certifications({
               <FormField label="Certificação">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
+                  className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                   placeholder="Ex: Certificação AWS Cloud Practitioner"
                   value={cert.name}
                   onChange={e => onCertificationChange(idx, 'name', e.target.value)}
@@ -461,7 +480,7 @@ export function Certifications({
               <FormField label="Emissor/Instituição">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
+                  className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                   placeholder="Ex: Udemy, Alura, AWS"
                   value={cert.issuer}
                   onChange={e => onCertificationChange(idx, 'issuer', e.target.value)}
@@ -481,7 +500,7 @@ export function Certifications({
               <FormField label="Carga Horária">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
+                  className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                   placeholder="Ex: 40 horas"
                   value={cert.hours}
                   onChange={e => onCertificationChange(idx, 'hours', e.target.value)}
@@ -490,7 +509,7 @@ export function Certifications({
               <FormField label="Link de Validação">
                 <input
                   type="url"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
+                  className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                   placeholder="Ex: https://certificado.instituicao.com/123456"
                   value={cert.validationLink}
                   onChange={e => onCertificationChange(idx, 'validationLink', e.target.value)}
@@ -501,7 +520,7 @@ export function Certifications({
             {/* Description field */}
             <FormField label="Descrição">
               <textarea
-                className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
+                className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                 placeholder="Ex: Curso focado em desenvolvimento de APIs REST com Node.js..."
                 value={cert.description}
                 onChange={e => onCertificationChange(idx, 'description', e.target.value)}

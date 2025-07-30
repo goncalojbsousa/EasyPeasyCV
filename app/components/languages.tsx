@@ -58,7 +58,7 @@ export function Languages({
   const [openDropdowns, setOpenDropdowns] = useState<{[key: string]: boolean}>({});
   const dropdownRefs = useRef<{[key: string]: HTMLDivElement | null}>({});
 
-  // Fecha dropdowns ao clicar fora
+  // Close dropdowns when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       Object.keys(openDropdowns).forEach(key => {
@@ -95,7 +95,7 @@ export function Languages({
         
         {/* Render each language entry */}
         {languages.map((lang, idx) => (
-          <div key={idx} className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 relative mb-6">
+          <div key={idx} className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-lg shadow-sm p-4 relative mb-6 transition-colors duration-300">
             {/* Remove button positioned at top right */}
             <IconButton 
               onClick={() => onRemoveLanguage(idx)} 
@@ -111,7 +111,7 @@ export function Languages({
               <FormField label="Idioma">
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm"
+                  className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                   placeholder="Ex: Inglês"
                   value={lang.name}
                   onChange={e => onLanguageChange(idx, 'name', e.target.value)}
@@ -121,7 +121,7 @@ export function Languages({
                 <div ref={el => { dropdownRefs.current[`level-${idx}`] = el; }} className="relative">
                   <button
                     type="button"
-                    className="w-full flex items-center justify-between p-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left"
+                    className="w-full flex items-center justify-between p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left text-gray-900 dark:text-gray-100"
                     onClick={() => toggleDropdown(`level-${idx}`)}
                     tabIndex={0}
                   >
@@ -129,12 +129,12 @@ export function Languages({
                     <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`level-${idx}`] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
                   </button>
                   {openDropdowns[`level-${idx}`] && (
-                    <div className="absolute left-0 mt-2 w-full bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50">
+                    <div className="absolute left-0 mt-2 w-full bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-1 z-50">
                       {LANGUAGE_LEVELS.map(level => (
                         <button
                           key={level}
                           type="button"
-                          className={`w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 transition-colors duration-150 ${lang.level === level ? 'bg-blue-50 font-semibold text-blue-700' : ''}`}
+                          className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-150 ${lang.level === level ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
                           onClick={() => {
                             onLanguageChange(idx, 'level', level);
                             setOpenDropdowns(prev => ({ ...prev, [`level-${idx}`]: false }));

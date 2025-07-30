@@ -5,11 +5,11 @@
  */
 export function Footer() {
   return (
-    <footer className="bg-white border-t border-gray-200 py-6 mt-12">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+    <footer className="bg-white dark:bg-zinc-900 border-t border-gray-200 dark:border-zinc-700 py-6 mt-12 transition-colors duration-300">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="text-center sm:text-left">
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
               © 2025 CV Builder. Criado com ❤️
             </p>
           </div>
@@ -18,7 +18,7 @@ export function Footer() {
               href="https://github.com/goncalojbsousa/cv-builder"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm"
+              className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors duration-200 text-sm"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

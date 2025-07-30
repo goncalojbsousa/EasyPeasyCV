@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { LanguageHtmlAttribute } from './components/language-html-attribute';
+import { ThemeProvider } from 'next-themes';
 
 /**
  * Metadata configuration for the CV Builder application
@@ -24,7 +25,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html>
+    <html suppressHydrationWarning className="">
+
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <meta name="theme-color" content="#2563eb" />
@@ -34,7 +36,14 @@ export default function RootLayout({
       <body>
         <LanguageProvider>
           <LanguageHtmlAttribute />
+          <ThemeProvider 
+          attribute="class" 
+          defaultTheme="light" 
+          enableSystem={false}
+          disableTransitionOnChange={false}
+        >
           {children}
+        </ThemeProvider>
         </LanguageProvider>
       </body>
     </html>

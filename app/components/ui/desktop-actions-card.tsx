@@ -117,28 +117,28 @@ export function DesktopActionsCard({
         <div className="space-y-4">
           {/* CV Type Selector */}
           <div className="relative" ref={cvTypeDropdownRef}>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               {t('cv.type.selector')}
             </label>
             <button
               onClick={() => setIsCVTypeDropdownOpen(!isCVTypeDropdownOpen)}
-              className="w-full flex items-center justify-between p-3 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left text-sm"
+                              className="w-full flex items-center justify-between p-3 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left text-sm text-gray-900 dark:text-gray-100"
             >
               <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 <span className="font-medium">{t(`cv.type.${cvType}`)}</span>
               </div>
-              <svg className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isCVTypeDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <svg className={`w-4 h-4 text-gray-400 dark:text-zinc-500 transition-transform duration-200 ${isCVTypeDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
               </svg>
             </button>
 
             {/* CV Type Dropdown */}
             {isCVTypeDropdownOpen && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
-                <div className="px-4 py-2 text-xs text-gray-500 border-b border-gray-100">
+                                <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-2 z-50">
+                <div className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-zinc-700">
                   {t('cv.type.selector')}
                 </div>
                 <div className="py-1">
@@ -149,7 +149,7 @@ export function DesktopActionsCard({
                         setCVType(type as any);
                         setIsCVTypeDropdownOpen(false);
                       }}
-                      className={`w-full flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-blue-50 transition-colors duration-150 ${cvType === type ? 'bg-blue-50 font-semibold text-blue-700' : ''}`}
+                      className={`w-full flex items-center gap-2 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-150 ${cvType === type ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -191,13 +191,13 @@ export function DesktopActionsCard({
 
             {/* Language selection dropdown */}
             {isDropdownOpen && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 py-2">
-                <div className="px-4 py-2 text-sm text-gray-500 border-b border-gray-100">
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-2">
+                <div className="px-4 py-2 text-sm text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-zinc-700">
                   {t('select.language')}
                 </div>
                 <div className="py-1">
                   <PdfDownloadButtonWithValidation lang="pt">
-                    <div className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-purple-50 transition-colors duration-150 cursor-pointer">
+                    <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-150 cursor-pointer">
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6">
                         <path d="M5,4H13V28H5c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" fill="#2b6519"></path>
                         <path d="M16,4h15V28h-15c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" transform="rotate(180 21.5 16)" fill="#ea3323"></path>
@@ -210,7 +210,7 @@ export function DesktopActionsCard({
                     </div>
                   </PdfDownloadButtonWithValidation>
                   <PdfDownloadButtonWithValidation lang="en">
-                    <div className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-purple-50 transition-colors duration-150 cursor-pointer">
+                    <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-150 cursor-pointer">
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6">
                         <rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="#071b65"></rect>
                         <path d="M5.101,4h-.101c-1.981,0-3.615,1.444-3.933,3.334L26.899,28h.101c1.981,0,3.615-1.444,3.933-3.334L5.101,4Z" fill="#fff"></path>
