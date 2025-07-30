@@ -112,6 +112,7 @@ const ptTranslations: Record<string, string> = {
   'app.subtitle': 'Crie um currículo profissional em minutos',
   'generate.cv': 'Gerar CV',
   'generate.resume': 'Gerar Currículo',
+  'generate.ats.resume': 'Gerar Currículo ATS',
   'preview.cv': 'Preview do CV',
   'preview': 'Preview',
   'select.language': 'Escolher idioma:',
@@ -297,6 +298,9 @@ const ptTranslations: Record<string, string> = {
   'tip.spelling.desc': 'O ATS pode não reconhecer palavras mal escritas, o que pode levar à exclusão do currículo.',
   'tip.technical.skills': 'Inclui uma secção de competências técnicas',
   'tip.technical.skills.desc': 'Lista as tecnologias, linguagens e ferramentas que utilizaste (ex: Java, Git, SQL, Docker).',
+
+  // Actions
+  'actions': 'Ações',
 
   // CV Type Selector
   'cv.type.selector': 'Tipo de Currículo',
@@ -489,6 +493,7 @@ const enTranslations: Record<string, string> = {
   'app.subtitle': 'Create a professional resume in minutes',
   'generate.cv': 'Generate CV',
   'generate.resume': 'Generate Resume',
+  'generate.ats.resume': 'Generate ATS Resume',
   'preview.cv': 'CV Preview',
   'preview': 'Preview',
   'select.language': 'Choose language:',
@@ -674,6 +679,9 @@ const enTranslations: Record<string, string> = {
   'tip.spelling.desc': 'ATS may not recognize misspelled words, which can lead to resume exclusion.',
   'tip.technical.skills': 'Include a technical skills section',
   'tip.technical.skills.desc': 'List the technologies, languages and tools you used (e.g., Java, Git, SQL, Docker).',
+
+  // Actions
+  'actions': 'Actions',
 
   // CV Type Selector
   'cv.type.selector': 'Resume Type',
