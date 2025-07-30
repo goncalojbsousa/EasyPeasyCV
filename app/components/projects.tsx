@@ -130,7 +130,7 @@ export function Projects({
                 <div className="flex items-center gap-2">
                   {projects.length > 1 && (
                     <div 
-                      className="text-gray-400 dark:text-zinc-500 cursor-move hover:text-gray-600 dark:hover:text-zinc-300 transition-colors"
+                      className="text-gray-400 dark:text-zinc-500 cursor-move hover:text-gray-600 dark:hover:text-zinc-300 transition-colors duration-300"
                       draggable
                       onDragStart={(e) => handleDragStart(e, idx)}
                       onDragOver={handleDragOver}

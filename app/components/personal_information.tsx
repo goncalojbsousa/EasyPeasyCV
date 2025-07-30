@@ -308,7 +308,7 @@ export function PersonalInformation({
                     <button
                       key={country.value}
                       type="button"
-                      className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-150 ${personalInfo.countryCode === country.value ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+                      className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${personalInfo.countryCode === country.value ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
                       onClick={() => {
                         onPersonalInfoChange('countryCode', country.value);
                         setOpenCountryDropdown(false);
@@ -365,7 +365,7 @@ export function PersonalInformation({
                     )}
                     {links.length > 1 && (
                       <div 
-                        className="text-gray-400 dark:text-zinc-500 cursor-move hover:text-gray-600 dark:hover:text-zinc-300 transition-colors"
+                        className="text-gray-400 dark:text-zinc-500 cursor-move hover:text-gray-600 dark:hover:text-zinc-300 transition-colors duration-300"
                         draggable
                         onDragStart={(e) => handleDragStart(e, idx)}
                         onDragOver={handleDragOver}
@@ -383,7 +383,7 @@ export function PersonalInformation({
                     <button
                       type="button"
                       onClick={() => onRemoveLink(idx)}
-                      className="text-gray-400 dark:text-zinc-500 hover:text-red-500 dark:hover:text-red-400 transition-colors ml-1"
+                      className="text-gray-400 dark:text-zinc-500 hover:text-red-500 dark:hover:text-red-400 transition-colors duration-300 ml-1"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -415,7 +415,7 @@ export function PersonalInformation({
                     <button
                       key={t.label}
                       type="button"
-                      className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-150 ${newLinkType === t.label ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+                      className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${newLinkType === t.label ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
                       onClick={() => {
                         setNewLinkType(t.label);
                         setOpenDropdownIdx(null);
@@ -452,7 +452,7 @@ export function PersonalInformation({
                 type="button"
                 onClick={handleAddLink}
                 disabled={!newLinkValue.trim()}
-                className="flex items-center justify-center w-10 h-10 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg transition-colors shadow-sm flex-shrink-0"
+                className="flex items-center justify-center w-10 h-10 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg transition-colors duration-300 shadow-sm flex-shrink-0"
               >
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />

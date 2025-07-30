@@ -4,7 +4,7 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
 export function ThemeToggle() {
-    const { theme, setTheme } = useTheme();
+    const { theme, setTheme, resolvedTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
 
     // Prevent hydration mismatch
@@ -16,7 +16,7 @@ export function ThemeToggle() {
     if (!mounted) {
         return (
             <button
-                className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
+                className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-300"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -38,10 +38,10 @@ export function ThemeToggle() {
     
     return (
         <button
-            className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-300"
+            onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
         >
-            {theme === 'dark' ? (
+            {resolvedTheme === 'dark' ? (
                 // Sun icon for dark mode (to switch to light mode)
                 <svg
                     xmlns="http://www.w3.org/2000/svg"

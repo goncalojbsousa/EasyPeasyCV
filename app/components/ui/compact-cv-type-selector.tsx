@@ -100,7 +100,7 @@ export function CompactCVTypeSelector() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center w-10 h-10 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded-full transition-colors duration-200"
+        className="flex items-center justify-center w-10 h-10 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded-full transition-colors duration-300"
         title={`${t('cv.type.selector')}: ${t(`cv.type.${cvType}`)}`}
       >
         {getCVTypeIcon(cvType)}
@@ -116,7 +116,7 @@ export function CompactCVTypeSelector() {
               <button
                 key={type}
                 onClick={() => handleCVTypeChange(type)}
-                className={`w-full flex items-center gap-2 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-150 ${cvType === type ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+                className={`w-full flex items-center gap-2 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${cvType === type ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
               >
                 {getCVTypeIcon(type)}
                 <span className="font-medium text-sm">{t(`cv.type.${type}`)}</span>

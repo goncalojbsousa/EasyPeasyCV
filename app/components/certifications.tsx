@@ -188,7 +188,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
             <button
               type="button"
               onClick={goToPreviousMonth}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded-lg transition-colors duration-300"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -198,14 +198,14 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
               <button
                 type="button"
                 onClick={() => setShowYearPicker(!showYearPicker)}
-                className="text-lg font-semibold text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors px-2 py-1 rounded"
+                className="text-lg font-semibold text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 px-2 py-1 rounded"
               >
                 {monthNames[currentDate.getMonth()]}
               </button>
               <button
                 type="button"
                 onClick={() => setShowYearPicker(!showYearPicker)}
-                className="text-lg font-semibold text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors px-2 py-1 rounded"
+                className="text-lg font-semibold text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 px-2 py-1 rounded"
               >
                 {currentDate.getFullYear()}
               </button>
@@ -213,7 +213,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
             <button
               type="button"
               onClick={goToNextMonth}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded-lg transition-colors duration-300"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -228,7 +228,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
                 <button
                   type="button"
                   onClick={goToPreviousYear}
-                  className="p-1 hover:bg-gray-200 dark:hover:bg-zinc-600 rounded transition-colors"
+                  className="p-1 hover:bg-gray-200 dark:hover:bg-zinc-600 rounded transition-colors duration-300"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -240,7 +240,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
                 <button
                   type="button"
                   onClick={goToNextYear}
-                  className="p-1 hover:bg-gray-200 dark:hover:bg-zinc-600 rounded transition-colors"
+                  className="p-1 hover:bg-gray-200 dark:hover:bg-zinc-600 rounded transition-colors duration-300"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -436,7 +436,7 @@ export function Certifications({
                 <div className="flex items-center gap-2">
                   {certifications.length > 1 && (
                     <div 
-                      className="text-gray-400 dark:text-zinc-500 cursor-move hover:text-gray-600 dark:hover:text-zinc-300 transition-colors"
+                      className="text-gray-400 dark:text-zinc-500 cursor-move hover:text-gray-600 dark:hover:text-zinc-300 transition-colors duration-300"
                       draggable
                       onDragStart={(e) => handleDragStart(e, idx)}
                       onDragOver={handleDragOver}

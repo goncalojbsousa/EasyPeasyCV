@@ -35,7 +35,7 @@ export function IconButton({
   className = ''
 }: IconButtonProps) {
   // Base CSS classes for all button variants
-  const baseClasses = "font-semibold flex items-center gap-2 transition-colors duration-200";
+  const baseClasses = "font-semibold flex items-center gap-2 transition-colors duration-300";
   
   // CSS classes for different visual variants
   const variantClasses = {

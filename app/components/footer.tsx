@@ -18,7 +18,7 @@ export function Footer() {
               href="https://github.com/goncalojbsousa/cv-builder"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors duration-200 text-sm"
+              className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors duration-300 text-sm"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

@@ -134,7 +134,7 @@ export function Languages({
                         <button
                           key={level}
                           type="button"
-                          className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-150 ${lang.level === level ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+                          className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${lang.level === level ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
                           onClick={() => {
                             onLanguageChange(idx, 'level', level);
                             setOpenDropdowns(prev => ({ ...prev, [`level-${idx}`]: false }));

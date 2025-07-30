@@ -695,7 +695,7 @@ export default function Home() {
             <div className="max-w-6xl mx-auto mt-8 mb-8 flex justify-center">
               <button
                 onClick={fillWithExampleData}
-                className="bg-green-600 text-white px-4 sm:px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-200 shadow-lg text-sm sm:text-base w-full sm:w-auto"
+                className="bg-green-600 text-white px-4 sm:px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-300 shadow-lg text-sm sm:text-base w-full sm:w-auto"
                 type="button"
               >
                 {t('fill.example')}

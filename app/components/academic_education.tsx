@@ -203,7 +203,7 @@ export function AcademicEducation({
                 <div className="flex items-center gap-2">
                   {education.length > 1 && (
                     <div 
-                      className="text-gray-400 dark:text-zinc-500 cursor-move hover:text-gray-600 dark:hover:text-zinc-300 transition-colors"
+                      className="text-gray-400 dark:text-zinc-500 cursor-move hover:text-gray-600 dark:hover:text-zinc-300 transition-colors duration-300"
                       draggable
                       onDragStart={(e) => handleDragStart(e, idx)}
                       onDragOver={handleDragOver}
@@ -252,7 +252,7 @@ export function AcademicEducation({
                         <button
                           key={type}
                           type="button"
-                          className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-150 ${ed.type === type ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+                          className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${ed.type === type ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
                           onClick={() => {
                             onEducationChange(idx, 'type', type);
                             setOpenDropdowns(prev => ({ ...prev, [`type-${idx}`]: false }));
@@ -282,7 +282,7 @@ export function AcademicEducation({
                         <button
                           key={status}
                           type="button"
-                          className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-150 ${ed.status === status ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+                          className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${ed.status === status ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
                           onClick={() => {
                             onEducationChange(idx, 'status', status);
                             setOpenDropdowns(prev => ({ ...prev, [`status-${idx}`]: false }));
@@ -338,7 +338,7 @@ export function AcademicEducation({
                         <button
                           key={month}
                           type="button"
-                          className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-150 ${ed.startMonth === month ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+                          className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${ed.startMonth === month ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
                           onClick={() => {
                             onEducationChange(idx, 'startMonth', month);
                             setOpenDropdowns(prev => ({ ...prev, [`startMonth-${idx}`]: false }));
@@ -381,7 +381,7 @@ export function AcademicEducation({
                               <button
                                 key={month}
                                 type="button"
-                                className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-150 ${ed.endMonth === month ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+                                className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${ed.endMonth === month ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
                                 onClick={() => {
                                   onEducationChange(idx, 'endMonth', month);
                                   setOpenDropdowns(prev => ({ ...prev, [`endMonth-${idx}`]: false }));

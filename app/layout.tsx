@@ -38,8 +38,8 @@ export default function RootLayout({
           <LanguageHtmlAttribute />
           <ThemeProvider 
           attribute="class" 
-          defaultTheme="light" 
-          enableSystem={false}
+          defaultTheme="system" 
+          enableSystem={true}
           disableTransitionOnChange={false}
         >
           {children}
