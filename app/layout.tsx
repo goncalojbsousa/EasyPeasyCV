@@ -3,7 +3,6 @@ import './globals.css';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { LanguageHtmlAttribute } from './components/language-html-attribute';
 
-
 /**
  * Metadata configuration for the CV Builder application
  */

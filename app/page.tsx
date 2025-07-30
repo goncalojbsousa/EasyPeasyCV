@@ -54,6 +54,7 @@ export default function Home() {
   const [dataLoaded, setDataLoaded] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showPdfPreview, setShowPdfPreview] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
 
 
@@ -94,6 +95,16 @@ export default function Home() {
   // Load saved data when page loads
   useEffect(() => {
     loadFromLocalStorage();
+  }, []);
+
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   // Hide data loaded notification after 5 seconds
@@ -417,6 +428,52 @@ export default function Home() {
     return true; // Return true to allow PDF generation
   };
 
+  const handleShowPdfPreview = async () => {
+    if (!validateForm()) {
+      setShowValidationErrors(true);
+      return;
+    }
+
+    if (isMobile) {
+      // Mobile: Generate PDF and open directly
+      try {
+        const { pdf } = await import('@react-pdf/renderer');
+        const { CvDocument } = await import('./components/cv_document');
+        
+        const pdfDoc = (
+          <CvDocument
+            personalInfo={personalInfo}
+            links={links}
+            resume={resume}
+            experiences={experiences}
+            education={education}
+            skills={skills}
+            languages={languages}
+            certifications={certifications}
+            projects={projects}
+            lang={language}
+          />
+        );
+
+        const blob = await pdf(pdfDoc).toBlob();
+        const url = URL.createObjectURL(blob);
+        
+        // Open PDF in new tab
+        window.open(url, '_blank');
+        
+        // Cleanup URL after a delay
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      } catch (error) {
+        console.error('Error generating PDF for mobile:', error);
+        // Fallback: show modal
+        setShowPdfPreview(true);
+      }
+    } else {
+      // Desktop: Show modal
+      setShowPdfPreview(true);
+    }
+  };
+
 
 
   /**
@@ -648,20 +705,20 @@ export default function Home() {
           </div>
 
           {/* Desktop Actions Card */}
-          <DesktopActionsCard
-            personalInfo={personalInfo}
-            links={links}
-            resume={resume}
-            experiences={experiences}
-            education={education}
-            skills={skills}
-            languages={languages}
-            certifications={certifications}
-            projects={projects}
-            onShowPdfPreview={() => setShowPdfPreview(true)}
-            onGeneratePDF={handleGeneratePDF}
-            onShowSuccessMessage={() => setShowSuccessMessage(true)}
-          />
+                  <DesktopActionsCard
+          personalInfo={personalInfo}
+          links={links}
+          resume={resume}
+          experiences={experiences}
+          education={education}
+          skills={skills}
+          languages={languages}
+          certifications={certifications}
+          projects={projects}
+          onShowPdfPreview={handleShowPdfPreview}
+          onGeneratePDF={handleGeneratePDF}
+          onShowSuccessMessage={() => setShowSuccessMessage(true)}
+        />
         </div>
       </div>
       
@@ -685,20 +742,20 @@ export default function Home() {
       />
 
       {/* Floating Action Bar (Mobile/Tablet) */}
-      <FloatingActionBar
-        personalInfo={personalInfo}
-        links={links}
-        resume={resume}
-        experiences={experiences}
-        education={education}
-        skills={skills}
-        languages={languages}
-        certifications={certifications}
-        projects={projects}
-        onShowPdfPreview={() => setShowPdfPreview(true)}
-        onGeneratePDF={handleGeneratePDF}
-        onShowSuccessMessage={() => setShowSuccessMessage(true)}
-      />
+              <FloatingActionBar
+          personalInfo={personalInfo}
+          links={links}
+          resume={resume}
+          experiences={experiences}
+          education={education}
+          skills={skills}
+          languages={languages}
+          certifications={certifications}
+          projects={projects}
+          onShowPdfPreview={handleShowPdfPreview}
+          onGeneratePDF={handleGeneratePDF}
+          onShowSuccessMessage={() => setShowSuccessMessage(true)}
+        />
     </div>
   );
 }

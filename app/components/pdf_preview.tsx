@@ -44,6 +44,18 @@ export function PdfPreview({
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [pdfSize, setPdfSize] = useState<number>(0);
+
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Generate PDF when component mounts or data changes
   useEffect(() => {
@@ -87,13 +99,13 @@ export function PdfPreview({
 
       // Generate PDF blob
       const blob = await pdf(pdfDoc).toBlob();
+      setPdfSize(blob.size);
       
       // Create URL from blob
       const url = URL.createObjectURL(blob);
       setPdfUrl(url);
     } catch (error) {
-      console.error('Error generating PDF:', error);
-      setError('Erro ao gerar PDF. Tente novamente.');
+      setError(`Erro ao gerar PDF: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
     } finally {
       setLoading(false);
     }
@@ -151,12 +163,62 @@ export function PdfPreview({
             </div>
           ) : pdfUrl ? (
             <div className="h-full w-full">
-              <iframe
-                src={pdfUrl}
-                className="w-full h-full border-0 rounded-lg shadow-lg"
-                title="PDF Preview"
-                style={{ minHeight: '600px' }}
-              />
+              {isMobile ? (
+                // Mobile: Show download and open options instead of iframe
+                <div className="flex flex-col items-center justify-center h-full p-6 text-center">
+                  <div className="max-w-md">
+                    <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                      PDF Gerado com Sucesso!
+                    </h3>
+                    <p className="text-gray-600 mb-6">
+                      A visualização direta do PDF pode não funcionar no telemóvel.
+                    </p>
+                    <div className="space-y-3">
+                      <a
+                        href={pdfUrl}
+                        download="curriculo.pdf"
+                        className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Baixar PDF
+                      </a>
+                      <a
+                        href={pdfUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                        Abrir PDF numa nova aba
+                      </a>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-4">
+                      Tamanho: {(pdfSize / 1024).toFixed(1)} KB
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                // Desktop: Show iframe
+                <iframe
+                  src={pdfUrl}
+                  className="w-full h-full border-0 rounded-lg shadow-lg"
+                  title="PDF Preview"
+                  style={{ minHeight: '600px' }}
+                  onLoad={() => console.log('PDF iframe loaded successfully')}
+                  onError={(e) => {
+                    setError('Erro ao carregar PDF no iframe');
+                  }}
+                />
+              )}
             </div>
           ) : (
             <div className="flex items-center justify-center h-full">
