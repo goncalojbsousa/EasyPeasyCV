@@ -301,6 +301,8 @@ const ptTranslations: Record<string, string> = {
 
   // Actions
   'actions': 'Ações',
+  'cv.actions': 'Ações do CV',
+  'extra.features': 'Funcionalidades Extra',
 
   // CV Type Selector
   'cv.type.selector': 'Tipo de Currículo',
@@ -722,6 +724,8 @@ const enTranslations: Record<string, string> = {
 
   // Actions
   'actions': 'Actions',
+  'cv.actions': 'CV Actions',
+  'extra.features': 'Extra Features',
 
   // CV Type Selector
   'cv.type.selector': 'Resume Type',
