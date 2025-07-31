@@ -113,7 +113,7 @@ export function Projects({
         {projects.map((proj, idx) => (
           <div 
             key={idx} 
-            className={`bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-lg shadow-sm relative mb-6 transition-all duration-300 ${
+            className={`bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg shadow-sm relative mb-6 transition-all duration-300 ${
               draggedIndex === idx ? 'opacity-50 scale-95' : ''
             }`}
             onDragOver={projects.length > 1 ? handleDragOver : undefined}
@@ -125,7 +125,7 @@ export function Projects({
               <div className="absolute left-0 -top-3 w-full h-0.5 bg-blue-500 rounded-full z-10"></div>
             )}
             {/* Card header with title */}
-            <div className="bg-gray-50 dark:bg-zinc-800 px-4 py-3 border-b border-gray-200 dark:border-zinc-700 rounded-t-lg transition-colors duration-300">
+            <div className="bg-gray-50 dark:bg-zinc-900 px-4 py-3 border-b border-gray-200 dark:border-zinc-700 rounded-t-lg transition-colors duration-300">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
                   {projects.length > 1 && (

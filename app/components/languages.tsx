@@ -95,7 +95,7 @@ export function Languages({
         
         {/* Render each language entry */}
         {languages.map((lang, idx) => (
-          <div key={idx} className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-lg shadow-sm p-4 relative mb-6 transition-colors duration-300">
+          <div key={idx} className="bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg shadow-sm p-4 relative mb-6 transition-colors duration-300">
             {/* Remove button positioned at top right */}
             <IconButton 
               onClick={() => onRemoveLanguage(idx)} 

@@ -10,6 +10,7 @@ import { Languages } from './components/languages';
 import { Certifications } from './components/certifications';
 import { Projects } from './components/projects';
 import { CVTips } from './components/cv_tips';
+import { JobAnalysis } from './components/job_analysis';
 import { LanguageSelector } from './components/ui/language-selector';
 import { Footer } from './components/footer';
 import { PdfPreview } from './components/pdf_preview';
@@ -480,6 +481,38 @@ export default function Home() {
 
 
   /**
+   * Scrolls smoothly to the job analysis section
+   */
+  const scrollToJobAnalysis = () => {
+    const element = document.getElementById('job-analysis-section');
+    if (element) {
+      const headerHeight = 115; // Approximate header height in pixels
+      const elementPosition = element.offsetTop - headerHeight;
+      
+      window.scrollTo({
+        top: elementPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  /**
+   * Scrolls smoothly to the CV tips section
+   */
+  const scrollToCVTips = () => {
+    const element = document.getElementById('cv-tips-section');
+    if (element) {
+      const headerHeight = 115; // Approximate header height in pixels
+      const elementPosition = element.offsetTop - headerHeight;
+      
+      window.scrollTo({
+        top: elementPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  /**
    * Fill form with example data for demonstration purposes
    */
   const fillWithExampleData = () => {
@@ -702,6 +735,11 @@ export default function Home() {
               </button>
             </div>
 
+            {/* Job Analysis section */}
+            <div className="w-full">
+              <JobAnalysis />
+            </div>
+
             {/* CV Tips section */}
             <div className="w-full">
               <CVTips />
@@ -722,6 +760,8 @@ export default function Home() {
             onShowPdfPreview={handleShowPdfPreview}
             onGeneratePDF={handleGeneratePDF}
             onShowSuccessMessage={() => setShowSuccessMessage(true)}
+            onScrollToJobAnalysis={scrollToJobAnalysis}
+            onScrollToCVTips={scrollToCVTips}
           />
         </div>
       </div>
@@ -759,6 +799,8 @@ export default function Home() {
         onShowPdfPreview={handleShowPdfPreview}
         onGeneratePDF={handleGeneratePDF}
         onShowSuccessMessage={() => setShowSuccessMessage(true)}
+        onScrollToJobAnalysis={scrollToJobAnalysis}
+        onScrollToCVTips={scrollToCVTips}
       />
     </div>
   );

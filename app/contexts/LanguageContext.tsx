@@ -484,6 +484,46 @@ const ptTranslations: Record<string, string> = {
   // Other specific activities and achievements
   'other.placeholder.activities': 'Ex: Desenvolvi projetos específicos da área\nImplementei processos e melhorias',
   'other.placeholder.achievements': 'Ex: Alcançei objetivos específicos da área\nImplementei melhorias com resultados positivos',
+
+  // Job Analysis
+  'job.analysis.title': 'Análise de Vagas',
+  'job.analysis.subtitle': 'Introduza o texto da vaga para receber conselhos personalizados',
+  'job.analysis.input.label': 'Texto da Vaga',
+  'job.analysis.input.placeholder': 'Cole aqui o texto completo da oferta de emprego...',
+  'job.analysis.analyze': 'Analisar Vaga',
+  'job.analysis.analyzing': 'A analisar...',
+  'job.analysis.clear': 'Limpar',
+  'job.analysis.results': 'Resultados da Análise',
+  'job.analysis.error': 'Erro ao analisar a vaga. Tente novamente.',
+  'job.analysis.tips.title': 'Como usar esta funcionalidade',
+  'job.analysis.tips.content': 'Cole o texto completo da oferta de emprego no campo acima. O sistema irá analisar automaticamente as competências requeridas, nível de experiência e tipo de contrato, fornecendo conselhos personalizados para adaptar o seu CV.',
+  
+  // Job Analysis Results
+  'job.analysis.skills.title': 'Competências Identificadas',
+  'job.analysis.skills.found': 'Competências encontradas na vaga',
+  'job.analysis.skills.advice': 'Certifique-se de incluir estas competências no seu CV, especialmente na secção de competências técnicas e experiências profissionais.',
+  'job.analysis.skills.notFound': 'Não foram identificadas competências técnicas específicas. Considere incluir competências gerais relevantes para a área.',
+  
+  'job.analysis.experience.title': 'Nível de Experiência',
+  'job.analysis.experience.senior': 'Esta vaga requer um nível sénior. Destaque experiências de liderança, gestão de projetos e responsabilidades estratégicas no seu CV.',
+  'job.analysis.experience.mid': 'Esta vaga requer um nível intermédio. Foque-se em experiências práticas e resultados quantificáveis.',
+  'job.analysis.experience.entry': 'Esta vaga é adequada para candidatos com pouca experiência. Destaque projetos académicos, estágios e competências técnicas.',
+  
+  'job.analysis.type.title': 'Tipo de Contrato',
+  'job.analysis.type.remote': 'Esta vaga permite trabalho remoto. Destaque experiências de trabalho autónomo e competências de comunicação virtual.',
+  'job.analysis.type.partTime': 'Esta vaga é a tempo parcial. Adapte o seu CV para mostrar flexibilidade e gestão eficiente do tempo.',
+  'job.analysis.type.fullTime': 'Esta vaga é a tempo inteiro. Destaque compromisso e disponibilidade total para o projeto.',
+  
+  'job.analysis.general.title': 'Conselhos Gerais',
+  'job.analysis.general.advice': 'Personalize o seu CV de acordo com esta análise. Utilize palavras-chave da vaga, destaque experiências relevantes e adapte o resumo profissional para alinhar com os requisitos identificados.',
+  
+  // Job Analysis Actions
+  'job.analysis.action.button': 'Analisar Vaga',
+  'job.analysis.action.description': 'Analise uma oferta de emprego para receber conselhos personalizados',
+  
+  // CV Tips Actions
+  'cv.tips.action.button': 'Dicas CV',
+  'cv.tips.action.description': 'Consulte dicas para criar um CV que passe em sistemas ATS',
 };
 
 // English translations
@@ -865,4 +905,44 @@ const enTranslations: Record<string, string> = {
   // Other specific activities and achievements
   'other.placeholder.activities': 'Ex: Developed area-specific projects\nImplemented processes and improvements',
   'other.placeholder.achievements': 'Ex: Achieved area-specific objectives\nImplemented improvements with positive results',
+
+  // Job Analysis
+  'job.analysis.title': 'Job Analysis',
+  'job.analysis.subtitle': 'Enter job posting text to receive personalized advice',
+  'job.analysis.input.label': 'Job Posting Text',
+  'job.analysis.input.placeholder': 'Paste the complete job posting text here...',
+  'job.analysis.analyze': 'Analyze Job',
+  'job.analysis.analyzing': 'Analyzing...',
+  'job.analysis.clear': 'Clear',
+  'job.analysis.results': 'Analysis Results',
+  'job.analysis.error': 'Error analyzing job posting. Please try again.',
+  'job.analysis.tips.title': 'How to use this feature',
+  'job.analysis.tips.content': 'Paste the complete job posting text in the field above. The system will automatically analyze required skills, experience level, and contract type, providing personalized advice to adapt your CV.',
+  
+  // Job Analysis Results
+  'job.analysis.skills.title': 'Identified Skills',
+  'job.analysis.skills.found': 'Skills found in the job posting',
+  'job.analysis.skills.advice': 'Make sure to include these skills in your CV, especially in the technical skills section and professional experiences.',
+  'job.analysis.skills.notFound': 'No specific technical skills were identified. Consider including general skills relevant to the field.',
+  
+  'job.analysis.experience.title': 'Experience Level',
+  'job.analysis.experience.senior': 'This job requires a senior level. Highlight leadership experiences, project management, and strategic responsibilities in your CV.',
+  'job.analysis.experience.mid': 'This job requires a mid-level. Focus on practical experiences and quantifiable results.',
+  'job.analysis.experience.entry': 'This job is suitable for candidates with little experience. Highlight academic projects, internships, and technical skills.',
+  
+  'job.analysis.type.title': 'Contract Type',
+  'job.analysis.type.remote': 'This job allows remote work. Highlight autonomous work experiences and virtual communication skills.',
+  'job.analysis.type.partTime': 'This job is part-time. Adapt your CV to show flexibility and efficient time management.',
+  'job.analysis.type.fullTime': 'This job is full-time. Highlight commitment and full availability for the project.',
+  
+  'job.analysis.general.title': 'General Advice',
+  'job.analysis.general.advice': 'Personalize your CV according to this analysis. Use keywords from the job posting, highlight relevant experiences, and adapt the professional summary to align with the identified requirements.',
+  
+  // Job Analysis Actions
+  'job.analysis.action.button': 'Analyze Job',
+  'job.analysis.action.description': 'Analyze a job posting to receive personalized advice',
+  
+  // CV Tips Actions
+  'cv.tips.action.button': 'CV Tips',
+  'cv.tips.action.description': 'View tips for creating a CV that passes ATS systems',
 }; 
