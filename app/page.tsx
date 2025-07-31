@@ -629,23 +629,23 @@ export default function Home() {
           <div className="flex flex-col gap-6 sm:gap-8">
             {/* Data loaded notification */}
             {dataLoaded && (
-              <div className="p-3 bg-green-50 border border-green-200 rounded-lg shadow-sm transition-colors duration-300">
-                <p className="text-green-700 text-sm">{t('data.loaded')}</p>
+              <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg shadow-sm transition-colors duration-300">
+                <p className="text-green-700 dark:text-green-400 text-sm">{t('data.loaded')}</p>
               </div>
             )}
 
             {/* Success message notification */}
             {showSuccessMessage && (
-              <div className="p-3 bg-green-50 border border-green-200 rounded-lg shadow-sm transition-colors duration-300">
-                <p className="text-green-700 text-sm">{t('cv.generated')}</p>
+              <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg shadow-sm transition-colors duration-300">
+                <p className="text-green-700 dark:text-green-400 text-sm">{t('cv.generated')}</p>
               </div>
             )}
 
             {/* Validation errors notification */}
             {showValidationErrors && Object.keys(validationErrors).length > 0 && (
-              <div className="p-4 bg-red-50 border border-red-200 rounded-lg shadow-sm transition-colors duration-300">
-                <p className="text-red-700 text-sm font-medium">{t('validation.required')}</p>
-                <ul className="text-red-600 text-xs mt-1 list-disc list-inside">
+              <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg shadow-sm transition-colors duration-300">
+                <p className="text-red-700 dark:text-red-400 text-sm font-medium">{t('validation.required')}</p>
+                <ul className="text-red-600 dark:text-red-400 text-xs mt-1 list-disc list-inside">
                   {validationErrors.name && <li>{t('validation.name')}</li>}
                   {validationErrors.email && <li>{t('validation.email')}</li>}
                   {validationErrors.desiredRole && <li>{t('validation.role')}</li>}
