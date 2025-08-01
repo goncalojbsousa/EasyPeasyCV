@@ -7,6 +7,7 @@ import { FormField } from './ui/form-field';
 import { IconButton } from './ui/icon-button';
 import { EmptyState } from './ui/empty-state';
 import { Icons } from './ui/icons';
+import { useLanguage } from '../contexts/LanguageContext';
 
 /**
  * Props interface for the Certifications component
@@ -35,6 +36,7 @@ interface CertificationsProps {
  * @param placeholder - Placeholder text for the input
  */
 function DatePicker({ value, onChange, placeholder }: { value: string; onChange: (value: string) => void; placeholder: string }) {
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(value ? new Date(value) : null);
@@ -146,8 +148,8 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
 
   const days = getDaysInMonth(currentDate);
   const monthNames = [
-    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    'calendar.month.january', 'calendar.month.february', 'calendar.month.march', 'calendar.month.april', 'calendar.month.may', 'calendar.month.june',
+    'calendar.month.july', 'calendar.month.august', 'calendar.month.september', 'calendar.month.october', 'calendar.month.november', 'calendar.month.december'
   ];
 
   // Generate array of years for the year picker
@@ -200,7 +202,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
                 onClick={() => setShowYearPicker(!showYearPicker)}
                 className="text-lg font-semibold text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 px-2 py-1 rounded"
               >
-                {monthNames[currentDate.getMonth()]}
+                {t(monthNames[currentDate.getMonth()])}
               </button>
               <button
                 type="button"
@@ -270,9 +272,9 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
 
           {/* Days of Week */}
           <div className="grid grid-cols-7 gap-1 mb-2">
-            {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(day => (
+            {['calendar.day.sun', 'calendar.day.mon', 'calendar.day.tue', 'calendar.day.wed', 'calendar.day.thu', 'calendar.day.fri', 'calendar.day.sat'].map(day => (
               <div key={day} className="text-center text-sm font-medium text-gray-500 dark:text-zinc-400 py-2">
-                {day}
+                {t(day)}
               </div>
             ))}
           </div>
@@ -310,14 +312,14 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
               onClick={clearDate}
               className="px-3 py-1 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded transition-colors"
             >
-              Limpar
+              {t('calendar.clear')}
             </button>
             <button
               type="button"
               onClick={goToToday}
               className="px-3 py-1 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition-colors"
             >
-              Hoje
+              {t('calendar.today')}
             </button>
           </div>
         </div>
@@ -347,6 +349,7 @@ export function Certifications({
   onRemoveCertification,
   onReorderCertifications
 }: CertificationsProps) {
+  const { t } = useLanguage();
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   
@@ -355,7 +358,7 @@ export function Certifications({
     if (cert.name && cert.issuer) return `${cert.name} | ${cert.issuer}`;
     if (cert.name) return cert.name;
     if (cert.issuer) return cert.issuer;
-    return `Certificação ${idx + 1}`;
+    return `${t('certification.title')} ${idx + 1}`;
   };
 
   // Drag and drop handlers
@@ -407,12 +410,12 @@ export function Certifications({
   return (
     <form className="space-y-8 flex flex-col items-center">
       <FormSection 
-        title="Certificações/Cursos" 
+        title={t('section.certifications')} 
         icon={Icons.certifications}
       >
         {/* Display empty state when no certifications exist */}
         {certifications.length === 0 && (
-          <EmptyState message="Nenhuma certificação adicionada" />
+          <EmptyState message={t('empty.certification')} />
         )}
         
         {/* Render each certification entry */}
@@ -468,20 +471,20 @@ export function Certifications({
             
             {/* Certification name and issuer fields */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
-              <FormField label="Certificação">
+              <FormField label={t('field.certification')}>
                 <input
                   type="text"
                   className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                  placeholder="Ex: Certificação AWS Cloud Practitioner"
+                  placeholder={t('placeholder.certification')}
                   value={cert.name}
                   onChange={e => onCertificationChange(idx, 'name', e.target.value)}
                 />
               </FormField>
-              <FormField label="Emissor/Instituição">
+              <FormField label={t('field.issuer')}>
                 <input
                   type="text"
                   className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                  placeholder="Ex: Udemy, Alura, AWS"
+                  placeholder={t('placeholder.issuer')}
                   value={cert.issuer}
                   onChange={e => onCertificationChange(idx, 'issuer', e.target.value)}
                 />
@@ -490,27 +493,27 @@ export function Certifications({
             
             {/* Completion date, hours, and validation link fields */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-4">
-              <FormField label="Data de Conclusão">
+              <FormField label={t('field.completion.date')}>
                 <DatePicker
                   value={cert.completionDate}
                   onChange={(value) => onCertificationChange(idx, 'completionDate', value)}
-                  placeholder="Selecionar data"
+                  placeholder={t('select.date')}
                 />
               </FormField>
-              <FormField label="Carga Horária">
+              <FormField label={t('field.hours')}>
                 <input
                   type="text"
                   className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                  placeholder="Ex: 40 horas"
+                  placeholder={t('placeholder.hours')}
                   value={cert.hours}
                   onChange={e => onCertificationChange(idx, 'hours', e.target.value)}
                 />
               </FormField>
-              <FormField label="Link de Validação">
+              <FormField label={t('field.validation.link')}>
                 <input
                   type="url"
                   className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                  placeholder="Ex: https://certificado.instituicao.com/123456"
+                  placeholder={t('placeholder.validation.link')}
                   value={cert.validationLink}
                   onChange={e => onCertificationChange(idx, 'validationLink', e.target.value)}
                 />
@@ -518,10 +521,10 @@ export function Certifications({
             </div>
             
             {/* Description field */}
-            <FormField label="Descrição">
+            <FormField label={t('field.description')}>
               <textarea
                 className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                placeholder="Ex: Curso focado em desenvolvimento de APIs REST com Node.js..."
+                placeholder={t('placeholder.certification.description')}
                 value={cert.description}
                 onChange={e => onCertificationChange(idx, 'description', e.target.value)}
               />
@@ -534,7 +537,7 @@ export function Certifications({
         <div className="flex justify-start mt-4">
           <IconButton onClick={onAddCertification}>
             {Icons.add}
-            Adicionar Certificação/Curso
+            {t('add.certification')}
           </IconButton>
         </div>
       </FormSection>

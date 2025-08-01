@@ -49,7 +49,7 @@ export function Projects({
   // Helper function to generate smart titles for project cards
   const getProjectTitle = (proj: Project, idx: number) => {
     if (proj.name) return proj.name;
-    return `Projeto ${idx + 1}`;
+    return `${t('project.title')} ${idx + 1}`;
   };
 
   // Drag and drop handlers
@@ -101,12 +101,12 @@ export function Projects({
   return (
     <form className="space-y-8 flex flex-col items-center">
       <FormSection 
-        title="Projetos" 
+        title={t('section.projects')} 
         icon={Icons.projects}
       >
         {/* Display empty state when no projects exist */}
         {projects.length === 0 && (
-          <EmptyState message="Nenhum projeto adicionado" />
+          <EmptyState message={t('empty.project')} />
         )}
         
         {/* Render each project entry */}
@@ -162,7 +162,7 @@ export function Projects({
             
             {/* Project name and year fields */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
-              <FormField label="Nome do Projeto">
+              <FormField label={t('field.project.name')}>
                 <input
                   type="text"
                   className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
@@ -171,11 +171,11 @@ export function Projects({
                   onChange={e => onProjectChange(idx, 'name', e.target.value)}
                 />
               </FormField>
-              <FormField label="Ano">
+              <FormField label={t('field.year')}>
                 <input
                   type="text"
                   className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                  placeholder="Ex: 2023"
+                  placeholder={t('placeholder.project.year')}
                   value={proj.year}
                   onChange={e => onProjectChange(idx, 'year', e.target.value)}
                 />
@@ -193,11 +193,11 @@ export function Projects({
                   onChange={e => onProjectChange(idx, 'tech', e.target.value)}
                 />
               </FormField>
-              <FormField label="Link">
+              <FormField label={t('field.project.link')}>
                 <input
                   type="url"
                   className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                  placeholder="Ex: https://github.com/user/project"
+                  placeholder={t('placeholder.project.link')}
                   value={proj.link}
                   onChange={e => onProjectChange(idx, 'link', e.target.value)}
                 />
@@ -205,7 +205,7 @@ export function Projects({
             </div>
             
             {/* Project description field */}
-            <FormField label="Descrição">
+            <FormField label={t('field.description')}>
               <textarea
                 className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                                   placeholder={t(`cvType.placeholder.project.description`)}
@@ -221,7 +221,7 @@ export function Projects({
         <div className="flex justify-start mt-4">
           <IconButton onClick={onAddProject}>
             {Icons.add}
-            Adicionar Projeto
+            {t('add.project')}
           </IconButton>
         </div>
       </FormSection>

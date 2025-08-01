@@ -174,17 +174,40 @@ const ptTranslations: Record<string, string> = {
   'field.course': 'Curso',
   'field.institution': 'Instituição',
   'field.description': 'Descrição',
-  'add.education': 'Adicionar Educação',
+  'field.education.type': 'Tipo de Formação',
+  'field.education.status': 'Estado',
+  'add.education': 'Adicionar Formação',
   'education.title': 'Educação',
+  
+  // Education types
+  'education.type.secondary': 'Ensino Secundário',
+  'education.type.technical': 'Técnico',
+  'education.type.bachelor': 'Licenciatura',
+  'education.type.postgraduate': 'Pós-graduação',
+  'education.type.master': 'Mestrado',
+  'education.type.phd': 'Doutoramento',
+  
+  // Education status
+  'education.status.completed': 'Completo',
+  'education.status.in.progress': 'Em andamento',
+  'education.status.interrupted': 'Interrompido',
 
   // Technical Skills
   'skills.placeholder': 'Ex: JavaScript, React, Node.js, SQL',
+  'field.technical.skills.helper': 'Separe as competências por vírgula',
 
   // Languages
   'field.language': 'Língua',
   'field.level': 'Nível',
   'add.language': 'Adicionar Língua',
   'language.title': 'Língua',
+  
+  // Language levels
+  'language.level.basic': 'Básico',
+  'language.level.intermediate': 'Intermediário',
+  'language.level.advanced': 'Avançado',
+  'language.level.fluent': 'Fluente',
+  'language.level.native': 'Nativo',
 
   // Certifications
   'field.certification': 'Certificação',
@@ -227,11 +250,16 @@ const ptTranslations: Record<string, string> = {
   'placeholder.achievements': 'Ex: Reestruturei a arquitetura da aplicação usando Next.js com SSR, o que melhorou o SEO e aumentou a retenção de usuários em 25%.',
   'placeholder.education.description': 'Ex: Tese sobre inteligência artificial, disciplinas relevantes, projetos académicos...',
   'placeholder.certification.description': 'Ex: Curso focado em desenvolvimento de APIs REST com Node.js...',
+  'placeholder.year': 'Ex: 2023',
+  'placeholder.language': 'Ex: Inglês',
 
   // Dropdown options
   'select.month': 'Selecione',
   'select.country': 'Selecionar país',
   'select.date': 'Selecionar data',
+  'select.education.type': 'Selecione',
+  'select.education.status': 'Selecione',
+  'select.language.level': 'Selecione',
 
   // Link types
   'link.type.linkedin': 'LinkedIn',
@@ -536,6 +564,29 @@ const ptTranslations: Record<string, string> = {
   // CV Tips Actions
   'cv.tips.action.button': 'Dicas CV',
   'cv.tips.action.description': 'Consulte dicas para criar um CV que passe em sistemas ATS',
+  
+  // Calendar
+  'calendar.clear': 'Limpar',
+  'calendar.today': 'Hoje',
+  'calendar.month.january': 'Janeiro',
+  'calendar.month.february': 'Fevereiro',
+  'calendar.month.march': 'Março',
+  'calendar.month.april': 'Abril',
+  'calendar.month.may': 'Maio',
+  'calendar.month.june': 'Junho',
+  'calendar.month.july': 'Julho',
+  'calendar.month.august': 'Agosto',
+  'calendar.month.september': 'Setembro',
+  'calendar.month.october': 'Outubro',
+  'calendar.month.november': 'Novembro',
+  'calendar.month.december': 'Dezembro',
+  'calendar.day.sun': 'Dom',
+  'calendar.day.mon': 'Seg',
+  'calendar.day.tue': 'Ter',
+  'calendar.day.wed': 'Qua',
+  'calendar.day.thu': 'Qui',
+  'calendar.day.fri': 'Sex',
+  'calendar.day.sat': 'Sáb',
 };
 
 // English translations
@@ -607,17 +658,40 @@ const enTranslations: Record<string, string> = {
   'field.course': 'Course',
   'field.institution': 'Institution',
   'field.description': 'Description',
+  'field.education.type': 'Education Type',
+  'field.education.status': 'Status',
   'add.education': 'Add Education',
   'education.title': 'Education',
+  
+  // Education types
+  'education.type.secondary': 'Secondary Education',
+  'education.type.technical': 'Technical',
+  'education.type.bachelor': 'Bachelor\'s Degree',
+  'education.type.postgraduate': 'Postgraduate',
+  'education.type.master': 'Master\'s Degree',
+  'education.type.phd': 'PhD',
+  
+  // Education status
+  'education.status.completed': 'Completed',
+  'education.status.in.progress': 'In Progress',
+  'education.status.interrupted': 'Interrupted',
 
   // Technical Skills
   'skills.placeholder': 'Ex: JavaScript, React, Node.js, SQL',
+  'field.technical.skills.helper': 'Separate skills by comma',
 
   // Languages
   'field.language': 'Language',
   'field.level': 'Level',
   'add.language': 'Add Language',
   'language.title': 'Language',
+  
+  // Language levels
+  'language.level.basic': 'Basic',
+  'language.level.intermediate': 'Intermediate',
+  'language.level.advanced': 'Advanced',
+  'language.level.fluent': 'Fluent',
+  'language.level.native': 'Native',
 
   // Certifications
   'field.certification': 'Certification',
@@ -660,11 +734,16 @@ const enTranslations: Record<string, string> = {
   'placeholder.achievements': 'Ex: I restructured the application architecture using Next.js with SSR, which improved SEO and increased user retention by 25%.',
   'placeholder.education.description': 'Ex: Thesis on artificial intelligence, relevant subjects, academic projects...',
   'placeholder.certification.description': 'Ex: Course focused on REST API development with Node.js...',
+  'placeholder.year': 'Ex: 2023',
+  'placeholder.language': 'Ex: English',
 
   // Dropdown options
   'select.month': 'Select',
   'select.country': 'Select country',
   'select.date': 'Select date',
+  'select.education.type': 'Select',
+  'select.education.status': 'Select',
+  'select.language.level': 'Select',
 
   // Link types
   'link.type.linkedin': 'LinkedIn',
@@ -969,4 +1048,27 @@ const enTranslations: Record<string, string> = {
   // CV Tips Actions
   'cv.tips.action.button': 'CV Tips',
   'cv.tips.action.description': 'View tips for creating a CV that passes ATS systems',
+  
+  // Calendar
+  'calendar.clear': 'Clear',
+  'calendar.today': 'Today',
+  'calendar.month.january': 'January',
+  'calendar.month.february': 'February',
+  'calendar.month.march': 'March',
+  'calendar.month.april': 'April',
+  'calendar.month.may': 'May',
+  'calendar.month.june': 'June',
+  'calendar.month.july': 'July',
+  'calendar.month.august': 'August',
+  'calendar.month.september': 'September',
+  'calendar.month.october': 'October',
+  'calendar.month.november': 'November',
+  'calendar.month.december': 'December',
+  'calendar.day.sun': 'Sun',
+  'calendar.day.mon': 'Mon',
+  'calendar.day.tue': 'Tue',
+  'calendar.day.wed': 'Wed',
+  'calendar.day.thu': 'Thu',
+  'calendar.day.fri': 'Fri',
+  'calendar.day.sat': 'Sat',
 }; 

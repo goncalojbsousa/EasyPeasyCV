@@ -29,21 +29,21 @@ interface AcademicEducationProps {
  * Available education types for dropdown selection
  */
 const EDUCATION_TYPES = [
-  'Ensino Secundário',
-  'Técnico',
-  'Licenciatura',
-  'Pós-graduação',
-  'Mestrado',
-  'Doutoramento'
+  'education.type.secondary',
+  'education.type.technical',
+  'education.type.bachelor',
+  'education.type.postgraduate',
+  'education.type.master',
+  'education.type.phd'
 ];
 
 /**
  * Available education status options for dropdown selection
  */
 const EDUCATION_STATUS = [
-  'Completo',
-  'Em andamento',
-  'Interrompido'
+  'education.status.completed',
+  'education.status.in.progress',
+  'education.status.interrupted'
 ];
 
 /**
@@ -70,25 +70,6 @@ export function AcademicEducation({
 }: AcademicEducationProps) {
   const { t } = useLanguage();
   const [openDropdowns, setOpenDropdowns] = useState<{[key: string]: boolean}>({});
-  
-  // Function to get translated month
-  const getTranslatedMonth = (month: string) => {
-    const monthMap: { [key: string]: string } = {
-      'Jan': t('month.jan'),
-      'Feb': t('month.feb'),
-      'Mar': t('month.mar'),
-      'Apr': t('month.apr'),
-      'May': t('month.may'),
-      'Jun': t('month.jun'),
-      'Jul': t('month.jul'),
-      'Aug': t('month.aug'),
-      'Sep': t('month.sep'),
-      'Oct': t('month.oct'),
-      'Nov': t('month.nov'),
-      'Dec': t('month.dec'),
-    };
-    return monthMap[month] || month;
-  };
   const dropdownRefs = useRef<{[key: string]: HTMLDivElement | null}>({});
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
@@ -235,7 +216,7 @@ export function AcademicEducation({
             
             {/* Education type and status fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-              <FormField label="Tipo de Formação">
+              <FormField label={t('field.education.type')}>
                 <div ref={el => { dropdownRefs.current[`type-${idx}`] = el; }} className="relative">
                   <button
                     type="button"
@@ -243,7 +224,7 @@ export function AcademicEducation({
                     onClick={() => toggleDropdown(`type-${idx}`)}
                     tabIndex={0}
                   >
-                    <span>{ed.type || 'Selecione'}</span>
+                    <span>{ed.type ? t(ed.type) : t('select.education.type')}</span>
                     <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`type-${idx}`] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
                   </button>
                   {openDropdowns[`type-${idx}`] && (
@@ -258,14 +239,14 @@ export function AcademicEducation({
                             setOpenDropdowns(prev => ({ ...prev, [`type-${idx}`]: false }));
                           }}
                         >
-                          {type}
+                          {t(type)}
                         </button>
                       ))}
                     </div>
                   )}
                 </div>
               </FormField>
-              <FormField label="Estado">
+              <FormField label={t('field.education.status')}>
                 <div ref={el => { dropdownRefs.current[`status-${idx}`] = el; }} className="relative">
                   <button
                     type="button"
@@ -273,7 +254,7 @@ export function AcademicEducation({
                     onClick={() => toggleDropdown(`status-${idx}`)}
                     tabIndex={0}
                   >
-                    <span>{ed.status || 'Selecione'}</span>
+                    <span>{ed.status ? t(ed.status) : t('select.education.status')}</span>
                     <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`status-${idx}`] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
                   </button>
                   {openDropdowns[`status-${idx}`] && (
@@ -288,7 +269,7 @@ export function AcademicEducation({
                             setOpenDropdowns(prev => ({ ...prev, [`status-${idx}`]: false }));
                           }}
                         >
-                          {status}
+                          {t(status)}
                         </button>
                       ))}
                     </div>
@@ -299,20 +280,20 @@ export function AcademicEducation({
             
             {/* Course and institution fields */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
-              <FormField label="Curso">
+              <FormField label={t('field.course')}>
                 <input
                   type="text"
                   className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                  placeholder="Ex: Licenciatura em Engenharia Informática"
+                  placeholder={t('placeholder.course')}
                   value={ed.course}
                   onChange={e => onEducationChange(idx, 'course', e.target.value)}
                 />
               </FormField>
-              <FormField label="Instituição">
+              <FormField label={t('field.institution')}>
                 <input
                   type="text"
                   className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                  placeholder="Ex: Universidade do Porto"
+                  placeholder={t('placeholder.institution')}
                   value={ed.institution}
                   onChange={e => onEducationChange(idx, 'institution', e.target.value)}
                 />
@@ -321,7 +302,7 @@ export function AcademicEducation({
             
             {/* Date fields - Start and End dates in parallel */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-4">
-              <FormField label="Mês Início">
+              <FormField label={t('field.start.month')}>
                 <div ref={el => { dropdownRefs.current[`startMonth-${idx}`] = el; }} className="relative">
                   <button
                     type="button"
@@ -329,7 +310,7 @@ export function AcademicEducation({
                     onClick={() => toggleDropdown(`startMonth-${idx}`)}
                     tabIndex={0}
                   >
-                    <span>{ed.startMonth || 'Selecione'}</span>
+                    <span>{ed.startMonth || t('select.month')}</span>
                     <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`startMonth-${idx}`] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
                   </button>
                   {openDropdowns[`startMonth-${idx}`] && (
@@ -351,20 +332,20 @@ export function AcademicEducation({
                   )}
                 </div>
               </FormField>
-              <FormField label="Ano Início">
+              <FormField label={t('field.start.year')}>
                 <input
                   type="text"
                   className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                  placeholder="Ano"
+                  placeholder={t('placeholder.year')}
                   value={ed.startYear}
                   onChange={e => onEducationChange(idx, 'startYear', e.target.value)}
                 />
               </FormField>
               
               {/* End date fields - only show if status is "Completo" */}
-              {(ed.status === 'Completo' || ed.status === 'Completed') && (
+              {(ed.status === 'education.status.completed') && (
                 <>
-                  <FormField label="Mês Fim">
+                  <FormField label={t('field.end.month')}>
                     <div ref={el => { dropdownRefs.current[`endMonth-${idx}`] = el; }} className="relative">
                       <button
                         type="button"
@@ -372,7 +353,7 @@ export function AcademicEducation({
                         onClick={() => toggleDropdown(`endMonth-${idx}`)}
                         tabIndex={0}
                       >
-                        <span>{ed.endMonth || 'Selecione'}</span>
+                        <span>{ed.endMonth || t('select.month')}</span>
                         <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`endMonth-${idx}`] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
                       </button>
                                               {openDropdowns[`endMonth-${idx}`] && (
@@ -394,11 +375,11 @@ export function AcademicEducation({
                         )}
                     </div>
                   </FormField>
-                  <FormField label="Ano Fim">
+                  <FormField label={t('field.end.year')}>
                     <input
                       type="text"
                       className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                      placeholder="Ano"
+                      placeholder={t('placeholder.year')}
                       value={ed.endYear}
                       onChange={e => onEducationChange(idx, 'endYear', e.target.value)}
                     />
@@ -408,10 +389,10 @@ export function AcademicEducation({
             </div>
             
             {/* Description field */}
-            <FormField label="Descrição">
+            <FormField label={t('field.description')}>
                               <textarea
                   className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                  placeholder="Ex: Tese sobre inteligência artificial, disciplinas relevantes, projetos académicos..."
+                  placeholder={t('placeholder.education.description')}
                   value={ed.description}
                   onChange={e => onEducationChange(idx, 'description', e.target.value)}
                 />
@@ -424,7 +405,7 @@ export function AcademicEducation({
         <div className="flex justify-start mt-4">
           <IconButton onClick={onAddEducation}>
             {Icons.add}
-            Adicionar Formação
+            {t('add.education')}
           </IconButton>
         </div>
       </FormSection>

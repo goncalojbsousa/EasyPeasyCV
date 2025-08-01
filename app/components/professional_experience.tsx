@@ -271,7 +271,7 @@ export function ProfessionalExperience({
                 <input
                   type="text"
                   className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                  placeholder="Ano"
+                  placeholder={t('placeholder.year')}
                   value={exp.startYear}
                   onChange={e => onExperienceChange(idx, 'startYear', e.target.value)}
                 />
@@ -313,7 +313,7 @@ export function ProfessionalExperience({
                                       <input
                     type="text"
                     className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                    placeholder="Ano"
+                    placeholder={t('placeholder.year')}
                     value={exp.endYear}
                     onChange={e => onExperienceChange(idx, 'endYear', e.target.value)}
                   />

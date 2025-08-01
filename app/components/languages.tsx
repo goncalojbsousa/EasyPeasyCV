@@ -27,11 +27,11 @@ interface LanguagesProps {
  * Available language levels for dropdown selection
  */
 const LANGUAGE_LEVELS = [
-  'Básico',
-  'Intermediário',
-  'Avançado',
-  'Fluente',
-  'Nativo'
+  'language.level.basic',
+  'language.level.intermediate',
+  'language.level.advanced',
+  'language.level.fluent',
+  'language.level.native'
 ];
 
 /**
@@ -108,16 +108,16 @@ export function Languages({
             
             {/* Language name and proficiency level fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-              <FormField label="Idioma">
+              <FormField label={t('field.language')}>
                 <input
                   type="text"
                   className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                  placeholder="Ex: Inglês"
+                  placeholder={t('placeholder.language')}
                   value={lang.name}
                   onChange={e => onLanguageChange(idx, 'name', e.target.value)}
                 />
               </FormField>
-              <FormField label="Nível">
+              <FormField label={t('field.level')}>
                 <div ref={el => { dropdownRefs.current[`level-${idx}`] = el; }} className="relative">
                   <button
                     type="button"
@@ -125,7 +125,7 @@ export function Languages({
                     onClick={() => toggleDropdown(`level-${idx}`)}
                     tabIndex={0}
                   >
-                    <span>{lang.level || 'Selecione'}</span>
+                    <span>{lang.level ? t(lang.level) : t('select.language.level')}</span>
                     <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`level-${idx}`] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
                   </button>
                   {openDropdowns[`level-${idx}`] && (
@@ -140,7 +140,7 @@ export function Languages({
                             setOpenDropdowns(prev => ({ ...prev, [`level-${idx}`]: false }));
                           }}
                         >
-                          {level}
+                          {t(level)}
                         </button>
                       ))}
                     </div>
@@ -155,7 +155,7 @@ export function Languages({
         <div className="flex justify-start mt-4">
           <IconButton onClick={onAddLanguage}>
             {Icons.add}
-            Adicionar Idioma
+            {t('add.language')}
           </IconButton>
         </div>
       </FormSection>

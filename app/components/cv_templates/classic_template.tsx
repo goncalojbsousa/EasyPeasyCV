@@ -231,6 +231,32 @@ export function ClassicTemplate({
     }
   };
 
+  // Helper to translate language levels
+  const translateLanguageLevel = (level: string, lang: string) => {
+    if (!level) return '';
+    
+    const levelMap = {
+      'Básico': { pt: 'Básico', en: 'Basic' },
+      'Intermediário': { pt: 'Intermediário', en: 'Intermediate' },
+      'Avançado': { pt: 'Avançado', en: 'Advanced' },
+      'Fluente': { pt: 'Fluente', en: 'Fluent' },
+      'Nativo': { pt: 'Nativo', en: 'Native' },
+      'Basic': { pt: 'Básico', en: 'Basic' },
+      'Intermediate': { pt: 'Intermediário', en: 'Intermediate' },
+      'Advanced': { pt: 'Avançado', en: 'Advanced' },
+      'Fluent': { pt: 'Fluente', en: 'Fluent' },
+      'Native': { pt: 'Nativo', en: 'Native' },
+      // Handle old translation keys
+      'language.level.basic': { pt: 'Básico', en: 'Basic' },
+      'language.level.intermediate': { pt: 'Intermediário', en: 'Intermediate' },
+      'language.level.advanced': { pt: 'Avançado', en: 'Advanced' },
+      'language.level.fluent': { pt: 'Fluente', en: 'Fluent' },
+      'language.level.native': { pt: 'Nativo', en: 'Native' },
+    };
+    
+    return levelMap[level as keyof typeof levelMap]?.[lang as keyof typeof levelMap[keyof typeof levelMap]] || level;
+  };
+
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -367,9 +393,9 @@ export function ClassicTemplate({
                     {lang === 'en' ? 'Languages' : 'Idiomas'}
                   </Text>
                   <View style={styles.langRow}>
-                    {languages.map((lang, index) => (
+                    {languages.map((language, index) => (
                       <Text key={index} style={styles.langItem}>
-                        {lang.name} ({lang.level})
+                        {language.name} ({translateLanguageLevel(language.level, lang || 'pt')})
                       </Text>
                     ))}
                   </View>
