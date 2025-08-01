@@ -16,8 +16,10 @@ import { Footer } from './components/footer';
 import { PdfPreview } from './components/pdf_preview';
 import { FloatingActionBar } from './components/ui/floating-action-bar';
 import { DesktopActionsCard } from './components/ui/desktop-actions-card';
+import { CvTypeSelector } from './components/ui/cv-type-selector';
+import { ColorSelector } from './components/ui/color-selector';
 import { useLanguage } from './contexts/LanguageContext';
-import { Experience, Education, Language, Certification, Project } from './types/cv';
+import { Experience, Education, Language, Certification, Project, CvColor } from './types/cv';
 import { ThemeToggle } from './components/theme-toggle';
 
 /**
@@ -57,6 +59,8 @@ export default function Home() {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showPdfPreview, setShowPdfPreview] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<'classic' | 'modern' | 'creative'>('classic');
+  const [selectedColor, setSelectedColor] = useState<CvColor>('blue');
 
 
 
@@ -87,6 +91,8 @@ export default function Home() {
         setLanguages(data.languages || []);
         setCertifications(data.certifications || []);
         setProjects(data.projects || []);
+        setSelectedTemplate(data.template || 'classic');
+        setSelectedColor(data.color || 'blue');
         setDataLoaded(true);
       }
     } catch {
@@ -172,10 +178,12 @@ export default function Home() {
       skills,
       languages,
       certifications,
-      projects
+      projects,
+      template: selectedTemplate,
+      color: selectedColor
     };
     localStorage.setItem('cv-builder-data', JSON.stringify(data));
-  }, [personalInfo, links, resume, experiences, education, skills, languages, certifications, projects]);
+  }, [personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, selectedTemplate, selectedColor]);
 
   // Auto-save data when any field changes
   useEffect(() => {
@@ -456,6 +464,7 @@ export default function Home() {
             certifications={certifications}
             projects={projects}
             lang={language}
+            template={selectedTemplate}
           />
         );
 
@@ -757,6 +766,12 @@ export default function Home() {
             languages={languages}
             certifications={certifications}
             projects={projects}
+            template={selectedTemplate}
+            color={selectedColor}
+            selectedTemplate={selectedTemplate}
+            selectedColor={selectedColor}
+            onTemplateChange={setSelectedTemplate}
+            onColorChange={setSelectedColor}
             onShowPdfPreview={handleShowPdfPreview}
             onGeneratePDF={handleGeneratePDF}
             onShowSuccessMessage={() => setShowSuccessMessage(true)}
@@ -783,6 +798,8 @@ export default function Home() {
         show={showPdfPreview}
         onClose={() => setShowPdfPreview(false)}
         lang={language}
+        template={selectedTemplate}
+        color={selectedColor}
       />
 
       {/* Floating Action Bar (Mobile/Tablet) */}
@@ -796,6 +813,8 @@ export default function Home() {
         languages={languages}
         certifications={certifications}
         projects={projects}
+        template={selectedTemplate}
+        color={selectedColor}
         onShowPdfPreview={handleShowPdfPreview}
         onGeneratePDF={handleGeneratePDF}
         onShowSuccessMessage={() => setShowSuccessMessage(true)}

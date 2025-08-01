@@ -123,6 +123,13 @@ export interface Project {
 }
 
 /**
+ * Available CV template types
+ */
+export type CvTemplate = 'classic' | 'modern' | 'creative';
+
+export type CvColor = 'blue' | 'green' | 'purple' | 'orange' | 'red' | 'teal' | 'indigo' | 'pink';
+
+/**
  * Main interface containing all CV data
  */
 export interface CvData {
@@ -144,4 +151,8 @@ export interface CvData {
   certifications: Certification[];
   /** Project entries */
   projects: Project[];
+  /** Selected CV template */
+  template?: CvTemplate;
+  /** Selected color theme */
+  color?: CvColor;
 } 

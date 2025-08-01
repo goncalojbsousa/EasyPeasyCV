@@ -299,6 +299,16 @@ const ptTranslations: Record<string, string> = {
   'tip.technical.skills': 'Inclui uma secção de competências técnicas',
   'tip.technical.skills.desc': 'Lista as tecnologias, linguagens e ferramentas que utilizaste (ex: Java, Git, SQL, Docker).',
 
+  // Template selector
+  'template.selector': 'Selecionar Template',
+  'template.classic.name': 'Clássico',
+  'template.classic.description': 'Layout tradicional e profissional',
+  'template.modern.name': 'Moderno',
+  'template.modern.description': 'Design limpo e minimalista',
+  'template.creative.name': 'Criativo',
+  'template.creative.description': 'Layout inovador e expressivo',
+  'color.selector': 'Selecionar Cor',
+
   // Actions
   'actions': 'Ações',
   'cv.actions': 'Ações do CV',
@@ -721,6 +731,16 @@ const enTranslations: Record<string, string> = {
   'tip.spelling.desc': 'ATS may not recognize misspelled words, which can lead to resume exclusion.',
   'tip.technical.skills': 'Include a technical skills section',
   'tip.technical.skills.desc': 'List the technologies, languages and tools you used (e.g., Java, Git, SQL, Docker).',
+
+  // Template selector
+  'template.selector': 'Select Template',
+  'template.classic.name': 'Classic',
+  'template.classic.description': 'Traditional and professional layout',
+  'template.modern.name': 'Modern',
+  'template.modern.description': 'Clean and minimalist design',
+  'template.creative.name': 'Creative',
+  'template.creative.description': 'Innovative and expressive layout',
+  'color.selector': 'Select Color',
 
   // Actions
   'actions': 'Actions',

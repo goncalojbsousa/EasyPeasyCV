@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { pdf } from '@react-pdf/renderer';
 import { CvDocument } from './cv_document';
-import { CvData } from '../types/cv';
+import { CvData, CvColor } from '../types/cv';
 
 /**
  * Props interface for the PdfPreview component
@@ -15,6 +15,10 @@ interface PdfPreviewProps extends CvData {
   onClose?: () => void;
   /** Language for the document (pt or en) */
   lang?: string;
+  /** Selected CV template */
+  template?: 'classic' | 'modern' | 'creative';
+  /** Selected color theme */
+  color?: CvColor;
 }
 
 /**
@@ -40,6 +44,8 @@ export function PdfPreview({
   show = false,
   onClose,
   lang = 'pt',
+  template = 'classic',
+  color = 'blue',
 }: PdfPreviewProps) {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -62,7 +68,7 @@ export function PdfPreview({
     if (show) {
       generatePdf();
     }
-  }, [show, personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, lang]);
+  }, [show, personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, lang, template, color]);
 
   // Block body scroll when modal is open
   useEffect(() => {
@@ -94,6 +100,8 @@ export function PdfPreview({
           certifications={certifications}
           projects={projects}
           lang={lang}
+          template={template}
+          color={color}
         />
       );
 

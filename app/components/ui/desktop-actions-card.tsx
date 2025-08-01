@@ -5,7 +5,9 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { FormSection } from './form-section';
 import { Icons } from './icons';
 import PdfDownloadButton from '../pdf_download_button';
-import { Experience, Education, Language, Certification, Project } from '../../types/cv';
+import { Experience, Education, Language, Certification, Project, CvColor } from '../../types/cv';
+import { CvTypeSelector } from './cv-type-selector';
+import { ColorSelector } from './color-selector';
 
 interface DesktopActionsCardProps {
   personalInfo: any;
@@ -17,6 +19,12 @@ interface DesktopActionsCardProps {
   languages: Language[];
   certifications: Certification[];
   projects: Project[];
+  template?: 'classic' | 'modern' | 'creative';
+  color?: CvColor;
+  selectedTemplate: 'classic' | 'modern' | 'creative';
+  selectedColor: CvColor;
+  onTemplateChange: (template: 'classic' | 'modern' | 'creative') => void;
+  onColorChange: (color: CvColor) => void;
   onShowPdfPreview: () => void;
   onGeneratePDF: () => boolean;
   onShowSuccessMessage: () => void;
@@ -40,6 +48,12 @@ export function DesktopActionsCard({
   languages,
   certifications,
   projects,
+  template = 'classic',
+  color = 'blue',
+  selectedTemplate,
+  selectedColor,
+  onTemplateChange,
+  onColorChange,
   onShowPdfPreview,
   onGeneratePDF,
   onShowSuccessMessage,
@@ -168,6 +182,8 @@ export function DesktopActionsCard({
           certifications={certifications}
           projects={projects}
           lang={lang}
+          template={template}
+          color={color}
         >
           {children}
         </PdfDownloadButton>
@@ -181,6 +197,31 @@ export function DesktopActionsCard({
         {/* CV Actions Card */}
         <FormSection title={t('cv.actions')} icon={Icons.actions}>
           <div className="space-y-4">
+            {/* Template Selector */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {t('template.selector')}
+              </label>
+              <CvTypeSelector
+                selectedTemplate={selectedTemplate}
+                onTemplateChange={onTemplateChange}
+              />
+            </div>
+
+            {/* Color Selector - Only show for non-classic templates */}
+            {selectedTemplate !== 'classic' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  {t('color.selector')}
+                </label>
+                <ColorSelector
+                  selectedColor={selectedColor}
+                  onColorChange={onColorChange}
+                  show={true}
+                />
+              </div>
+            )}
+
             {/* CV Type Selector */}
             <div className="relative" ref={cvTypeDropdownRef}>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">

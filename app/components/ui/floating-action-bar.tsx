@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { CompactCVTypeSelector } from './compact-cv-type-selector';
 import PdfDownloadButton from '../pdf_download_button';
-import { Experience, Education, Language, Certification, Project } from '../../types/cv';
+import { Experience, Education, Language, Certification, Project, CvColor } from '../../types/cv';
 
 interface FloatingActionBarProps {
   personalInfo: any;
@@ -16,6 +16,8 @@ interface FloatingActionBarProps {
   languages: Language[];
   certifications: Certification[];
   projects: Project[];
+  template?: 'classic' | 'modern' | 'creative';
+  color?: CvColor;
   onShowPdfPreview: () => void;
   onGeneratePDF: () => boolean;
   onShowSuccessMessage: () => void;
@@ -39,6 +41,8 @@ export function FloatingActionBar({
   languages,
   certifications,
   projects,
+  template = 'classic',
+  color = 'blue',
   onShowPdfPreview,
   onGeneratePDF,
   onShowSuccessMessage,
@@ -101,6 +105,8 @@ export function FloatingActionBar({
           certifications={certifications}
           projects={projects}
           lang={lang}
+          template={template}
+          color={color}
         >
           {children}
         </PdfDownloadButton>
