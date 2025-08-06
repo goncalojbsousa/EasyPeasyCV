@@ -14,7 +14,7 @@ interface ClassicTemplateProps extends CvData {
  * Classic template styles with traditional and professional design
  */
 const styles = StyleSheet.create({
-    page: { padding: 40, fontSize: 11, fontFamily: 'Helvetica' },
+    page: { padding: 30, fontSize: 11, fontFamily: 'Helvetica' },
     header: { marginBottom: 13, paddingBottom: 8 },
     name: { fontSize: 20, fontWeight: 'bold', marginBottom: 2 },
     desiredRole: { fontSize: 13, color: '#2563eb', fontWeight: 'bold', marginBottom: 8 },
@@ -57,6 +57,11 @@ const styles = StyleSheet.create({
     projTech: { fontSize: 10, color: '#2563eb', marginBottom: 2 },
     projDesc: { fontSize: 10, marginLeft: 8, marginBottom: 2 },
     projLink: { fontSize: 10, color: '#2563eb', textDecoration: 'underline', marginLeft: 8 },
+    volBlock: { marginBottom: 12, paddingBottom: 6, borderBottomWidth: 0.5, borderBottomColor: '#e5e7eb', borderBottomStyle: 'solid' },
+    volRole: { fontSize: 11, fontWeight: 'bold', color: '#0f172a', marginBottom: 2 },
+    volOrg: { fontSize: 10, color: '#64748b', marginBottom: 2 },
+    volDesc: { fontSize: 10, marginLeft: 8, marginBottom: 2 },
+    volImpact: { fontSize: 10, fontStyle: 'italic', marginLeft: 8, marginBottom: 2 },
   });
 
 /**
@@ -75,6 +80,7 @@ export function ClassicTemplate({
   languages,
   certifications,
   projects,
+  volunteers,
   lang,
 }: ClassicTemplateProps) {
   
@@ -97,14 +103,19 @@ export function ClassicTemplate({
   };
 
   // Helper to translate link types
-  const translateLinkType = (type: string, lang: string) => {
+  const translateLinkType = (type: string, lang: string, customName?: string) => {
+    // If it's "Other" type and has a custom name, return the custom name
+    if (type === 'Other' && customName) {
+      return customName;
+    }
+    
     if (lang === 'en') {
       switch (type) {
         case 'LinkedIn': return 'LinkedIn';
         case 'GitHub': return 'GitHub';
         case 'GitLab': return 'GitLab';
         case 'Portfolio': return 'Portfolio';
-        case 'Outro': return 'Other';
+        case 'Other': return 'Other';
         default: return type;
       }
     } else {
@@ -113,7 +124,7 @@ export function ClassicTemplate({
         case 'GitHub': return 'GitHub';
         case 'GitLab': return 'GitLab';
         case 'Portfolio': return 'Portfolio';
-        case 'Outro': return 'Outro';
+        case 'Other': return 'Outro';
         default: return type;
       }
     }
@@ -236,6 +247,14 @@ export function ClassicTemplate({
     if (!level) return '';
     
     const levelMap = {
+      // CEFR levels
+      'language.level.a1': { pt: 'A1', en: 'A1' },
+      'language.level.a2': { pt: 'A2', en: 'A2' },
+      'language.level.b1': { pt: 'B1', en: 'B1' },
+      'language.level.b2': { pt: 'B2', en: 'B2' },
+      'language.level.c1': { pt: 'C1', en: 'C1' },
+      'language.level.c2': { pt: 'C2', en: 'C2' },
+      // Legacy levels for backward compatibility
       'Básico': { pt: 'Básico', en: 'Basic' },
       'Intermediário': { pt: 'Intermediário', en: 'Intermediate' },
       'Avançado': { pt: 'Avançado', en: 'Advanced' },
@@ -246,7 +265,7 @@ export function ClassicTemplate({
       'Advanced': { pt: 'Avançado', en: 'Advanced' },
       'Fluent': { pt: 'Fluente', en: 'Fluent' },
       'Native': { pt: 'Nativo', en: 'Native' },
-      // Handle old translation keys
+      // Old translation keys for backward compatibility
       'language.level.basic': { pt: 'Básico', en: 'Basic' },
       'language.level.intermediate': { pt: 'Intermediário', en: 'Intermediate' },
       'language.level.advanced': { pt: 'Avançado', en: 'Advanced' },
@@ -280,7 +299,7 @@ export function ClassicTemplate({
             <View style={styles.linksRow}>
               {links.map((link, index) => (
                 <Link key={index} src={getSocialUrl(link.type, link.value)} style={styles.linkItem}>
-                  {translateLinkType(link.type, lang || 'pt')}: {link.value}
+                  {translateLinkType(link.type, lang || 'pt', link.customName)}: {link.value}
                 </Link>
               ))}
             </View>
@@ -323,7 +342,7 @@ export function ClassicTemplate({
                       {exp.company && <Text style={styles.companyName}>{exp.company}</Text>}
                     </View>
                     <Text style={styles.dateRange}>
-                      {`${translateMonth(exp.startMonth || '', lang || 'pt')}${exp.startMonth && exp.startYear ? '/' : ''}${exp.startYear || ''} – ${exp.current ? translateCurrent(lang || 'pt') : ((translateMonth(exp.endMonth || '', lang || 'pt')) + (exp.endMonth && exp.endYear ? '/' : '') + (exp.endYear || ''))}`}
+                      {`${translateMonth(exp.startMonth || '', lang || 'pt')}${exp.startMonth && exp.startYear ? '/' : ''}${exp.startYear || ''} - ${exp.current ? translateCurrent(lang || 'pt') : ((translateMonth(exp.endMonth || '', lang || 'pt')) + (exp.endMonth && exp.endYear ? '/' : '') + (exp.endYear || ''))}`}
                     </Text>
                   </View>
                   {exp.tech && <Text style={styles.tech}>{exp.tech}</Text>}
@@ -419,6 +438,7 @@ export function ClassicTemplate({
                   style={{
                     ...styles.certBlock,
                     marginBottom: showSeparator ? styles.certBlock.marginBottom : 0,
+                    paddingBottom: showSeparator ? styles.certBlock.paddingBottom : 0,
                     borderBottomWidth: showSeparator ? styles.certBlock.borderBottomWidth : 0,
                     borderBottomColor: showSeparator ? styles.certBlock.borderBottomColor : undefined,
                     borderBottomStyle: showSeparator ? styles.certBlock.borderBottomStyle : undefined,
@@ -441,9 +461,46 @@ export function ClassicTemplate({
           </View>
         )}
 
+        {/* Volunteer Work */}
+                      {volunteers && volunteers.length > 0 && (
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>
+                    {lang === 'en' ? 'Volunteer Work' : 'Voluntariado'}
+                  </Text>
+                  {volunteers.map((vol, index) => {
+                    const showSeparator = volunteers.length > 1 && index < volunteers.length - 1;
+              return (
+                <View
+                  key={index}
+                  style={{
+                    ...styles.volBlock,
+                    marginBottom: showSeparator ? styles.volBlock.marginBottom : 0,
+                    paddingBottom: showSeparator ? styles.volBlock.paddingBottom : 0,
+                    borderBottomWidth: showSeparator ? styles.volBlock.borderBottomWidth : 0,
+                    borderBottomColor: showSeparator ? styles.volBlock.borderBottomColor : undefined,
+                    borderBottomStyle: showSeparator ? styles.volBlock.borderBottomStyle : undefined,
+                  }}
+                >
+                  <View style={styles.roleAndDate}>
+                    <Text style={styles.volRole}>{vol.role}</Text>
+                    <Text style={styles.dateRange}>
+                      {vol.startMonth && vol.startYear ? `${translateMonth(vol.startMonth, lang || 'pt')} ${vol.startYear}` : ''}
+                      {vol.startMonth && vol.startYear && (vol.endMonth || vol.endYear || vol.current) ? ' - ' : ''}
+                      {vol.current ? translateCurrent(lang || 'pt') : vol.endMonth && vol.endYear ? `${translateMonth(vol.endMonth, lang || 'pt')} ${vol.endYear}` : ''}
+                    </Text>
+                  </View>
+                  <Text style={styles.volOrg}>{vol.organization}</Text>
+                  {vol.description && <Text style={styles.volDesc}>• {vol.description}</Text>}
+                  {vol.impact && <Text style={styles.volImpact}>• {vol.impact}</Text>}
+                </View>
+              );
+            })}
+          </View>
+        )}
+
         {/* Projects */}
         {projects.length > 0 && (
-          <View style={styles.section}>
+          <View style={{ ...styles.section, marginBottom: 0 }}>
             <Text style={styles.sectionTitle}>
               {lang === 'en' ? 'Projects' : 'Projetos'}
             </Text>
@@ -455,6 +512,7 @@ export function ClassicTemplate({
                   style={{
                     ...styles.projBlock,
                     marginBottom: showSeparator ? styles.projBlock.marginBottom : 0,
+                    paddingBottom: showSeparator ? styles.projBlock.paddingBottom : 0,
                     borderBottomWidth: showSeparator ? styles.projBlock.borderBottomWidth : 0,
                     borderBottomColor: showSeparator ? styles.projBlock.borderBottomColor : undefined,
                     borderBottomStyle: showSeparator ? styles.projBlock.borderBottomStyle : undefined,

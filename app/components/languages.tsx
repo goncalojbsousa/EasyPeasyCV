@@ -25,13 +25,15 @@ interface LanguagesProps {
 
 /**
  * Available language levels for dropdown selection
+ * Using CEFR (Common European Framework of Reference for Languages)
  */
 const LANGUAGE_LEVELS = [
-  'language.level.basic',
-  'language.level.intermediate',
-  'language.level.advanced',
-  'language.level.fluent',
-  'language.level.native'
+  'language.level.a1',
+  'language.level.a2', 
+  'language.level.b1',
+  'language.level.b2',
+  'language.level.c1',
+  'language.level.c2'
 ];
 
 /**

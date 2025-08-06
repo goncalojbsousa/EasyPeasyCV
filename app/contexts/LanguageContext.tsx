@@ -108,7 +108,7 @@ export function useLanguage() {
 // Portuguese translations
 const ptTranslations: Record<string, string> = {
   // Header
-  'app.title': 'CV Builder',
+  'app.title': 'OpenCVLab',
   'app.subtitle': 'Crie um currículo profissional em minutos',
   'generate.cv': 'Gerar CV',
   'generate.resume': 'Gerar Currículo',
@@ -137,6 +137,7 @@ const ptTranslations: Record<string, string> = {
   'section.technical.skills': 'Competências Técnicas',
   'section.languages': 'Línguas',
   'section.certifications': 'Certificações e Cursos',
+  'section.volunteer': 'Voluntariado',
   'section.projects': 'Projetos',
 
   // Personal Information
@@ -202,12 +203,13 @@ const ptTranslations: Record<string, string> = {
   'add.language': 'Adicionar Língua',
   'language.title': 'Língua',
   
-  // Language levels
-  'language.level.basic': 'Básico',
-  'language.level.intermediate': 'Intermediário',
-  'language.level.advanced': 'Avançado',
-  'language.level.fluent': 'Fluente',
-  'language.level.native': 'Nativo',
+  // Language levels - CEFR (Common European Framework of Reference for Languages)
+  'language.level.a1': 'A1',
+  'language.level.a2': 'A2',
+  'language.level.b1': 'B1',
+  'language.level.b2': 'B2',
+  'language.level.c1': 'C1',
+  'language.level.c2': 'C2',
 
   // Certifications
   'field.certification': 'Certificação',
@@ -225,6 +227,12 @@ const ptTranslations: Record<string, string> = {
   'field.project.link': 'Link',
   'add.project': 'Adicionar Projeto',
   'project.title': 'Projeto',
+
+  // Volunteer Work
+  'field.organization': 'Organização',
+  'field.impact': 'Impacto',
+  'add.volunteer': 'Adicionar Voluntariado',
+  'volunteer.title': 'Voluntariado',
 
   // Placeholders
   'placeholder.full.name': 'Ex: Gonçalo Sousa',
@@ -246,6 +254,10 @@ const ptTranslations: Record<string, string> = {
   'placeholder.project.tech': 'Ex: React, Node.js, MongoDB',
   'placeholder.project.link': 'Ex: https://github.com/user/project',
   'placeholder.project.description': 'Breve descrição do projeto, objetivos, resultados...',
+  'placeholder.organization': 'Ex: Cruz Vermelha Portuguesa',
+  'placeholder.volunteer.role': 'Ex: Voluntário de Apoio Social',
+  'placeholder.volunteer.description': 'Ex: Prestação de apoio social a famílias carenciadas, distribuição de alimentos e roupas.',
+  'placeholder.volunteer.impact': 'Ex: Ajudou mais de 50 famílias durante a pandemia, organizou campanhas de recolha de donativos.',
   'placeholder.activities': 'Descreva suas responsabilidades (um item por linha)',
   'placeholder.achievements': 'Ex: Reestruturei a arquitetura da aplicação usando Next.js com SSR, o que melhorou o SEO e aumentou a retenção de usuários em 25%.',
   'placeholder.education.description': 'Ex: Tese sobre inteligência artificial, disciplinas relevantes, projetos académicos...',
@@ -274,6 +286,10 @@ const ptTranslations: Record<string, string> = {
   'link.placeholder.gitlab': 'Ex: utilizador',
   'link.placeholder.portfolio': 'Ex: meuwebsite.com',
   'link.placeholder.other': 'Ex: meuwebsite.com',
+  
+  // Custom link name
+  'field.link.custom.name': 'Nome da Plataforma',
+  'placeholder.link.custom.name': 'Ex: Behance, Dribbble, Medium',
 
   // Months
   'month.jan': 'Jan',
@@ -299,6 +315,7 @@ const ptTranslations: Record<string, string> = {
   'empty.education': 'Nenhuma educação adicionada',
   'empty.language': 'Nenhuma língua adicionada',
   'empty.certification': 'Nenhuma certificação adicionada',
+  'empty.volunteer': 'Nenhum voluntariado adicionado',
   'empty.project': 'Nenhum projeto adicionado',
 
   // CV Tips
@@ -565,6 +582,30 @@ const ptTranslations: Record<string, string> = {
   'cv.tips.action.button': 'Dicas CV',
   'cv.tips.action.description': 'Consulte dicas para criar um CV que passe em sistemas ATS',
   
+  // ATS Explanation
+  'ats.explanation.title': 'O que são Sistemas ATS?',
+  'ats.explanation.subtitle': 'Compreenda como funcionam e por que são importantes para o seu CV',
+  'ats.explanation.what.title': 'O que é um Sistema ATS?',
+  'ats.explanation.what.description': 'ATS (Applicant Tracking System) é um software que as empresas utilizam para gerir candidaturas de emprego. Estes sistemas analisam automaticamente os CVs recebidos, procurando palavras-chave e critérios específicos antes de os enviar para revisão humana.',
+  'ats.explanation.why.title': 'Por que é importante?',
+  'ats.explanation.why.description': 'Mais de 75% das empresas utilizam sistemas ATS para filtrar candidaturas. Se o seu CV não for otimizado para estes sistemas, pode ser automaticamente rejeitado, mesmo que tenha as qualificações necessárias.',
+  'ats.explanation.why.warning': 'Sem otimização ATS, o seu CV pode ser rejeitado automaticamente, mesmo sendo qualificado para a vaga!',
+  'ats.explanation.how.title': 'Como otimizar o seu CV para ATS',
+  'ats.explanation.how.description': 'Siga estas dicas para aumentar as hipóteses do seu CV passar nos filtros ATS:',
+  'ats.explanation.how.tip1': 'Utilize palavras-chave exatas do anúncio da vaga',
+  'ats.explanation.how.tip2': 'Mantenha um formato simples, sem gráficos ou tabelas',
+  'ats.explanation.how.tip3': 'Use cabeçalhos padrão como "Experiência Profissional" e "Educação"',
+  'ats.explanation.how.tip4': 'Inclua uma secção de competências técnicas com tecnologias relevantes',
+  'ats.explanation.template.title': 'Recomendação de Template',
+  'ats.explanation.template.description': 'Para máxima compatibilidade com sistemas ATS, recomendamos o template clássico, que foi especificamente desenhado para passar nos filtros automáticos.',
+  'ats.explanation.template.recommendation': 'Template Clássico Recomendado',
+  'ats.explanation.extra.title': 'Dica Importante',
+  'ats.explanation.extra.content': 'O template clássico deste OpenCVLab foi otimizado para sistemas ATS, mas sempre personalize o conteúdo de acordo com cada vaga específica.',
+  
+  // ATS Explanation Actions
+  'ats.explanation.action.button': 'Explicação ATS',
+  'ats.explanation.action.description': 'Aprenda sobre sistemas ATS e como otimizar o seu CV',
+  
   // Calendar
   'calendar.clear': 'Limpar',
   'calendar.today': 'Hoje',
@@ -592,7 +633,7 @@ const ptTranslations: Record<string, string> = {
 // English translations
 const enTranslations: Record<string, string> = {
   // Header
-  'app.title': 'CV Builder',
+  'app.title': 'OpenCVLab',
   'app.subtitle': 'Create a professional resume in minutes',
   'generate.cv': 'Generate CV',
   'generate.resume': 'Generate Resume',
@@ -621,6 +662,7 @@ const enTranslations: Record<string, string> = {
   'section.technical.skills': 'Technical Skills',
   'section.languages': 'Languages',
   'section.certifications': 'Certifications & Courses',
+  'section.volunteer': 'Volunteer Work',
   'section.projects': 'Projects',
 
   // Personal Information
@@ -686,12 +728,13 @@ const enTranslations: Record<string, string> = {
   'add.language': 'Add Language',
   'language.title': 'Language',
   
-  // Language levels
-  'language.level.basic': 'Basic',
-  'language.level.intermediate': 'Intermediate',
-  'language.level.advanced': 'Advanced',
-  'language.level.fluent': 'Fluent',
-  'language.level.native': 'Native',
+  // Language levels - CEFR (Common European Framework of Reference for Languages)
+  'language.level.a1': 'A1',
+  'language.level.a2': 'A2',
+  'language.level.b1': 'B1',
+  'language.level.b2': 'B2',
+  'language.level.c1': 'C1',
+  'language.level.c2': 'C2',
 
   // Certifications
   'field.certification': 'Certification',
@@ -709,6 +752,12 @@ const enTranslations: Record<string, string> = {
   'field.project.link': 'Link',
   'add.project': 'Add Project',
   'project.title': 'Project',
+
+  // Volunteer Work
+  'field.organization': 'Organization',
+  'field.impact': 'Impact',
+  'add.volunteer': 'Add Volunteer Work',
+  'volunteer.title': 'Volunteer Work',
 
   // Placeholders
   'placeholder.full.name': 'Ex: John Doe',
@@ -730,6 +779,10 @@ const enTranslations: Record<string, string> = {
   'placeholder.project.tech': 'Ex: React, Node.js, MongoDB',
   'placeholder.project.link': 'Ex: https://github.com/user/project',
   'placeholder.project.description': 'Brief project description, objectives, results...',
+  'placeholder.organization': 'Ex: Red Cross Portugal',
+  'placeholder.volunteer.role': 'Ex: Social Support Volunteer',
+  'placeholder.volunteer.description': 'Ex: Providing social support to families in need, distributing food and clothing.',
+  'placeholder.volunteer.impact': 'Ex: Helped more than 50 families during the pandemic, organized donation campaigns.',
   'placeholder.activities': 'Describe your responsibilities (one item per line)',
   'placeholder.achievements': 'Ex: I restructured the application architecture using Next.js with SSR, which improved SEO and increased user retention by 25%.',
   'placeholder.education.description': 'Ex: Thesis on artificial intelligence, relevant subjects, academic projects...',
@@ -758,6 +811,10 @@ const enTranslations: Record<string, string> = {
   'link.placeholder.gitlab': 'Ex: user',
   'link.placeholder.portfolio': 'Ex: mywebsite.com',
   'link.placeholder.other': 'Ex: mywebsite.com',
+  
+  // Custom link name
+  'field.link.custom.name': 'Platform Name',
+  'placeholder.link.custom.name': 'Ex: Behance, Dribbble, Medium',
 
   // Months
   'month.jan': 'Jan',
@@ -783,6 +840,7 @@ const enTranslations: Record<string, string> = {
   'empty.education': 'No education added',
   'empty.language': 'No language added',
   'empty.certification': 'No certification added',
+  'empty.volunteer': 'No volunteer work added',
   'empty.project': 'No project added',
 
   // CV Tips
@@ -1048,6 +1106,30 @@ const enTranslations: Record<string, string> = {
   // CV Tips Actions
   'cv.tips.action.button': 'CV Tips',
   'cv.tips.action.description': 'View tips for creating a CV that passes ATS systems',
+  
+  // ATS Explanation
+  'ats.explanation.title': 'What are ATS Systems?',
+  'ats.explanation.subtitle': 'Understand how they work and why they are important for your CV',
+  'ats.explanation.what.title': 'What is an ATS System?',
+  'ats.explanation.what.description': 'ATS (Applicant Tracking System) is software that companies use to manage job applications. These systems automatically analyze received CVs, looking for specific keywords and criteria before sending them for human review.',
+  'ats.explanation.why.title': 'Why is it important?',
+  'ats.explanation.why.description': 'More than 75% of companies use ATS systems to filter applications. If your CV is not optimized for these systems, it can be automatically rejected, even if you have the necessary qualifications.',
+  'ats.explanation.why.warning': 'Without ATS optimization, your CV can be automatically rejected, even if you are qualified for the position!',
+  'ats.explanation.how.title': 'How to optimize your CV for ATS',
+  'ats.explanation.how.description': 'Follow these tips to increase your CV\'s chances of passing ATS filters:',
+  'ats.explanation.how.tip1': 'Use exact keywords from the job posting',
+  'ats.explanation.how.tip2': 'Keep a simple format, without graphics or tables',
+  'ats.explanation.how.tip3': 'Use standard headers like "Professional Experience" and "Education"',
+  'ats.explanation.how.tip4': 'Include a technical skills section with relevant technologies',
+  'ats.explanation.template.title': 'Template Recommendation',
+  'ats.explanation.template.description': 'For maximum compatibility with ATS systems, we recommend the classic template, which was specifically designed to pass automatic filters.',
+  'ats.explanation.template.recommendation': 'Classic Template Recommended',
+  'ats.explanation.extra.title': 'Important Tip',
+  'ats.explanation.extra.content': 'The classic template from this OpenCVLab has been optimized for ATS systems, but always personalize the content according to each specific job posting.',
+  
+  // ATS Explanation Actions
+  'ats.explanation.action.button': 'ATS Explanation',
+  'ats.explanation.action.description': 'Learn about ATS systems and how to optimize your CV',
   
   // Calendar
   'calendar.clear': 'Clear',

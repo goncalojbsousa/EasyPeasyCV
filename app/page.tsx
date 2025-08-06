@@ -9,8 +9,10 @@ import { TechnicalSkills } from './components/technical_skills';
 import { Languages } from './components/languages';
 import { Certifications } from './components/certifications';
 import { Projects } from './components/projects';
+import { VolunteerWork } from './components/volunteer';
 import { CVTips } from './components/cv_tips';
 import { JobAnalysis } from './components/job_analysis';
+import { AtsExplanation } from './components/ats_explanation';
 import { LanguageSelector } from './components/ui/language-selector';
 import { Footer } from './components/footer';
 import { PdfPreview } from './components/pdf_preview';
@@ -19,13 +21,13 @@ import { DesktopActionsCard } from './components/ui/desktop-actions-card';
 import { CvTypeSelector } from './components/ui/cv-type-selector';
 import { ColorSelector } from './components/ui/color-selector';
 import { useLanguage } from './contexts/LanguageContext';
-import { Experience, Education, Language, Certification, Project, CvColor } from './types/cv';
+import { Experience, Education, Language, Certification, Project, Volunteer, CvColor } from './types/cv';
 import { ThemeToggle } from './components/theme-toggle';
 
 /**
- * Main CV Builder application component
+ * Main OpenCVLab application component
  * Manages all form state and provides a complete CV creation interface
- * @returns JSX element representing the main CV builder application
+ * @returns JSX element representing the main OpenCVLab application
  */
 export default function Home() {
   const { t, language } = useLanguage();
@@ -53,6 +55,7 @@ export default function Home() {
   const [languages, setLanguages] = useState<Language[]>([]);
   const [certifications, setCertifications] = useState<Certification[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
+  const [volunteers, setVolunteers] = useState<Volunteer[]>([]);
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: boolean }>({});
   const [showValidationErrors, setShowValidationErrors] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
@@ -91,6 +94,7 @@ export default function Home() {
         setLanguages(data.languages || []);
         setCertifications(data.certifications || []);
         setProjects(data.projects || []);
+        setVolunteers(data.volunteers || []);
         setSelectedTemplate(data.template || 'classic');
         setSelectedColor(data.color || 'blue');
         setDataLoaded(true);
@@ -154,7 +158,6 @@ export default function Home() {
     if (!personalInfo.name.trim()) errors.name = true;
     if (!personalInfo.email.trim()) errors.email = true;
     if (!personalInfo.desiredRole.trim()) errors.desiredRole = true;
-    if (!resume.trim()) errors.resume = true;
 
     setValidationErrors(errors);
 
@@ -162,7 +165,7 @@ export default function Home() {
     if (Object.keys(errors).length === 0) {
       setShowValidationErrors(false);
     }
-  }, [personalInfo.name, personalInfo.email, personalInfo.desiredRole, resume]);
+  }, [personalInfo.name, personalInfo.email, personalInfo.desiredRole]);
 
   /**
    * Function to save data to localStorage
@@ -179,6 +182,7 @@ export default function Home() {
       languages,
       certifications,
       projects,
+      volunteers,
       template: selectedTemplate,
       color: selectedColor
     };
@@ -201,9 +205,10 @@ export default function Home() {
    * Add a new social media link
    * @param type - Type of social media link (LinkedIn, GitHub, etc.)
    * @param value - URL value for the link
+   * @param customName - Custom name for the platform (when type is "Other")
    */
-  const handleAddLink = (type: string = 'LinkedIn', value: string = '') => {
-    setLinks([...links, { type, value }]);
+  const handleAddLink = (type: string = 'LinkedIn', value: string = '', customName?: string) => {
+    setLinks([...links, { type, value, ...(customName && { customName }) }]);
   };
 
   /**
@@ -403,6 +408,43 @@ export default function Home() {
     setProjects(projects.map((proj, i) => i === idx ? { ...proj, [field]: value } : proj));
   };
 
+  // Volunteer handlers
+  /**
+   * Add a new volunteer entry
+   */
+  const handleAddVolunteer = () => {
+    setVolunteers([...volunteers, {
+      organization: '', role: '', startMonth: '', startYear: '', endMonth: '', endYear: '', current: false, description: '', impact: ''
+    }]);
+  };
+  /**
+   * Remove a volunteer entry
+   * @param idx - Index of the volunteer to remove
+   */
+  const handleRemoveVolunteer = (idx: number) => {
+    setVolunteers(volunteers.filter((_, i) => i !== idx));
+  };
+  /**
+   * Update a volunteer field
+   * @param idx - Index of the volunteer to update
+   * @param field - Field name to update
+   * @param value - New value for the field
+   */
+  const handleVolunteerChange = (idx: number, field: string, value: string | boolean) => {
+    setVolunteers(volunteers.map((vol, i) => i === idx ? { ...vol, [field]: value } : vol));
+  };
+  /**
+   * Reorder volunteer entries
+   * @param fromIndex - Index of the volunteer to move
+   * @param toIndex - Index where to move the volunteer
+   */
+  const handleReorderVolunteers = (fromIndex: number, toIndex: number) => {
+    const newVolunteers = [...volunteers];
+    const [movedVolunteer] = newVolunteers.splice(fromIndex, 1);
+    newVolunteers.splice(toIndex, 0, movedVolunteer);
+    setVolunteers(newVolunteers);
+  };
+
   /**
    * Function to update personal information fields
    * @param field - Field name to update
@@ -429,11 +471,11 @@ export default function Home() {
     if (!validateForm()) {
       // Show validation errors
       setShowValidationErrors(true);
-      // Scroll to first error
-      const firstErrorField = document.querySelector('[data-error="true"]');
-      if (firstErrorField) {
-        firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
+      // Scroll to top of page to show validation errors
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
       return false; // Return false to prevent PDF generation
     }
 
@@ -443,6 +485,11 @@ export default function Home() {
   const handleShowPdfPreview = async () => {
     if (!validateForm()) {
       setShowValidationErrors(true);
+      // Scroll to top of page to show validation errors
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
       return;
     }
 
@@ -463,6 +510,7 @@ export default function Home() {
             languages={languages}
             certifications={certifications}
             projects={projects}
+            volunteers={volunteers}
             lang={language}
             template={selectedTemplate}
           />
@@ -510,6 +558,22 @@ export default function Home() {
    */
   const scrollToCVTips = () => {
     const element = document.getElementById('cv-tips-section');
+    if (element) {
+      const headerHeight = 115; // Approximate header height in pixels
+      const elementPosition = element.offsetTop - headerHeight;
+      
+      window.scrollTo({
+        top: elementPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  /**
+   * Scrolls smoothly to the ATS explanation section
+   */
+  const scrollToAtsExplanation = () => {
+    const element = document.getElementById('ats-explanation-section');
     if (element) {
       const headerHeight = 115; // Approximate header height in pixels
       const elementPosition = element.offsetTop - headerHeight;
@@ -611,6 +675,30 @@ export default function Home() {
         year: '2023',
       },
     ]);
+    setVolunteers([
+      {
+        organization: 'Cruz Vermelha Portuguesa',
+        role: 'Voluntário de Apoio Social',
+        startMonth: 'Jan',
+        startYear: '2022',
+        endMonth: 'Dez',
+        endYear: '2023',
+        current: false,
+        description: 'Prestação de apoio social a famílias carenciadas, distribuição de alimentos e roupas.',
+        impact: 'Ajudou mais de 50 famílias durante a pandemia, organizou campanhas de recolha de donativos.',
+      },
+      {
+        organization: 'Associação de Proteção Animal',
+        role: 'Coordenador de Adoções',
+        startMonth: 'Mar',
+        startYear: '2023',
+        endMonth: '',
+        endYear: '',
+        current: true,
+        description: 'Coordenação do processo de adoção de animais, gestão de voluntários e eventos.',
+        impact: 'Facilitou a adoção de mais de 100 animais, aumentou a taxa de adoção em 30%.',
+      },
+    ]);
   };
 
 
@@ -619,12 +707,19 @@ export default function Home() {
     <div className="min-h-screen bg-gray-100 dark:bg-zinc-900 transition-colors duration-300">
       {/* Header with title and PDF generation dropdown */}
       <header className="bg-white dark:bg-zinc-800 shadow fixed top-0 left-0 right-0 z-50 transition-colors duration-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
-          <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-blue-600">{t('app.title')}</h1>
-            <p className="text-xs sm:text-sm">{t('app.subtitle')}</p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex flex-row justify-between items-center gap-3">
+          <div className="flex items-center gap-3">
+            <img 
+              src="/logo.webp" 
+              alt="OpenCVLab Logo" 
+              className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
+            />
+            <div>
+              <h1 className="text-xl sm:text-2xl font-bold text-blue-600">{t('app.title')}</h1>
+              <p className="text-xs sm:text-sm">{t('app.subtitle')}</p>
+            </div>
           </div>
-          <div className="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
+          <div className="flex flex-row items-center gap-2 sm:w-auto">
             <LanguageSelector />
             <ThemeToggle />
           </div>
@@ -632,7 +727,7 @@ export default function Home() {
       </header>
 
       {/* Main content area */}
-      <div className="max-w-7xl mx-auto pt-36 sm:pt-28 pb-24 px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto pt-28 pb-24 px-4 sm:px-6">
         <div className="lg:grid lg:grid-cols-[1fr_320px] lg:gap-8">
           {/* Form content */}
           <div className="flex flex-col gap-6 sm:gap-8">
@@ -679,8 +774,6 @@ export default function Home() {
             <ProfessionalSummary
               resume={resume}
               onResumeChange={handleResumeChange}
-              validationErrors={validationErrors}
-              showValidationErrors={showValidationErrors}
             />
 
             {/* Professional Experience section */}
@@ -733,6 +826,15 @@ export default function Home() {
               onReorderProjects={handleReorderProjects}
             />
 
+            {/* Volunteer Work section */}
+            <VolunteerWork
+              volunteers={volunteers}
+              onVolunteerChange={handleVolunteerChange}
+              onAddVolunteer={handleAddVolunteer}
+              onRemoveVolunteer={handleRemoveVolunteer}
+              onReorderVolunteers={handleReorderVolunteers}
+            />
+
             {/* Example data button */}
             <div className="max-w-6xl mx-auto mt-8 mb-8 flex justify-center">
               <button
@@ -747,6 +849,11 @@ export default function Home() {
             {/* Job Analysis section */}
             <div className="w-full">
               <JobAnalysis />
+            </div>
+
+            {/* Ats Explanation section */}
+            <div className="w-full">
+              <AtsExplanation />
             </div>
 
             {/* CV Tips section */}
@@ -766,6 +873,7 @@ export default function Home() {
             languages={languages}
             certifications={certifications}
             projects={projects}
+            volunteers={volunteers}
             template={selectedTemplate}
             color={selectedColor}
             selectedTemplate={selectedTemplate}
@@ -777,6 +885,7 @@ export default function Home() {
             onShowSuccessMessage={() => setShowSuccessMessage(true)}
             onScrollToJobAnalysis={scrollToJobAnalysis}
             onScrollToCVTips={scrollToCVTips}
+            onScrollToAtsExplanation={scrollToAtsExplanation}
           />
         </div>
       </div>
@@ -795,6 +904,7 @@ export default function Home() {
         languages={languages}
         certifications={certifications}
         projects={projects}
+        volunteers={volunteers}
         show={showPdfPreview}
         onClose={() => setShowPdfPreview(false)}
         lang={language}
@@ -813,6 +923,7 @@ export default function Home() {
         languages={languages}
         certifications={certifications}
         projects={projects}
+        volunteers={volunteers}
         template={selectedTemplate}
         color={selectedColor}
         onShowPdfPreview={handleShowPdfPreview}
@@ -820,6 +931,8 @@ export default function Home() {
         onShowSuccessMessage={() => setShowSuccessMessage(true)}
         onScrollToJobAnalysis={scrollToJobAnalysis}
         onScrollToCVTips={scrollToCVTips}
+        onScrollToAtsExplanation={scrollToAtsExplanation}
+        onTemplateChange={setSelectedTemplate}
       />
     </div>
   );

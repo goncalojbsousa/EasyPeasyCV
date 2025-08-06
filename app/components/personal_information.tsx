@@ -16,7 +16,7 @@ interface PersonalInformationProps {
   /** Personal information data */
   personalInfo: PersonalInfo;
   /** Handler for adding new link */
-  onAddLink: (type: string, value: string) => void;
+  onAddLink: (type: string, value: string, customName?: string) => void;
   /** Handler for removing link */
   onRemoveLink: (idx: number) => void;
   /** Handler for updating personal information fields */
@@ -76,6 +76,7 @@ export function PersonalInformation({
   const [openDropdownIdx, setOpenDropdownIdx] = useState<number | null>(null);
   const [newLinkType, setNewLinkType] = useState('LinkedIn');
   const [newLinkValue, setNewLinkValue] = useState('');
+  const [newLinkCustomName, setNewLinkCustomName] = useState('');
   const [openCountryDropdown, setOpenCountryDropdown] = useState(false);
   const dropdownRefs = useRef<(HTMLDivElement | null)[]>([]);
   const countryDropdownRef = useRef<HTMLDivElement | null>(null);
@@ -110,11 +111,12 @@ export function PersonalInformation({
       const prefix = getLinkPrefix(newLinkType);
       const fullValue = prefix ? `${prefix}${newLinkValue}` : newLinkValue;
       
-      // Add the link with the correct type and value
-      onAddLink(newLinkType, fullValue);
+      // Add the link with the correct type, value, and custom name if applicable
+      onAddLink(newLinkType, fullValue, newLinkType === 'Other' ? newLinkCustomName.trim() : undefined);
       
       // Reset the form
       setNewLinkValue('');
+      setNewLinkCustomName('');
     }
   };
 
@@ -140,7 +142,12 @@ export function PersonalInformation({
     }
   };
 
-  const translateLinkType = (type: string) => {
+  const translateLinkType = (type: string, customName?: string) => {
+    // If it's "Other" type and has a custom name, return the custom name
+    if (type === 'Other' && customName) {
+      return customName;
+    }
+    
     switch (type) {
       case 'LinkedIn':
         return t('link.type.linkedin');
@@ -378,7 +385,7 @@ export function PersonalInformation({
                         </svg>
                       </div>
                     )}
-                    <span className="font-medium text-gray-700 dark:text-gray-300">{translateLinkType(link.type)}:</span>
+                    <span className="font-medium text-gray-700 dark:text-gray-300">{translateLinkType(link.type, link.customName)}:</span>
                     <span className="text-gray-600 dark:text-gray-400">{displayValue}</span>
                     <button
                       type="button"
@@ -397,6 +404,19 @@ export function PersonalInformation({
           
           {/* Fixed input section for adding new links */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-end">
+            {/* Custom name input for "Other" type */}
+            {newLinkType === 'Other' && (
+              <div className="lg:col-span-2">
+                <label className="block text-sm font-medium mb-1">{t('field.link.custom.name')}</label>
+                <input
+                  type="text"
+                  placeholder={t('placeholder.link.custom.name')}
+                  value={newLinkCustomName}
+                  onChange={(e) => setNewLinkCustomName(e.target.value)}
+                  className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                />
+              </div>
+            )}
             {/* Link type selection */}
             <div className="relative" ref={(el) => { dropdownRefs.current[0] = el; }}>
               <label className="block text-sm font-medium mb-1">{t('field.link.type')}</label>

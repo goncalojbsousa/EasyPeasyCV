@@ -284,6 +284,38 @@ const styles = StyleSheet.create({
     textDecoration: 'underline', 
     marginLeft: 0 
   },
+  volBlock: { 
+    marginBottom: 12, 
+    paddingBottom: 8,
+    borderLeftWidth: 3,
+    borderLeftColor: '#ef4444',
+    borderLeftStyle: 'solid',
+    paddingLeft: 12
+  },
+  volRole: { 
+    fontSize: 10, 
+    fontWeight: 'bold', 
+    color: '#1f2937', 
+    marginBottom: 3 
+  },
+  volOrg: { 
+    fontSize: 9, 
+    color: '#6b7280', 
+    marginBottom: 3 
+  },
+  volDesc: { 
+    fontSize: 9, 
+    marginLeft: 0, 
+    marginBottom: 3,
+    color: '#374151'
+  },
+  volImpact: { 
+    fontSize: 9, 
+    fontStyle: 'italic', 
+    marginLeft: 0, 
+    marginBottom: 3,
+    color: '#059669'
+  },
   summary: {
     fontSize: 10,
     color: '#374151',
@@ -308,6 +340,7 @@ export function ModernTemplate({
   languages,
   certifications,
   projects,
+  volunteers,
   lang,
   color = 'blue',
 }: ModernTemplateProps) {
@@ -381,6 +414,14 @@ export function ModernTemplate({
       borderLeftStyle: 'solid',
       paddingLeft: 12
     },
+    volBlock: { 
+      marginBottom: 12, 
+      paddingBottom: 8,
+      borderLeftWidth: 3,
+      borderLeftColor: '#ef4444',
+      borderLeftStyle: 'solid',
+      paddingLeft: 12
+    },
     projTech: { 
       fontSize: 9, 
       color: colorTheme.primary, 
@@ -427,14 +468,19 @@ export function ModernTemplate({
   };
 
   // Helper to translate link types
-  const translateLinkType = (type: string, lang: string) => {
+  const translateLinkType = (type: string, lang: string, customName?: string) => {
+    // If it's "Other" type and has a custom name, return the custom name
+    if (type === 'Other' && customName) {
+      return customName;
+    }
+    
     if (lang === 'en') {
       switch (type) {
         case 'LinkedIn': return 'LinkedIn';
         case 'GitHub': return 'GitHub';
         case 'GitLab': return 'GitLab';
         case 'Portfolio': return 'Portfolio';
-        case 'Outro': return 'Other';
+        case 'Other': return 'Other';
         default: return type;
       }
     } else {
@@ -443,7 +489,7 @@ export function ModernTemplate({
         case 'GitHub': return 'GitHub';
         case 'GitLab': return 'GitLab';
         case 'Portfolio': return 'Portfolio';
-        case 'Outro': return 'Outro';
+        case 'Other': return 'Outro';
         default: return type;
       }
     }
@@ -491,6 +537,14 @@ export function ModernTemplate({
     if (!level) return '';
     
     const levelMap = {
+      // CEFR levels
+      'language.level.a1': { pt: 'A1', en: 'A1' },
+      'language.level.a2': { pt: 'A2', en: 'A2' },
+      'language.level.b1': { pt: 'B1', en: 'B1' },
+      'language.level.b2': { pt: 'B2', en: 'B2' },
+      'language.level.c1': { pt: 'C1', en: 'C1' },
+      'language.level.c2': { pt: 'C2', en: 'C2' },
+      // Legacy levels for backward compatibility
       'Básico': { pt: 'Básico', en: 'Basic' },
       'Intermediário': { pt: 'Intermediário', en: 'Intermediate' },
       'Avançado': { pt: 'Avançado', en: 'Advanced' },
@@ -501,7 +555,7 @@ export function ModernTemplate({
       'Advanced': { pt: 'Avançado', en: 'Advanced' },
       'Fluent': { pt: 'Fluente', en: 'Fluent' },
       'Native': { pt: 'Nativo', en: 'Native' },
-      // Handle old translation keys
+      // Old translation keys for backward compatibility
       'language.level.basic': { pt: 'Básico', en: 'Basic' },
       'language.level.intermediate': { pt: 'Intermediário', en: 'Intermediate' },
       'language.level.advanced': { pt: 'Avançado', en: 'Advanced' },
@@ -535,7 +589,7 @@ export function ModernTemplate({
             <View style={styles.linksRow}>
                              {links.map((link, index) => (
                  <Link key={index} src={getSocialUrl(link.type, link.value)} style={dynamicStyles.linkItem}>
-                   {translateLinkType(link.type, lang || 'pt')}: {link.value}
+                   {translateLinkType(link.type, lang || 'pt', link.customName)}: {link.value}
                  </Link>
                ))}
             </View>
@@ -642,8 +696,14 @@ export function ModernTemplate({
             <Text style={dynamicStyles.sectionTitle}>
               {lang === 'en' ? 'Certifications' : 'Certificações'}
             </Text>
-            {certifications.map((cert, index) => (
-              <View key={index} style={dynamicStyles.certBlock}>
+            {certifications.map((cert, index) => {
+              const isLast = index === certifications.length - 1;
+              return (
+                <View key={index} style={{
+                  ...dynamicStyles.certBlock,
+                  marginBottom: isLast ? 0 : dynamicStyles.certBlock.marginBottom,
+                  paddingBottom: isLast ? 0 : dynamicStyles.certBlock.paddingBottom,
+                }}>
                 <View style={styles.roleAndDate}>
                   <Text style={styles.certName}>{cert.name}</Text>
                   <Text style={styles.certDate}>{cert.completionDate}</Text>
@@ -656,18 +716,56 @@ export function ModernTemplate({
                 )}
                 {cert.description && <Text style={styles.certDesc}>{cert.description}</Text>}
               </View>
-            ))}
+            );
+            })}
+          </View>
+        )}
+
+        {/* Volunteer Work */}
+                      {volunteers && volunteers.length > 0 && (
+                <View style={styles.section}>
+                  <Text style={dynamicStyles.sectionTitle}>
+                    {lang === 'en' ? 'Volunteer Work' : 'Voluntariado'}
+                  </Text>
+                  {volunteers.map((vol, index) => {
+                    const isLast = index === volunteers.length - 1;
+              return (
+                <View key={index} style={{
+                  ...dynamicStyles.volBlock,
+                  marginBottom: isLast ? 0 : dynamicStyles.volBlock.marginBottom,
+                  paddingBottom: isLast ? 0 : dynamicStyles.volBlock.paddingBottom,
+                }}>
+                <View style={styles.roleAndDate}>
+                  <Text style={styles.volRole}>{vol.role}</Text>
+                  <Text style={styles.dateRange}>
+                    {vol.startMonth && vol.startYear ? `${translateMonth(vol.startMonth, lang || 'pt')} ${vol.startYear}` : ''}
+                    {vol.startMonth && vol.startYear && (vol.endMonth || vol.endYear || vol.current) ? ' - ' : ''}
+                    {vol.current ? (lang === 'en' ? 'Present' : 'Atual') : vol.endMonth && vol.endYear ? `${translateMonth(vol.endMonth, lang || 'pt')} ${vol.endYear}` : ''}
+                  </Text>
+                </View>
+                <Text style={styles.volOrg}>{vol.organization}</Text>
+                {vol.description && <Text style={styles.volDesc}>{vol.description}</Text>}
+                {vol.impact && <Text style={styles.volImpact}>{vol.impact}</Text>}
+              </View>
+            );
+            })}
           </View>
         )}
 
         {/* Projects */}
         {projects.length > 0 && (
-          <View style={styles.section}>
+          <View style={{ ...styles.section, marginBottom: 0 }}>
             <Text style={dynamicStyles.sectionTitle}>
               {lang === 'en' ? 'Projects' : 'Projetos'}
             </Text>
-            {projects.map((proj, index) => (
-              <View key={index} style={dynamicStyles.projBlock}>
+            {projects.map((proj, index) => {
+              const isLast = index === projects.length - 1;
+              return (
+                <View key={index} style={{
+                  ...dynamicStyles.projBlock,
+                  marginBottom: isLast ? 0 : dynamicStyles.projBlock.marginBottom,
+                  paddingBottom: isLast ? 0 : dynamicStyles.projBlock.paddingBottom,
+                }}>
                 <View style={styles.roleAndDate}>
                   <Text style={styles.projName}>{proj.name}</Text>
                   <Text style={styles.projYear}>{proj.year}</Text>
@@ -680,7 +778,8 @@ export function ModernTemplate({
                   </Link>
                 )}
               </View>
-            ))}
+            );
+            })}
           </View>
         )}
       </Page>

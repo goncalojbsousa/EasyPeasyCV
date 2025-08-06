@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { CompactCVTypeSelector } from './compact-cv-type-selector';
 import PdfDownloadButton from '../pdf_download_button';
-import { Experience, Education, Language, Certification, Project, CvColor } from '../../types/cv';
+import { Experience, Education, Language, Certification, Project, Volunteer, CvColor } from '../../types/cv';
 
 interface FloatingActionBarProps {
   personalInfo: any;
@@ -16,6 +16,7 @@ interface FloatingActionBarProps {
   languages: Language[];
   certifications: Certification[];
   projects: Project[];
+  volunteers: Volunteer[];
   template?: 'classic' | 'modern' | 'creative';
   color?: CvColor;
   onShowPdfPreview: () => void;
@@ -23,6 +24,8 @@ interface FloatingActionBarProps {
   onShowSuccessMessage: () => void;
   onScrollToJobAnalysis: () => void;
   onScrollToCVTips: () => void;
+  onScrollToAtsExplanation: () => void;
+  onTemplateChange?: (template: 'classic' | 'modern' | 'creative') => void;
 }
 
 /**
@@ -47,28 +50,36 @@ export function FloatingActionBar({
   onGeneratePDF,
   onShowSuccessMessage,
   onScrollToJobAnalysis,
-  onScrollToCVTips
+  onScrollToCVTips,
+  onScrollToAtsExplanation,
+  volunteers,
+  onTemplateChange
 }: FloatingActionBarProps) {
   const { t, language } = useLanguage();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isTemplateDropdownOpen, setIsTemplateDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const templateDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
       }
+      if (templateDropdownRef.current && !templateDropdownRef.current.contains(event.target as Node)) {
+        setIsTemplateDropdownOpen(false);
+      }
     }
 
-    if (isDropdownOpen) {
+    if (isDropdownOpen || isTemplateDropdownOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isDropdownOpen]);
+  }, [isDropdownOpen, isTemplateDropdownOpen]);
 
   /**
    * PDF download button component with validation
@@ -104,6 +115,7 @@ export function FloatingActionBar({
           languages={languages}
           certifications={certifications}
           projects={projects}
+          volunteers={volunteers}
           lang={lang}
           template={template}
           color={color}
@@ -121,11 +133,96 @@ export function FloatingActionBar({
         <CompactCVTypeSelector />
       </div>
 
+      {/* Template Selector */}
+      <div className="relative" ref={templateDropdownRef}>
+        <button
+          onClick={() => setIsTemplateDropdownOpen(!isTemplateDropdownOpen)}
+          className="bg-white dark:bg-zinc-900 rounded-full shadow-lg border border-gray-200 dark:border-zinc-700 p-4 hover:shadow-xl transition-all duration-300 flex items-center justify-center"
+          title={t('template.selector')}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 text-gray-700 dark:text-gray-300">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+          </svg>
+        </button>
+
+        {/* Template selection dropdown */}
+        {isTemplateDropdownOpen && (
+          <div className="absolute bottom-full right-0 mb-2 w-48 bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-2">
+            <div className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-zinc-700">
+              {t('template.selector')}
+            </div>
+            <div className="py-1">
+              <button
+                                 onClick={() => {
+                   onTemplateChange?.('classic');
+                   setIsTemplateDropdownOpen(false);
+                 }}
+                className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${template === 'classic' ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+              >
+                <div className="w-6 h-6 bg-blue-500 rounded flex items-center justify-center">
+                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <rect x="4" y="4" width="16" height="16" rx="2" fill="none" stroke="currentColor" strokeWidth="2"/>
+                    <rect x="7" y="8" width="10" height="1" fill="currentColor"/>
+                    <rect x="7" y="11" width="10" height="1" fill="currentColor"/>
+                    <rect x="7" y="14" width="6" height="1" fill="currentColor"/>
+                  </svg>
+                </div>
+                <span className="font-medium text-sm">{t('template.classic.name')}</span>
+              </button>
+              <button
+                                 onClick={() => {
+                   onTemplateChange?.('modern');
+                   setIsTemplateDropdownOpen(false);
+                 }}
+                className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${template === 'modern' ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+              >
+                <div className="w-6 h-6 bg-purple-500 rounded flex items-center justify-center">
+                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <rect x="2" y="2" width="20" height="20" rx="10" fill="none" stroke="currentColor" strokeWidth="2"/>
+                    <path d="M8 12L11 15L16 10" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+                <span className="font-medium text-sm">{t('template.modern.name')}</span>
+              </button>
+              <button
+                                 onClick={() => {
+                   onTemplateChange?.('creative');
+                   setIsTemplateDropdownOpen(false);
+                 }}
+                className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${template === 'creative' ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+              >
+                <div className="w-6 h-6 bg-pink-500 rounded flex items-center justify-center">
+                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <rect x="2" y="2" width="20" height="20" rx="10" fill="none" stroke="currentColor" strokeWidth="2"/>
+                    <circle cx="8" cy="8" r="2" fill="currentColor"/>
+                    <circle cx="16" cy="8" r="2" fill="currentColor"/>
+                    <circle cx="8" cy="16" r="2" fill="currentColor"/>
+                    <circle cx="16" cy="16" r="2" fill="currentColor"/>
+                  </svg>
+                </div>
+                <span className="font-medium text-sm">{t('template.creative.name')}</span>
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* Job Analysis Button */}
       <button
         onClick={onScrollToJobAnalysis}
-        className="bg-purple-600 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 transition-colors duration-300 flex items-center justify-center"
+        className="hidden md:flex bg-purple-600 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 transition-colors duration-300 items-center justify-center"
         title={t('job.analysis.action.description')}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+        </svg>
+      </button>
+
+      {/* ATS Explanation Button */}
+      <button
+        onClick={onScrollToAtsExplanation}
+        className="hidden md:flex bg-green-600 text-white p-4 rounded-full shadow-lg hover:bg-green-700 transition-colors duration-300 items-center justify-center"
+        title={t('ats.explanation.action.description')}
       >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
           <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
@@ -135,7 +232,7 @@ export function FloatingActionBar({
       {/* CV Tips Button */}
       <button
         onClick={onScrollToCVTips}
-        className="bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center"
+        className="hidden md:flex bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-colors duration-300 items-center justify-center"
         title={t('cv.tips.action.description')}
       >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">

@@ -41,6 +41,7 @@ export function PdfPreview({
   languages,
   certifications,
   projects,
+  volunteers,
   show = false,
   onClose,
   lang = 'pt',
@@ -68,7 +69,7 @@ export function PdfPreview({
     if (show) {
       generatePdf();
     }
-  }, [show, personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, lang, template, color]);
+  }, [show, personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, lang, template, color]);
 
   // Block body scroll when modal is open
   useEffect(() => {
@@ -99,6 +100,7 @@ export function PdfPreview({
           languages={languages}
           certifications={certifications}
           projects={projects}
+          volunteers={volunteers}
           lang={lang}
           template={template}
           color={color}

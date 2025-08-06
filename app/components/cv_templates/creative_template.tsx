@@ -299,6 +299,40 @@ const styles = StyleSheet.create({
     color: '#6b7280', 
     marginLeft: 0 
   },
+  volBlock: { 
+    marginBottom: 15, 
+    paddingBottom: 12,
+    backgroundColor: '#fafafa',
+    padding: 12,
+    borderRadius: 8,
+    borderLeftWidth: 4,
+    borderLeftColor: '#ef4444',
+    borderLeftStyle: 'solid'
+  },
+  volRole: { 
+    fontSize: 11, 
+    fontWeight: 'bold', 
+    color: '#ef4444', 
+    marginBottom: 4 
+  },
+  volOrg: { 
+    fontSize: 10, 
+    color: '#6b7280', 
+    marginBottom: 4 
+  },
+  volDesc: { 
+    fontSize: 10, 
+    marginLeft: 0, 
+    marginBottom: 4,
+    color: '#374151'
+  },
+  volImpact: { 
+    fontSize: 10, 
+    fontStyle: 'italic', 
+    marginLeft: 0, 
+    marginBottom: 4,
+    color: '#059669'
+  },
   projTech: { 
     fontSize: 10, 
     color: '#ec4899', 
@@ -338,6 +372,7 @@ export function CreativeTemplate({
   languages,
   certifications,
   projects,
+  volunteers,
   lang,
   color = 'pink',
 }: CreativeTemplateProps) {
@@ -427,14 +462,19 @@ export function CreativeTemplate({
   };
 
   // Helper to translate link types
-  const translateLinkType = (type: string, lang: string) => {
+  const translateLinkType = (type: string, lang: string, customName?: string) => {
+    // If it's "Other" type and has a custom name, return the custom name
+    if (type === 'Other' && customName) {
+      return customName;
+    }
+    
     if (lang === 'en') {
       switch (type) {
         case 'LinkedIn': return 'LinkedIn';
         case 'GitHub': return 'GitHub';
         case 'GitLab': return 'GitLab';
         case 'Portfolio': return 'Portfolio';
-        case 'Outro': return 'Other';
+        case 'Other': return 'Other';
         default: return type;
       }
     } else {
@@ -443,7 +483,7 @@ export function CreativeTemplate({
         case 'GitHub': return 'GitHub';
         case 'GitLab': return 'GitLab';
         case 'Portfolio': return 'Portfolio';
-        case 'Outro': return 'Outro';
+        case 'Other': return 'Outro';
         default: return type;
       }
     }
@@ -491,6 +531,14 @@ export function CreativeTemplate({
     if (!level) return '';
     
     const levelMap = {
+      // CEFR levels
+      'language.level.a1': { pt: 'A1', en: 'A1' },
+      'language.level.a2': { pt: 'A2', en: 'A2' },
+      'language.level.b1': { pt: 'B1', en: 'B1' },
+      'language.level.b2': { pt: 'B2', en: 'B2' },
+      'language.level.c1': { pt: 'C1', en: 'C1' },
+      'language.level.c2': { pt: 'C2', en: 'C2' },
+      // Legacy levels for backward compatibility
       'Básico': { pt: 'Básico', en: 'Basic' },
       'Intermediário': { pt: 'Intermediário', en: 'Intermediate' },
       'Avançado': { pt: 'Avançado', en: 'Advanced' },
@@ -501,7 +549,7 @@ export function CreativeTemplate({
       'Advanced': { pt: 'Avançado', en: 'Advanced' },
       'Fluent': { pt: 'Fluente', en: 'Fluent' },
       'Native': { pt: 'Nativo', en: 'Native' },
-      // Handle old translation keys
+      // Old translation keys for backward compatibility
       'language.level.basic': { pt: 'Básico', en: 'Basic' },
       'language.level.intermediate': { pt: 'Intermediário', en: 'Intermediate' },
       'language.level.advanced': { pt: 'Avançado', en: 'Advanced' },
@@ -535,7 +583,7 @@ export function CreativeTemplate({
             <View style={styles.linksRow}>
               {links.map((link, index) => (
                 <Link key={index} src={getSocialUrl(link.type, link.value)} style={dynamicStyles.linkItem}>
-                  {translateLinkType(link.type, lang || 'pt')}: {link.value}
+                  {translateLinkType(link.type, lang || 'pt', link.customName)}: {link.value}
                 </Link>
               ))}
             </View>
@@ -644,8 +692,14 @@ export function CreativeTemplate({
               <Text style={dynamicStyles.sectionTitle}>
                 {lang === 'en' ? 'Certifications' : 'Certificações'}
               </Text>
-              {certifications.map((cert, index) => (
-                <View key={index} style={styles.certBlock}>
+              {certifications.map((cert, index) => {
+                const isLast = index === certifications.length - 1;
+                return (
+                  <View key={index} style={{
+                    ...styles.certBlock,
+                    marginBottom: isLast ? 0 : styles.certBlock.marginBottom,
+                    paddingBottom: isLast ? 0 : styles.certBlock.paddingBottom,
+                  }}>
                   <View style={styles.roleAndDate}>
                     <Text style={styles.certName}>{cert.name}</Text>
                     <Text style={styles.certDate}>{cert.completionDate}</Text>
@@ -658,18 +712,56 @@ export function CreativeTemplate({
                 )}
                   {cert.description && <Text style={styles.certDesc}>{cert.description}</Text>}
                 </View>
-              ))}
+            );
+            })}
+            </View>
+          )}
+
+          {/* Volunteer Work */}
+                        {volunteers && volunteers.length > 0 && (
+                <View style={styles.section}>
+                  <Text style={dynamicStyles.sectionTitle}>
+                    {lang === 'en' ? 'Volunteer Work' : 'Voluntariado'}
+                  </Text>
+                  {volunteers.map((vol, index) => {
+                    const isLast = index === volunteers.length - 1;
+                return (
+                  <View key={index} style={{
+                    ...styles.volBlock,
+                    marginBottom: isLast ? 0 : styles.volBlock.marginBottom,
+                    paddingBottom: isLast ? 0 : styles.volBlock.paddingBottom,
+                  }}>
+                  <View style={styles.roleAndDate}>
+                    <Text style={styles.volRole}>{vol.role}</Text>
+                    <Text style={styles.dateRange}>
+                      {vol.startMonth && vol.startYear ? `${translateMonth(vol.startMonth, lang || 'pt')} ${vol.startYear}` : ''}
+                      {vol.startMonth && vol.startYear && (vol.endMonth || vol.endYear || vol.current) ? ' - ' : ''}
+                      {vol.current ? (lang === 'en' ? 'Present' : 'Atual') : vol.endMonth && vol.endYear ? `${translateMonth(vol.endMonth, lang || 'pt')} ${vol.endYear}` : ''}
+                    </Text>
+                  </View>
+                  <Text style={styles.volOrg}>{vol.organization}</Text>
+                  {vol.description && <Text style={styles.volDesc}>{vol.description}</Text>}
+                  {vol.impact && <Text style={styles.volImpact}>{vol.impact}</Text>}
+                </View>
+              );
+              })}
             </View>
           )}
 
           {/* Projects */}
           {projects.length > 0 && (
-            <View style={styles.section}>
+            <View style={{ ...styles.section, marginBottom: 0 }}>
               <Text style={dynamicStyles.sectionTitle}>
                 {lang === 'en' ? 'Projects' : 'Projetos'}
               </Text>
-              {projects.map((proj, index) => (
-                <View key={index} style={styles.projBlock}>
+              {projects.map((proj, index) => {
+                const isLast = index === projects.length - 1;
+                return (
+                  <View key={index} style={{
+                    ...styles.projBlock,
+                    marginBottom: isLast ? 0 : styles.projBlock.marginBottom,
+                    paddingBottom: isLast ? 0 : styles.projBlock.paddingBottom,
+                  }}>
                   <View style={styles.roleAndDate}>
                     <Text style={styles.projName}>{proj.name}</Text>
                     <Text style={styles.projYear}>{proj.year}</Text>
@@ -680,9 +772,10 @@ export function CreativeTemplate({
                   <Link src={proj.link} style={dynamicStyles.projLink}>
                     {lang === 'en' ? 'View Project' : 'Ver Projeto'}
                   </Link>
-                )}
-                </View>
-              ))}
+                                )}
+              </View>
+            );
+            })}
             </View>
           )}
         </View>

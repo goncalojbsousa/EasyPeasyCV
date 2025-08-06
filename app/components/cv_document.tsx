@@ -31,6 +31,7 @@ export function CvDocument({
   languages,
   certifications,
   projects,
+  volunteers,
   lang,
   template = 'classic',
   color = 'blue',
@@ -50,6 +51,7 @@ export function CvDocument({
           languages={languages}
           certifications={certifications}
           projects={projects}
+          volunteers={volunteers}
           lang={lang}
           color={color}
         />
@@ -67,6 +69,7 @@ export function CvDocument({
           languages={languages}
           certifications={certifications}
           projects={projects}
+          volunteers={volunteers}
           lang={lang}
           color={color}
         />
@@ -87,6 +90,7 @@ export function CvDocument({
           languages={languages}
           certifications={certifications}
           projects={projects}
+          volunteers={volunteers}
           lang={lang}
         />
       );

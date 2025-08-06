@@ -1,5 +1,5 @@
 /**
- * Footer component for the CV Builder application
+ * Footer component for the OpenCVLab application
  * Displays copyright information and links
  * @returns JSX element representing the application footer
  */
@@ -10,7 +10,7 @@ export function Footer() {
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="text-center sm:text-left">
             <p className="text-gray-600 dark:text-gray-400 text-sm">
-              © 2025 CV Builder. Criado com ❤️
+              © 2025 OpenCVLab.
             </p>
           </div>
           <div className="flex items-center gap-2">

@@ -5,10 +5,10 @@ import { LanguageHtmlAttribute } from './components/language-html-attribute';
 import { ThemeProvider } from 'next-themes';
 
 /**
- * Metadata configuration for the CV Builder application
+ * Metadata configuration for the OpenCVLab application
  */
 export const metadata: Metadata = {
-  title: "CV Builder",
+  title: "OpenCVLab",
   description: "Crie um currículo profissional em minutos",
 };
 

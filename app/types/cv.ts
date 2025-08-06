@@ -26,6 +26,8 @@ export interface Link {
   type: string;
   /** URL or username value */
   value: string;
+  /** Custom name for the platform (when type is "Other") */
+  customName?: string;
 }
 
 /**
@@ -123,6 +125,30 @@ export interface Project {
 }
 
 /**
+ * Interface for volunteer work entries
+ */
+export interface Volunteer {
+  /** Organization name */
+  organization: string;
+  /** Role or position in the organization */
+  role: string;
+  /** Start month (abbreviated) */
+  startMonth: string;
+  /** Start year */
+  startYear: string;
+  /** End month (abbreviated) */
+  endMonth: string;
+  /** End year */
+  endYear: string;
+  /** Whether this is the current volunteer position */
+  current: boolean;
+  /** Description of volunteer activities and responsibilities */
+  description: string;
+  /** Impact and achievements in the volunteer role */
+  impact: string;
+}
+
+/**
  * Available CV template types
  */
 export type CvTemplate = 'classic' | 'modern' | 'creative';
@@ -151,6 +177,8 @@ export interface CvData {
   certifications: Certification[];
   /** Project entries */
   projects: Project[];
+  /** Volunteer work entries */
+  volunteers: Volunteer[];
   /** Selected CV template */
   template?: CvTemplate;
   /** Selected color theme */
