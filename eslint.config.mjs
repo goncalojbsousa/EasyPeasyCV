@@ -3,7 +3,7 @@ import { fileURLToPath } from "url";
 import { FlatCompat } from "@eslint/eslintrc";
 
 /**
- * ESLint configuration for CV Builder application
+ * ESLint configuration for EasyPeasyCV application
  * Extends Next.js core web vitals and TypeScript rules
  */
 

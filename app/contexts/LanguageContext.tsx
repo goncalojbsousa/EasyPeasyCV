@@ -108,11 +108,11 @@ export function useLanguage() {
 // Portuguese translations
 const ptTranslations: Record<string, string> = {
   // Header
-  'app.title': 'OpenCVLab',
+  'app.title': 'EasyPeasyCV',
   'app.subtitle': 'Crie um currículo profissional em minutos',
   'generate.cv': 'Gerar CV',
   'generate.resume': 'Gerar Currículo',
-  'generate.ats.resume': 'Gerar Currículo ATS',
+  'generate.ats.resume': 'Gerar CV',
   'preview.cv': 'Preview do CV',
   'preview': 'Preview',
   'select.language': 'Escolher idioma:',
@@ -128,6 +128,14 @@ const ptTranslations: Record<string, string> = {
   'validation.email': 'Email',
   'validation.role': 'Cargo desejado',
   'validation.resume': 'Resumo profissional',
+
+  // Thank you modal
+  'thank.you.title': 'Obrigado por usar o EasyPeasyCV!',
+  'thank.you.message': 'O seu currículo foi gerado com sucesso. Esperamos que esta ferramenta tenha sido útil para si. Se gostou do projeto, considere fazer uma pequena doação para ajudar a manter o desenvolvimento.',
+  'thank.you.close': 'Fechar',
+  'donation.title': 'Apoiar o Projeto',
+  'donation.message': 'As suas doações ajudam a manter o EasyPeasyCV gratuito e a melhorar continuamente a ferramenta.',
+  'donation.button': 'Fazer Doação',
 
   // Form Sections
   'section.personal.info': 'Informações Pessoais',
@@ -633,11 +641,11 @@ const ptTranslations: Record<string, string> = {
 // English translations
 const enTranslations: Record<string, string> = {
   // Header
-  'app.title': 'OpenCVLab',
+  'app.title': 'EasyPeasyCV',
   'app.subtitle': 'Create a professional resume in minutes',
   'generate.cv': 'Generate CV',
   'generate.resume': 'Generate Resume',
-  'generate.ats.resume': 'Generate ATS Resume',
+  'generate.ats.resume': 'Generate CV',
   'preview.cv': 'CV Preview',
   'preview': 'Preview',
   'select.language': 'Choose language:',
@@ -653,6 +661,14 @@ const enTranslations: Record<string, string> = {
   'validation.email': 'Email',
   'validation.role': 'Desired role',
   'validation.resume': 'Professional summary',
+
+  // Thank you modal
+  'thank.you.title': 'Thank you for using EasyPeasyCV!',
+  'thank.you.message': 'Your resume has been generated successfully. We hope this tool has been useful for you. If you liked the project, consider making a small donation to help maintain development.',
+  'thank.you.close': 'Close',
+  'donation.title': 'Support the Project',
+  'donation.message': 'Your donations help keep EasyPeasyCV free and continuously improve the tool.',
+  'donation.button': 'Make Donation',
 
   // Form Sections
   'section.personal.info': 'Personal Information',

@@ -5,7 +5,8 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { FormSection } from './form-section';
 import { Icons } from './icons';
 import PdfDownloadButton from '../pdf_download_button';
-import { Experience, Education, Language, Certification, Project, CvColor } from '../../types/cv';
+import { ThankYouModal } from '../thank_you_modal';
+import { Experience, Education, Language, Certification, Project, Volunteer, CvColor } from '../../types/cv';
 import { CvTypeSelector } from './cv-type-selector';
 import { ColorSelector } from './color-selector';
 
@@ -19,6 +20,7 @@ interface DesktopActionsCardProps {
   languages: Language[];
   certifications: Certification[];
   projects: Project[];
+  volunteers: Volunteer[];
   template?: 'classic' | 'modern' | 'creative';
   color?: CvColor;
   selectedTemplate: 'classic' | 'modern' | 'creative';
@@ -49,6 +51,7 @@ export function DesktopActionsCard({
   languages,
   certifications,
   projects,
+  volunteers,
   template = 'classic',
   color = 'blue',
   selectedTemplate,
@@ -65,6 +68,7 @@ export function DesktopActionsCard({
   const { t, cvType, setCVType } = useLanguage();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isCVTypeDropdownOpen, setIsCVTypeDropdownOpen] = useState(false);
+  const [showThankYouModal, setShowThankYouModal] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const cvTypeDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -171,6 +175,11 @@ export function DesktopActionsCard({
       }
     };
 
+    const handlePdfGenerated = () => {
+      // Show thank you modal after PDF generation
+      setShowThankYouModal(true);
+    };
+
     return (
       <div onClick={handleClick}>
         <PdfDownloadButton
@@ -183,9 +192,11 @@ export function DesktopActionsCard({
           languages={languages}
           certifications={certifications}
           projects={projects}
+          volunteers={volunteers}
           lang={lang}
           template={template}
           color={color}
+          onPdfGenerated={handlePdfGenerated}
         >
           {children}
         </PdfDownloadButton>
@@ -384,6 +395,12 @@ export function DesktopActionsCard({
           </FormSection>
         </div>
       </div>
+
+      {/* Thank You Modal */}
+      <ThankYouModal
+        show={showThankYouModal}
+        onClose={() => setShowThankYouModal(false)}
+      />
     </div>
   );
 } 

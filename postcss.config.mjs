@@ -1,5 +1,5 @@
 /**
- * PostCSS configuration for CV Builder application
+ * PostCSS configuration for EasyPeasyCV application
  * Configures Tailwind CSS processing
  */
 const config = {

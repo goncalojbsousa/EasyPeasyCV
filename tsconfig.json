@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    // TypeScript configuration for CV Builder application
+    // TypeScript configuration for EasyPeasyCV application
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,

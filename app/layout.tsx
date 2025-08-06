@@ -5,10 +5,10 @@ import { LanguageHtmlAttribute } from './components/language-html-attribute';
 import { ThemeProvider } from 'next-themes';
 
 /**
- * Metadata configuration for the OpenCVLab application
+ * Metadata configuration for the EasyPeasyCV application
  */
 export const metadata: Metadata = {
-  title: "OpenCVLab",
+  title: "EasyPeasyCV",
   description: "Crie um currículo profissional em minutos",
 };
 

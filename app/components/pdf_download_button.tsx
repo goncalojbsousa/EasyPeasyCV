@@ -16,6 +16,8 @@ interface PdfDownloadButtonProps extends CvData {
   color?: CvColor;
   /** Custom children to render inside the button */
   children?: React.ReactNode;
+  /** Callback function to show thank you modal after PDF generation */
+  onPdfGenerated?: () => void;
 }
 
 /**
@@ -31,11 +33,22 @@ interface PdfDownloadButtonProps extends CvData {
  * @returns JSX element representing a button that triggers PDF download
  */
 export default function PdfDownloadButton(props: PdfDownloadButtonProps) {
-  const { children, ...pdfProps } = props;
+  const { children, onPdfGenerated, ...pdfProps } = props;
+  
+  const handleDownload = () => {
+    // Call the callback after a short delay to ensure PDF generation has started
+    if (onPdfGenerated) {
+      setTimeout(() => {
+        onPdfGenerated();
+      }, 500);
+    }
+  };
+
   return (
     <PDFDownloadLink
       document={<CvDocument {...pdfProps} />}
       fileName="curriculo.pdf"
+      onClick={handleDownload}
     >
       {({ loading }) =>
         children || (loading ? 'Gerando PDF...' : 'Gerar Currículo em PDF')

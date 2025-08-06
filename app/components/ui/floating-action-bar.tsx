@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { CompactCVTypeSelector } from './compact-cv-type-selector';
 import PdfDownloadButton from '../pdf_download_button';
+import { ThankYouModal } from '../thank_you_modal';
 import { Experience, Education, Language, Certification, Project, Volunteer, CvColor } from '../../types/cv';
 
 interface FloatingActionBarProps {
@@ -58,6 +59,7 @@ export function FloatingActionBar({
   const { t, language } = useLanguage();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isTemplateDropdownOpen, setIsTemplateDropdownOpen] = useState(false);
+  const [showThankYouModal, setShowThankYouModal] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const templateDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -103,6 +105,11 @@ export function FloatingActionBar({
       }
     };
 
+    const handlePdfGenerated = () => {
+      // Show thank you modal after PDF generation
+      setShowThankYouModal(true);
+    };
+
     return (
       <div onClick={handleClick}>
         <PdfDownloadButton
@@ -119,6 +126,7 @@ export function FloatingActionBar({
           lang={lang}
           template={template}
           color={color}
+          onPdfGenerated={handlePdfGenerated}
         >
           {children}
         </PdfDownloadButton>
@@ -308,6 +316,12 @@ export function FloatingActionBar({
           </div>
         )}
       </div>
+
+      {/* Thank You Modal */}
+      <ThankYouModal
+        show={showThankYouModal}
+        onClose={() => setShowThankYouModal(false)}
+      />
     </div>
   );
 } 

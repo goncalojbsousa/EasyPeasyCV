@@ -1,4 +1,4 @@
-# CV Builder
+# EasyPeasyCV
 
 A modern, responsive CV builder application built with Next.js, React, and TypeScript. Features real-time preview, PDF generation, and multi-language support.
 

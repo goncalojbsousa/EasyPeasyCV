@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 /**
  * Next.js configuration
- * Defines build settings and optimizations for the CV Builder application
+ * Defines build settings and optimizations for the EasyPeasyCV application
  */
 const nextConfig: NextConfig = {
   images: {
