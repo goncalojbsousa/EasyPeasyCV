@@ -25,7 +25,7 @@ export function ThankYouModal({ show, onClose }: ThankYouModalProps) {
   if (!show) return null;
 
   const handleDonationClick = () => {
-    window.open('https://ko-fi.com/opencvlab', '_blank');
+            window.open('https://ko-fi.com/easypeasycv', '_blank');
     onClose();
   };
 

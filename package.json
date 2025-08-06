@@ -3,6 +3,21 @@
   "description": "A modern EasyPeasyCV application with real-time preview and PDF generation",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
+  "author": "EasyPeasyCV",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/goncalojbsousa/cv-builder.git"
+  },
+  "keywords": [
+    "cv-builder",
+    "resume-builder",
+    "nextjs",
+    "react",
+    "typescript",
+    "pdf-generation",
+    "open-source"
+  ],
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
