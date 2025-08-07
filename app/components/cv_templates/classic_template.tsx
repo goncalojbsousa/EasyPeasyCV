@@ -310,7 +310,7 @@ export function ClassicTemplate({
         {resume && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
-              {lang === 'en' ? 'Professional Summary' : 'Resumo Profissional'}
+              {lang === 'en' ? 'Professional Summary' : lang === 'es' ? 'Resumen Profesional' : 'Resumo Profissional'}
             </Text>
             <Text>{resume}</Text>
           </View>
@@ -320,7 +320,7 @@ export function ClassicTemplate({
         {experiences.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
-              {lang === 'en' ? 'Professional Experience' : 'Experiência Profissional'}
+              {lang === 'en' ? 'Professional Experience' : lang === 'es' ? 'Experiencia Profesional' : 'Experiência Profissional'}
             </Text>
             {experiences.map((exp, index) => {
               const showSeparator = experiences.length > 1 && index < experiences.length - 1;
@@ -358,7 +358,7 @@ export function ClassicTemplate({
         {education.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
-              {lang === 'en' ? 'Education' : 'Formação Académica'}
+              {lang === 'en' ? 'Education' : lang === 'es' ? 'Educación' : 'Formação Académica'}
             </Text>
             {education.map((edu, index) => {
               const showSeparator = education.length > 1 && index < education.length - 1;
@@ -399,9 +399,9 @@ export function ClassicTemplate({
             <View style={styles.skillsLangRow}>
               {skills && (
                 <View style={styles.skillsCol}>
-                  <Text style={styles.sectionTitle}>
-                    {lang === 'en' ? 'Technical Skills' : 'Competências Técnicas'}
-                  </Text>
+                              <Text style={styles.sectionTitle}>
+              {lang === 'en' ? 'Technical Skills' : lang === 'es' ? 'Competencias Técnicas' : 'Competências Técnicas'}
+            </Text>
                   <Text style={styles.skillText}>{skills}</Text>
                 </View>
               )}
@@ -502,7 +502,7 @@ export function ClassicTemplate({
         {projects.length > 0 && (
           <View style={{ ...styles.section, marginBottom: 0 }}>
             <Text style={styles.sectionTitle}>
-              {lang === 'en' ? 'Projects' : 'Projetos'}
+              {lang === 'en' ? 'Projects' : lang === 'es' ? 'Proyectos' : 'Projetos'}
             </Text>
             {projects.map((proj, index) => {
               const showSeparator = projects.length > 1 && index < projects.length - 1;

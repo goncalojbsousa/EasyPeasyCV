@@ -600,7 +600,7 @@ export function ModernTemplate({
         {resume && (
           <View style={styles.section}>
             <Text style={dynamicStyles.sectionTitle}>
-              {lang === 'en' ? 'Professional Summary' : 'Resumo Profissional'}
+              {lang === 'en' ? 'Professional Summary' : lang === 'es' ? 'Resumen Profesional' : 'Resumo Profissional'}
             </Text>
             <Text style={styles.summary}>{resume}</Text>
           </View>
@@ -610,7 +610,7 @@ export function ModernTemplate({
         {experiences.length > 0 && (
           <View style={styles.section}>
             <Text style={dynamicStyles.sectionTitle}>
-              {lang === 'en' ? 'Professional Experience' : 'Experiência Profissional'}
+              {lang === 'en' ? 'Professional Experience' : lang === 'es' ? 'Experiencia Profesional' : 'Experiência Profissional'}
             </Text>
             {experiences.map((exp, index) => (
               <View key={index} style={dynamicStyles.expBlock}>
@@ -636,7 +636,7 @@ export function ModernTemplate({
         {education.length > 0 && (
           <View style={styles.section}>
             <Text style={dynamicStyles.sectionTitle}>
-              {lang === 'en' ? 'Education' : 'Formação Académica'}
+              {lang === 'en' ? 'Education' : lang === 'es' ? 'Educación' : 'Formação Académica'}
             </Text>
             {education.map((edu, index) => (
               <View key={index} style={dynamicStyles.eduBlock}>
@@ -659,9 +659,9 @@ export function ModernTemplate({
             <View style={styles.skillsLangRow}>
                           {skills && (
               <View style={styles.skillsCol}>
-                <Text style={dynamicStyles.sectionTitle}>
-                  {lang === 'en' ? 'Technical Skills' : 'Competências Técnicas'}
-                </Text>
+                            <Text style={dynamicStyles.sectionTitle}>
+              {lang === 'en' ? 'Technical Skills' : lang === 'es' ? 'Competencias Técnicas' : 'Competências Técnicas'}
+            </Text>
                   <View style={styles.skillsGrid}>
                     {skills.split(',').map((skill, index) => (
                       <Text key={index} style={styles.skillText}>
@@ -756,7 +756,7 @@ export function ModernTemplate({
         {projects.length > 0 && (
           <View style={{ ...styles.section, marginBottom: 0 }}>
             <Text style={dynamicStyles.sectionTitle}>
-              {lang === 'en' ? 'Projects' : 'Projetos'}
+              {lang === 'en' ? 'Projects' : lang === 'es' ? 'Proyectos' : 'Projetos'}
             </Text>
             {projects.map((proj, index) => {
               const isLast = index === projects.length - 1;
@@ -774,7 +774,7 @@ export function ModernTemplate({
                 {proj.description && <Text style={styles.projDesc}>{proj.description}</Text>}
                 {proj.link && (
                   <Link src={proj.link} style={dynamicStyles.projLink}>
-                    {lang === 'en' ? 'View Project' : 'Ver Projeto'}
+                    {lang === 'en' ? 'View Project' : lang === 'es' ? 'Ver Proyecto' : 'Ver Projeto'}
                   </Link>
                 )}
               </View>

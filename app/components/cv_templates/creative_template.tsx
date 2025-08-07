@@ -595,9 +595,9 @@ export function CreativeTemplate({
           {/* Professional Summary */}
           {resume && (
             <View style={styles.section}>
-              <Text style={dynamicStyles.sectionTitle}>
-                {lang === 'en' ? 'Professional Summary' : 'Resumo Profissional'}
-              </Text>
+                          <Text style={dynamicStyles.sectionTitle}>
+              {lang === 'en' ? 'Professional Summary' : lang === 'es' ? 'Resumen Profesional' : 'Resumo Profissional'}
+            </Text>
               <Text style={dynamicStyles.summary}>{resume}</Text>
             </View>
           )}
@@ -605,9 +605,9 @@ export function CreativeTemplate({
           {/* Professional Experience */}
           {experiences.length > 0 && (
             <View style={styles.section}>
-              <Text style={dynamicStyles.sectionTitle}>
-                {lang === 'en' ? 'Professional Experience' : 'Experiência Profissional'}
-              </Text>
+                          <Text style={dynamicStyles.sectionTitle}>
+              {lang === 'en' ? 'Professional Experience' : lang === 'es' ? 'Experiencia Profesional' : 'Experiência Profissional'}
+            </Text>
               {experiences.map((exp, index) => (
                 <View key={index} style={styles.expBlock}>
                   <View style={styles.roleAndDate}>
@@ -631,9 +631,9 @@ export function CreativeTemplate({
           {/* Education */}
           {education.length > 0 && (
             <View style={styles.section}>
-              <Text style={dynamicStyles.sectionTitle}>
-                {lang === 'en' ? 'Education' : 'Formação Académica'}
-              </Text>
+                          <Text style={dynamicStyles.sectionTitle}>
+              {lang === 'en' ? 'Education' : lang === 'es' ? 'Educación' : 'Formação Académica'}
+            </Text>
               {education.map((edu, index) => (
                 <View key={index} style={styles.eduBlock}>
                   <View style={styles.roleAndDate}>
@@ -655,9 +655,9 @@ export function CreativeTemplate({
               <View style={styles.skillsLangRow}>
                 {skills && (
                   <View style={styles.skillsCol}>
-                    <Text style={dynamicStyles.sectionTitle}>
-                      {lang === 'en' ? 'Technical Skills' : 'Competências Técnicas'}
-                    </Text>
+                                <Text style={dynamicStyles.sectionTitle}>
+              {lang === 'en' ? 'Technical Skills' : lang === 'es' ? 'Competencias Técnicas' : 'Competências Técnicas'}
+            </Text>
                     <View style={styles.skillsGrid}>
                       {skills.split(',').map((skill, index) => (
                         <Text key={index} style={styles.skillText}>
@@ -751,9 +751,9 @@ export function CreativeTemplate({
           {/* Projects */}
           {projects.length > 0 && (
             <View style={{ ...styles.section, marginBottom: 0 }}>
-              <Text style={dynamicStyles.sectionTitle}>
-                {lang === 'en' ? 'Projects' : 'Projetos'}
-              </Text>
+                          <Text style={dynamicStyles.sectionTitle}>
+              {lang === 'en' ? 'Projects' : lang === 'es' ? 'Proyectos' : 'Projetos'}
+            </Text>
               {projects.map((proj, index) => {
                 const isLast = index === projects.length - 1;
                 return (
@@ -770,7 +770,7 @@ export function CreativeTemplate({
                   {proj.description && <Text style={styles.projDesc}>{proj.description}</Text>}
                                   {proj.link && (
                   <Link src={proj.link} style={dynamicStyles.projLink}>
-                    {lang === 'en' ? 'View Project' : 'Ver Projeto'}
+                    {lang === 'en' ? 'View Project' : lang === 'es' ? 'Ver Proyecto' : 'Ver Projeto'}
                   </Link>
                                 )}
               </View>

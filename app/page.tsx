@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { useLanguage } from './contexts/LanguageContext';
 import { Navbar } from './components/navbar';
 import { Footer } from './components/footer';
@@ -12,8 +11,7 @@ import Link from 'next/link';
  * @returns JSX element representing the landing page
  */
 export default function Home() {
-  const { t, language } = useLanguage();
-  const [activeFeature, setActiveFeature] = useState(0);
+  const { t } = useLanguage();
 
   const features = [
     {
@@ -56,14 +54,14 @@ export default function Home() {
       features: t('landing.templates.classic.features').split(',')
     },
     {
-      name: t('landing.templates.modern.name'), 
+      name: t('landing.templates.modern.name'),
       description: t('landing.templates.modern.description'),
       color: "bg-green-500",
       features: t('landing.templates.modern.features').split(',')
     },
     {
       name: t('landing.templates.creative.name'),
-      description: t('landing.templates.creative.description'), 
+      description: t('landing.templates.creative.description'),
       color: "bg-purple-500",
       features: t('landing.templates.creative.features').split(',')
     }
@@ -96,7 +94,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="pt-40 pb-24 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto text-center">
-          
+
           <h1 className="text-4xl sm:text-6xl font-bold text-gray-900 dark:text-white mb-6">
             {t('landing.hero.title')}
           </h1>
@@ -111,7 +109,7 @@ export default function Home() {
               {t('landing.create.cv.button')}
             </Link>
           </div>
-          
+
           {/* Stats Section */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto">
             {stats.map((stat, index) => (
@@ -144,7 +142,6 @@ export default function Home() {
               <div
                 key={index}
                 className="p-6 rounded-lg border border-gray-200 dark:border-zinc-700 hover:shadow-lg transition-all duration-300 bg-gray-50 dark:bg-zinc-900 group"
-                onMouseEnter={() => setActiveFeature(index)}
               >
                 <div className="text-4xl mb-4">{feature.icon}</div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
@@ -178,7 +175,7 @@ export default function Home() {
               >
                 <div className={`w-16 h-16 ${template.color} rounded-lg mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold group-hover:scale-110 transition-transform duration-300`}>
                   {template.name.charAt(0)}
-              </div>
+                </div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                   {template.name}
                 </h3>
@@ -368,7 +365,7 @@ export default function Home() {
           >
             {t('landing.cta.button')}
           </Link>
-      </div>
+        </div>
       </section>
 
       {/* Footer */}

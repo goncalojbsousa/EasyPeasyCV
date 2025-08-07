@@ -8,7 +8,7 @@ A modern, responsive CV builder application built with Next.js, React, and TypeS
 - **Full Customization**: Choose colors, reorder sections, and customize every detail
 - **Responsive Design**: Works perfectly on desktop, tablet, and mobile
 - **Auto-Save**: Your data is automatically saved in the browser
-- **Multi-language**: Available in Portuguese and English
+- **Multi-language**: Available in Portuguese, English and Spanish
 - **Privacy-First**: Everything stays in your browser, no external servers
 - **PDF Export**: Generate professional PDFs instantly
 - **ATS Optimized**: Templates designed to pass Applicant Tracking Systems
@@ -83,6 +83,7 @@ cv-builder/
 The application supports multiple languages:
 - Portuguese (pt)
 - English (en)
+- Spanish (es)
 
 Language switching is available in the header.
 

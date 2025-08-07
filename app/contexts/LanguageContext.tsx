@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 // Types for available languages
-export type Language = 'pt' | 'en';
+export type Language = 'pt' | 'en' | 'es';
 
 // Available CV types
 export type CVType = 'development' | 'marketing' | 'sales' | 'hr' | 'finance' | 'design' | 'health' | 'education' | 'admin' | 'other';
@@ -11,6 +11,7 @@ export type CVType = 'development' | 'marketing' | 'sales' | 'hr' | 'finance' | 
 // Context interface
 interface LanguageContextType {
   language: Language;
+
   setLanguage: (lang: Language) => void;
   cvType: CVType;
   setCVType: (type: CVType) => void;
@@ -42,17 +43,22 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
         } else {
           // Detect browser language if no language is saved
           const browserLanguage = navigator.language || navigator.languages?.[0] || 'en';
-          const detectedLanguage = browserLanguage.startsWith('pt') ? 'pt' : 'en';
+          let detectedLanguage: Language = 'en';
+          if (browserLanguage.startsWith('pt')) {
+            detectedLanguage = 'pt';
+          } else if (browserLanguage.startsWith('es')) {
+            detectedLanguage = 'es';
+          }
           setLanguageState(detectedLanguage);
           localStorage.setItem('cv-builder-language', detectedLanguage);
         }
-        
+
         const savedCVType = localStorage.getItem('cv-builder-type') as CVType;
         if (savedCVType && ['development', 'marketing', 'sales', 'hr', 'finance', 'design', 'health', 'education', 'admin', 'other'].includes(savedCVType)) {
           setCVTypeState(savedCVType);
         }
       }
-      
+
       setIsInitialized(true);
     } catch (error) {
       console.error('Error initializing language:', error);
@@ -74,9 +80,17 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 
   // Translation function
   const t = (key: string): string => {
-    const translations = language === 'pt' ? ptTranslations : enTranslations;
+    let translations: Record<string, string>;
+    if (language === 'pt') {
+      translations = ptTranslations;
+    } else if (language === 'es') {
+      translations = esTranslations;
+    } else {
+      translations = enTranslations;
+    }
+
     const baseTranslation = translations[key] || key;
-    
+
     // If the key contains CV type, return the specific translation
     if (key.includes('cvType.')) {
       const cvTypeKey = key.replace('cvType.', `${cvType}.`);
@@ -85,7 +99,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
         return cvTypeTranslation;
       }
     }
-    
+
     return baseTranslation;
   };
 
@@ -105,24 +119,13 @@ export function useLanguage() {
   return context;
 }
 
-  // Portuguese translations
-  const ptTranslations: Record<string, string> = {
-    // ... existing translations ...
-    'landing.benefits.title': 'Vantagens do EasyPeasyCV',
-    'landing.benefits.subtitle': 'Descobre por que o EasyPeasyCV é a escolha certa para o teu CV profissional',
-    'landing.benefits.privacy.title': 'Privacidade Total',
-    'landing.benefits.privacy.subtitle': 'Os teus dados ficam seguros',
-    'landing.benefits.privacy.description': 'Todos os dados são guardados localmente no teu navegador. Nenhuma informação é enviada para servidores externos.',
-    'landing.benefits.ats.title': 'Otimizado para ATS',
-    'landing.benefits.ats.subtitle': 'Compatível com sistemas de recrutamento',
-    'landing.benefits.ats.description': 'Os nossos templates são otimizados para passar nos sistemas de rastreamento de candidatos (ATS) das empresas.',
-    'landing.benefits.performance.title': 'Rápido e Eficiente',
-    'landing.benefits.performance.subtitle': 'Geração instantânea de PDF',
-    'landing.benefits.performance.description': 'Gera o teu CV em PDF de alta qualidade em segundos, sem esperas ou complicações.',
+// Portuguese translations
+const ptTranslations: Record<string, string> = {
+  // ... existing translations ...
   // Header
   'app.title': 'EasyPeasyCV',
   'app.subtitle': 'Crie um currículo profissional em minutos',
-  
+
   // Landing Page
   'landing.open.source.badge': 'Projeto Open Source',
   'landing.hero.title': 'Cria o teu CV profissional em minutos',
@@ -133,7 +136,7 @@ export function useLanguage() {
   'landing.stats.free': 'Gratuito',
   'landing.stats.unlimited': 'CVs Ilimitados',
   'landing.stats.languages': 'Idiomas',
-  
+
   // Features Section
   'landing.features.title': 'Porquê escolher EasyPeasyCV?',
   'landing.features.subtitle': 'Tudo o que precisas para criar um CV profissional, sem complicações.',
@@ -146,10 +149,10 @@ export function useLanguage() {
   'landing.features.autosave.title': 'Auto-Save',
   'landing.features.autosave.description': 'Os teus dados são guardados automaticamente no navegador',
   'landing.features.multilang.title': 'Multi-idioma',
-  'landing.features.multilang.description': 'Disponível em Português e Inglês',
+  'landing.features.multilang.description': 'Disponível em Português, Inglês e Espanhol',
   'landing.features.privacy.title': 'Privacidade',
   'landing.features.privacy.description': 'Tudo fica no teu navegador, sem servidores externos',
-  
+
   // Templates Section
   'landing.templates.title': 'Templates Disponíveis',
   'landing.templates.subtitle': 'Escolhe o template que melhor se adapta ao teu perfil profissional.',
@@ -163,7 +166,7 @@ export function useLanguage() {
   'landing.templates.creative.description': 'Original e expressivo',
   'landing.templates.creative.features': 'Cores vibrantes,Layout único,Elementos visuais',
   'landing.templates.use.button': 'Usar Template',
-  
+
   // How it works Section
   'landing.how.title': 'Como Funciona',
   'landing.how.subtitle': 'Criar o teu CV nunca foi tão simples. Segue estes 3 passos:',
@@ -173,25 +176,29 @@ export function useLanguage() {
   'landing.how.step2.description': 'Escolhe o template, cores e reorganiza as secções',
   'landing.how.step3.title': 'Descarrega',
   'landing.how.step3.description': 'Gera e descarrega o teu CV em PDF',
-  
+
   // Testimonials Section
-  'landing.testimonials.title': 'O que dizem os utilizadores',
-  'landing.testimonials.maria.name': 'Maria Silva',
-  'landing.testimonials.maria.role': 'Desenvolvedora Frontend',
-  'landing.testimonials.maria.quote': '"Criei o meu CV em 10 minutos. O template moderno ficou perfeito!"',
-  'landing.testimonials.joao.name': 'João Santos',
-  'landing.testimonials.joao.role': 'Gestor de Projetos',
-  'landing.testimonials.joao.quote': '"Interface muito intuitiva. Consegui personalizar tudo facilmente."',
-  'landing.testimonials.ana.name': 'Ana Costa',
-  'landing.testimonials.ana.role': 'Designer UX/UI',
-  'landing.testimonials.ana.quote': '"Adorei o template criativo. Destaquei-me da concorrência!"',
-  
+  'landing.benefits.title': 'Vantagens do EasyPeasyCV',
+  'landing.benefits.subtitle': 'Descobre porque o EasyPeasyCV é a escolha certa para o teu CV profissional',
+
+  'landing.benefits.privacy.title': 'Privacidade Total',
+  'landing.benefits.privacy.subtitle': 'Os teus dados ficam sempre seguros',
+  'landing.benefits.privacy.description': 'Todos os dados são guardados localmente no teu navegador. Nenhuma informação é enviada para servidores externos.',
+
+  'landing.benefits.ats.title': 'Otimizado para ATS',
+  'landing.benefits.ats.subtitle': 'Compatível com sistemas de recrutamento',
+  'landing.benefits.ats.description': 'Os nossos templates estão otimizados para passar nos sistemas de rastreio de candidatos (ATS) das empresas.',
+
+  'landing.benefits.performance.title': 'Rápido e Eficiente',
+  'landing.benefits.performance.subtitle': 'Geração instantânea de PDF',
+  'landing.benefits.performance.description': 'Gera o teu CV em PDF de alta qualidade em segundos, sem esperas nem complicações.',
+
   // Open Source Section
   'landing.opensource.title': 'Projeto Open Source',
   'landing.opensource.subtitle': 'EasyPeasyCV é um projeto open source. Contribuições são bem-vindas! Juntos podemos tornar esta ferramenta ainda melhor.',
   'landing.opensource.contribute.button': 'Contribuir no GitHub',
   'landing.opensource.support.button': 'Apoiar o Projeto',
-  
+
   // CTA Section
   'landing.cta.title': 'Pronto para criar o teu CV?',
   'landing.cta.subtitle': 'Começa agora mesmo e cria um CV profissional em minutos',
@@ -204,6 +211,7 @@ export function useLanguage() {
   'select.language': 'Escolher idioma:',
   'language.portuguese': 'Português',
   'language.english': 'English',
+  'language.spanish': 'Español',
 
   // Notifications
   'data.loaded': 'Dados carregados automaticamente do navegador.',
@@ -273,7 +281,7 @@ export function useLanguage() {
   'field.education.status': 'Estado',
   'add.education': 'Adicionar Formação',
   'education.title': 'Educação',
-  
+
   // Education types
   'education.type.secondary': 'Ensino Secundário',
   'education.type.technical': 'Técnico',
@@ -281,7 +289,7 @@ export function useLanguage() {
   'education.type.postgraduate': 'Pós-graduação',
   'education.type.master': 'Mestrado',
   'education.type.phd': 'Doutoramento',
-  
+
   // Education status
   'education.status.completed': 'Completo',
   'education.status.in.progress': 'Em andamento',
@@ -296,7 +304,7 @@ export function useLanguage() {
   'field.level': 'Nível',
   'add.language': 'Adicionar Língua',
   'language.title': 'Língua',
-  
+
   // Language levels - CEFR (Common European Framework of Reference for Languages)
   'language.level.a1': 'A1',
   'language.level.a2': 'A2',
@@ -380,7 +388,7 @@ export function useLanguage() {
   'link.placeholder.gitlab': 'Ex: utilizador',
   'link.placeholder.portfolio': 'Ex: meuwebsite.com',
   'link.placeholder.other': 'Ex: meuwebsite.com',
-  
+
   // Custom link name
   'field.link.custom.name': 'Nome da Plataforma',
   'placeholder.link.custom.name': 'Ex: Behance, Dribbble, Medium',
@@ -648,34 +656,34 @@ export function useLanguage() {
   'job.analysis.error': 'Erro ao analisar a vaga. Tente novamente.',
   'job.analysis.tips.title': 'Como usar esta funcionalidade',
   'job.analysis.tips.content': 'Cole o texto completo da oferta de emprego no campo acima. O sistema irá analisar automaticamente as competências requeridas, nível de experiência e tipo de contrato, fornecendo conselhos personalizados para adaptar o seu CV.',
-  
+
   // Job Analysis Results
   'job.analysis.skills.title': 'Competências Identificadas',
   'job.analysis.skills.found': 'Competências encontradas na vaga',
   'job.analysis.skills.advice': 'Certifique-se de incluir estas competências no seu CV, especialmente na secção de competências técnicas e experiências profissionais.',
   'job.analysis.skills.notFound': 'Não foram identificadas competências técnicas específicas. Considere incluir competências gerais relevantes para a área.',
-  
+
   'job.analysis.experience.title': 'Nível de Experiência',
   'job.analysis.experience.senior': 'Esta vaga requer um nível sénior. Destaque experiências de liderança, gestão de projetos e responsabilidades estratégicas no seu CV.',
   'job.analysis.experience.mid': 'Esta vaga requer um nível intermédio. Foque-se em experiências práticas e resultados quantificáveis.',
   'job.analysis.experience.entry': 'Esta vaga é adequada para candidatos com pouca experiência. Destaque projetos académicos, estágios e competências técnicas.',
-  
+
   'job.analysis.type.title': 'Tipo de Contrato',
   'job.analysis.type.remote': 'Esta vaga permite trabalho remoto. Destaque experiências de trabalho autónomo e competências de comunicação virtual.',
   'job.analysis.type.partTime': 'Esta vaga é a tempo parcial. Adapte o seu CV para mostrar flexibilidade e gestão eficiente do tempo.',
   'job.analysis.type.fullTime': 'Esta vaga é a tempo inteiro. Destaque compromisso e disponibilidade total para o projeto.',
-  
+
   'job.analysis.general.title': 'Conselhos Gerais',
   'job.analysis.general.advice': 'Personalize o seu CV de acordo com esta análise. Utilize palavras-chave da vaga, destaque experiências relevantes e adapte o resumo profissional para alinhar com os requisitos identificados.',
-  
+
   // Job Analysis Actions
   'job.analysis.action.button': 'Analisar Vaga',
   'job.analysis.action.description': 'Analise uma oferta de emprego para receber conselhos personalizados',
-  
+
   // CV Tips Actions
   'cv.tips.action.button': 'Dicas CV',
   'cv.tips.action.description': 'Consulte dicas para criar um CV que passe em sistemas ATS',
-  
+
   // ATS Explanation
   'ats.explanation.title': 'O que são Sistemas ATS?',
   'ats.explanation.subtitle': 'Compreenda como funcionam e por que são importantes para o seu CV',
@@ -695,11 +703,11 @@ export function useLanguage() {
   'ats.explanation.template.recommendation': 'Template Clássico Recomendado',
   'ats.explanation.extra.title': 'Dica Importante',
   'ats.explanation.extra.content': 'O template clássico deste OpenCVLab foi otimizado para sistemas ATS, mas sempre personalize o conteúdo de acordo com cada vaga específica.',
-  
+
   // ATS Explanation Actions
   'ats.explanation.action.button': 'Explicação ATS',
   'ats.explanation.action.description': 'Aprenda sobre sistemas ATS e como otimizar o seu CV',
-  
+
   // Calendar
   'calendar.clear': 'Limpar',
   'calendar.today': 'Hoje',
@@ -813,24 +821,24 @@ export function useLanguage() {
   'footer.terms': 'Termos',
 };
 
-  // English translations
-  const enTranslations: Record<string, string> = {
-    // ... existing translations ...
-    'landing.benefits.title': 'EasyPeasyCV Advantages',
-    'landing.benefits.subtitle': 'Discover why EasyPeasyCV is the right choice for your professional CV',
-    'landing.benefits.privacy.title': 'Complete Privacy',
-    'landing.benefits.privacy.subtitle': 'Your data stays secure',
-    'landing.benefits.privacy.description': 'All data is stored locally in your browser. No information is sent to external servers.',
-    'landing.benefits.ats.title': 'ATS Optimized',
-    'landing.benefits.ats.subtitle': 'Compatible with recruitment systems',
-    'landing.benefits.ats.description': 'Our templates are optimized to pass through company applicant tracking systems (ATS).',
-    'landing.benefits.performance.title': 'Fast and Efficient',
-    'landing.benefits.performance.subtitle': 'Instant PDF generation',
-    'landing.benefits.performance.description': 'Generate your high-quality CV in PDF in seconds, without waiting or complications.',
+// English translations
+const enTranslations: Record<string, string> = {
+  // ... existing translations ...
+  'landing.benefits.title': 'EasyPeasyCV Advantages',
+  'landing.benefits.subtitle': 'Discover why EasyPeasyCV is the right choice for your professional CV',
+  'landing.benefits.privacy.title': 'Complete Privacy',
+  'landing.benefits.privacy.subtitle': 'Your data stays secure',
+  'landing.benefits.privacy.description': 'All data is stored locally in your browser. No information is sent to external servers.',
+  'landing.benefits.ats.title': 'ATS Optimized',
+  'landing.benefits.ats.subtitle': 'Compatible with recruitment systems',
+  'landing.benefits.ats.description': 'Our templates are optimized to pass through company applicant tracking systems (ATS).',
+  'landing.benefits.performance.title': 'Fast and Efficient',
+  'landing.benefits.performance.subtitle': 'Instant PDF generation',
+  'landing.benefits.performance.description': 'Generate your high-quality CV in PDF in seconds, without waiting or complications.',
   // Header
   'app.title': 'EasyPeasyCV',
   'app.subtitle': 'Create a professional resume in minutes',
-  
+
   // Landing Page
   'landing.open.source.badge': 'Open Source Project',
   'landing.hero.title': 'Create your professional CV in minutes',
@@ -841,7 +849,7 @@ export function useLanguage() {
   'landing.stats.free': 'Free',
   'landing.stats.unlimited': 'Unlimited CVs',
   'landing.stats.languages': 'Languages',
-  
+
   // Features Section
   'landing.features.title': 'Why choose EasyPeasyCV?',
   'landing.features.subtitle': 'Everything you need to create a professional CV, without complications.',
@@ -854,10 +862,10 @@ export function useLanguage() {
   'landing.features.autosave.title': 'Auto-Save',
   'landing.features.autosave.description': 'Your data is automatically saved in the browser',
   'landing.features.multilang.title': 'Multi-language',
-  'landing.features.multilang.description': 'Available in Portuguese and English',
+  'landing.features.multilang.description': 'Available in Portuguese, English and Spanish',
   'landing.features.privacy.title': 'Privacy',
   'landing.features.privacy.description': 'Everything stays in your browser, no external servers',
-  
+
   // Templates Section
   'landing.templates.title': 'Available Templates',
   'landing.templates.subtitle': 'Choose the template that best fits your professional profile.',
@@ -871,7 +879,7 @@ export function useLanguage() {
   'landing.templates.creative.description': 'Original and expressive',
   'landing.templates.creative.features': 'Vibrant colors,Unique layout,Visual elements',
   'landing.templates.use.button': 'Use Template',
-  
+
   // How it works Section
   'landing.how.title': 'How it Works',
   'landing.how.subtitle': 'Creating your CV has never been so simple. Follow these 3 steps:',
@@ -881,7 +889,7 @@ export function useLanguage() {
   'landing.how.step2.description': 'Choose template, colors and reorder sections',
   'landing.how.step3.title': 'Download',
   'landing.how.step3.description': 'Generate and download your CV as PDF',
-  
+
   // Testimonials Section
   'landing.testimonials.title': 'What users say',
   'landing.testimonials.maria.name': 'Maria Silva',
@@ -893,13 +901,13 @@ export function useLanguage() {
   'landing.testimonials.ana.name': 'Ana Costa',
   'landing.testimonials.ana.role': 'UX/UI Designer',
   'landing.testimonials.ana.quote': '"I loved the creative template. I stood out from the competition!"',
-  
+
   // Open Source Section
   'landing.opensource.title': 'Open Source Project',
   'landing.opensource.subtitle': 'EasyPeasyCV is an open source project. Contributions are welcome! Together we can make this tool even better.',
   'landing.opensource.contribute.button': 'Contribute on GitHub',
   'landing.opensource.support.button': 'Support the Project',
-  
+
   // CTA Section
   'landing.cta.title': 'Ready to create your CV?',
   'landing.cta.subtitle': 'Start now and create a professional CV in minutes',
@@ -912,6 +920,7 @@ export function useLanguage() {
   'select.language': 'Choose language:',
   'language.portuguese': 'Português',
   'language.english': 'English',
+  'language.spanish': 'Español',
 
   // Notifications
   'data.loaded': 'Data automatically loaded from browser.',
@@ -981,7 +990,7 @@ export function useLanguage() {
   'field.education.status': 'Status',
   'add.education': 'Add Education',
   'education.title': 'Education',
-  
+
   // Education types
   'education.type.secondary': 'Secondary Education',
   'education.type.technical': 'Technical',
@@ -989,7 +998,7 @@ export function useLanguage() {
   'education.type.postgraduate': 'Postgraduate',
   'education.type.master': 'Master\'s Degree',
   'education.type.phd': 'PhD',
-  
+
   // Education status
   'education.status.completed': 'Completed',
   'education.status.in.progress': 'In Progress',
@@ -1004,7 +1013,7 @@ export function useLanguage() {
   'field.level': 'Level',
   'add.language': 'Add Language',
   'language.title': 'Language',
-  
+
   // Language levels - CEFR (Common European Framework of Reference for Languages)
   'language.level.a1': 'A1',
   'language.level.a2': 'A2',
@@ -1088,7 +1097,7 @@ export function useLanguage() {
   'link.placeholder.gitlab': 'Ex: user',
   'link.placeholder.portfolio': 'Ex: mywebsite.com',
   'link.placeholder.other': 'Ex: mywebsite.com',
-  
+
   // Custom link name
   'field.link.custom.name': 'Platform Name',
   'placeholder.link.custom.name': 'Ex: Behance, Dribbble, Medium',
@@ -1356,34 +1365,34 @@ export function useLanguage() {
   'job.analysis.error': 'Error analyzing job posting. Please try again.',
   'job.analysis.tips.title': 'How to use this feature',
   'job.analysis.tips.content': 'Paste the complete job posting text in the field above. The system will automatically analyze required skills, experience level, and contract type, providing personalized advice to adapt your CV.',
-  
+
   // Job Analysis Results
   'job.analysis.skills.title': 'Identified Skills',
   'job.analysis.skills.found': 'Skills found in the job posting',
   'job.analysis.skills.advice': 'Make sure to include these skills in your CV, especially in the technical skills section and professional experiences.',
   'job.analysis.skills.notFound': 'No specific technical skills were identified. Consider including general skills relevant to the field.',
-  
+
   'job.analysis.experience.title': 'Experience Level',
   'job.analysis.experience.senior': 'This job requires a senior level. Highlight leadership experiences, project management, and strategic responsibilities in your CV.',
   'job.analysis.experience.mid': 'This job requires a mid-level. Focus on practical experiences and quantifiable results.',
   'job.analysis.experience.entry': 'This job is suitable for candidates with little experience. Highlight academic projects, internships, and technical skills.',
-  
+
   'job.analysis.type.title': 'Contract Type',
   'job.analysis.type.remote': 'This job allows remote work. Highlight autonomous work experiences and virtual communication skills.',
   'job.analysis.type.partTime': 'This job is part-time. Adapt your CV to show flexibility and efficient time management.',
   'job.analysis.type.fullTime': 'This job is full-time. Highlight commitment and full availability for the project.',
-  
+
   'job.analysis.general.title': 'General Advice',
   'job.analysis.general.advice': 'Personalize your CV according to this analysis. Use keywords from the job posting, highlight relevant experiences, and adapt the professional summary to align with the identified requirements.',
-  
+
   // Job Analysis Actions
   'job.analysis.action.button': 'Analyze Job',
   'job.analysis.action.description': 'Analyze a job posting to receive personalized advice',
-  
+
   // CV Tips Actions
   'cv.tips.action.button': 'CV Tips',
   'cv.tips.action.description': 'View tips for creating a CV that passes ATS systems',
-  
+
   // ATS Explanation
   'ats.explanation.title': 'What are ATS Systems?',
   'ats.explanation.subtitle': 'Understand how they work and why they are important for your CV',
@@ -1403,11 +1412,11 @@ export function useLanguage() {
   'ats.explanation.template.recommendation': 'Classic Template Recommended',
   'ats.explanation.extra.title': 'Important Tip',
   'ats.explanation.extra.content': 'The classic template from this OpenCVLab has been optimized for ATS systems, but always personalize the content according to each specific job posting.',
-  
+
   // ATS Explanation Actions
   'ats.explanation.action.button': 'ATS Explanation',
   'ats.explanation.action.description': 'Learn about ATS systems and how to optimize your CV',
-  
+
   // Calendar
   'calendar.clear': 'Clear',
   'calendar.today': 'Today',
@@ -1520,4 +1529,717 @@ export function useLanguage() {
   // Footer
   'footer.privacy': 'Privacy',
   'footer.terms': 'Terms',
-}; 
+};
+
+// Spanish translations
+const esTranslations: Record<string, string> = {
+  // CV Type specific fields
+  'cvType.field.desired.role': 'Cargo Deseado',
+  'cvType.field.technical.skills': 'Competencias Técnicas',
+  'cvType.field.technologies': 'Tecnologías Utilizadas',
+  // Header
+  'app.title': 'EasyPeasyCV',
+  'app.subtitle': 'Crea un currículum profesional en minutos',
+
+  // Development specific placeholders
+  'development.placeholder.desired.role': 'Ej: Desarrollador Full Stack',
+  'development.placeholder.professional.summary': 'Ej: Desarrollador Full Stack con 5 años de experiencia en desarrollo web, especializado en React, Node.js y bases de datos. Apasionado por crear soluciones escalables y eficientes.',
+  'development.placeholder.activities': 'Ej: Desarrollé aplicaciones web full-stack utilizando React y Node.js\nImplementé APIs RESTful e integración con bases de datos',
+  'development.placeholder.achievements': 'Ej: Reduje el tiempo de carga de la aplicación en un 40%\nImplementé pruebas automatizadas con 90% de cobertura',
+
+  // Marketing specific placeholders
+  'marketing.placeholder.desired.role': 'Ej: Gerente de Marketing Digital',
+  'marketing.placeholder.professional.summary': 'Ej: Profesional de Marketing Digital con 4 años de experiencia en campañas online, especializado en SEO, SEM y análisis de datos. Experiencia en gestión de redes sociales y email marketing.',
+  'marketing.placeholder.activities': 'Ej: Gestioné campañas de marketing digital para múltiples clientes\nImplementé estrategias de SEO y SEM para aumentar la visibilidad',
+  'marketing.placeholder.achievements': 'Ej: Aumenté el tráfico orgánico en un 40% para clientes B2B\nMejoré la tasa de conversión en un 25% mediante optimización',
+
+  // Sales specific placeholders
+  'sales.placeholder.desired.role': 'Ej: Representante de Ventas',
+  'sales.placeholder.professional.summary': 'Ej: Representante de Ventas con 6 años de experiencia en ventas B2B, especializado en prospección de clientes y cierre de negocios. Historial comprobado de superación de metas de ventas.',
+  'sales.placeholder.activities': 'Ej: Prospecté y califiqué leads para el pipeline de ventas\nRealicé demostraciones de productos y negociaciones',
+  'sales.placeholder.achievements': 'Ej: Superé las metas de ventas en un 120% durante 3 años consecutivos\nDesarrollé un pipeline de €500K en nuevos negocios',
+
+  // HR specific placeholders
+  'hr.placeholder.desired.role': 'Ej: Reclutador',
+  'hr.placeholder.professional.summary': 'Ej: Profesional de Recursos Humanos con 5 años de experiencia en reclutamiento y selección, especializado en reclutamiento técnico y gestión de talentos. Experiencia en implementación de políticas de RRHH.',
+  'hr.placeholder.activities': 'Ej: Recluté candidatos para posiciones técnicas y de gestión\nRealicé entrevistas y evaluaciones de competencias',
+  'hr.placeholder.achievements': 'Ej: Reduje el tiempo de contratación en un 30%\nAumenté la diversidad del equipo en un 40%',
+
+  // Finance specific placeholders
+  'finance.placeholder.desired.role': 'Ej: Contable',
+  'finance.placeholder.professional.summary': 'Ej: Contable con 7 años de experiencia en contabilidad empresarial, especializado en análisis financiero e informes fiscales. Experiencia en auditoría y control interno.',
+  'finance.placeholder.activities': 'Ej: Gestioné la contabilidad para múltiples empresas\nPreparé informes financieros mensuales y anuales',
+  'finance.placeholder.achievements': 'Ej: Reduje los errores contables en un 60%\nOptimicé los procesos de cierre mensual en un 40%',
+
+  // Design specific placeholders
+  'design.placeholder.desired.role': 'Ej: Diseñador Gráfico',
+  'design.placeholder.professional.summary': 'Ej: Diseñador Gráfico con 6 años de experiencia en diseño digital e impreso, especializado en identidad visual y diseño de interfaces. Apasionado por crear experiencias visuales memorables.',
+  'design.placeholder.activities': 'Ej: Creé identidades visuales para marcas y productos\nDesarrollé materiales promocionales y campañas',
+  'design.placeholder.achievements': 'Ej: Aumenté el reconocimiento de marca en un 50%\nReduje el tiempo de producción de materiales en un 35%',
+
+  // Health specific placeholders
+  'health.placeholder.desired.role': 'Ej: Enfermero',
+  'health.placeholder.professional.summary': 'Ej: Enfermero con 8 años de experiencia en cuidados intensivos, especializado en gestión de pacientes críticos y coordinación de equipos. Experiencia en formación de nuevos profesionales.',
+  'health.placeholder.activities': 'Ej: Proporcioné atención de enfermería especializada\nCoordiné equipos de atención médica',
+  'health.placeholder.achievements': 'Ej: Reduje las infecciones hospitalarias en un 40%\nMejoré la satisfacción del paciente en un 60%',
+
+  // Education specific placeholders
+  'education.placeholder.desired.role': 'Ej: Profesor',
+  'education.placeholder.professional.summary': 'Ej: Profesor con 10 años de experiencia en educación secundaria, especializado en Matemáticas y Ciencias. Experiencia en coordinación pedagógica y desarrollo curricular.',
+  'education.placeholder.activities': 'Ej: Enseñé asignaturas de Matemáticas y Ciencias\nDesarrollé planes de lecciones innovadores',
+  'education.placeholder.achievements': 'Ej: Mejoré el rendimiento de los estudiantes en un 25%\nImplementé con éxito un programa de enseñanza híbrida',
+
+  // Admin specific placeholders
+  'admin.placeholder.desired.role': 'Ej: Asistente Administrativo',
+  'admin.placeholder.professional.summary': 'Ej: Asistente Administrativo con 9 años de experiencia en gestión administrativa, especializado en organización de eventos y gestión documental. Experiencia en coordinación de equipos.',
+  'admin.placeholder.activities': 'Ej: Gestioné la administración para una empresa con 50 empleados\nCoordiné eventos corporativos y reuniones',
+  'admin.placeholder.achievements': 'Ej: Reduje el tiempo de procesamiento administrativo en un 60%\nOptimicé la gestión documental en un 50%',
+
+  // Other specific placeholders
+  'other.placeholder.desired.role': 'Ej: Especialista',
+  'other.placeholder.professional.summary': 'Ej: Profesional especializado con experiencia en el área, demostrando competencias relevantes y resultados comprobados. Adaptable y orientado a resultados.',
+  'other.placeholder.activities': 'Ej: Desarrollé proyectos específicos del área\nImplementé procesos y mejoras',
+  'other.placeholder.achievements': 'Ej: Logré objetivos específicos del área\nImplementé mejoras con resultados positivos',
+  'other.placeholder.experience.description': 'Ej: Desarrollé e implementé proyectos en el área, demostrando competencias técnicas y habilidades interpersonales relevantes para el puesto.',
+  'other.placeholder.project.description': 'Ej: Proyecto específico del área, incluyendo objetivos, metodología y resultados alcanzados.',
+  'other.placeholder.project.name': 'Ej: Proyecto Específico',
+
+  // Development specific placeholders for projects and experience
+  'development.placeholder.experience.description': 'Ej: Desarrollé aplicaciones web full-stack utilizando React y Node.js. Implementé APIs RESTful y optimicé el rendimiento de la aplicación, reduciendo el tiempo de carga en un 40%.',
+  'development.placeholder.project.description': 'Ej: Aplicación web para gestión de tareas desarrollada con React, Node.js y MongoDB. Incluye autenticación, roles de usuario y funcionalidades en tiempo real.',
+  'development.placeholder.project.name': 'Ej: Aplicación de Gestión de Tareas',
+
+  // Marketing specific placeholders for projects and experience
+  'marketing.placeholder.experience.description': 'Ej: Gestioné campañas de marketing digital para múltiples clientes, implementando estrategias de SEO, SEM y redes sociales que aumentaron el tráfico orgánico en un 40%.',
+  'marketing.placeholder.project.description': 'Ej: Campaña de marketing digital para lanzamiento de producto, incluyendo estrategia de contenidos, SEO y redes sociales. Resultado: 200% de aumento en conversiones.',
+  'marketing.placeholder.project.name': 'Ej: Campaña de Lanzamiento',
+
+  // Sales specific placeholders for projects and experience
+  'sales.placeholder.experience.description': 'Ej: Gestioné una cartera de 50 clientes B2B, desarrollando relaciones comerciales y superando las metas de ventas en un 120% durante tres años consecutivos.',
+  'sales.placeholder.project.description': 'Ej: Implementación de nueva estrategia de ventas para mercado internacional, incluyendo prospección, negociación y cierre. Resultado: aumento de 35% en ventas internacionales.',
+  'sales.placeholder.project.name': 'Ej: Expansión Internacional',
+
+  // HR specific placeholders for projects and experience
+  'hr.placeholder.experience.description': 'Ej: Gestioné procesos de reclutamiento y selección para 30+ posiciones técnicas y gerenciales, reduciendo el tiempo de contratación en un 30% e implementando nuevas políticas de RRHH.',
+  'hr.placeholder.project.description': 'Ej: Implementación de nuevo sistema de evaluación de desempeño, incluyendo definición de KPIs, formación y seguimiento. Resultado: mejora de 40% en retención de talento.',
+  'hr.placeholder.project.name': 'Ej: Sistema de Evaluación',
+
+  // Finance specific placeholders for projects and experience
+  'finance.placeholder.experience.description': 'Ej: Gestioné la contabilidad para 15 empresas, preparando informes mensuales, trimestrales y anuales. Implementé procesos de control interno y optimicé flujos de trabajo.',
+  'finance.placeholder.project.description': 'Ej: Proyecto de implementación de sistema contable, incluyendo migración de datos y formación de usuarios. Resultado: reducción del 30% en tiempo de procesamiento.',
+  'finance.placeholder.project.name': 'Ej: Proyecto Contable',
+
+  // Design specific placeholders for projects and experience
+  'design.placeholder.experience.description': 'Ej: Creé identidades visuales para más de 20 marcas, incluyendo logos, guías de estilo y materiales promocionales. Colaboré con equipos de marketing para desarrollar campañas visuales.',
+  'design.placeholder.project.description': 'Ej: Rediseño completo de la identidad visual de una startup, incluyendo logo, sitio web y materiales promocionales. Resultado: aumento del 50% en reconocimiento de marca.',
+  'design.placeholder.project.name': 'Ej: Proyecto de Diseño',
+
+  // Health specific placeholders for projects and experience
+  'health.placeholder.experience.description': 'Ej: Proporcioné atención especializada a pacientes en unidad de cuidados intensivos, coordinando equipos multidisciplinarios y mejorando protocolos de atención que redujeron las infecciones hospitalarias en un 40%.',
+  'health.placeholder.project.description': 'Ej: Implementación de nuevo protocolo de atención al paciente, incluyendo formación del personal y seguimiento. Resultado: mejora del 60% en satisfacción del paciente.',
+  'health.placeholder.project.name': 'Ej: Protocolo de Atención',
+
+  // Education specific placeholders for projects and experience
+  'education.placeholder.experience.description': 'Ej: Enseñé asignaturas de Matemáticas y Ciencias a estudiantes de secundaria, desarrollando planes de estudio innovadores que mejoraron el rendimiento de los estudiantes en un 25%.',
+  'education.placeholder.project.description': 'Ej: Desarrollo e implementación de programa de enseñanza híbrida, incluyendo creación de contenidos digitales y evaluación. Resultado: mejora del 30% en participación estudiantil.',
+  'education.placeholder.project.name': 'Ej: Programa Educativo',
+
+  // Admin specific placeholders for projects and experience
+  'admin.placeholder.experience.description': 'Ej: Gestioné la administración para una empresa con 50 empleados, coordinando eventos corporativos, optimizando procesos y reduciendo el tiempo de procesamiento administrativo en un 60%.',
+  'admin.placeholder.project.description': 'Ej: Proyecto de digitalización de procesos administrativos, incluyendo implementación de sistema de gestión documental y formación de equipos. Resultado: reducción del 60% en tiempo de procesamiento.',
+  'admin.placeholder.project.name': 'Ej: Proyecto Administrativo',
+
+  // Technical skills placeholders by CV type
+  'development.placeholder.technical.skills': 'Ej: JavaScript, React, Node.js, SQL, Git, Docker',
+  'marketing.placeholder.technical.skills': 'Ej: Google Analytics, Facebook Ads, SEO, Email Marketing',
+  'sales.placeholder.technical.skills': 'Ej: CRM, Prospección, Negociación, LinkedIn',
+  'hr.placeholder.technical.skills': 'Ej: Reclutamiento, Selección, Workday, LinkedIn Recruiter',
+  'finance.placeholder.technical.skills': 'Ej: SAP, Excel, Contabilidad, Análisis Financiero',
+  'design.placeholder.technical.skills': 'Ej: Photoshop, Illustrator, Figma, Design Thinking',
+  'health.placeholder.technical.skills': 'Ej: Gestión de Pacientes, Procedimientos Clínicos, Excel',
+  'education.placeholder.technical.skills': 'Ej: Moodle, Google Classroom, Metodologías de Enseñanza',
+  'admin.placeholder.technical.skills': 'Ej: Microsoft Office, SAP, Gestión de Documentos',
+  'other.placeholder.technical.skills': 'Ej: Competencias específicas del área',
+
+  // Technologies placeholders by CV type
+  'development.placeholder.technologies': 'Ej: TypeScript, React, Node.js, PostgreSQL',
+  'marketing.placeholder.technologies': 'Ej: Google Analytics, Facebook Ads, Mailchimp, Canva',
+  'sales.placeholder.technologies': 'Ej: Salesforce, HubSpot, LinkedIn Sales Navigator',
+  'hr.placeholder.technologies': 'Ej: Workday, BambooHR, LinkedIn Recruiter',
+  'finance.placeholder.technologies': 'Ej: SAP, Excel, QuickBooks, Primavera',
+  'design.placeholder.technologies': 'Ej: Adobe Creative Suite, Figma, Sketch',
+  'health.placeholder.technologies': 'Ej: Sistema de Gestión Hospitalaria, Excel',
+  'education.placeholder.technologies': 'Ej: Moodle, Google Classroom, PowerPoint',
+  'admin.placeholder.technologies': 'Ej: Microsoft Office, SAP, Excel',
+  'other.placeholder.technologies': 'Ej: Herramientas específicas del área',
+
+  // Role placeholders by CV type
+  'development.placeholder.role': 'Ej: Desarrollador Full Stack',
+  'marketing.placeholder.role': 'Ej: Gerente de Marketing Digital',
+  'sales.placeholder.role': 'Ej: Representante de Ventas',
+  'hr.placeholder.role': 'Ej: Reclutador',
+  'finance.placeholder.role': 'Ej: Contable',
+  'design.placeholder.role': 'Ej: Diseñador Gráfico',
+  'health.placeholder.role': 'Ej: Enfermero',
+  'education.placeholder.role': 'Ej: Profesor',
+  'admin.placeholder.role': 'Ej: Asistente Administrativo',
+  'other.placeholder.role': 'Ej: Especialista',
+
+  // Rule for personal information
+  'rule.personal.info': 'La información personal es opcional, pero recomendamos incluir al menos nombre, correo electrónico y teléfono para facilitar el contacto.',
+
+  // Landing Page
+  'landing.open.source.badge': 'Proyecto Open Source',
+  'landing.hero.title': 'Crea tu CV profesional en minutos',
+  'landing.hero.subtitle': 'EasyPeasyCV es una herramienta gratuita y de código abierto para crear CVs profesionales. Sin registros, sin costos, sin complicaciones.',
+  'landing.create.cv.button': 'Crear CV Ahora',
+  'landing.view.github.button': 'Ver en GitHub',
+  'landing.stats.templates': 'Plantillas',
+  'landing.stats.free': 'Gratuito',
+  'landing.stats.unlimited': 'CVs Ilimitados',
+  'landing.stats.languages': 'Idiomas',
+
+  // Features Section
+  'landing.features.title': '¿Por qué elegir EasyPeasyCV?',
+  'landing.features.subtitle': 'Todo lo que necesitas para crear un CV profesional, sin complicaciones.',
+  'landing.features.templates.title': 'Plantillas Profesionales',
+  'landing.features.templates.description': '3 plantillas elegantes y profesionales: Clásica, Moderna y Creativa',
+  'landing.features.customization.title': 'Personalización Total',
+  'landing.features.customization.description': 'Elige colores, reorganiza secciones y personaliza cada detalle',
+  'landing.features.responsive.title': 'Responsivo',
+  'landing.features.responsive.description': 'Funciona perfectamente en escritorio, tablet y móvil',
+  'landing.features.autosave.title': 'Auto-Guardado',
+  'landing.features.autosave.description': 'Tus datos se guardan automáticamente en el navegador',
+  'landing.features.multilang.title': 'Multi-idioma',
+  'landing.features.multilang.description': 'Disponible en Portugués, Inglés y Español',
+  'landing.features.privacy.title': 'Privacidad',
+  'landing.features.privacy.description': 'Todo se queda en tu navegador, sin servidores externos',
+
+  // Templates Section
+  'landing.templates.title': 'Plantillas Disponibles',
+  'landing.templates.subtitle': 'Elige la plantilla que mejor se adapte a tu perfil profesional.',
+  'landing.templates.classic.name': 'Clásica',
+  'landing.templates.classic.description': 'Elegante y tradicional',
+  'landing.templates.classic.features': 'Diseño limpio,Fuente profesional,Colores neutros',
+  'landing.templates.modern.name': 'Moderna',
+  'landing.templates.modern.description': 'Limpia y contemporánea',
+  'landing.templates.modern.features': 'Diseño minimalista,Espaciado generoso,Tipografía moderna',
+  'landing.templates.creative.name': 'Creativa',
+  'landing.templates.creative.description': 'Original y expresiva',
+  'landing.templates.creative.features': 'Colores vibrantes,Diseño único,Elementos visuales',
+  'landing.templates.use.button': 'Usar Plantilla',
+
+  // How it works Section
+  'landing.how.title': 'Cómo Funciona',
+  'landing.how.subtitle': 'Crear tu CV nunca ha sido tan simple. Sigue estos 3 pasos:',
+  'landing.how.step1.title': 'Rellena tus Datos',
+  'landing.how.step1.description': 'Añade tu información personal, experiencia profesional y educación',
+  'landing.how.step2.title': 'Personaliza',
+  'landing.how.step2.description': 'Elige plantilla, colores y reorganiza secciones',
+  'landing.how.step3.title': 'Descarga',
+  'landing.how.step3.description': 'Genera y descarga tu CV en PDF',
+
+  // Testimonials Section
+  'landing.testimonials.title': 'Lo que dicen los usuarios',
+  'landing.testimonials.maria.name': 'María Silva',
+  'landing.testimonials.maria.role': 'Desarrolladora Frontend',
+  'landing.testimonials.maria.quote': '"Creé mi CV en 10 minutos. ¡La plantilla moderna fue perfecta!"',
+  'landing.testimonials.joao.name': 'João Santos',
+  'landing.testimonials.joao.role': 'Gestor de Proyectos',
+  'landing.testimonials.joao.quote': '"Interfaz muy intuitiva. Pude personalizar todo fácilmente."',
+  'landing.testimonials.ana.name': 'Ana Costa',
+  'landing.testimonials.ana.role': 'Diseñadora UX/UI',
+  'landing.testimonials.ana.quote': '"¡Me encantó la plantilla creativa. Me destaqué de la competencia!"',
+
+  // Open Source Section
+  'landing.opensource.title': 'Proyecto Open Source',
+  'landing.opensource.subtitle': 'EasyPeasyCV es un proyecto de código abierto. ¡Las contribuciones son bienvenidas! Juntos podemos hacer esta herramienta aún mejor.',
+  'landing.opensource.contribute.button': 'Contribuir en GitHub',
+  'landing.opensource.support.button': 'Apoyar el Proyecto',
+
+  // CTA Section
+  'landing.cta.title': '¿Listo para crear tu CV?',
+  'landing.cta.subtitle': 'Empieza ahora y crea un CV profesional en minutos',
+  'landing.cta.button': 'Crear CV Gratuitamente',
+  'generate.cv': 'Generar CV',
+  'generate.resume': 'Generar Currículum',
+  'generate.ats.resume': 'Generar CV',
+  'preview.cv': 'Vista Previa del CV',
+  'preview': 'Vista Previa',
+  'select.language': 'Elegir idioma:',
+  'language.portuguese': 'Português',
+  'language.english': 'English',
+  'language.spanish': 'Español',
+
+  // Notifications
+  'data.loaded': 'Datos cargados automáticamente del navegador.',
+  'cv.generated': '¡Currículum generado con éxito! La descarga debe comenzar automáticamente.',
+  'fill.example': 'Rellenar con datos de ejemplo',
+  'validation.required': 'Por favor, rellena todos los campos obligatorios:',
+  'validation.name': 'Nombre completo',
+  'validation.email': 'Email',
+  'validation.role': 'Cargo deseado',
+  'validation.resume': 'Resumen profesional',
+
+  // Thank you modal
+  'thank.you.title': '¡Gracias por usar EasyPeasyCV!',
+  'thank.you.message': 'Tu currículum ha sido generado con éxito. Esperamos que esta herramienta haya sido útil para ti. Si te gustó el proyecto, considera hacer una pequeña donación para ayudar a mantener el desarrollo.',
+  'thank.you.close': 'Cerrar',
+  'donation.title': 'Apoyar el Proyecto',
+  'donation.message': 'Tus donaciones ayudan a mantener EasyPeasyCV gratuito y mejorar continuamente la herramienta.',
+  'donation.button': 'Hacer Donación',
+
+  // Form Sections
+  'section.personal.info': 'Información Personal',
+  'section.professional.summary': 'Resumen Profesional',
+  'section.academic.education': 'Educación Académica',
+  'section.technical.skills': 'Competencias Técnicas',
+  'section.languages': 'Idiomas',
+  'section.certifications': 'Certificaciones y Cursos',
+  'section.volunteer': 'Voluntariado',
+
+  // Personal Information
+  'field.full.name': 'Nombre completo',
+  'field.desired.role': 'Cargo Deseado',
+  'field.postal.code': 'Código Postal',
+  'field.city': 'Ciudad',
+  'field.email': 'Email',
+  'field.country.code': 'Código del País',
+  'field.phone': 'Teléfono',
+  'field.links.social': 'Enlaces y Redes Sociales',
+  'field.link.type': 'Tipo de Enlace',
+  'field.url': 'URL',
+
+  // Professional Summary
+  'field.professional.summary': 'Resumen Profesional',
+  'resume.placeholder': 'Desarrollador Fullstack con experiencia en el desarrollo de aplicaciones web escalables, responsivas y centradas en el usuario. Trabajo con TypeScript, React, Next.js, Node.js, PostgreSQL y Prisma, con fuerte atención a la performance, usabilidad y calidad del código...',
+  'professional.summary.title': 'Resumen Profesional',
+  'professional.summary.description': 'Breve descripción de tu perfil profesional, experiencia y objetivos',
+  'professional.summary.placeholder': 'Profesional con X años de experiencia en [área]. Especializado en [competencias principales]. Logros destacados incluyen [mencionar 1-2 logros con métricas si es posible]. Busco [objetivo profesional].',
+
+  // Professional Experience
+  'field.role': 'Cargo',
+  'field.company': 'Empresa',
+  'field.start.month': 'Mes Inicio',
+  'field.start.year': 'Año Inicio',
+  'field.end.month': 'Mes Fin',
+  'field.end.year': 'Año Fin',
+  'field.current': 'Actual',
+  'field.technologies': 'Tecnologías Utilizadas',
+  'field.activities': 'Actividades Desarrolladas',
+  'field.achievements': 'Logros',
+  'field.achievements.helper': 'con métricas',
+  'add.experience': 'Añadir Experiencia',
+  'experience.title': 'Experiencia',
+  'section.professional.experience': 'Experiencia Profesional',
+  'professional.experience.title': 'Experiencia Profesional',
+  'professional.experience.description': 'Detalla tu trayectoria laboral en orden cronológico inverso',
+  'professional.experience.placeholder': 'Describe tus responsabilidades, proyectos y logros en este puesto. Incluye tecnologías utilizadas y resultados cuantificables cuando sea posible.',
+
+  // Academic Education
+  'field.course': 'Curso',
+  'field.institution': 'Institución',
+  'field.description': 'Descripción',
+  'field.education.type': 'Tipo de Formación',
+  'field.education.status': 'Estado',
+  'add.education': 'Añadir Formación',
+  'education.title': 'Educación',
+
+  // Education types
+  'education.type.secondary': 'Educación Secundaria',
+  'education.type.technical': 'Técnico',
+  'education.type.bachelor': 'Licenciatura',
+  'education.type.postgraduate': 'Posgrado',
+  'education.type.master': 'Máster',
+  'education.type.phd': 'Doctorado',
+
+  // Education status
+  'education.status.completed': 'Completo',
+  'education.status.in.progress': 'En progreso',
+  'education.status.interrupted': 'Interrumpido',
+
+  // Technical Skills
+  'skills.placeholder': 'Ej: JavaScript, React, Node.js, SQL',
+  'field.technical.skills.helper': 'Separa las competencias por coma',
+  'technical.skills.title': 'Competencias Técnicas',
+  'technical.skills.description': 'Lista tus habilidades técnicas relevantes para el puesto',
+  'technical.skills.placeholder': 'Ej: JavaScript, React, Node.js, SQL, Git, Docker',
+
+  // Languages
+  'field.language': 'Idioma',
+  'field.level': 'Nivel',
+  'add.language': 'Añadir Idioma',
+  'language.title': 'Idioma',
+
+  // Language levels - CEFR (Common European Framework of Reference for Languages)
+  'language.level.a1': 'A1',
+  'language.level.a2': 'A2',
+  'language.level.b1': 'B1',
+  'language.level.b2': 'B2',
+  'language.level.c1': 'C1',
+  'language.level.c2': 'C2',
+
+  // Certifications
+  'field.certification': 'Certificación',
+  'field.issuer': 'Emisor/Institución',
+  'field.completion.date': 'Fecha de Finalización',
+  'field.hours': 'Horas',
+  'field.validation.link': 'Enlace de Validación',
+  'add.certification': 'Añadir Certificación/Curso',
+  'certification.title': 'Certificación',
+
+  // Projects
+  'field.project.name': 'Nombre del Proyecto',
+  'field.year': 'Año',
+  'field.project.technologies': 'Tecnologías',
+  'field.project.link': 'Enlace',
+  'add.project': 'Añadir Proyecto',
+  'project.title': 'Proyecto',
+  'section.projects': 'Proyectos',
+  'projects.title': 'Proyectos',
+  'projects.description': 'Destaca tus proyectos personales o profesionales más relevantes',
+  'projects.placeholder': 'Describe brevemente el proyecto, su propósito, tecnologías utilizadas y tu rol específico. Incluye resultados o impacto si es posible.',
+
+  // Volunteer Work
+  'field.organization': 'Organización',
+  'field.impact': 'Impacto',
+  'add.volunteer': 'Añadir Voluntariado',
+  'volunteer.title': 'Voluntariado',
+
+  // Placeholders
+  'placeholder.full.name': 'Ej: Juan Pérez',
+  'placeholder.desired.role': 'Ej: Desarrollador Full Stack',
+  'placeholder.postal.code': 'Ej: 1234-567',
+  'placeholder.city': 'Ej: Madrid',
+  'placeholder.email': 'Ej: email@ejemplo.com',
+  'placeholder.phone': 'Ej: 912345678',
+  'placeholder.role': 'Ej: Desarrollador Full Stack',
+  'placeholder.company': 'Ej: Amazon',
+  'placeholder.course': 'Ej: Licenciatura en Ingeniería Informática',
+  'placeholder.institution': 'Ej: Universidad de Madrid',
+  'placeholder.certification': 'Ej: Certificación AWS Cloud Practitioner',
+  'placeholder.issuer': 'Ej: Udemy, Alura, AWS',
+  'placeholder.hours': 'Ej: 40 horas',
+  'placeholder.validation.link': 'Ej: https://certificate.institution.com/123456',
+  'placeholder.project.name': 'Ej: Portfolio Website',
+  'placeholder.project.year': 'Ej: 2023',
+  'placeholder.project.tech': 'Ej: React, Node.js, MongoDB',
+  'placeholder.project.link': 'Ej: https://github.com/user/project',
+  'placeholder.project.description': 'Breve descripción del proyecto, objetivos, resultados...',
+  'placeholder.organization': 'Ej: Cruz Roja Española',
+  'placeholder.volunteer.role': 'Ej: Voluntario de Apoyo Social',
+  'placeholder.volunteer.description': 'Ej: Prestación de apoyo social a familias necesitadas, distribución de alimentos y ropa.',
+  'placeholder.volunteer.impact': 'Ej: Ayudó a más de 50 familias durante la pandemia, organizó campañas de recogida de donativos.',
+  'placeholder.activities': 'Describe tus responsabilidades (un elemento por línea)',
+  'placeholder.achievements': 'Ej: Reestructuré la arquitectura de la aplicación usando Next.js con SSR, lo que mejoró el SEO y aumentó la retención de usuarios en un 25%.',
+  'placeholder.education.description': 'Ej: Tesis sobre inteligencia artificial, asignaturas relevantes, proyectos académicos...',
+  'placeholder.certification.description': 'Ej: Curso enfocado en desarrollo de APIs REST con Node.js...',
+  'placeholder.year': 'Ej: 2023',
+  'placeholder.language': 'Ej: Inglés',
+
+  // Dropdown options
+  'select.month': 'Seleccionar',
+  'select.country': 'Seleccionar país',
+  'select.date': 'Seleccionar fecha',
+  'select.education.type': 'Seleccionar',
+  'select.education.status': 'Seleccionar',
+  'select.language.level': 'Seleccionar',
+
+  // Link types
+  'link.type.linkedin': 'LinkedIn',
+  'link.type.github': 'GitHub',
+  'link.type.gitlab': 'GitLab',
+  'link.type.portfolio': 'Portfolio',
+  'link.type.other': 'Otro',
+
+  // Link placeholders
+  'link.placeholder.linkedin': 'Ej: miperfil',
+  'link.placeholder.github': 'Ej: usuario',
+  'link.placeholder.gitlab': 'Ej: usuario',
+  'link.placeholder.portfolio': 'Ej: miwebsite.com',
+  'link.placeholder.other': 'Ej: miwebsite.com',
+
+  // Custom link name
+  'field.link.custom.name': 'Nombre de la Plataforma',
+  'placeholder.link.custom.name': 'Ej: Behance, Dribbble, Medium',
+
+  // Months
+  'month.jan': 'Ene',
+  'month.feb': 'Feb',
+  'month.mar': 'Mar',
+  'month.apr': 'Abr',
+  'month.may': 'May',
+  'month.jun': 'Jun',
+  'month.jul': 'Jul',
+  'month.aug': 'Ago',
+  'month.sep': 'Sep',
+  'month.oct': 'Oct',
+  'month.nov': 'Nov',
+  'month.dec': 'Dic',
+
+  // Countries
+  'country.portugal': 'Portugal (+351)',
+  'country.brazil': 'Brasil (+55)',
+  'country.spain': 'España (+34)',
+
+  // Empty states
+  'empty.experience': 'Ninguna experiencia añadida',
+  'empty.education': 'Ninguna educación añadida',
+  'empty.language': 'Ningún idioma añadido',
+  'empty.certification': 'Ninguna certificación añadida',
+  'empty.volunteer': 'Ningún voluntariado añadido',
+  'empty.project': 'Ningún proyecto añadido',
+
+  // CV Tips
+  'tips.title': 'Consejos para un Currículum que Pase en Sistemas ATS',
+  'tips.subtitle': 'Sigue estas recomendaciones para aumentar tus posibilidades de ser seleccionado',
+  'tips.extra.title': 'Consejo Extra',
+  'tips.extra.content': 'El currículum generado por esta aplicación ya sigue estas buenas prácticas, pero asegúrate de personalizar el contenido de acuerdo con cada oferta específica.',
+
+  // Tip content
+  'tip.format.simple': 'Usa un formato simple (sin gráficos ni tablas)',
+  'tip.format.simple.desc': 'Los sistemas ATS tienen dificultad para leer elementos visuales. Utiliza solo texto con una estructura clara.',
+  'tip.keywords': 'Utiliza palabras clave exactas del anuncio',
+  'tip.keywords.desc': 'Copia los términos usados en el anuncio de la oferta (tecnologías, funciones, competencias). El ATS busca correspondencias exactas.',
+  'tip.headers': 'Evita encabezados personalizados',
+  'tip.headers.desc': 'Utiliza términos comunes como \'Experiencia Profesional\', \'Educación\', \'Competencias\'.',
+  'tip.format.file': 'Guarda el currículum en formato .docx o .pdf (simple)',
+  'tip.format.file.desc': 'Algunos ATS tienen problemas con PDFs mal formateados o versiones antiguas de Word.',
+  'tip.acronyms': 'No uses siglas sin escribir también el significado',
+  'tip.acronyms.desc': 'Ejemplo: escribe \'JavaScript (JS)\' o \'Base de Datos (BD)\' para garantizar que sea reconocido.',
+  'tip.chronological': 'Coloca la información por orden cronológico inverso',
+  'tip.chronological.desc': 'Empieza por la experiencia más reciente, pues es eso lo que el ATS y el reclutador quieren ver.',
+  'tip.job.titles': 'Incluye títulos de cargos comunes',
+  'tip.job.titles.desc': 'Utiliza nombres genéricos como \'Desarrollador Backend\', \'Analista de Sistemas\', etc., aunque el nombre oficial de la función fuera diferente.',
+  'tip.spelling': 'Evita errores ortográficos',
+  'tip.spelling.desc': 'El ATS puede no reconocer palabras mal escritas, lo que puede llevar a la exclusión del currículum.',
+  'tip.technical.skills': 'Incluye una sección de competencias técnicas',
+  'tip.technical.skills.desc': 'Lista las tecnologías, lenguajes y herramientas que utilizaste (ej: Java, Git, SQL, Docker).',
+
+  // Template selector
+  'template.selector': 'Seleccionar Plantilla',
+  'template.classic.name': 'Clásica',
+  'template.classic.description': 'Diseño tradicional y profesional',
+  'template.modern.name': 'Moderna',
+  'template.modern.description': 'Diseño limpio y minimalista',
+  'template.creative.name': 'Creativa',
+  'template.creative.description': 'Diseño innovador y expresivo',
+  'color.selector': 'Seleccionar Color',
+
+  // Actions
+  'actions': 'Acciones',
+  'cv.actions': 'Acciones del CV',
+  'extra.features': 'Funcionalidades Extra',
+  'extra.features.description': 'Herramientas adicionales para mejorar tu CV',
+  'extra.features.job.analysis': 'Análisis de Vacantes',
+  'extra.features.job.analysis.description': 'Analiza ofertas de empleo para optimizar tu CV',
+  'extra.features.ats.tips': 'Consejos ATS',
+  'extra.features.ats.tips.description': 'Aprende a optimizar tu CV para sistemas ATS',
+  'extra.features.ats.explanation': 'Explicación ATS',
+  'extra.features.ats.explanation.description': 'Comprende cómo funcionan los sistemas ATS',
+
+  // CV Type Selector
+  'cv.type.selector': 'Tipo de Currículum',
+  'cv.type.development': 'Desarrollo/IT',
+  'cv.type.marketing': 'Marketing/Digital',
+  'cv.type.sales': 'Ventas/Comercial',
+  'cv.type.hr': 'Recursos Humanos',
+  'cv.type.finance': 'Finanzas/Contabilidad',
+  'cv.type.design': 'Diseño/Creativo',
+  'cv.type.health': 'Salud/Medicina',
+  'cv.type.education': 'Educación/Enseñanza',
+  'cv.type.admin': 'Administración/Gestión',
+  'cv.type.other': 'Otros',
+
+  // Footer
+  'footer.privacy': 'Privacidad',
+  'footer.terms': 'Términos',
+
+  // Job Analysis
+  'job.analysis.title': 'Análisis de Vacantes',
+  'job.analysis.subtitle': 'Introduce el texto de la vacante para recibir consejos personalizados',
+  'job.analysis.input.label': 'Texto de la Vacante',
+  'job.analysis.input.placeholder': 'Pega aquí el texto completo de la oferta de empleo...',
+  'job.analysis.analyze': 'Analizar Vacante',
+  'job.analysis.analyzing': 'Analizando...',
+  'job.analysis.clear': 'Limpiar',
+  'job.analysis.results': 'Resultados del Análisis',
+  'job.analysis.error': 'Error al analizar la vacante. Inténtalo de nuevo.',
+  'job.analysis.tips.title': 'Cómo usar esta funcionalidad',
+  'job.analysis.tips.content': 'Pega el texto completo de la oferta de empleo en el campo de arriba. El sistema analizará automáticamente las competencias requeridas, nivel de experiencia y tipo de contrato, proporcionando consejos personalizados para adaptar tu CV.',
+
+  // Job Analysis Results
+  'job.analysis.skills.title': 'Competencias Identificadas',
+  'job.analysis.skills.found': 'Competencias encontradas en la vacante',
+  'job.analysis.skills.advice': 'Asegúrate de incluir estas competencias en tu CV, especialmente en la sección de competencias técnicas y experiencias profesionales.',
+  'job.analysis.skills.notFound': 'No se identificaron competencias técnicas específicas. Considera incluir competencias generales relevantes para el área.',
+
+  'job.analysis.experience.title': 'Nivel de Experiencia',
+  'job.analysis.experience.senior': 'Esta vacante requiere un nivel senior. Destaca experiencias de liderazgo, gestión de proyectos y responsabilidades estratégicas en tu CV.',
+  'job.analysis.experience.mid': 'Esta vacante requiere un nivel intermedio. Enfócate en experiencias prácticas y resultados cuantificables.',
+  'job.analysis.experience.entry': 'Esta vacante es adecuada para candidatos con poca experiencia. Destaca proyectos académicos, prácticas y competencias técnicas.',
+
+  'job.analysis.type.title': 'Tipo de Contrato',
+  'job.analysis.type.remote': 'Esta vacante permite trabajo remoto. Destaca experiencias de trabajo autónomo y competencias de comunicación virtual.',
+  'job.analysis.type.partTime': 'Esta vacante es a tiempo parcial. Adapta tu CV para mostrar flexibilidad y gestión eficiente del tiempo.',
+  'job.analysis.type.fullTime': 'Esta vacante es a tiempo completo. Destaca compromiso y disponibilidad total para el proyecto.',
+
+  'job.analysis.general.title': 'Consejos Generales',
+  'job.analysis.general.advice': 'Personaliza tu CV de acuerdo con este análisis. Utiliza palabras clave de la vacante, destaca experiencias relevantes y adapta el resumen profesional para alinear con los requisitos identificados.',
+
+  // Job Analysis Actions
+  'job.analysis.action.button': 'Analizar Vacante',
+  'job.analysis.action.description': 'Analiza una oferta de empleo para recibir consejos personalizados',
+
+  // CV Tips Actions
+  'cv.tips.action.button': 'Consejos CV',
+  'cv.tips.action.description': 'Consulta consejos para crear un CV que pase en sistemas ATS',
+
+  // ATS Explanation
+  'ats.explanation.title': '¿Qué son los Sistemas ATS?',
+  'ats.explanation.subtitle': 'Comprende cómo funcionan y por qué son importantes para tu CV',
+  'ats.explanation.what.title': '¿Qué es un Sistema ATS?',
+  'ats.explanation.what.description': 'ATS (Applicant Tracking System) es un software que las empresas utilizan para gestionar candidaturas de empleo. Estos sistemas analizan automáticamente los CVs recibidos, buscando palabras clave y criterios específicos antes de enviarlos para revisión humana.',
+  'ats.explanation.why.title': '¿Por qué es importante?',
+  'ats.explanation.why.description': 'Más del 75% de las empresas utilizan sistemas ATS para filtrar candidaturas. Si tu CV no está optimizado para estos sistemas, puede ser automáticamente rechazado, aunque tengas las calificaciones necesarias.',
+  'ats.explanation.why.warning': 'Sin optimización ATS, tu CV puede ser rechazado automáticamente, ¡aunque estés calificado para la vacante!',
+  'ats.explanation.how.title': 'Cómo optimizar tu CV para ATS',
+  'ats.explanation.how.description': 'Sigue estos consejos para aumentar las posibilidades de que tu CV pase los filtros ATS:',
+  'ats.explanation.how.tip1': 'Utiliza palabras clave exactas del anuncio de la vacante',
+  'ats.explanation.how.tip2': 'Mantén un formato simple, sin gráficos ni tablas',
+  'ats.explanation.how.tip3': 'Usa encabezados estándar como "Experiencia Profesional" y "Educación"',
+  'ats.explanation.how.tip4': 'Incluye una sección de competencias técnicas con tecnologías relevantes',
+  'ats.explanation.template.title': 'Recomendación de Plantilla',
+  'ats.explanation.template.description': 'Para máxima compatibilidad con sistemas ATS, recomendamos la plantilla clásica, que fue específicamente diseñada para pasar los filtros automáticos.',
+  'ats.explanation.template.recommendation': 'Plantilla Clásica Recomendada',
+  'ats.explanation.extra.title': 'Consejo Importante',
+  'ats.explanation.extra.content': 'La plantilla clásica de este OpenCVLab ha sido optimizada para sistemas ATS, pero siempre personaliza el contenido de acuerdo con cada vacante específica.',
+
+  // ATS Explanation Actions
+  'ats.explanation.action.button': 'Explicación ATS',
+  'ats.explanation.action.description': 'Aprende sobre sistemas ATS y cómo optimizar tu CV',
+
+  // Calendar
+  'calendar.clear': 'Limpiar',
+  'calendar.today': 'Hoy',
+  'calendar.month.january': 'Enero',
+  'calendar.month.february': 'Febrero',
+  'calendar.month.march': 'Marzo',
+  'calendar.month.april': 'Abril',
+  'calendar.month.may': 'Mayo',
+  'calendar.month.june': 'Junio',
+  'calendar.month.july': 'Julio',
+  'calendar.month.august': 'Agosto',
+  'calendar.month.september': 'Septiembre',
+  'calendar.month.october': 'Octubre',
+  'calendar.month.november': 'Noviembre',
+  'calendar.month.december': 'Diciembre',
+  'calendar.day.sun': 'Dom',
+  'calendar.day.mon': 'Lun',
+  'calendar.day.tue': 'Mar',
+  'calendar.day.wed': 'Mié',
+  'calendar.day.thu': 'Jue',
+  'calendar.day.fri': 'Vie',
+  'calendar.day.sat': 'Sáb',
+
+  // Error 404 Page
+  'error.404.title': 'Página no encontrada',
+  'error.404.description': 'La página que buscas no existe o ha sido movida. Verifica la URL o navega de vuelta a la página inicial.',
+  'error.404.home.button': 'Volver a la Página Inicial',
+  'error.404.builder.button': 'Crear CV',
+  'error.404.helpful.title': 'Páginas útiles',
+  'error.404.helpful.features.title': 'Funcionalidades',
+  'error.404.helpful.features.description': 'Descubre todas las funcionalidades de EasyPeasyCV para crear tu CV profesional.',
+  'error.404.helpful.templates.title': 'Plantillas',
+  'error.404.helpful.templates.description': 'Explora nuestras plantillas profesionales y personaliza tu CV.',
+
+  // Privacy Policy Page
+  'privacy.title': 'Política de Privacidad',
+  'privacy.last.updated': 'Última actualización',
+  'privacy.introduction.title': 'Introducción',
+  'privacy.introduction.description': 'EasyPeasyCV está comprometido en proteger tu privacidad. Esta política explica cómo funcionamos.',
+  'privacy.no.collection.title': 'No Recolectamos Datos',
+  'privacy.no.collection.description': 'EasyPeasyCV es una aplicación simple que funciona enteramente en tu navegador. No recolectamos, almacenamos o procesamos ningún dato personal.',
+  'privacy.no.collection.highlight': 'Tus datos siempre se quedan en tu dispositivo y nunca son enviados a servidores externos.',
+  'privacy.local.storage.title': 'Almacenamiento Local',
+  'privacy.local.storage.description': 'Todos los datos se almacenan localmente en tu navegador:',
+  'privacy.local.storage.browser': 'Los datos se quedan en tu navegador (localStorage)',
+  'privacy.local.storage.no.server': 'Ninguna información es enviada a servidores',
+  'privacy.local.storage.control': 'Tienes control total sobre tus datos',
+  'privacy.cookies.title': 'Cookies',
+  'privacy.cookies.description': 'Utilizamos solo cookies esenciales para el funcionamiento del servicio.',
+  'privacy.cookies.essential': 'Estas cookies son necesarias para el funcionamiento básico de la aplicación.',
+  'privacy.third.party.title': 'Servicios de Terceros',
+  'privacy.third.party.description': 'Solo utilizamos servicios externos para funcionalidades específicas:',
+  'privacy.third.party.github': 'GitHub - Para alojar el código fuente y issues',
+  'privacy.third.party.ko.fi': 'Ko-fi - Para donaciones (opcional)',
+  'privacy.changes.title': 'Cambios a la Política',
+  'privacy.changes.description': 'Podemos actualizar esta política ocasionalmente. Notificaremos a los usuarios sobre cambios significativos.',
+  'privacy.contact.title': 'Contacto',
+  'privacy.contact.description': 'Si tienes preguntas sobre esta política de privacidad, contáctanos:',
+  'privacy.back.home': 'Volver a la Página Inicial',
+
+  // Terms of Service Page
+  'terms.title': 'Términos de Servicio',
+  'terms.last.updated': 'Última actualización',
+  'terms.introduction.title': 'Introducción',
+  'terms.introduction.description': 'Al utilizar EasyPeasyCV, aceptas estos términos de servicio. Léelos cuidadosamente antes de utilizar la aplicación.',
+  'terms.acceptance.title': 'Aceptación de los Términos',
+  'terms.acceptance.description': 'Al acceder o utilizar EasyPeasyCV, confirmas que has leído, comprendido y aceptas estar vinculado a estos términos de servicio.',
+  'terms.service.title': 'Descripción del Servicio',
+  'terms.service.description': 'EasyPeasyCV es una aplicación web que permite:',
+  'terms.service.features.cv': 'Crear y editar currículums profesionales',
+  'terms.service.features.templates': 'Utilizar plantillas profesionales personalizables',
+  'terms.service.features.pdf': 'Exportar CVs en formato PDF',
+  'terms.service.features.local': 'Almacenamiento local de datos en navegador',
+  'terms.responsibilities.title': 'Responsabilidades del Usuario',
+  'terms.responsibilities.description': 'Como usuario, eres responsable de:',
+  'terms.responsibilities.accurate': 'Proporcionar información precisa y actualizada',
+  'terms.responsibilities.legal': 'Utilizar el servicio de acuerdo con la ley aplicable',
+  'terms.responsibilities.compliance': 'Cumplir todos los términos y condiciones',
+  'terms.prohibited.title': 'Usos Prohibidos',
+  'terms.prohibited.description': 'No puedes utilizar el servicio para:',
+  'terms.prohibited.illegal': 'Actividades ilegales o fraudulentas',
+  'terms.prohibited.harmful': 'Causar daños o interferir con el servicio',
+  'terms.prohibited.copyright': 'Violar derechos de propiedad intelectual',
+  'terms.intellectual.title': 'Propiedad Intelectual',
+  'terms.intellectual.description': 'EasyPeasyCV y todo su contenido son propiedad de sus creadores. Mantienes los derechos sobre el contenido que creas.',
+  'terms.intellectual.user.content': 'El contenido de tu CV es de tu responsabilidad y propiedad.',
+  'terms.privacy.title': 'Privacidad y Datos',
+  'terms.privacy.description': 'La recolección y uso de datos personales está regida por nuestra Política de Privacidad.',
+  'terms.privacy.policy': 'Consulta nuestra',
+  'terms.privacy.link': 'Política de Privacidad',
+  'terms.availability.title': 'Disponibilidad del Servicio',
+  'terms.availability.description': 'Nos esforzamos por mantener el servicio disponible, pero no garantizamos disponibilidad continua:',
+  'terms.availability.maintenance': 'El mantenimiento programado puede causar interrupciones',
+  'terms.availability.updates': 'Las actualizaciones pueden afectar temporalmente el servicio',
+  'terms.availability.force': 'Eventos fuera de nuestro control pueden afectar la disponibilidad',
+  'terms.disclaimers.title': 'Exclusiones de Responsabilidad',
+  'terms.disclaimers.description': 'El servicio se proporciona "tal como está" sin garantías:',
+  'terms.disclaimers.warranty': 'No garantizamos que el servicio esté libre de errores',
+  'terms.disclaimers.accuracy': 'No garantizamos la precisión del contenido generado',
+  'terms.disclaimers.employment': 'No garantizamos empleo o resultados de candidaturas',
+  'terms.law.title': 'Ley Aplicable',
+  'terms.law.description': 'Estos términos están regidos por la ley portuguesa.',
+  'terms.changes.title': 'Cambios a los Términos',
+  'terms.changes.description': 'Podemos cambiar estos términos en cualquier momento. Los cambios entrarán en vigor inmediatamente después de la publicación.',
+  'terms.contact.title': 'Contacto',
+  'terms.contact.description': 'Para preguntas sobre estos términos, contáctanos:',
+  'terms.back.home': 'Volver a la Página Inicial',
+
+  // Landing Page Benefits Section
+  'landing.benefits.title': 'Ventajas de EasyPeasyCV',
+  'landing.benefits.subtitle': 'Descubre por qué EasyPeasyCV es la elección correcta para tu CV profesional',
+  'landing.benefits.privacy.title': 'Privacidad Total',
+  'landing.benefits.privacy.subtitle': 'Tus datos se mantienen seguros',
+  'landing.benefits.privacy.description': 'Todos los datos se almacenan localmente en tu navegador. Ninguna información es enviada a servidores externos.',
+  'landing.benefits.ats.title': 'Optimizado para ATS',
+  'landing.benefits.ats.subtitle': 'Compatible con sistemas de reclutamiento',
+  'landing.benefits.ats.description': 'Nuestras plantillas están optimizadas para pasar los sistemas de seguimiento de candidatos (ATS) de las empresas.',
+  'landing.benefits.performance.title': 'Rápido y Eficiente',
+  'landing.benefits.performance.subtitle': 'Generación instantánea de PDF',
+  'landing.benefits.performance.description': 'Genera tu CV en PDF de alta calidad en segundos, sin esperas ni complicaciones.',
+
+  // View Project link
+  'view.project': 'Ver Proyecto',
+};
