@@ -48,7 +48,7 @@ export function ProfessionalExperience({
   onRemoveExperience,
   onReorderExperiences
 }: ProfessionalExperienceProps) {
-  const { t, cvType } = useLanguage();
+  const { t } = useLanguage();
   const [openDropdowns, setOpenDropdowns] = useState<{[key: string]: boolean}>({});
   
   // Returns the translated month name using the language context

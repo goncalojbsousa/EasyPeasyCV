@@ -1,4 +1,6 @@
+
 'use client';
+import type { CVType } from '../../contexts/LanguageContext';
 
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useState, useRef, useEffect } from 'react';
@@ -32,7 +34,7 @@ export function CompactCVTypeSelector() {
 
   // Handles changing the CV type and closes the dropdown
   const handleCVTypeChange = (newType: string) => {
-    setCVType(newType as any);
+  setCVType(newType as CVType);
     setIsOpen(false);
   };
 

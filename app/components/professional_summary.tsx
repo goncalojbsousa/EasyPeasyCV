@@ -26,7 +26,7 @@ export function ProfessionalSummary({
   resume,
   onResumeChange
 }: ProfessionalSummaryProps) {
-  const { t, cvType } = useLanguage();
+  const { t } = useLanguage();
   return (
     <form className="space-y-8 flex flex-col items-center w-full">
       <FormSection title={t('section.professional.summary')} icon={Icons.professionalSummary}>

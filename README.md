@@ -1,4 +1,9 @@
-# EasyPeasyCV
+<p align="center">
+  <a href="https://github.com/goncalojbsousa/EasyPeasyCV">
+    <img src="public/logo.webp" height="96" alt="EasyPeasyCV logo" style="margin-bottom: 10px;" />
+    <h3 align="center">EasyPeasyCV</h3>
+  </a>
+</p>
 
 A modern, responsive CV builder application built with Next.js, React, and TypeScript. Features real-time preview, PDF generation, and multi-language support.
 

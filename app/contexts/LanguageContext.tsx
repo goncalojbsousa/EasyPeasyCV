@@ -34,7 +34,7 @@ interface LanguageProviderProps {
 export function LanguageProvider({ children }: LanguageProviderProps) {
   const [language, setLanguageState] = useState<Language>('pt');
   const [cvType, setCVTypeState] = useState<CVType>('development');
-  const [isInitialized, setIsInitialized] = useState(false);
+  // Removed unused isInitialized state
 
   // Effect: Load language and CV type from localStorage on initialization.
   // If not set, detect browser language. Handles errors gracefully.
@@ -64,10 +64,10 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
         }
       }
 
-      setIsInitialized(true);
+  // Removed setIsInitialized(true) as isInitialized is unused
     } catch (error) {
       console.error('Error initializing language:', error);
-      setIsInitialized(true);
+  // Removed setIsInitialized(true) as isInitialized is unused
     }
   }, []);
 

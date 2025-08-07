@@ -26,7 +26,7 @@ export function TechnicalSkills({
   skills,
   onSkillsChange
 }: TechnicalSkillsProps) {
-  const { t, cvType } = useLanguage();
+  const { t } = useLanguage();
   return (
     <form className="space-y-8 flex flex-col items-center">
       <FormSection title={t('section.technical.skills')} icon={Icons.technicalSkills}>

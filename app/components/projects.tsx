@@ -42,7 +42,7 @@ export function Projects({
   onRemoveProject,
   onReorderProjects
 }: ProjectsProps) {
-  const { t, cvType } = useLanguage();
+  const { t } = useLanguage();
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   

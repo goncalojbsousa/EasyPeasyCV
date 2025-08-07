@@ -72,7 +72,7 @@ export function PersonalInformation({
   validationErrors = {},
   showValidationErrors = true
 }: PersonalInformationProps) {
-  const { t, cvType } = useLanguage();
+  const { t } = useLanguage();
   const [openDropdownIdx, setOpenDropdownIdx] = useState<number | null>(null);
   const [newLinkType, setNewLinkType] = useState('LinkedIn');
   const [newLinkValue, setNewLinkValue] = useState('');

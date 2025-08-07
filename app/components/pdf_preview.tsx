@@ -69,6 +69,7 @@ export function PdfPreview({
     if (show) {
       generatePdf();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [show, personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, lang, template, color]);
 
   // Prevent body scroll when the modal is open
@@ -224,7 +225,7 @@ export function PdfPreview({
                   title="PDF Preview"
                   style={{ minHeight: '600px' }}
                   onLoad={() => console.log('PDF iframe loaded successfully')}
-                  onError={(e) => {
+                  onError={() => {
                     setError('Erro ao carregar PDF no iframe');
                   }}
                 />

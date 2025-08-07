@@ -1,4 +1,7 @@
+
 'use client';
+import type { JSX } from 'react';
+import type { CVType } from '../../contexts/LanguageContext';
 
 import { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -10,9 +13,10 @@ import { Experience, Education, Language, Certification, Project, Volunteer, CvC
 import { CvTypeSelector } from './cv-type-selector';
 import { ColorSelector } from './color-selector';
 
+import { PersonalInfo, Link } from '../../types/cv';
 interface DesktopActionsCardProps {
-  personalInfo: any;
-  links: any[];
+  personalInfo: PersonalInfo;
+  links: Link[];
   resume: string;
   experiences: Experience[];
   education: Education[];
@@ -97,7 +101,7 @@ export function DesktopActionsCard({
    * @param type - CV type string
    */
   const getCVTypeIcon = (type: string) => {
-    const icons = {
+  const icons: Record<string, JSX.Element> = {
       development: (
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
@@ -263,7 +267,7 @@ export function DesktopActionsCard({
                         <button
                           key={type}
                           onClick={() => {
-                            setCVType(type as any);
+                            setCVType(type as CVType);
                             setIsCVTypeDropdownOpen(false);
                           }}
                           className={`w-full flex items-center gap-2 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${cvType === type ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}

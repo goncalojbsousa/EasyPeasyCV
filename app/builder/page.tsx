@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { PersonalInformation } from '../components/personal_information';
 import { ProfessionalSummary } from '../components/professional_summary';
 import { ProfessionalExperience } from '../components/professional_experience';
@@ -18,11 +18,8 @@ import { Footer } from '../components/footer';
 import { PdfPreview } from '../components/pdf_preview';
 import { FloatingActionBar } from '../components/ui/floating-action-bar';
 import { DesktopActionsCard } from '../components/ui/desktop-actions-card';
-import { CvTypeSelector } from '../components/ui/cv-type-selector';
-import { ColorSelector } from '../components/ui/color-selector';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Experience, Education, Language, Certification, Project, Volunteer, CvColor } from '../types/cv';
-import Link from 'next/link';
 
 /**
  * CV Builder page component
@@ -185,7 +182,7 @@ export default function Builder() {
       color: selectedColor
     };
     localStorage.setItem('cv-builder-data', JSON.stringify(data));
-  }, [personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, selectedTemplate, selectedColor]);
+  }, [personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, selectedTemplate, selectedColor]);
 
   // Auto-save data when any field changes
   useEffect(() => {

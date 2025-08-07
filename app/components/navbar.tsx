@@ -4,6 +4,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { LanguageSelector } from './ui/language-selector';
 import { ThemeToggle } from './theme-toggle';
 import Link from 'next/link';
+import Image from 'next/image';
 
 /**
  * Navbar component
@@ -19,10 +20,13 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-3">
-            <img 
-              src="/logo.webp" 
-              alt="EasyPeasyCV Logo" 
+            <Image
+              src="/logo.webp"
+              alt="EasyPeasyCV Logo"
+              width={40}
+              height={40}
               className="w-10 h-10 object-contain"
+              priority
             />
             <div>
               <h1 className="text-2xl font-bold text-blue-600">{t('app.title')}</h1>

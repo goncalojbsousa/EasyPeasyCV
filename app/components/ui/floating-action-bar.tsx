@@ -7,9 +7,10 @@ import PdfDownloadButton from '../pdf_download_button';
 import { ThankYouModal } from '../thank_you_modal';
 import { Experience, Education, Language, Certification, Project, Volunteer, CvColor } from '../../types/cv';
 
+import { PersonalInfo, Link } from '../../types/cv';
 interface FloatingActionBarProps {
-  personalInfo: any;
-  links: any[];
+  personalInfo: PersonalInfo;
+  links: Link[];
   resume: string;
   experiences: Experience[];
   education: Education[];
@@ -56,7 +57,7 @@ export function FloatingActionBar({
   volunteers,
   onTemplateChange
 }: FloatingActionBarProps) {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isTemplateDropdownOpen, setIsTemplateDropdownOpen] = useState(false);
   const [showThankYouModal, setShowThankYouModal] = useState(false);
