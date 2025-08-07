@@ -1,5 +1,5 @@
 {
-  "name": "cv-builder",
+  "name": "easypeasycv",
   "description": "A modern EasyPeasyCV application with real-time preview and PDF generation",
   "version": "0.1.0",
   "private": true,
@@ -7,10 +7,10 @@
   "author": "EasyPeasyCV",
   "repository": {
     "type": "git",
-    "url": "https://github.com/goncalojbsousa/cv-builder.git"
+    "url": "https://github.com/goncalojbsousa/EasyPeasyCV.git"
   },
   "keywords": [
-    "cv-builder",
+    "EasyPeasyCV",
     "resume-builder",
     "nextjs",
     "react",

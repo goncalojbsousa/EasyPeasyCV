@@ -135,7 +135,7 @@ export function JobAnalysis() {
       </div>
 
       <div className="space-y-4">
-        {/* Job posting input */}
+  {/* Job posting input area */}
         <div className="bg-white dark:bg-zinc-900 rounded-lg p-4 border border-purple-100 dark:border-purple-900 shadow-sm">
           <label htmlFor="jobText" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             {t('job.analysis.input.label')}
@@ -177,7 +177,7 @@ export function JobAnalysis() {
           </div>
         </div>
 
-        {/* Analysis results */}
+  {/* Analysis results section */}
         {showAnalysis && (
           <div className="bg-white dark:bg-zinc-900 rounded-lg p-4 border border-purple-100 dark:border-purple-900 shadow-sm">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-2">
@@ -194,7 +194,7 @@ export function JobAnalysis() {
           </div>
         )}
 
-        {/* Tips section */}
+  {/* Tips and advice section */}
         <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4 border border-purple-200 dark:border-purple-800">
           <div className="flex items-start gap-3">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600 mt-0.5 flex-shrink-0">

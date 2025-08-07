@@ -1,5 +1,11 @@
+
+// Import the CvColor type for color theme keys
 import { CvColor } from '../types/cv';
 
+/**
+ * Color theme definitions for each available CV color.
+ * Each theme includes primary, secondary, accent, light, and dark color values.
+ */
 export const colorThemes: Record<CvColor, {
   primary: string;
   secondary: string;
@@ -65,6 +71,10 @@ export const colorThemes: Record<CvColor, {
   }
 };
 
+/**
+ * Utility function to get the color theme object for a given CvColor.
+ * Defaults to the 'blue' theme if no color is provided.
+ */
 export function getColorTheme(color: CvColor = 'blue') {
   return colorThemes[color];
-} 
+}

@@ -15,14 +15,14 @@ export function Footer() {
     <footer className="bg-white dark:bg-zinc-900 border-t border-gray-200 dark:border-zinc-700 py-6 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-          {/* Copyright - Left */}
+          {/* Copyright section - Left */}
           <div className="text-center sm:text-left">
             <p className="text-gray-600 dark:text-gray-400 text-sm">
               © 2025 EasyPeasyCV.
             </p>
           </div>
 
-          {/* Support and GitHub - Center */}
+          {/* Support and GitHub links - Center */}
           <div className="flex items-center gap-4">
             <a
               href="https://ko-fi.com/easypeasycv"
@@ -62,7 +62,7 @@ export function Footer() {
             </a>
           </div>
 
-          {/* Privacy and Terms - Right */}
+          {/* Privacy and Terms links - Right */}
           <div className="flex items-center gap-4">
             <Link
               href="/privacy"

@@ -8,7 +8,7 @@ export type Language = 'pt' | 'en' | 'es';
 // Available CV types
 export type CVType = 'development' | 'marketing' | 'sales' | 'hr' | 'finance' | 'design' | 'health' | 'education' | 'admin' | 'other';
 
-// Context interface
+// Context interface for language and CV type management
 interface LanguageContextType {
   language: Language;
 
@@ -18,30 +18,35 @@ interface LanguageContextType {
   t: (key: string) => string;
 }
 
-// Context creation
+// Create the LanguageContext with the defined interface
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-// Provider props
+// Props for the LanguageProvider component
 interface LanguageProviderProps {
   children: ReactNode;
 }
 
-// Context provider
+/**
+ * LanguageProvider component
+ * Provides language, CV type, and translation context to the application.
+ * Loads preferences from localStorage and detects browser language if not set.
+ */
 export function LanguageProvider({ children }: LanguageProviderProps) {
   const [language, setLanguageState] = useState<Language>('pt');
   const [cvType, setCVTypeState] = useState<CVType>('development');
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Load language and CV type from localStorage on initialization
+  // Effect: Load language and CV type from localStorage on initialization.
+  // If not set, detect browser language. Handles errors gracefully.
   useEffect(() => {
     try {
-      // Check if we're in the browser
+      // Only run in browser
       if (typeof window !== 'undefined') {
         const savedLanguage = localStorage.getItem('cv-builder-language') as Language;
         if (savedLanguage && (savedLanguage === 'pt' || savedLanguage === 'en')) {
           setLanguageState(savedLanguage);
         } else {
-          // Detect browser language if no language is saved
+          // Detect browser language if not set
           const browserLanguage = navigator.language || navigator.languages?.[0] || 'en';
           let detectedLanguage: Language = 'en';
           if (browserLanguage.startsWith('pt')) {
@@ -66,19 +71,23 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     }
   }, []);
 
-  // Function to change language
+  // Change language and persist to localStorage
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
     localStorage.setItem('cv-builder-language', lang);
   };
 
-  // Function to change CV type
+  // Change CV type and persist to localStorage
   const setCVType = (type: CVType) => {
     setCVTypeState(type);
     localStorage.setItem('cv-builder-type', type);
   };
 
-  // Translation function
+  /**
+   * Translation function
+   * Returns the translation for a given key based on the current language.
+   * If the key is CV type-specific, returns the appropriate translation.
+   */
   const t = (key: string): string => {
     let translations: Record<string, string>;
     if (language === 'pt') {
@@ -110,7 +119,10 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   );
 }
 
-// Custom hook to use the context
+/**
+ * Custom hook to use the LanguageContext.
+ * Throws an error if used outside of LanguageProvider.
+ */
 export function useLanguage() {
   const context = useContext(LanguageContext);
   if (context === undefined) {

@@ -15,7 +15,7 @@ export function LanguageHtmlAttribute() {
   const { language } = useLanguage();
 
   useEffect(() => {
-    // Set the HTML lang attribute based on the current language
+    // Dynamically set the HTML lang attribute based on the current language selection
     if (typeof document !== 'undefined') {
       document.documentElement.lang = language;
     }

@@ -5,7 +5,7 @@ import { CvTemplate } from '../../types/cv';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 /**
- * Props interface for the CvTypeSelector component
+ * Props for the CvTypeSelector component.
  */
 interface CvTypeSelectorProps {
   /** Currently selected template */
@@ -15,7 +15,7 @@ interface CvTypeSelectorProps {
 }
 
 /**
- * Template configuration with metadata
+ * Template configuration with metadata for each template type.
  */
 const templates: Record<CvTemplate, {
   nameKey: string;
@@ -64,10 +64,8 @@ const templates: Record<CvTemplate, {
 };
 
 /**
- * CvTypeSelector component allows users to choose between different CV templates
- * @param selectedTemplate - Currently selected template
- * @param onTemplateChange - Callback function when template changes
- * @returns JSX element representing the template selector
+ * CvTypeSelector component allows users to choose between different CV templates.
+ * Handles dropdown for template selection and displays template metadata.
  */
 export function CvTypeSelector({ selectedTemplate, onTemplateChange }: CvTypeSelectorProps) {
   const { t } = useLanguage();

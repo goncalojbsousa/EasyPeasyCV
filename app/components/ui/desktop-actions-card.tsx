@@ -37,9 +37,9 @@ interface DesktopActionsCardProps {
 
 /**
  * Desktop Actions Card component
- * Fixed card on the right side of the screen for desktop view
- * Contains the main action buttons for CV generation and preview
- * @returns JSX element representing a fixed actions card
+ * Fixed card on the right side of the screen for desktop view.
+ * Contains the main action buttons for CV generation, preview, template/color selection, and extra features.
+ * Handles dropdowns for CV type and language selection, and manages PDF generation and preview actions.
  */
 export function DesktopActionsCard({
   personalInfo,
@@ -72,7 +72,7 @@ export function DesktopActionsCard({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const cvTypeDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdowns when clicking outside
+  // Effect to close dropdowns when clicking outside of them
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -93,9 +93,8 @@ export function DesktopActionsCard({
   }, [isDropdownOpen, isCVTypeDropdownOpen]);
 
   /**
-   * Get the appropriate icon for each CV type
+   * Returns the appropriate icon for each CV type.
    * @param type - CV type string
-   * @returns JSX element representing the icon
    */
   const getCVTypeIcon = (type: string) => {
     const icons = {
@@ -154,11 +153,10 @@ export function DesktopActionsCard({
   };
 
   /**
-   * PDF download button component with validation
-   * Wraps the PDF download button with form validation logic
+   * PDF download button component with validation logic.
+   * Prevents download if form validation fails, and shows a thank you modal after successful generation.
    * @param lang - Language for the PDF (pt or en)
    * @param children - Content to display in the button
-   * @returns JSX element with validation logic
    */
   const PdfDownloadButtonWithValidation = ({ lang, children }: { lang: string; children: React.ReactNode }) => {
     const handleClick = (e: React.MouseEvent) => {

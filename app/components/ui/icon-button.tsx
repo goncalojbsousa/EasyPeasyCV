@@ -3,7 +3,7 @@
 import { ReactNode } from 'react';
 
 /**
- * Props interface for the IconButton component
+ * Props for the IconButton component.
  */
 interface IconButtonProps {
   /** Click handler function */
@@ -19,13 +19,8 @@ interface IconButtonProps {
 }
 
 /**
- * IconButton component provides a consistent button with icon support and multiple variants
- * @param onClick - Function to call when button is clicked
- * @param children - Child elements (usually icons) to render
- * @param variant - Visual variant (defaults to 'primary')
- * @param size - Size variant (defaults to 'md')
- * @param className - Additional CSS classes
- * @returns JSX element representing a styled button with icon support
+ * IconButton component provides a consistent button with icon support and multiple variants.
+ * Supports primary and danger visual styles, and different sizes.
  */
 export function IconButton({ 
   onClick, 

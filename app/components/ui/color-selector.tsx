@@ -2,12 +2,19 @@ import { useState, useRef, useEffect } from 'react';
 import { CvColor } from '../../types/cv';
 import { useLanguage } from '../../contexts/LanguageContext';
 
+/**
+ * Props for the ColorSelector component.
+ */
 interface ColorSelectorProps {
   selectedColor: CvColor;
   onColorChange: (color: CvColor) => void;
-  show?: boolean; // New prop to control visibility
+  show?: boolean; // Controls visibility of the selector
 }
 
+/**
+ * Color configuration for each available color option.
+ * Includes both Portuguese and English names for translation.
+ */
 const colors: Record<CvColor, {
   name: string;
   nameEn: string;
@@ -73,12 +80,17 @@ const colors: Record<CvColor, {
   }
 };
 
+/**
+ * ColorSelector component allows users to select a color theme for the CV.
+ * Handles dropdown for color selection and displays color options with translated names.
+ * Closes dropdown when clicking outside.
+ */
 export function ColorSelector({ selectedColor, onColorChange, show = true }: ColorSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { language } = useLanguage();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown when clicking outside
+  // Effect to close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -95,8 +107,10 @@ export function ColorSelector({ selectedColor, onColorChange, show = true }: Col
     };
   }, [isOpen]);
 
+  // Toggles the dropdown open/close state
   const toggleDropdown = () => setIsOpen(!isOpen);
 
+  // Handles color selection and closes the dropdown
   const handleColorSelect = (color: CvColor) => {
     onColorChange(color);
     setIsOpen(false);
@@ -151,4 +165,4 @@ export function ColorSelector({ selectedColor, onColorChange, show = true }: Col
       )}
     </div>
   );
-} 
+}

@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * Props interface for the EmptyState component
+ * Props for the EmptyState component.
  */
 interface EmptyStateProps {
   /** Message to display in the empty state */
@@ -9,9 +9,8 @@ interface EmptyStateProps {
 }
 
 /**
- * EmptyState component displays a placeholder when there's no content to show
- * @param message - The message to display in the empty state
- * @returns JSX element representing an empty state with an icon and message
+ * EmptyState component displays a placeholder when there is no content to show.
+ * Shows a plus icon and a message.
  */
 export function EmptyState({ message }: EmptyStateProps) {
   return (

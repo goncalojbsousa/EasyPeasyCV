@@ -353,7 +353,7 @@ export function Certifications({
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   
-  // Helper function to generate smart titles for certification cards
+  // Generates a display title for each certification card based on available data
   const getCertificationTitle = (cert: Certification, idx: number) => {
     if (cert.name && cert.issuer) return `${cert.name} | ${cert.issuer}`;
     if (cert.name) return cert.name;
@@ -361,7 +361,7 @@ export function Certifications({
     return `${t('certification.title')} ${idx + 1}`;
   };
 
-  // Drag and drop handlers
+  // Drag and drop handlers for reordering certification entries
   const handleDragStart = (e: React.DragEvent, index: number) => {
     setDraggedIndex(index);
     e.dataTransfer.effectAllowed = 'move';

@@ -5,8 +5,8 @@ import { useState, useRef, useEffect } from 'react';
 
 /**
  * Language Selector component
- * Allows users to switch between Portuguese and English languages
- * @returns JSX element representing a dropdown for language selection
+ * Allows users to switch between Portuguese, English, and Spanish languages.
+ * Handles dropdown for language selection and closes dropdown when clicking outside.
  */
 export function LanguageSelector() {
   const { language, setLanguage, t } = useLanguage();

@@ -31,9 +31,9 @@ interface FloatingActionBarProps {
 
 /**
  * Floating Action Bar component
- * Contains the main action buttons for CV generation and preview
- * Positioned in the bottom-right corner of the screen
- * @returns JSX element representing a floating action bar
+ * Contains the main action buttons for CV generation and preview.
+ * This bar is positioned in the bottom-right corner of the screen and is visible on mobile devices.
+ * Handles dropdowns for template and language selection, and manages PDF generation and preview actions.
  */
 export function FloatingActionBar({
   personalInfo,
@@ -63,7 +63,7 @@ export function FloatingActionBar({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const templateDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdowns when clicking outside
+  // Effect to close dropdowns when clicking outside of them
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -84,11 +84,10 @@ export function FloatingActionBar({
   }, [isDropdownOpen, isTemplateDropdownOpen]);
 
   /**
-   * PDF download button component with validation
-   * Wraps the PDF download button with form validation logic
+   * PDF download button component with validation logic.
+   * Prevents download if form validation fails, and shows a thank you modal after successful generation.
    * @param lang - Language for the PDF (pt or en)
    * @param children - Content to display in the button
-   * @returns JSX element with validation logic
    */
   const PdfDownloadButtonWithValidation = ({ lang, children }: { lang: string; children: React.ReactNode }) => {
     const handleClick = (e: React.MouseEvent) => {

@@ -74,7 +74,7 @@ export function AcademicEducation({
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
-  // Helper function to generate smart titles for education cards
+  // Generates a display title for each education card based on available data
   const getEducationTitle = (ed: Education, idx: number) => {
     if (ed.course && ed.type) return `${ed.course} | ${ed.type}`;
     if (ed.course) return ed.course;
@@ -82,7 +82,7 @@ export function AcademicEducation({
     return `${t('education.title')} ${idx + 1}`;
   };
 
-  // Close dropdowns when clicking outside
+  // Closes all dropdowns when clicking outside any dropdown element
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       Object.keys(openDropdowns).forEach(key => {
@@ -106,7 +106,7 @@ export function AcademicEducation({
     setOpenDropdowns(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
-  // Drag and drop handlers
+  // Drag and drop handlers for reordering education entries
   const handleDragStart = (e: React.DragEvent, index: number) => {
     setDraggedIndex(index);
     e.dataTransfer.effectAllowed = 'move';

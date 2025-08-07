@@ -61,7 +61,8 @@ export function CVTips() {
       <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{t('tips.subtitle')}</p>
         </div>
       </div>
-      <div className="space-y-3 sm:space-y-4">
+  {/* List of CV tips and advice */}
+  <div className="space-y-3 sm:space-y-4">
         {tips.map((tip, index) => (
           <div key={index} className="bg-white dark:bg-zinc-900 rounded-lg p-3 sm:p-4 border border-blue-100 dark:border-blue-900 shadow-sm">
             <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2 flex items-start gap-2">
@@ -73,7 +74,8 @@ export function CVTips() {
             <p className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm ml-7 sm:ml-8">{tip.description}</p>
           </div>
         ))}
-        <div className="mt-6 p-3 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+  {/* Extra tips and information section */}
+  <div className="mt-6 p-3 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
           <div className="flex items-start gap-3">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 mt-0.5 flex-shrink-0">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />

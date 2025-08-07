@@ -3,7 +3,7 @@
 import { ReactNode } from 'react';
 
 /**
- * Props interface for the FormField component
+ * Props for the FormField component.
  */
 interface FormFieldProps {
   /** Label text for the form field */
@@ -17,12 +17,8 @@ interface FormFieldProps {
 }
 
 /**
- * FormField component provides a consistent layout for form inputs with labels
- * @param label - The label text for the form field
- * @param children - The form input elements to render
- * @param required - Whether the field is required (defaults to false)
- * @param helperText - Optional helper text to display
- * @returns JSX element representing a form field with label and input
+ * FormField component provides a consistent layout for form inputs with labels.
+ * Shows a required indicator and optional helper text.
  */
 export function FormField({ label, children, required = false, helperText }: FormFieldProps) {
   return (

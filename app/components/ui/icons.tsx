@@ -1,6 +1,6 @@
 /**
- * Collection of SVG icons used throughout the application
- * Each icon is a React component with consistent styling
+ * Collection of SVG icons used throughout the application.
+ * Each icon is a React component with consistent styling for use in UI sections.
  */
 export const Icons = {
   /** User profile icon for personal information section */

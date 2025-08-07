@@ -5,15 +5,15 @@ import { useState, useRef, useEffect } from 'react';
 
 /**
  * Compact CV Type Selector component
- * A compact version of the CV type selector for use in the floating action bar
- * @returns JSX element representing a compact dropdown for CV type selection
+ * A compact version of the CV type selector for use in the floating action bar.
+ * Handles dropdown for CV type selection and displays icons for each type.
  */
 export function CompactCVTypeSelector() {
   const { cvType, setCVType, t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown when clicking outside
+  // Effect to close dropdown when clicking outside of it
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -30,11 +30,13 @@ export function CompactCVTypeSelector() {
     };
   }, [isOpen]);
 
+  // Handles changing the CV type and closes the dropdown
   const handleCVTypeChange = (newType: string) => {
     setCVType(newType as any);
     setIsOpen(false);
   };
 
+  // Returns the appropriate icon for each CV type
   const getCVTypeIcon = (type: string) => {
     const icons = {
       development: (

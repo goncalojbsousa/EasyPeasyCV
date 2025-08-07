@@ -3,7 +3,7 @@
 import { ReactNode } from 'react';
 
 /**
- * Props interface for the FormSection component
+ * Props for the FormSection component.
  */
 interface FormSectionProps {
   /** Title text for the section */
@@ -17,12 +17,8 @@ interface FormSectionProps {
 }
 
 /**
- * FormSection component provides a consistent layout for form sections with title, icon, and optional action button
- * @param title - The title text for the section
- * @param icon - The icon element to display
- * @param children - The form elements to render inside the section
- * @param actionButton - Optional action button to display in the header
- * @returns JSX element representing a form section with header and content
+ * FormSection component provides a consistent layout for form sections with title, icon, and optional action button.
+ * Renders a header and content area for grouping related form fields.
  */
 export function FormSection({ title, icon, children, actionButton }: FormSectionProps) {
   return (

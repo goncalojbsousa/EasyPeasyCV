@@ -60,7 +60,7 @@ export function Languages({
   const [openDropdowns, setOpenDropdowns] = useState<{[key: string]: boolean}>({});
   const dropdownRefs = useRef<{[key: string]: HTMLDivElement | null}>({});
 
-  // Close dropdowns when clicking outside
+  // Closes all dropdowns when clicking outside any dropdown element
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       Object.keys(openDropdowns).forEach(key => {

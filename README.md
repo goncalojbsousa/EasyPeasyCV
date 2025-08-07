@@ -24,8 +24,8 @@ A modern, responsive CV builder application built with Next.js, React, and TypeS
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/goncalojbsousa/cv-builder.git
-cd cv-builder
+git clone https://github.com/goncalojbsousa/EasyPeasyCV.git
+cd EasyPeasyCV
 ```
 
 2. Install dependencies:
@@ -133,5 +133,5 @@ If you find this project helpful, consider supporting it:
 
 ## 🔗 Links
 
-- [GitHub Repository](https://github.com/goncalojbsousa/cv-builder)
-- [Issues](https://github.com/goncalojbsousa/cv-builder/issues)
+- [GitHub Repository](https://github.com/goncalojbsousa/EasyPeasyCV)
+- [Issues](https://github.com/goncalojbsousa/EasyPeasyCV/issues)

@@ -57,7 +57,7 @@ export function AtsExplanation() {
             </h3>
             <p className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm ml-7 sm:ml-8 mb-3">{info.description}</p>
             
-            {/* Warning for why section */}
+            {/* Warning message for the 'why' section */}
             {info.warning && (
               <div className="ml-7 sm:ml-8 mb-3 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
                 <div className="flex items-start gap-2">
@@ -73,7 +73,7 @@ export function AtsExplanation() {
           </div>
         ))}
 
-                 {/* Extra info section */}
+                 {/* Extra information section about ATS */}
          <div className="mt-6 p-3 sm:p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border border-emerald-200 dark:border-emerald-800">
            <div className="flex items-start gap-3">
              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 mt-0.5 flex-shrink-0">
