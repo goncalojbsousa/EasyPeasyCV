@@ -36,7 +36,7 @@ export default function PdfDownloadButton(props: PdfDownloadButtonProps) {
   const { children, onPdfGenerated, ...pdfProps } = props;
   
   const handleDownload = () => {
-    // Call the callback after a short delay to ensure PDF generation has started
+  // Call the callback after a short delay to ensure PDF generation has started
     if (onPdfGenerated) {
       setTimeout(() => {
         onPdfGenerated();

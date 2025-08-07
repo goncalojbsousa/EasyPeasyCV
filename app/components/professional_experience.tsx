@@ -51,7 +51,7 @@ export function ProfessionalExperience({
   const { t, cvType } = useLanguage();
   const [openDropdowns, setOpenDropdowns] = useState<{[key: string]: boolean}>({});
   
-  // Function to get translated month
+  // Returns the translated month name using the language context
   const getTranslatedMonth = (month: string) => {
     const monthMap: { [key: string]: string } = {
       'Jan': t('month.jan'),
@@ -73,7 +73,7 @@ export function ProfessionalExperience({
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
-  // Helper function to generate smart titles for experience cards
+  // Generates a display title for each experience card based on available data
   const getExperienceTitle = (exp: Experience, idx: number) => {
     if (exp.role && exp.company) return `${exp.role} | ${exp.company}`;
     if (exp.role) return exp.role;
@@ -81,7 +81,7 @@ export function ProfessionalExperience({
     return `${t('experience.title')} ${idx + 1}`;
   };
 
-  // Close dropdowns when clicking outside
+  // Closes all dropdowns when clicking outside any dropdown element
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       Object.keys(openDropdowns).forEach(key => {
@@ -105,7 +105,7 @@ export function ProfessionalExperience({
     setOpenDropdowns(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
-  // Drag and drop handlers
+  // Drag and drop handlers for reordering experience entries
   const handleDragStart = (e: React.DragEvent, index: number) => {
     setDraggedIndex(index);
     e.dataTransfer.effectAllowed = 'move';

@@ -8,6 +8,7 @@ import Link from 'next/link';
 /**
  * Navbar component
  * Reusable navigation bar with logo, language selector, and theme toggle
+ * Handles navigation and theme/language switching for the app
  * @returns JSX element representing the navigation bar
  */
 export function Navbar() {

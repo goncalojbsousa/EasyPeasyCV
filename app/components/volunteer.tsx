@@ -48,10 +48,10 @@ export function VolunteerWork({
   const [openDropdowns, setOpenDropdowns] = useState<{ [key: string]: boolean }>({});
   const dropdownRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
-  // Months array for dropdown
+  // Array of months for dropdown selection
   const MONTHS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
 
-  // Helper function to get translated month name
+  // Returns the translated month name using the language context
   const getTranslatedMonth = (month: string) => {
     const monthTranslations: { [key: string]: string } = {
       'Jan': t('month.jan'),
@@ -70,7 +70,7 @@ export function VolunteerWork({
     return monthTranslations[month] || month;
   };
 
-  // Handle click outside to close dropdowns
+  // Closes all dropdowns when clicking outside any dropdown element
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       const target = event.target as Node;
@@ -84,12 +84,12 @@ export function VolunteerWork({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Toggle dropdown function
+  // Toggles the open/close state of a dropdown by key
   const toggleDropdown = (key: string) => {
     setOpenDropdowns(prev => ({ ...prev, [key]: !prev[key] }));
   };
   
-  // Helper function to generate smart titles for volunteer cards
+  // Generates a display title for each volunteer card based on available data
   const getVolunteerTitle = (vol: Volunteer, idx: number) => {
     if (vol.role && vol.organization) return `${vol.role} | ${vol.organization}`;
     if (vol.role) return vol.role;
@@ -97,7 +97,7 @@ export function VolunteerWork({
     return `${t('volunteer.title')} ${idx + 1}`;
   };
 
-  // Drag and drop handlers
+  // Drag and drop handlers for reordering volunteer entries
   const handleDragStart = (e: React.DragEvent, index: number) => {
     setDraggedIndex(index);
     e.dataTransfer.effectAllowed = 'move';

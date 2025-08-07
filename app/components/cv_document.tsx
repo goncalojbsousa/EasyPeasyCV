@@ -1,6 +1,5 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet, Link } from '@react-pdf/renderer';
-import { CvData, CvTemplate, CvColor } from '../types/cv';
+import { CvData, CvColor } from '../types/cv';
 import { ClassicTemplate } from './cv_templates/classic_template';
 import { ModernTemplate } from './cv_templates/modern_template';
 import { CreativeTemplate } from './cv_templates/creative_template';
@@ -36,7 +35,7 @@ export function CvDocument({
   template = 'classic',
   color = 'blue',
 }: CvDocumentProps) {
-  
+
   // Select the appropriate template based on the template prop
   switch (template) {
     case 'modern':
@@ -56,9 +55,9 @@ export function CvDocument({
           color={color}
         />
       );
-    
+
     case 'creative':
-  return (
+      return (
         <CreativeTemplate
           personalInfo={personalInfo}
           links={links}
@@ -74,12 +73,12 @@ export function CvDocument({
           color={color}
         />
       );
-    
 
-    
+
+
     case 'classic':
     default:
-              return (
+      return (
         <ClassicTemplate
           personalInfo={personalInfo}
           links={links}

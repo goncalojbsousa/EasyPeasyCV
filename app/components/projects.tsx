@@ -46,13 +46,13 @@ export function Projects({
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   
-  // Helper function to generate smart titles for project cards
+  // Generates a display title for each project card based on available data
   const getProjectTitle = (proj: Project, idx: number) => {
     if (proj.name) return proj.name;
     return `${t('project.title')} ${idx + 1}`;
   };
 
-  // Drag and drop handlers
+  // Drag and drop handlers for reordering project entries
   const handleDragStart = (e: React.DragEvent, index: number) => {
     setDraggedIndex(index);
     e.dataTransfer.effectAllowed = 'move';

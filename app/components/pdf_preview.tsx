@@ -54,7 +54,7 @@ export function PdfPreview({
   const [isMobile, setIsMobile] = useState(false);
   const [pdfSize, setPdfSize] = useState<number>(0);
 
-  // Detect mobile device
+  // Detect if the device is mobile to adjust PDF preview behavior
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -64,14 +64,14 @@ export function PdfPreview({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Generate PDF when component mounts or data changes
+  // Generate PDF whenever the modal is shown or any relevant data changes
   useEffect(() => {
     if (show) {
       generatePdf();
     }
   }, [show, personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, lang, template, color]);
 
-  // Block body scroll when modal is open
+  // Prevent body scroll when the modal is open
   useEffect(() => {
     if (show) {
       document.body.style.overflow = 'hidden';
@@ -88,7 +88,7 @@ export function PdfPreview({
     setLoading(true);
     setError(null);
     try {
-      // Create PDF document
+  // Create the PDF document component with all CV data
       const pdfDoc = (
         <CvDocument
           personalInfo={personalInfo}
@@ -107,11 +107,11 @@ export function PdfPreview({
         />
       );
 
-      // Generate PDF blob
+  // Generate a PDF blob from the document
       const blob = await pdf(pdfDoc).toBlob();
       setPdfSize(blob.size);
       
-      // Create URL from blob
+  // Create a URL from the PDF blob for preview
       const url = URL.createObjectURL(blob);
       setPdfUrl(url);
     } catch (error) {
@@ -121,7 +121,7 @@ export function PdfPreview({
     }
   };
 
-  // Cleanup URL when component unmounts
+  // Cleanup the PDF URL when the component unmounts or URL changes
   useEffect(() => {
     return () => {
       if (pdfUrl) {

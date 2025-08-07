@@ -17,7 +17,7 @@ interface ProfessionalSummaryProps {
 
 /**
  * Professional Summary component
- * Manages the professional summary/resume text content
+ * Manages the professional summary/resume text content for the CV
  * @param resume - Professional summary text content
  * @param onResumeChange - Function to handle resume text updates
  * @returns JSX element representing the professional summary form section

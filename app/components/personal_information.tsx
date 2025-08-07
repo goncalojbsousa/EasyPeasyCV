@@ -83,7 +83,7 @@ export function PersonalInformation({
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
-  // Close dropdown when clicking outside
+  // Closes dropdowns when clicking outside any dropdown element
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (openDropdownIdx !== null && dropdownRefs.current[openDropdownIdx]) {
@@ -107,14 +107,14 @@ export function PersonalInformation({
 
   const handleAddLink = () => {
     if (newLinkValue.trim()) {
-      // Create the full URL with prefix
+  // Create the full URL with prefix for the new link
       const prefix = getLinkPrefix(newLinkType);
       const fullValue = prefix ? `${prefix}${newLinkValue}` : newLinkValue;
       
-      // Add the link with the correct type, value, and custom name if applicable
+  // Add the link with the correct type, value, and custom name if applicable
       onAddLink(newLinkType, fullValue, newLinkType === 'Other' ? newLinkCustomName.trim() : undefined);
       
-      // Reset the form
+  // Reset the new link form fields
       setNewLinkValue('');
       setNewLinkCustomName('');
     }
@@ -177,7 +177,7 @@ export function PersonalInformation({
     }
   };
 
-  // Drag and drop handlers for links
+  // Drag and drop handlers for reordering link tags
   const handleDragStart = (e: React.DragEvent, index: number) => {
     setDraggedIndex(index);
     e.dataTransfer.effectAllowed = 'move';

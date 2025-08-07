@@ -7,12 +7,12 @@ export function ThemeToggle() {
     const { theme, setTheme, resolvedTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
 
-    // Prevent hydration mismatch
+    // Prevent hydration mismatch between server and client
     useEffect(() => {
         setMounted(true);
     }, []);
 
-    // Render placeholder during SSR
+    // Render a placeholder button during server-side rendering to avoid UI flicker
     if (!mounted) {
         return (
             <button
@@ -42,7 +42,7 @@ export function ThemeToggle() {
             onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
         >
             {resolvedTheme === 'dark' ? (
-                // Sun icon for dark mode (to switch to light mode)
+                // Sun icon: shown in dark mode, click to switch to light mode
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -58,7 +58,7 @@ export function ThemeToggle() {
                     />
                 </svg>
             ) : (
-                // Moon icon for light mode (to switch to dark mode)
+                // Moon icon: shown in light mode, click to switch to dark mode
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"

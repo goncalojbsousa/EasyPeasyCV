@@ -17,7 +17,7 @@ interface TechnicalSkillsProps {
 
 /**
  * Technical Skills component
- * Manages technical skills and competencies text content
+ * Manages technical skills and competencies text content for the CV
  * @param skills - Technical skills text content
  * @param onSkillsChange - Function to handle skills text updates
  * @returns JSX element representing the technical skills form section

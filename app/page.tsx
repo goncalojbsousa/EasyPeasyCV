@@ -13,6 +13,7 @@ import Link from 'next/link';
 export default function Home() {
   const { t } = useLanguage();
 
+  // Features displayed on the landing page
   const features = [
     {
       icon: "📄",
@@ -46,6 +47,7 @@ export default function Home() {
     }
   ];
 
+  // CV templates available for selection
   const templates = [
     {
       name: t('landing.templates.classic.name'),
@@ -67,11 +69,8 @@ export default function Home() {
     }
   ];
 
+  // Key statistics to highlight on the landing page
   const stats = [
-    {
-      number: "3",
-      label: t('landing.stats.templates')
-    },
     {
       number: "100%",
       label: t('landing.stats.free')
@@ -79,19 +78,15 @@ export default function Home() {
     {
       number: "∞",
       label: t('landing.stats.unlimited')
-    },
-    {
-      number: "2",
-      label: t('landing.stats.languages')
     }
   ];
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-zinc-900 transition-colors duration-300">
-      {/* Header */}
+  {/* Header */}
       <Navbar />
 
-      {/* Hero Section */}
+  {/* Hero Section */}
       <section className="pt-40 pb-24 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto text-center">
 
@@ -111,7 +106,7 @@ export default function Home() {
           </div>
 
           {/* Stats Section */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto">
+          <div className="grid grid-cols-2 gap-6 max-w-sm mx-auto">
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-1">
@@ -126,7 +121,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Section */}
+  {/* Features Section */}
       <section className="py-16 px-4 sm:px-6 bg-white dark:bg-zinc-800">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
@@ -156,7 +151,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Templates Section */}
+  {/* Templates Section */}
       <section className="py-16 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
@@ -199,7 +194,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* How it works Section */}
+  {/* How it works Section */}
       <section className="py-16 px-4 sm:px-6 bg-white dark:bg-zinc-800">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
@@ -248,7 +243,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Benefits Section */}
+  {/* Benefits Section */}
       <section className="py-16 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
@@ -312,7 +307,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Open Source Section */}
+  {/* Open Source Section */}
       <section className="py-16 px-4 sm:px-6 bg-white dark:bg-zinc-800">
         <div className="max-w-7xl mx-auto text-center">
           <div className="mb-8">
@@ -350,7 +345,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section */}
+  {/* Call to Action Section */}
       <section className="py-16 px-4 sm:px-6 bg-gradient-to-r from-blue-600 to-blue-700">
         <div className="max-w-7xl mx-auto text-center">
           <h2 className="text-3xl font-bold text-white mb-6">
@@ -368,7 +363,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer */}
+  {/* Footer */}
       <Footer />
     </div>
   );
