@@ -1,9 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<p align="center">
+  <a href="https://github.com/goncalojbsousa/EasyPeasyCV">
+    <img src="public/logo.webp" height="96" alt="EasyPeasyCV logo" style="margin-bottom: 10px;" />
+    <h3 align="center">EasyPeasyCV</h3>
+  </a>
+</p>
 
-## Getting Started
+A modern, responsive CV builder application built with Next.js, React, and TypeScript. Features real-time preview, PDF generation, and multi-language support.
 
-First, run the development server:
+## 🌟 Features
 
+- **3 Professional Templates**: Classic, Modern, and Creative designs
+- **Full Customization**: Choose colors, reorder sections, and customize every detail
+- **Responsive Design**: Works perfectly on desktop, tablet, and mobile
+- **Auto-Save**: Your data is automatically saved in the browser
+- **Multi-language**: Available in Portuguese, English and Spanish
+- **Privacy-First**: Everything stays in your browser, no external servers
+- **PDF Export**: Generate professional PDFs instantly
+- **ATS Optimized**: Templates designed to pass Applicant Tracking Systems
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+ 
+- npm, yarn, pnpm, or bun
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/goncalojbsousa/EasyPeasyCV.git
+cd EasyPeasyCV
+```
+
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+# or
+bun install
+```
+
+3. Run the development server:
 ```bash
 npm run dev
 # or
@@ -14,23 +55,88 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📁 Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+cv-builder/
+├── app/
+│   ├── components/          # React components
+│   │   ├── cv_templates/    # CV template components
+│   │   └── ui/             # Reusable UI components
+│   ├── contexts/           # React contexts
+│   ├── types/              # TypeScript type definitions
+│   ├── utils/              # Utility functions
+│   ├── page.tsx            # Landing page
+│   └── builder/            # CV builder page
+├── public/                 # Static assets
+└── README.md
+```
 
-## Learn More
+## 🛠️ Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+- **Framework**: Next.js 14 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **PDF Generation**: @react-pdf/renderer
+- **State Management**: React Hooks
+- **Icons**: Custom SVG icons
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🌍 Internationalization
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The application supports multiple languages:
+- Portuguese (pt)
+- English (en)
+- Spanish (es)
 
-## Deploy on Vercel
+Language switching is available in the header.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🎨 Templates
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Classic Template
+Elegant and traditional design suitable for most industries.
+
+### Modern Template
+Clean and contemporary layout with a professional look.
+
+### Creative Template
+Original and expressive design for creative professionals.
+
+## 🤝 Contributing
+
+We welcome contributions! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+
+### How to Contribute
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+### Development Guidelines
+
+- Follow TypeScript best practices
+- Use meaningful commit messages
+- Add comments for complex logic
+- Test your changes thoroughly
+- Follow the existing code style
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 📞 Support
+
+If you find this project helpful, consider supporting it:
+
+- ⭐ Star the repository
+- 🐛 Report bugs
+- 💡 Suggest new features
+- ☕ [Buy me a coffee](https://ko-fi.com/easypeasycv)
+
+## 🔗 Links
+
+- [GitHub Repository](https://github.com/goncalojbsousa/EasyPeasyCV)
+- [Issues](https://github.com/goncalojbsousa/EasyPeasyCV/issues)

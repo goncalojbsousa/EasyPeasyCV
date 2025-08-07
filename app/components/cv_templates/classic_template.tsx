@@ -1,0 +1,540 @@
+import React from 'react';
+import { Document, Page, Text, View, StyleSheet, Link } from '@react-pdf/renderer';
+import { CvData } from '../../types/cv';
+
+/**
+ * Props interface for the ClassicTemplate component
+ */
+interface ClassicTemplateProps extends CvData {
+  /** Language for the document (pt or en) */
+  lang?: string;
+}
+
+/**
+ * Classic template styles with traditional and professional design
+ */
+const styles = StyleSheet.create({
+    page: { padding: 30, fontSize: 11, fontFamily: 'Helvetica' },
+    header: { marginBottom: 13, paddingBottom: 8 },
+    name: { fontSize: 20, fontWeight: 'bold', marginBottom: 2 },
+    desiredRole: { fontSize: 13, color: '#2563eb', fontWeight: 'bold', marginBottom: 8 },
+    contactRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', marginBottom: 2 },
+    contactItem: { fontSize: 10, color: '#374151', marginRight: 12 },
+    separator: { fontSize: 12, color: '#d1d5db', marginHorizontal: 8 },
+    linksRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 2, marginBottom: 2 },
+    linkItem: { fontSize: 10, color: '#2563eb', textDecoration: 'underline', marginRight: 20, marginBottom: 2 },
+    section: { marginBottom: 13 },
+    sectionTitle: { fontSize: 13, fontWeight: 'bold', color: '#1e293b', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1, borderBottomWidth: 1, borderBottomColor: '#e5e7eb', borderBottomStyle: 'solid', paddingBottom: 4 },
+    expBlock: { marginBottom: 12, paddingBottom: 6, borderBottomWidth: 0.5, borderBottomColor: '#e5e7eb', borderBottomStyle: 'solid' },
+    roleAndDate: { fontSize: 10, color: '#64748b', marginBottom: 2, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+    roleAndCompany: { fontSize: 11, color: '#0f172a', flexDirection: 'row' },
+    jobRole: { fontSize: 11, fontWeight: 'bold', color: '#0f172a' },
+    companyName: { fontSize: 11, color: '#64748b' },
+    companySeparator: { fontSize: 11, color: '#64748b' },
+    dateRange: { fontSize: 10, color: '#64748b' },
+    tech: { fontSize: 10, color: '#2563eb', marginBottom: 2 },
+    activities: { fontSize: 10, marginBottom: 2, marginLeft: 8 },
+    results: { fontSize: 10, fontStyle: 'italic', marginLeft: 8, marginBottom: 2 },
+    eduBlock: { marginBottom: 12, paddingBottom: 6, borderBottomWidth: 0.5, borderBottomColor: '#e5e7eb', borderBottomStyle: 'solid' },
+    eduTitle: { fontSize: 11, fontWeight: 'bold', color: '#0f172a' },
+    eduInst: { fontSize: 10, color: '#64748b', marginBottom: 2 },
+    eduDesc: { fontSize: 10, marginLeft: 8, marginBottom: 2 },
+    skillsLangRow: { flexDirection: 'row', gap: 32, marginBottom: 13 },
+    skillsCol: { flex: 1, marginRight: 16 },
+    langCol: { flex: 1 },
+    skillText: { fontSize: 10, color: '#0f172a', marginBottom: 2 },
+    langRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+    langItem: { fontSize: 10, marginRight: 12 },
+    certBlock: { marginBottom: 12, paddingBottom: 6, borderBottomWidth: 0.5, borderBottomColor: '#e5e7eb', borderBottomStyle: 'solid' },
+    certName: { fontSize: 11, fontWeight: 'bold', color: '#0f172a', marginBottom: 2 },
+    certDate: { fontSize: 10, fontStyle: 'italic', color: '#64748b', marginLeft: 4 },
+    certIssuer: { fontSize: 10, color: '#64748b', marginBottom: 2 },
+    certLink: { fontSize: 10, color: '#2563eb', textDecoration: 'underline', marginBottom: 2 },
+    certDesc: { fontSize: 10, marginLeft: 8, marginBottom: 2 },
+    projBlock: { marginBottom: 12, paddingBottom: 6, borderBottomWidth: 0.5, borderBottomColor: '#e5e7eb', borderBottomStyle: 'solid' },
+    projName: { fontSize: 11, fontWeight: 'bold', color: '#0f172a', marginBottom: 2 },
+    projYear: { fontSize: 10, color: '#64748b', marginLeft: 4 },
+    projTech: { fontSize: 10, color: '#2563eb', marginBottom: 2 },
+    projDesc: { fontSize: 10, marginLeft: 8, marginBottom: 2 },
+    projLink: { fontSize: 10, color: '#2563eb', textDecoration: 'underline', marginLeft: 8 },
+    volBlock: { marginBottom: 12, paddingBottom: 6, borderBottomWidth: 0.5, borderBottomColor: '#e5e7eb', borderBottomStyle: 'solid' },
+    volRole: { fontSize: 11, fontWeight: 'bold', color: '#0f172a', marginBottom: 2 },
+    volOrg: { fontSize: 10, color: '#64748b', marginBottom: 2 },
+    volDesc: { fontSize: 10, marginLeft: 8, marginBottom: 2 },
+    volImpact: { fontSize: 10, fontStyle: 'italic', marginLeft: 8, marginBottom: 2 },
+  });
+
+/**
+ * Classic CV Template component
+ * Features a traditional and professional layout
+ * @param props - Component props including all CV data and language
+ * @returns JSX element representing the classic CV template
+ */
+export function ClassicTemplate({
+  personalInfo,
+  links,
+  resume,
+  experiences,
+  education,
+  skills,
+  languages,
+  certifications,
+  projects,
+  volunteers,
+  lang,
+}: ClassicTemplateProps) {
+  
+  const contactItems = [
+    personalInfo?.city,
+    personalInfo?.postalCode,
+    personalInfo?.email,
+    personalInfo?.countryCode && personalInfo?.phone ? `${personalInfo.countryCode.match(/\(([^)]+)\)/)?.[1] || personalInfo.countryCode} ${personalInfo.phone}` : personalInfo?.phone
+  ].filter(Boolean);
+
+  // Helper to generate complete URLs for social media
+  const getSocialUrl = (type: string, value: string) => {
+    if (!value) return '';
+    if (type === 'LinkedIn') return value.startsWith('http') ? value : `https://linkedin.com/in/${value}`;
+    if (type === 'GitHub') return value.startsWith('http') ? value : `https://github.com/${value}`;
+    if (type === 'GitLab') return value.startsWith('http') ? value : `https://gitlab.com/${value}`;
+    if (type === 'Portfolio') return value.startsWith('http') ? value : `https://${value}`;
+    if (type === 'Outro') return value.startsWith('http') ? value : `https://${value}`;
+    return value;
+  };
+
+  // Helper to translate link types
+  const translateLinkType = (type: string, lang: string, customName?: string) => {
+    // If it's "Other" type and has a custom name, return the custom name
+    if (type === 'Other' && customName) {
+      return customName;
+    }
+    
+    if (lang === 'en') {
+      switch (type) {
+        case 'LinkedIn': return 'LinkedIn';
+        case 'GitHub': return 'GitHub';
+        case 'GitLab': return 'GitLab';
+        case 'Portfolio': return 'Portfolio';
+        case 'Other': return 'Other';
+        default: return type;
+      }
+    } else {
+      switch (type) {
+        case 'LinkedIn': return 'LinkedIn';
+        case 'GitHub': return 'GitHub';
+        case 'GitLab': return 'GitLab';
+        case 'Portfolio': return 'Portfolio';
+        case 'Other': return 'Outro';
+        default: return type;
+      }
+    }
+  };
+
+  // Helper to translate months
+  const translateMonth = (month: string, lang: string) => {
+    if (lang === 'en') {
+      switch (month) {
+        case 'Jan': return 'Jan';
+        case 'Fev': return 'Feb';
+        case 'Mar': return 'Mar';
+        case 'Abr': return 'Apr';
+        case 'Mai': return 'May';
+        case 'Jun': return 'Jun';
+        case 'Jul': return 'Jul';
+        case 'Ago': return 'Aug';
+        case 'Set': return 'Sep';
+        case 'Out': return 'Oct';
+        case 'Nov': return 'Nov';
+        case 'Dez': return 'Dec';
+        default: return month;
+      }
+    } else {
+      switch (month) {
+        case 'Jan': return 'Jan';
+        case 'Feb': return 'Fev';
+        case 'Mar': return 'Mar';
+        case 'Apr': return 'Abr';
+        case 'May': return 'Mai';
+        case 'Jun': return 'Jun';
+        case 'Jul': return 'Jul';
+        case 'Aug': return 'Ago';
+        case 'Sep': return 'Set';
+        case 'Oct': return 'Out';
+        case 'Nov': return 'Nov';
+        case 'Dec': return 'Dez';
+        default: return month;
+      }
+    }
+  };
+
+  // Helper to translate "Current"
+  const translateCurrent = (lang: string) => {
+    return lang === 'en' ? 'Current' : 'Atual';
+  };
+
+  // Helper to translate education types
+  const translateEducationType = (type: string, lang: string) => {
+    if (lang === 'en') {
+      switch (type) {
+        case 'Licenciatura':
+          return 'Bachelor\'s Degree';
+        case 'Mestrado':
+          return 'Master\'s Degree';
+        case 'Doutoramento':
+          return 'PhD';
+        case 'Pós-Graduação':
+          return 'Postgraduate';
+        case 'Curso Técnico':
+          return 'Technical Course';
+        default:
+          return type;
+      }
+    } else {
+      // Portuguese (default)
+      switch (type) {
+        case 'Bachelor\'s Degree':
+          return 'Licenciatura';
+        case 'Master\'s Degree':
+          return 'Mestrado';
+        case 'PhD':
+          return 'Doutoramento';
+        case 'Postgraduate':
+          return 'Pós-Graduação';
+        case 'Technical Course':
+          return 'Curso Técnico';
+        default:
+          return type;
+      }
+    }
+  };
+
+  // Helper to translate education status
+  const translateEducationStatus = (status: string, lang: string) => {
+    if (lang === 'en') {
+      switch (status) {
+        case 'Completo':
+          return 'Completed';
+        case 'Em curso':
+          return 'In Progress';
+        case 'Em andamento':
+          return 'In Progress';
+        case 'Incompleto':
+          return 'Incomplete';
+        case 'Interrompido':
+          return 'Interrupted';
+        default:
+          return status;
+      }
+    } else {
+      // Portuguese (default)
+      switch (status) {
+        case 'Completed':
+          return 'Completo';
+        case 'In Progress':
+          return 'Em andamento';
+        case 'Incomplete':
+          return 'Incompleto';
+        case 'Interrupted':
+          return 'Interrompido';
+        default:
+          return status;
+      }
+    }
+  };
+
+  // Helper to translate language levels
+  const translateLanguageLevel = (level: string, lang: string) => {
+    if (!level) return '';
+    
+    const levelMap = {
+      // CEFR levels
+      'language.level.a1': { pt: 'A1', en: 'A1' },
+      'language.level.a2': { pt: 'A2', en: 'A2' },
+      'language.level.b1': { pt: 'B1', en: 'B1' },
+      'language.level.b2': { pt: 'B2', en: 'B2' },
+      'language.level.c1': { pt: 'C1', en: 'C1' },
+      'language.level.c2': { pt: 'C2', en: 'C2' },
+      // Legacy levels for backward compatibility
+      'Básico': { pt: 'Básico', en: 'Basic' },
+      'Intermediário': { pt: 'Intermediário', en: 'Intermediate' },
+      'Avançado': { pt: 'Avançado', en: 'Advanced' },
+      'Fluente': { pt: 'Fluente', en: 'Fluent' },
+      'Nativo': { pt: 'Nativo', en: 'Native' },
+      'Basic': { pt: 'Básico', en: 'Basic' },
+      'Intermediate': { pt: 'Intermediário', en: 'Intermediate' },
+      'Advanced': { pt: 'Avançado', en: 'Advanced' },
+      'Fluent': { pt: 'Fluente', en: 'Fluent' },
+      'Native': { pt: 'Nativo', en: 'Native' },
+      // Old translation keys for backward compatibility
+      'language.level.basic': { pt: 'Básico', en: 'Basic' },
+      'language.level.intermediate': { pt: 'Intermediário', en: 'Intermediate' },
+      'language.level.advanced': { pt: 'Avançado', en: 'Advanced' },
+      'language.level.fluent': { pt: 'Fluente', en: 'Fluent' },
+      'language.level.native': { pt: 'Nativo', en: 'Native' },
+    };
+    
+    return levelMap[level as keyof typeof levelMap]?.[lang as keyof typeof levelMap[keyof typeof levelMap]] || level;
+  };
+
+  return (
+    <Document>
+      <Page size="A4" style={styles.page}>
+        {/* Header Section */}
+        <View style={styles.header}>
+          <Text style={styles.name}>{personalInfo?.name}</Text>
+          <Text style={styles.desiredRole}>{personalInfo?.desiredRole}</Text>
+          
+          {/* Contact Information */}
+          <View style={styles.contactRow}>
+            {contactItems.map((item, index) => (
+              <React.Fragment key={index}>
+                <Text style={styles.contactItem}>{item}</Text>
+                {index < contactItems.length - 1 && <Text style={styles.separator}>|</Text>}
+              </React.Fragment>
+            ))}
+          </View>
+
+          {/* Social Links */}
+          {links.length > 0 && (
+            <View style={styles.linksRow}>
+              {links.map((link, index) => (
+                <Link key={index} src={getSocialUrl(link.type, link.value)} style={styles.linkItem}>
+                  {translateLinkType(link.type, lang || 'pt', link.customName)}: {link.value}
+                </Link>
+              ))}
+            </View>
+          )}
+        </View>
+
+        {/* Professional Summary */}
+        {resume && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>
+              {lang === 'en' ? 'Professional Summary' : lang === 'es' ? 'Resumen Profesional' : 'Resumo Profissional'}
+            </Text>
+            <Text>{resume}</Text>
+          </View>
+        )}
+
+        {/* Professional Experience */}
+        {experiences.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>
+              {lang === 'en' ? 'Professional Experience' : lang === 'es' ? 'Experiencia Profesional' : 'Experiência Profissional'}
+            </Text>
+            {experiences.map((exp, index) => {
+              const showSeparator = experiences.length > 1 && index < experiences.length - 1;
+              return (
+                <View
+                  key={index}
+                  style={{
+                    ...styles.expBlock,
+                    marginBottom: showSeparator ? styles.expBlock.marginBottom : 0,
+                    borderBottomWidth: showSeparator ? styles.expBlock.borderBottomWidth : 0,
+                    borderBottomColor: showSeparator ? styles.expBlock.borderBottomColor : undefined,
+                    borderBottomStyle: showSeparator ? styles.expBlock.borderBottomStyle : undefined,
+                  }}
+                >
+                  <View style={styles.roleAndDate}>
+                    <View style={styles.roleAndCompany}>
+                      {exp.role && <Text style={styles.jobRole}>{exp.role} </Text>}
+                      {(exp.role && exp.company) && <Text style={styles.companySeparator}>- </Text>}
+                      {exp.company && <Text style={styles.companyName}>{exp.company}</Text>}
+                    </View>
+                    <Text style={styles.dateRange}>
+                      {`${translateMonth(exp.startMonth || '', lang || 'pt')}${exp.startMonth && exp.startYear ? '/' : ''}${exp.startYear || ''} - ${exp.current ? translateCurrent(lang || 'pt') : ((translateMonth(exp.endMonth || '', lang || 'pt')) + (exp.endMonth && exp.endYear ? '/' : '') + (exp.endYear || ''))}`}
+                    </Text>
+                  </View>
+                  {exp.tech && <Text style={styles.tech}>{exp.tech}</Text>}
+                  {exp.activities && <Text style={styles.activities}>• {exp.activities}</Text>}
+                  {exp.results && <Text style={styles.results}>• {exp.results}</Text>}
+                </View>
+              );
+            })}
+          </View>
+        )}
+
+        {/* Education */}
+        {education.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>
+              {lang === 'en' ? 'Education' : lang === 'es' ? 'Educación' : 'Formação Académica'}
+            </Text>
+            {education.map((edu, index) => {
+              const showSeparator = education.length > 1 && index < education.length - 1;
+              return (
+                <View
+                  key={index}
+                  style={{
+                    ...styles.eduBlock,
+                    marginBottom: showSeparator ? styles.eduBlock.marginBottom : 0,
+                    borderBottomWidth: showSeparator ? styles.eduBlock.borderBottomWidth : 0,
+                    borderBottomColor: showSeparator ? styles.eduBlock.borderBottomColor : undefined,
+                    borderBottomStyle: showSeparator ? styles.eduBlock.borderBottomStyle : undefined,
+                  }}
+                >
+                  <Text style={styles.eduTitle}>
+                    {edu.course}{edu.course && edu.type ? ' - ' : ''}{translateEducationType(edu.type, lang || 'pt')}
+                    {edu.status && <Text style={styles.certDate}> ({translateEducationStatus(edu.status, lang || 'pt')})</Text>}
+                  </Text>
+                  <Text style={styles.eduInst}>
+                    {edu.institution}
+                    {edu.institution && (edu.startMonth || edu.startYear) ? ' | ' : ''}
+                    {(edu.startMonth || edu.startYear) ? (
+                      (edu.status === 'Completo' || edu.status === 'Completed') ? 
+                        `${translateMonth(edu.startMonth || '', lang || 'pt')}${edu.startMonth && edu.startYear ? '/' : ''}${edu.startYear || ''} - ${translateMonth(edu.endMonth || '', lang || 'pt')}${edu.endMonth && edu.endYear ? '/' : ''}${edu.endYear || ''}` :
+                        `${translateMonth(edu.startMonth || '', lang || 'pt')}${edu.startMonth && edu.startYear ? '/' : ''}${edu.startYear || ''} - ${translateCurrent(lang || 'pt')}`
+                    ) : ''}
+                  </Text>
+                  {edu.description && <Text style={styles.eduDesc}>• {edu.description}</Text>}
+                </View>
+              );
+            })}
+          </View>
+        )}
+
+        {/* Skills and Languages */}
+        {(skills || languages.length > 0) && (
+          <View style={styles.section}>
+            <View style={styles.skillsLangRow}>
+              {skills && (
+                <View style={styles.skillsCol}>
+                              <Text style={styles.sectionTitle}>
+              {lang === 'en' ? 'Technical Skills' : lang === 'es' ? 'Competencias Técnicas' : 'Competências Técnicas'}
+            </Text>
+                  <Text style={styles.skillText}>{skills}</Text>
+                </View>
+              )}
+              
+              {languages.length > 0 && (
+                <View style={styles.langCol}>
+                  <Text style={styles.sectionTitle}>
+                    {lang === 'en' ? 'Languages' : 'Idiomas'}
+                  </Text>
+                  <View style={styles.langRow}>
+                    {languages.map((language, index) => (
+                      <Text key={index} style={styles.langItem}>
+                        {language.name} ({translateLanguageLevel(language.level, lang || 'pt')})
+                      </Text>
+                    ))}
+                  </View>
+                </View>
+              )}
+            </View>
+          </View>
+        )}
+
+        {/* Certifications */}
+        {certifications.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>
+              {lang === 'en' ? 'Certifications' : 'Certificações'}
+            </Text>
+            {certifications.map((cert, index) => {
+              const showSeparator = certifications.length > 1 && index < certifications.length - 1;
+              return (
+                <View
+                  key={index}
+                  style={{
+                    ...styles.certBlock,
+                    marginBottom: showSeparator ? styles.certBlock.marginBottom : 0,
+                    paddingBottom: showSeparator ? styles.certBlock.paddingBottom : 0,
+                    borderBottomWidth: showSeparator ? styles.certBlock.borderBottomWidth : 0,
+                    borderBottomColor: showSeparator ? styles.certBlock.borderBottomColor : undefined,
+                    borderBottomStyle: showSeparator ? styles.certBlock.borderBottomStyle : undefined,
+                  }}
+                >
+                  <Text style={styles.certName}>
+                    {cert.name}
+                    <Text style={styles.certDate}> ({cert.completionDate})</Text>
+                  </Text>
+                  <Text style={styles.certIssuer}>{cert.issuer}</Text>
+                  {cert.validationLink && (
+                    <Link src={cert.validationLink} style={styles.certLink}>
+                      {cert.validationLink}
+                    </Link>
+                  )}
+                  {cert.description && <Text style={styles.certDesc}>• {cert.description}</Text>}
+                </View>
+              );
+            })}
+          </View>
+        )}
+
+        {/* Volunteer Work */}
+                      {volunteers && volunteers.length > 0 && (
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>
+                    {lang === 'en' ? 'Volunteer Work' : 'Voluntariado'}
+                  </Text>
+                  {volunteers.map((vol, index) => {
+                    const showSeparator = volunteers.length > 1 && index < volunteers.length - 1;
+              return (
+                <View
+                  key={index}
+                  style={{
+                    ...styles.volBlock,
+                    marginBottom: showSeparator ? styles.volBlock.marginBottom : 0,
+                    paddingBottom: showSeparator ? styles.volBlock.paddingBottom : 0,
+                    borderBottomWidth: showSeparator ? styles.volBlock.borderBottomWidth : 0,
+                    borderBottomColor: showSeparator ? styles.volBlock.borderBottomColor : undefined,
+                    borderBottomStyle: showSeparator ? styles.volBlock.borderBottomStyle : undefined,
+                  }}
+                >
+                  <View style={styles.roleAndDate}>
+                    <Text style={styles.volRole}>{vol.role}</Text>
+                    <Text style={styles.dateRange}>
+                      {vol.startMonth && vol.startYear ? `${translateMonth(vol.startMonth, lang || 'pt')} ${vol.startYear}` : ''}
+                      {vol.startMonth && vol.startYear && (vol.endMonth || vol.endYear || vol.current) ? ' - ' : ''}
+                      {vol.current ? translateCurrent(lang || 'pt') : vol.endMonth && vol.endYear ? `${translateMonth(vol.endMonth, lang || 'pt')} ${vol.endYear}` : ''}
+                    </Text>
+                  </View>
+                  <Text style={styles.volOrg}>{vol.organization}</Text>
+                  {vol.description && <Text style={styles.volDesc}>• {vol.description}</Text>}
+                  {vol.impact && <Text style={styles.volImpact}>• {vol.impact}</Text>}
+                </View>
+              );
+            })}
+          </View>
+        )}
+
+        {/* Projects */}
+        {projects.length > 0 && (
+          <View style={{ ...styles.section, marginBottom: 0 }}>
+            <Text style={styles.sectionTitle}>
+              {lang === 'en' ? 'Projects' : lang === 'es' ? 'Proyectos' : 'Projetos'}
+            </Text>
+            {projects.map((proj, index) => {
+              const showSeparator = projects.length > 1 && index < projects.length - 1;
+              return (
+                <View
+                  key={index}
+                  style={{
+                    ...styles.projBlock,
+                    marginBottom: showSeparator ? styles.projBlock.marginBottom : 0,
+                    paddingBottom: showSeparator ? styles.projBlock.paddingBottom : 0,
+                    borderBottomWidth: showSeparator ? styles.projBlock.borderBottomWidth : 0,
+                    borderBottomColor: showSeparator ? styles.projBlock.borderBottomColor : undefined,
+                    borderBottomStyle: showSeparator ? styles.projBlock.borderBottomStyle : undefined,
+                  }}
+                >
+                  <Text style={styles.projName}>
+                    {proj.name}
+                    <Text style={styles.projYear}> ({proj.year})</Text>
+                  </Text>
+                  {proj.tech && <Text style={styles.projTech}>{proj.tech}</Text>}
+                  {proj.description && <Text style={styles.projDesc}>• {proj.description}</Text>}
+                  {proj.link && (
+                    <Link src={proj.link} style={styles.projLink}>
+                      {proj.link}
+                    </Link>
+                  )}
+                </View>
+              );
+            })}
+          </View>
+        )}
+      </Page>
+    </Document>
+  );
+} 

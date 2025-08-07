@@ -1,1 +1,32 @@
+/* Global CSS styles for the OpenCVLab application */
+
+/* Import Tailwind CSS base styles */
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Custom scrollbar styles for the desktop actions card */
+.sticky.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sticky.overflow-y-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sticky.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+.sticky.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Dark mode scrollbar styles */
+.dark .sticky.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #4b5563;
+}
+
+.dark .sticky.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}

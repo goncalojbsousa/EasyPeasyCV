@@ -1,7 +1,13 @@
 import type { NextConfig } from "next";
 
+/**
+ * Next.js configuration
+ * Defines build settings and optimizations for the EasyPeasyCV application
+ */
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    unoptimized: true, // Disables Next.js image optimization
+  },
 };
 
 export default nextConfig;
