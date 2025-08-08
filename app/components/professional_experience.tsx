@@ -204,6 +204,7 @@ export function ProfessionalExperience({
                   onClick={() => onRemoveExperience(idx)} 
                   variant="danger" 
                   size="sm"
+                  ariaLabel="Remove experience"
                 >
                   {Icons.remove}
                 </IconButton>
@@ -328,10 +329,10 @@ export function ProfessionalExperience({
                 type="checkbox"
                 checked={exp.current}
                 onChange={e => onExperienceChange(idx, 'current', e.target.checked)}
-                id={`current-${idx}`}
+                id={`experience-current-${idx}`}
                 className="mr-2"
               />
-              <label htmlFor={`current-${idx}`} className="text-sm text-gray-900 dark:text-gray-100">{t('field.current')}</label>
+              <label htmlFor={`experience-current-${idx}`} className="text-sm text-gray-900 dark:text-gray-100">{t('field.current')}</label>
             </div>
             
             {/* Technologies used field */}

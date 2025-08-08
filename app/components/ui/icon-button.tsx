@@ -16,6 +16,8 @@ interface IconButtonProps {
   size?: 'sm' | 'md' | 'lg';
   /** Additional CSS classes to apply */
   className?: string;
+  /** Accessible label for icon-only buttons */
+  ariaLabel?: string;
 }
 
 /**
@@ -27,7 +29,8 @@ export function IconButton({
   children, 
   variant = 'primary', 
   size = 'md',
-  className = ''
+  className = '',
+  ariaLabel
 }: IconButtonProps) {
   // Base CSS classes for all button variants
   const baseClasses = "font-semibold flex items-center gap-2 transition-colors duration-300";
@@ -49,6 +52,7 @@ export function IconButton({
     <button
       type="button"
       onClick={onClick}
+      aria-label={ariaLabel}
       className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} rounded-lg ${className}`}
     >
       {children}

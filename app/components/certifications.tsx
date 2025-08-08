@@ -166,7 +166,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
       <div className="relative">
         <input
           type="text"
-          className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all pr-10 text-gray-900 dark:text-gray-100"
+          className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all pr-14 text-gray-900 dark:text-gray-100"
           placeholder={placeholder}
           value={formatDisplayDate(value)}
           readOnly
@@ -174,8 +174,9 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
         />
         <button
           type="button"
-          className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-zinc-500 hover:text-gray-600 dark:hover:text-zinc-300 transition-colors"
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-zinc-500 hover:text-gray-600 dark:hover:text-zinc-300 transition-colors w-11 h-11 flex items-center justify-center rounded-md"
           onClick={() => setIsOpen(!isOpen)}
+          aria-label="Open calendar"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -190,7 +191,8 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
             <button
               type="button"
               onClick={goToPreviousMonth}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded-lg transition-colors duration-300"
+              className="w-11 h-11 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-zinc-700 rounded-lg transition-colors duration-300"
+              aria-label="Previous month"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -201,6 +203,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
                 type="button"
                 onClick={() => setShowYearPicker(!showYearPicker)}
                 className="text-lg font-semibold text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 px-2 py-1 rounded"
+                aria-label="Change month"
               >
                 {t(monthNames[currentDate.getMonth()])}
               </button>
@@ -208,6 +211,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
                 type="button"
                 onClick={() => setShowYearPicker(!showYearPicker)}
                 className="text-lg font-semibold text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 px-2 py-1 rounded"
+                aria-label="Change year"
               >
                 {currentDate.getFullYear()}
               </button>
@@ -215,7 +219,8 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
             <button
               type="button"
               onClick={goToNextMonth}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded-lg transition-colors duration-300"
+              className="w-11 h-11 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-zinc-700 rounded-lg transition-colors duration-300"
+              aria-label="Next month"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -230,7 +235,8 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
                 <button
                   type="button"
                   onClick={goToPreviousYear}
-                  className="p-1 hover:bg-gray-200 dark:hover:bg-zinc-600 rounded transition-colors duration-300"
+                  className="w-10 h-10 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-zinc-600 rounded transition-colors duration-300"
+                  aria-label="Previous years"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -242,7 +248,8 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
                 <button
                   type="button"
                   onClick={goToNextYear}
-                  className="p-1 hover:bg-gray-200 dark:hover:bg-zinc-600 rounded transition-colors duration-300"
+                  className="w-10 h-10 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-zinc-600 rounded transition-colors duration-300"
+                  aria-label="Next years"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -460,6 +467,7 @@ export function Certifications({
                   onClick={() => onRemoveCertification(idx)} 
                   variant="danger" 
                   size="sm"
+                  ariaLabel="Remove certification"
                 >
                   {Icons.remove}
                 </IconButton>

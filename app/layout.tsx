@@ -7,11 +7,26 @@ import { ThemeProvider } from 'next-themes';
 import { ReactNode } from 'react';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.easypeasycv.com'),
   title: {
     default: 'EasyPeasyCV | Build your professional CV online',
     template: '%s | EasyPeasyCV',
   },
   description: 'Create a professional, modern, and ATS-optimized CV in minutes. 100% free and secure. No registration required.',
+  alternates: {
+    canonical: '/',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-video-preview': -1,
+      'max-snippet': -1,
+    },
+  },
   openGraph: {
     title: 'EasyPeasyCV | Build your professional CV online',
     description: 'Create a professional, modern, and ATS-optimized CV in minutes. 100% free and secure. No registration required.',
@@ -26,6 +41,7 @@ export const metadata: Metadata = {
       },
     ],
     locale: 'en_US',
+    alternateLocale: ['pt_PT', 'es_ES'],
     type: 'website',
   },
   twitter: {
@@ -98,10 +114,12 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning>
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="theme-color" content="#2563eb" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <link rel="preconnect" href="https://www.easypeasycv.com" crossOrigin="" />
+        <link rel="dns-prefetch" href="https://www.easypeasycv.com" />
         <SEOHead />
       </head>
       <body>

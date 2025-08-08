@@ -169,111 +169,94 @@ export function ClassicTemplate({
 
   // Helper to translate "Current"
   const translateCurrent = (lang: string) => {
-    return lang === 'en' ? 'Current' : 'Atual';
+    if (lang === 'en') return 'Current';
+    if (lang === 'es') return 'Actual';
+    return 'Atual';
   };
 
   // Helper to translate education types
   const translateEducationType = (type: string, lang: string) => {
-    if (lang === 'en') {
-      switch (type) {
-        case 'Licenciatura':
-          return 'Bachelor\'s Degree';
-        case 'Mestrado':
-          return 'Master\'s Degree';
-        case 'Doutoramento':
-          return 'PhD';
-        case 'Pós-Graduação':
-          return 'Postgraduate';
-        case 'Curso Técnico':
-          return 'Technical Course';
-        default:
-          return type;
-      }
-    } else {
-      // Portuguese (default)
-      switch (type) {
-        case 'Bachelor\'s Degree':
-          return 'Licenciatura';
-        case 'Master\'s Degree':
-          return 'Mestrado';
-        case 'PhD':
-          return 'Doutoramento';
-        case 'Postgraduate':
-          return 'Pós-Graduação';
-        case 'Technical Course':
-          return 'Curso Técnico';
-        default:
-          return type;
-      }
+    // Support i18n keys from the form
+    const map = {
+      // Keys
+      'education.type.secondary': { pt: 'Ensino Secundário', en: 'Secondary Education', es: 'Educación Secundaria' },
+      'education.type.technical': { pt: 'Curso Técnico', en: 'Technical Course', es: 'Curso Técnico' },
+      'education.type.bachelor':  { pt: 'Licenciatura', en: "Bachelor's Degree", es: 'Grado' },
+      'education.type.postgraduate': { pt: 'Pós-Graduação', en: 'Postgraduate', es: 'Posgrado' },
+      'education.type.master':    { pt: 'Mestrado', en: "Master's Degree", es: 'Máster' },
+      'education.type.phd':       { pt: 'Doutoramento', en: 'PhD', es: 'Doctorado' },
+    } as const;
+
+    type LangKey = 'pt' | 'en' | 'es';
+    type EducationTypeKey = keyof typeof map;
+    if (Object.prototype.hasOwnProperty.call(map, type)) {
+      const entry = map[type as EducationTypeKey];
+      return entry[(lang as LangKey) || 'pt'] || type;
     }
+    return type;
   };
 
   // Helper to translate education status
   const translateEducationStatus = (status: string, lang: string) => {
-    if (lang === 'en') {
-      switch (status) {
-        case 'Completo':
-          return 'Completed';
-        case 'Em curso':
-          return 'In Progress';
-        case 'Em andamento':
-          return 'In Progress';
-        case 'Incompleto':
-          return 'Incomplete';
-        case 'Interrompido':
-          return 'Interrupted';
-        default:
-          return status;
-      }
-    } else {
-      // Portuguese (default)
-      switch (status) {
-        case 'Completed':
-          return 'Completo';
-        case 'In Progress':
-          return 'Em andamento';
-        case 'Incomplete':
-          return 'Incompleto';
-        case 'Interrupted':
-          return 'Interrompido';
-        default:
-          return status;
-      }
+    // Normalize i18n keys literals to target language
+    const map = {
+      // Keys
+      'education.status.completed':  { pt: 'Completo', en: 'Completed', es: 'Completado' },
+      'education.status.in.progress':{ pt: 'Em andamento', en: 'In Progress', es: 'En curso' },
+      'education.status.interrupted':{ pt: 'Interrompido', en: 'Interrupted', es: 'Interrumpido' },
+    } as const;
+
+    type LangKey = 'pt' | 'en' | 'es';
+    type EducationStatusKey = keyof typeof map;
+    if (Object.prototype.hasOwnProperty.call(map, status)) {
+      const entry = map[status as EducationStatusKey];
+      return entry[(lang as LangKey) || 'pt'] || status;
     }
+    return status;
+  };
+
+  // Helper to determine if education is completed based on status value (supports i18n keys)
+  const isEducationCompleted = (status?: string) => {
+    if (!status) return false;
+    const normalized = status.trim();
+    return [
+      'education.status.completed',
+    ].includes(normalized);
   };
 
   // Helper to translate language levels
   const translateLanguageLevel = (level: string, lang: string) => {
     if (!level) return '';
-    
+
+    // Normalize input to reduce key mismatches
+    const normalized = String(level).trim();
+
     const levelMap = {
       // CEFR levels
-      'language.level.a1': { pt: 'A1', en: 'A1' },
-      'language.level.a2': { pt: 'A2', en: 'A2' },
-      'language.level.b1': { pt: 'B1', en: 'B1' },
-      'language.level.b2': { pt: 'B2', en: 'B2' },
-      'language.level.c1': { pt: 'C1', en: 'C1' },
-      'language.level.c2': { pt: 'C2', en: 'C2' },
-      // Legacy levels for backward compatibility
-      'Básico': { pt: 'Básico', en: 'Basic' },
-      'Intermediário': { pt: 'Intermediário', en: 'Intermediate' },
-      'Avançado': { pt: 'Avançado', en: 'Advanced' },
-      'Fluente': { pt: 'Fluente', en: 'Fluent' },
-      'Nativo': { pt: 'Nativo', en: 'Native' },
-      'Basic': { pt: 'Básico', en: 'Basic' },
-      'Intermediate': { pt: 'Intermediário', en: 'Intermediate' },
-      'Advanced': { pt: 'Avançado', en: 'Advanced' },
-      'Fluent': { pt: 'Fluente', en: 'Fluent' },
-      'Native': { pt: 'Nativo', en: 'Native' },
-      // Old translation keys for backward compatibility
-      'language.level.basic': { pt: 'Básico', en: 'Basic' },
-      'language.level.intermediate': { pt: 'Intermediário', en: 'Intermediate' },
-      'language.level.advanced': { pt: 'Avançado', en: 'Advanced' },
-      'language.level.fluent': { pt: 'Fluente', en: 'Fluent' },
-      'language.level.native': { pt: 'Nativo', en: 'Native' },
-    };
-    
-    return levelMap[level as keyof typeof levelMap]?.[lang as keyof typeof levelMap[keyof typeof levelMap]] || level;
+      'language.level.a1': { pt: 'A1', en: 'A1', es: 'A1' },
+      'language.level.a2': { pt: 'A2', en: 'A2', es: 'A2' },
+      'language.level.b1': { pt: 'B1', en: 'B1', es: 'B1' },
+      'language.level.b2': { pt: 'B2', en: 'B2', es: 'B2' },
+      'language.level.c1': { pt: 'C1', en: 'C1', es: 'C1' },
+      'language.level.c2': { pt: 'C2', en: 'C2', es: 'C2' },
+    } as const;
+
+    // 1) Direct map lookup (type-safe)
+    type LevelKey = keyof typeof levelMap;
+    if (Object.prototype.hasOwnProperty.call(levelMap, normalized)) {
+      const direct = levelMap[normalized as LevelKey];
+      return direct[lang as keyof typeof direct] ?? normalized;
+    }
+
+    // 2) Generic key fallback: language.level.<cefr>
+    if (normalized.toLowerCase().startsWith('language.level.')) {
+      const suf = normalized.substring('language.level.'.length).toUpperCase();
+      const valid = ['A1','A2','B1','B2','C1','C2'];
+      if (valid.includes(suf)) return suf; // CEFR labels are language-agnostic
+    }
+
+    // 3) Last resort: return normalized value
+    return normalized;
   };
 
   return (
@@ -381,7 +364,7 @@ export function ClassicTemplate({
                     {edu.institution}
                     {edu.institution && (edu.startMonth || edu.startYear) ? ' | ' : ''}
                     {(edu.startMonth || edu.startYear) ? (
-                      (edu.status === 'Completo' || edu.status === 'Completed') ? 
+                      isEducationCompleted(edu.status) ?
                         `${translateMonth(edu.startMonth || '', lang || 'pt')}${edu.startMonth && edu.startYear ? '/' : ''}${edu.startYear || ''} - ${translateMonth(edu.endMonth || '', lang || 'pt')}${edu.endMonth && edu.endYear ? '/' : ''}${edu.endYear || ''}` :
                         `${translateMonth(edu.startMonth || '', lang || 'pt')}${edu.startMonth && edu.startYear ? '/' : ''}${edu.startYear || ''} - ${translateCurrent(lang || 'pt')}`
                     ) : ''}

@@ -196,6 +196,7 @@ export function VolunteerWork({
                   onClick={() => onRemoveVolunteer(idx)} 
                   variant="danger" 
                   size="sm"
+                  ariaLabel="Remove volunteer experience"
                 >
                   {Icons.remove}
                 </IconButton>
@@ -320,10 +321,10 @@ export function VolunteerWork({
                 type="checkbox"
                 checked={vol.current}
                 onChange={e => onVolunteerChange(idx, 'current', e.target.checked)}
-                id={`current-${idx}`}
+                id={`volunteer-current-${idx}`}
                 className="mr-2"
               />
-              <label htmlFor={`current-${idx}`} className="text-sm text-gray-900 dark:text-gray-100">{t('field.current')}</label>
+              <label htmlFor={`volunteer-current-${idx}`} className="text-sm text-gray-900 dark:text-gray-100">{t('field.current')}</label>
             </div>
             
             {/* Description field */}

@@ -159,7 +159,7 @@ export function DesktopActionsCard({
   /**
    * PDF download button component with validation logic.
    * Prevents download if form validation fails, and shows a thank you modal after successful generation.
-   * @param lang - Language for the PDF (pt or en)
+   * @param lang - Language for the PDF (pt, en or es)
    * @param children - Content to display in the button
    */
   const PdfDownloadButtonWithValidation = ({ lang, children }: { lang: string; children: React.ReactNode }) => {
@@ -183,7 +183,7 @@ export function DesktopActionsCard({
     };
 
     return (
-      <div onClick={handleClick}>
+      <div onClickCapture={handleClick}>
         <PdfDownloadButton
           personalInfo={personalInfo}
           links={links}
@@ -346,6 +346,16 @@ export function DesktopActionsCard({
                             <path d="M27,5H5c-1.657,0-3,1.343-3,3v1c0-1.657,1.343-3,3-3H27c1.657,0,3,1.343,3,3v-1c0-1.657-1.343-3-3-3Z" fill="#fff" opacity=".2"></path>
                           </svg>
                           <span className="font-medium text-sm">{t('language.english')}</span>
+                        </div>
+                      </PdfDownloadButtonWithValidation>
+                      <PdfDownloadButtonWithValidation lang="es">
+                        <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 cursor-pointer">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6">
+                            <rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="#c60b1e"></rect>
+                            <rect x="1" y="10" width="30" height="12" fill="#ffc400"></rect>
+                            <rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="none" stroke="#000" opacity=".1"></rect>
+                          </svg>
+                          <span className="font-medium text-sm">{t('language.spanish')}</span>
                         </div>
                       </PdfDownloadButtonWithValidation>
                     </div>

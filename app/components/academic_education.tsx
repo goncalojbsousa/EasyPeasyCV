@@ -205,6 +205,7 @@ export function AcademicEducation({
                   onClick={() => onRemoveEducation(idx)} 
                   variant="danger" 
                   size="sm"
+                  ariaLabel="Remove education"
                 >
                   {Icons.remove}
                 </IconButton>

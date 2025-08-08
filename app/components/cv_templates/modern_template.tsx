@@ -544,23 +544,6 @@ export function ModernTemplate({
       'language.level.b2': { pt: 'B2', en: 'B2' },
       'language.level.c1': { pt: 'C1', en: 'C1' },
       'language.level.c2': { pt: 'C2', en: 'C2' },
-      // Legacy levels for backward compatibility
-      'Básico': { pt: 'Básico', en: 'Basic' },
-      'Intermediário': { pt: 'Intermediário', en: 'Intermediate' },
-      'Avançado': { pt: 'Avançado', en: 'Advanced' },
-      'Fluente': { pt: 'Fluente', en: 'Fluent' },
-      'Nativo': { pt: 'Nativo', en: 'Native' },
-      'Basic': { pt: 'Básico', en: 'Basic' },
-      'Intermediate': { pt: 'Intermediário', en: 'Intermediate' },
-      'Advanced': { pt: 'Avançado', en: 'Advanced' },
-      'Fluent': { pt: 'Fluente', en: 'Fluent' },
-      'Native': { pt: 'Nativo', en: 'Native' },
-      // Old translation keys for backward compatibility
-      'language.level.basic': { pt: 'Básico', en: 'Basic' },
-      'language.level.intermediate': { pt: 'Intermediário', en: 'Intermediate' },
-      'language.level.advanced': { pt: 'Avançado', en: 'Advanced' },
-      'language.level.fluent': { pt: 'Fluente', en: 'Fluent' },
-      'language.level.native': { pt: 'Nativo', en: 'Native' },
     };
     
     return levelMap[level as keyof typeof levelMap]?.[lang as keyof typeof levelMap[keyof typeof levelMap]] || level;

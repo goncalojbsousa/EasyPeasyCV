@@ -391,6 +391,7 @@ export function PersonalInformation({
                       type="button"
                       onClick={() => onRemoveLink(idx)}
                       className="text-gray-400 dark:text-zinc-500 hover:text-red-500 dark:hover:text-red-400 transition-colors duration-300 ml-1"
+                      aria-label="Remove link"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -473,6 +474,7 @@ export function PersonalInformation({
                 onClick={handleAddLink}
                 disabled={!newLinkValue.trim()}
                 className="flex items-center justify-center w-10 h-10 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 dark:disabled:bg-zinc-400 disabled:cursor-not-allowed text-white rounded-lg transition-colors duration-300 shadow-sm flex-shrink-0"
+                aria-label="Add link"
               >
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />

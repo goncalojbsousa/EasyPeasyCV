@@ -529,35 +529,32 @@ export function CreativeTemplate({
   // Helper to translate language levels
   const translateLanguageLevel = (level: string, lang: string) => {
     if (!level) return '';
-    
+
+    const normalized = String(level).trim();
+
     const levelMap = {
       // CEFR levels
-      'language.level.a1': { pt: 'A1', en: 'A1' },
-      'language.level.a2': { pt: 'A2', en: 'A2' },
-      'language.level.b1': { pt: 'B1', en: 'B1' },
-      'language.level.b2': { pt: 'B2', en: 'B2' },
-      'language.level.c1': { pt: 'C1', en: 'C1' },
-      'language.level.c2': { pt: 'C2', en: 'C2' },
-      // Legacy levels for backward compatibility
-      'Básico': { pt: 'Básico', en: 'Basic' },
-      'Intermediário': { pt: 'Intermediário', en: 'Intermediate' },
-      'Avançado': { pt: 'Avançado', en: 'Advanced' },
-      'Fluente': { pt: 'Fluente', en: 'Fluent' },
-      'Nativo': { pt: 'Nativo', en: 'Native' },
-      'Basic': { pt: 'Básico', en: 'Basic' },
-      'Intermediate': { pt: 'Intermediário', en: 'Intermediate' },
-      'Advanced': { pt: 'Avançado', en: 'Advanced' },
-      'Fluent': { pt: 'Fluente', en: 'Fluent' },
-      'Native': { pt: 'Nativo', en: 'Native' },
-      // Old translation keys for backward compatibility
-      'language.level.basic': { pt: 'Básico', en: 'Basic' },
-      'language.level.intermediate': { pt: 'Intermediário', en: 'Intermediate' },
-      'language.level.advanced': { pt: 'Avançado', en: 'Advanced' },
-      'language.level.fluent': { pt: 'Fluente', en: 'Fluent' },
-      'language.level.native': { pt: 'Nativo', en: 'Native' },
-    };
-    
-    return levelMap[level as keyof typeof levelMap]?.[lang as keyof typeof levelMap[keyof typeof levelMap]] || level;
+      'language.level.a1': { pt: 'A1', en: 'A1', es: 'A1' },
+      'language.level.a2': { pt: 'A2', en: 'A2', es: 'A2' },
+      'language.level.b1': { pt: 'B1', en: 'B1', es: 'B1' },
+      'language.level.b2': { pt: 'B2', en: 'B2', es: 'B2' },
+      'language.level.c1': { pt: 'C1', en: 'C1', es: 'C1' },
+      'language.level.c2': { pt: 'C2', en: 'C2', es: 'C2' },
+    } as const;
+
+    type LevelKey = keyof typeof levelMap;
+    if (Object.prototype.hasOwnProperty.call(levelMap, normalized)) {
+      const direct = levelMap[normalized as LevelKey];
+      return direct[lang as keyof typeof direct] ?? normalized;
+    }
+
+    if (normalized.toLowerCase().startsWith('language.level.')) {
+      const suf = normalized.substring('language.level.'.length).toUpperCase();
+      const valid = ['A1','A2','B1','B2','C1','C2'];
+      if (valid.includes(suf)) return suf;
+    }
+
+    return normalized;
   };
 
   return (

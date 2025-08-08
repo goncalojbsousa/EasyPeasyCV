@@ -151,6 +151,7 @@ export function Projects({
                   onClick={() => onRemoveProject(idx)} 
                   variant="danger" 
                   size="sm"
+                  ariaLabel="Remove project"
                 >
                   {Icons.remove}
                 </IconButton>
