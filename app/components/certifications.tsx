@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { SortableList } from './dnd/sortable-list';
 import { Certification } from '../types/cv';
 import { FormSection } from './ui/form-section';
 import { FormField } from './ui/form-field';
@@ -357,8 +358,7 @@ export function Certifications({
   onReorderCertifications
 }: CertificationsProps) {
   const { t } = useLanguage();
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  
   
   // Generates a display title for each certification card based on available data
   const getCertificationTitle = (cert: Certification, idx: number) => {
@@ -368,51 +368,7 @@ export function Certifications({
     return `${t('certification.title')} ${idx + 1}`;
   };
 
-  // Drag and drop handlers for reordering certification entries
-  const handleDragStart = (e: React.DragEvent, index: number) => {
-    setDraggedIndex(index);
-    e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/html', index.toString());
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-    
-    // Enhanced auto-scroll with variable speed based on distance from edge
-    const scrollThreshold = 150; // pixels from top/bottom
-    const maxScrollSpeed = 15;
-    
-    if (e.clientY < scrollThreshold) {
-      // Scroll up with variable speed
-      const distanceFromEdge = scrollThreshold - e.clientY;
-      const scrollSpeed = Math.min(maxScrollSpeed, Math.max(5, distanceFromEdge / 10));
-      window.scrollBy(0, -scrollSpeed);
-    } else if (e.clientY > window.innerHeight - scrollThreshold) {
-      // Scroll down with variable speed
-      const distanceFromEdge = e.clientY - (window.innerHeight - scrollThreshold);
-      const scrollSpeed = Math.min(maxScrollSpeed, Math.max(5, distanceFromEdge / 10));
-      window.scrollBy(0, scrollSpeed);
-    }
-  };
-
-  const handleDragEnter = (index: number) => {
-    setDragOverIndex(index);
-  };
-
-  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
-    e.preventDefault();
-    if (draggedIndex !== null && draggedIndex !== dropIndex && onReorderCertifications) {
-      onReorderCertifications(draggedIndex, dropIndex);
-    }
-    setDraggedIndex(null);
-    setDragOverIndex(null);
-  };
-
-  const handleDragEnd = () => {
-    setDraggedIndex(null);
-    setDragOverIndex(null);
-  };
+  // Drag & drop managed by SortableList
 
   return (
     <form className="space-y-8 flex flex-col items-center">
@@ -425,121 +381,111 @@ export function Certifications({
           <EmptyState message={t('empty.certification')} />
         )}
         
-        {/* Render each certification entry */}
-        {certifications.map((cert, idx) => (
-          <div 
-            key={idx} 
-            className={`bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg shadow-sm relative mb-6 transition-all duration-300 ${
-              draggedIndex === idx ? 'opacity-50 scale-95' : ''
-            }`}
-            onDragOver={certifications.length > 1 ? handleDragOver : undefined}
-            onDragEnter={certifications.length > 1 ? () => handleDragEnter(idx) : undefined}
-            onDrop={certifications.length > 1 ? (e) => handleDrop(e, idx) : undefined}
-          >
-            {/* Drop indicator - shows between items */}
-            {dragOverIndex === idx && draggedIndex !== idx && (
-              <div className="absolute left-0 -top-3 w-full h-0.5 bg-blue-500 rounded-full z-10"></div>
-            )}
-            {/* Card header with title */}
-            <div className="bg-gray-50 dark:bg-zinc-900 px-4 py-3 border-b border-gray-200 dark:border-zinc-700 rounded-t-lg transition-colors duration-300">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  {certifications.length > 1 && (
-                    <div 
-                      className="text-gray-400 dark:text-zinc-500 cursor-move hover:text-gray-600 dark:hover:text-zinc-300 transition-colors duration-300"
-                      draggable
-                      onDragStart={(e) => handleDragStart(e, idx)}
-                      onDragOver={handleDragOver}
-                      onDragEnter={() => handleDragEnter(idx)}
-                      onDrop={(e) => handleDrop(e, idx)}
-                      onDragEnd={handleDragEnd}
-                    >
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                      </svg>
+        {/* Render each certification entry via SortableList */}
+        <SortableList
+          length={certifications.length}
+          onReorder={(from, to) => onReorderCertifications && onReorderCertifications(from, to)}
+          renderItem={(idx) => {
+            const cert = certifications[idx];
+            return (
+              <div 
+                key={idx} 
+                className="bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg shadow-sm relative mb-6 transition-all duration-300"
+              >
+                {/* Card header with title */}
+                <div className="bg-gray-50 dark:bg-zinc-900 px-4 py-3 border-b border-gray-200 dark:border-zinc-700 rounded-t-lg transition-colors duration-300">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      {certifications.length > 1 && (
+                        <div className="text-gray-400 dark:text-zinc-500 cursor-grab hover:text-gray-600 dark:hover:text-zinc-300 transition-colors duration-300">
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                          </svg>
+                        </div>
+                      )}
+                      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        {getCertificationTitle(cert, idx)}
+                      </h3>
                     </div>
-                  )}
-                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                    {getCertificationTitle(cert, idx)}
-                  </h3>
+                    <IconButton 
+                      onClick={() => onRemoveCertification(idx)} 
+                      variant="danger" 
+                      size="sm"
+                      ariaLabel="Remove certification"
+                    >
+                      {Icons.remove}
+                    </IconButton>
+                  </div>
                 </div>
-                <IconButton 
-                  onClick={() => onRemoveCertification(idx)} 
-                  variant="danger" 
-                  size="sm"
-                  ariaLabel="Remove certification"
-                >
-                  {Icons.remove}
-                </IconButton>
+                
+                {/* Card content */}
+                <div className="p-4">
+                
+                {/* Certification name and issuer fields */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
+                  <FormField label={t('field.certification')}>
+                    <input
+                      type="text"
+                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                      placeholder={t('placeholder.certification')}
+                      value={cert.name}
+                      onChange={e => onCertificationChange(idx, 'name', e.target.value)}
+                    />
+                  </FormField>
+                  <FormField label={t('field.issuer')}>
+                    <input
+                      type="text"
+                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                      placeholder={t('placeholder.issuer')}
+                      value={cert.issuer}
+                      onChange={e => onCertificationChange(idx, 'issuer', e.target.value)}
+                    />
+                  </FormField>
+                </div>
+                
+                {/* Completion date, hours, and validation link fields */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-4">
+                  <FormField label={t('field.completion.date')}>
+                    <DatePicker
+                      value={cert.completionDate}
+                      onChange={(value) => onCertificationChange(idx, 'completionDate', value)}
+                      placeholder={t('select.date')}
+                    />
+                  </FormField>
+                  <FormField label={t('field.hours')}>
+                    <input
+                      type="text"
+                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                      placeholder={t('placeholder.hours')}
+                      value={cert.hours}
+                      onChange={e => onCertificationChange(idx, 'hours', e.target.value)}
+                    />
+                  </FormField>
+                  <FormField label={t('field.validation.link')}>
+                    <input
+                      type="url"
+                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                      placeholder={t('placeholder.validation.link')}
+                      value={cert.validationLink}
+                      onChange={e => onCertificationChange(idx, 'validationLink', e.target.value)}
+                    />
+                  </FormField>
+                </div>
+                
+                {/* Description field */}
+                <FormField label={t('field.description')}>
+                  <textarea
+                    className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                    placeholder={t('placeholder.certification.description')}
+                    value={cert.description}
+                    onChange={e => onCertificationChange(idx, 'description', e.target.value)}
+                  />
+                </FormField>
+                </div>
               </div>
-            </div>
-            
-            {/* Card content */}
-            <div className="p-4">
-            
-            {/* Certification name and issuer fields */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
-              <FormField label={t('field.certification')}>
-                <input
-                  type="text"
-                  className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                  placeholder={t('placeholder.certification')}
-                  value={cert.name}
-                  onChange={e => onCertificationChange(idx, 'name', e.target.value)}
-                />
-              </FormField>
-              <FormField label={t('field.issuer')}>
-                <input
-                  type="text"
-                  className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                  placeholder={t('placeholder.issuer')}
-                  value={cert.issuer}
-                  onChange={e => onCertificationChange(idx, 'issuer', e.target.value)}
-                />
-              </FormField>
-            </div>
-            
-            {/* Completion date, hours, and validation link fields */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-4">
-              <FormField label={t('field.completion.date')}>
-                <DatePicker
-                  value={cert.completionDate}
-                  onChange={(value) => onCertificationChange(idx, 'completionDate', value)}
-                  placeholder={t('select.date')}
-                />
-              </FormField>
-              <FormField label={t('field.hours')}>
-                <input
-                  type="text"
-                  className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                  placeholder={t('placeholder.hours')}
-                  value={cert.hours}
-                  onChange={e => onCertificationChange(idx, 'hours', e.target.value)}
-                />
-              </FormField>
-              <FormField label={t('field.validation.link')}>
-                <input
-                  type="url"
-                  className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                  placeholder={t('placeholder.validation.link')}
-                  value={cert.validationLink}
-                  onChange={e => onCertificationChange(idx, 'validationLink', e.target.value)}
-                />
-              </FormField>
-            </div>
-            
-            {/* Description field */}
-            <FormField label={t('field.description')}>
-              <textarea
-                className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                placeholder={t('placeholder.certification.description')}
-                value={cert.description}
-                onChange={e => onCertificationChange(idx, 'description', e.target.value)}
-              />
-            </FormField>
-            </div>
-          </div>
-        ))}
+            );
+          }}
+        />
         
         {/* Add certification button at bottom */}
         <div className="flex justify-start mt-4">

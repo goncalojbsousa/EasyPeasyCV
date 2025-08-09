@@ -38,9 +38,11 @@ export function Navbar() {
         </div>
         <div className="flex items-center gap-3">
           <LanguageSelector />
-          <ThemeToggle />
+          <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors duration-300">
+            <ThemeToggle />
+          </div>
         </div>
       </div>
     </header>
   );
-} 
+}

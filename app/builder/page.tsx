@@ -19,7 +19,7 @@ import { PdfPreview } from '../components/pdf_preview';
 import { FloatingActionBar } from '../components/ui/floating-action-bar';
 import { DesktopActionsCard } from '../components/ui/desktop-actions-card';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Experience, Education, Language, Certification, Project, Volunteer, CvColor } from '../types/cv';
+import { Experience, Education, Language, Certification, Project, Volunteer, CvColor, CvTemplate } from '../types/cv';
 
 /**
  * CV Builder page component
@@ -59,7 +59,7 @@ export default function Builder() {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showPdfPreview, setShowPdfPreview] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [selectedTemplate, setSelectedTemplate] = useState<'classic' | 'modern' | 'creative'>('classic');
+  const [selectedTemplate, setSelectedTemplate] = useState<CvTemplate>('classic');
   const [selectedColor, setSelectedColor] = useState<CvColor>('blue');
 
   /**
@@ -804,16 +804,18 @@ export default function Builder() {
               onReorderVolunteers={handleReorderVolunteers}
             />
 
-            {/* Example data button */}
-            <div className="max-w-6xl mx-auto mt-8 mb-8 flex justify-center">
-              <button
-                onClick={fillWithExampleData}
-                className="bg-green-600 text-white px-4 sm:px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-300 shadow-lg text-sm sm:text-base w-full sm:w-auto"
-                type="button"
-              >
-                {t('fill.example')}
-              </button>
-            </div>
+            {/* Example data button (hidden in production) */}
+            {process.env.NODE_ENV !== 'production' && (
+              <div className="max-w-6xl mx-auto mt-8 mb-8 flex justify-center">
+                <button
+                  onClick={fillWithExampleData}
+                  className="bg-green-600 text-white px-4 sm:px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-300 shadow-lg text-sm sm:text-base w-full sm:w-auto"
+                  type="button"
+                >
+                  {t('fill.example')}
+                </button>
+              </div>
+            )}
 
             {/* Job Analysis section */}
             <div className="w-full">

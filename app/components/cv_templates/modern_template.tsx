@@ -459,12 +459,27 @@ export function ModernTemplate({
   // Helper to generate complete URLs for social media
   const getSocialUrl = (type: string, value: string) => {
     if (!value) return '';
-    if (type === 'LinkedIn') return value.startsWith('http') ? value : `https://linkedin.com/in/${value}`;
-    if (type === 'GitHub') return value.startsWith('http') ? value : `https://github.com/${value}`;
-    if (type === 'GitLab') return value.startsWith('http') ? value : `https://gitlab.com/${value}`;
-    if (type === 'Portfolio') return value.startsWith('http') ? value : `https://${value}`;
-    if (type === 'Outro') return value.startsWith('http') ? value : `https://${value}`;
-    return value;
+    const val = value.trim();
+    const hasProtocol = /^https?:\/\//i.test(val);
+    const lower = type.toLowerCase();
+
+    if (lower === 'email') return `mailto:${val}`;
+    if (lower === 'phone') return `tel:${val}`;
+
+    // If value contains a known domain but lacks protocol, prefix https
+    if (!hasProtocol) {
+      if (/linkedin\.com/i.test(val)) return `https://${val}`;
+      if (/github\.com/i.test(val)) return `https://${val}`;
+      if (/gitlab\.com/i.test(val)) return `https://${val}`;
+    }
+
+    if (!hasProtocol) {
+      if (lower === 'linkedin') return `https://www.linkedin.com/in/${val}`;
+      if (lower === 'github') return `https://github.com/${val}`;
+      if (lower === 'gitlab') return `https://gitlab.com/${val}`;
+      return `https://${val}`; // portfolio/other
+    }
+    return val;
   };
 
   // Helper to translate link types

@@ -48,67 +48,99 @@ export function JobAnalysis() {
    */
   const generateJobAnalysis = (text: string): string => {
     const lowerText = text.toLowerCase();
-    let analysis = '';
+    let out = '';
 
-    // Analyze required skills
-    const skills = [];
-    if (lowerText.includes('react') || lowerText.includes('javascript')) skills.push('React/JavaScript');
-    if (lowerText.includes('node') || lowerText.includes('express')) skills.push('Node.js/Express');
-    if (lowerText.includes('python')) skills.push('Python');
-    if (lowerText.includes('java')) skills.push('Java');
-    if (lowerText.includes('sql') || lowerText.includes('database')) skills.push('SQL/Databases');
-    if (lowerText.includes('aws') || lowerText.includes('cloud')) skills.push('Cloud Computing');
-    if (lowerText.includes('docker') || lowerText.includes('kubernetes')) skills.push('Containerization');
-    if (lowerText.includes('git')) skills.push('Version Control');
-    if (lowerText.includes('agile') || lowerText.includes('scrum')) skills.push('Agile Methodologies');
+    // Helper: count occurrences of any synonym in text
+    const countAny = (syns: string[]) => syns.reduce((acc, s) => acc + (lowerText.match(new RegExp(`\\b${s.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\$&")}\\b`, 'g'))?.length || 0), 0);
 
-    // Analyze experience level
-    let experienceLevel = 'entry';
-    if (lowerText.includes('senior') || lowerText.includes('lead') || lowerText.includes('principal')) {
-      experienceLevel = 'senior';
-    } else if (lowerText.includes('mid') || lowerText.includes('intermediate') || lowerText.includes('3+') || lowerText.includes('5+')) {
-      experienceLevel = 'mid';
-    }
+    // Canonical skills with synonyms
+    const skillsCatalog: { label: string; synonyms: string[] }[] = [
+      { label: 'React', synonyms: ['react', 'next.js', 'nextjs'] },
+      { label: 'TypeScript/JavaScript', synonyms: ['typescript', 'javascript', 'js', 'ts'] },
+      { label: 'Node.js/Express', synonyms: ['node', 'node.js', 'express'] },
+      { label: 'Python', synonyms: ['python', 'django', 'flask'] },
+      { label: 'Java', synonyms: ['java', 'spring', 'spring boot'] },
+      { label: 'SQL/Databases', synonyms: ['sql', 'postgres', 'mysql', 'database', 'databases', 'mongodb', 'nosql'] },
+      { label: 'Cloud (AWS/Azure/GCP)', synonyms: ['aws', 'azure', 'gcp', 'cloud'] },
+      { label: 'Docker/Kubernetes', synonyms: ['docker', 'kubernetes', 'k8s', 'containers'] },
+      { label: 'CI/CD', synonyms: ['ci/cd', 'pipeline', 'github actions', 'gitlab ci'] },
+      { label: 'Testing', synonyms: ['testing', 'jest', 'cypress', 'playwright', 'unit test', 'integration test'] },
+      { label: 'Version Control (Git)', synonyms: ['git', 'github', 'gitlab', 'bitbucket'] },
+      { label: 'Agile/Scrum', synonyms: ['agile', 'scrum', 'kanban'] },
+    ];
 
-    // Analyze job type
-    let jobType = 'full-time';
-    if (lowerText.includes('remote') || lowerText.includes('teletrabalho')) jobType = 'remote';
-    if (lowerText.includes('part-time') || lowerText.includes('parte')) jobType = 'part-time';
+    // Compute matches and suggestions
+    const matchedSkills: { label: string; hits: number }[] = [];
+    skillsCatalog.forEach(s => {
+      const hits = countAny(s.synonyms);
+      if (hits > 0) matchedSkills.push({ label: s.label, hits });
+    });
 
-    // Generate analysis
-    analysis += `## ${t('job.analysis.skills.title')}\n\n`;
-    if (skills.length > 0) {
-      analysis += `${t('job.analysis.skills.found')}:\n`;
-      skills.forEach(skill => {
-        analysis += `• ${skill}\n`;
-      });
-      analysis += `\n${t('job.analysis.skills.advice')}\n\n`;
+    // Experience level + years extraction
+    let experienceLevel: 'entry' | 'mid' | 'senior' = 'entry';
+    if (/\b(senior|lead|principal|staff)\b/.test(lowerText)) experienceLevel = 'senior';
+    else if (/\b(mid|intermediate|pleno|3\+|5\+)\b/.test(lowerText)) experienceLevel = 'mid';
+
+    // Years of experience (supports EN/PT/ES with accents)
+    const yearsMatch = lowerText.match(/\b\d{1,2}\s*\+?\s*(?:years?|anos|años|yrs?)\b/u);
+    const yearsText = yearsMatch ? yearsMatch[0] : '';
+
+    // Job type detection
+    const isRemote = /\b(remote|teletrabalho|remoto)\b/u.test(lowerText);
+    const isHybrid = /\b(hybrid|híbrido|hibrido)\b/u.test(lowerText);
+    const isOnsite = /\b(onsite|on-site|presencial)\b/u.test(lowerText);
+    const isPartTime = /\b(part[-\s]?time|meio\s*período|meio\s*periodo|media\s*jornada)\b/u.test(lowerText);
+    const isContract = /\b(contract|contrato|freelance|temporário|temporario)\b/u.test(lowerText);
+
+    // Education / languages / salary
+    const requiresDegree = /\b(bachelor|licenciatura|degree)\b/u.test(lowerText);
+    const requiresMasters = /\b(master|mestrado)\b/u.test(lowerText);
+    const langs: string[] = [];
+    if (/\b(?:english|inglês|ingles)\b/u.test(lowerText)) langs.push('English');
+    if (/\b(?:portuguese|português|portugues)\b/u.test(lowerText)) langs.push('Portuguese');
+    if (/\b(?:spanish|español|espanhol)\b/u.test(lowerText)) langs.push('Spanish');
+
+    // Build analysis
+    out += `## ${t('job.analysis.skills.title')}\n\n`;
+    if (matchedSkills.length) {
+      out += `${t('job.analysis.skills.found')}:\n`;
+      matchedSkills
+        .sort((a, b) => b.hits - a.hits)
+        .forEach(s => (out += `• ${s.label} (${s.hits})\n`));
+      out += `\n${t('job.analysis.skills.advice')}\n\n`;
     } else {
-      analysis += `${t('job.analysis.skills.notFound')}\n\n`;
+      out += `${t('job.analysis.skills.notFound')}\n\n`;
     }
 
-    analysis += `## ${t('job.analysis.experience.title')}\n\n`;
-    if (experienceLevel === 'senior') {
-      analysis += `${t('job.analysis.experience.senior')}\n\n`;
-    } else if (experienceLevel === 'mid') {
-      analysis += `${t('job.analysis.experience.mid')}\n\n`;
-    } else {
-      analysis += `${t('job.analysis.experience.entry')}\n\n`;
+    out += `## ${t('job.analysis.experience.title')}\n\n`;
+    if (experienceLevel === 'senior') out += `${t('job.analysis.experience.senior')}\n`;
+    else if (experienceLevel === 'mid') out += `${t('job.analysis.experience.mid')}\n`;
+    else out += `${t('job.analysis.experience.entry')}\n`;
+    if (yearsText) out += `• Mentioned experience: ${yearsText}\n\n`;
+    else out += `• Consider adding explicit years of experience if you have them.\n\n`;
+
+    out += `## ${t('job.analysis.type.title')}\n\n`;
+    if (isRemote) out += `${t('job.analysis.type.remote')}\n`;
+    else if (isHybrid) out += `Hybrid work model indicated.\n`;
+    else if (isOnsite) out += `On-site role indicated.\n`;
+    else out += `${t('job.analysis.type.fullTime')}\n`;
+    if (isPartTime) out += `• Part-time possibility.\n`;
+    if (isContract) out += `• Contract-based engagement.\n`;
+    out += `\n`;
+
+    out += `## Additional Signals\n\n`;
+    if (langs.length) out += `• Languages: ${langs.join(', ')}\n`;
+    if (requiresMasters || requiresDegree) {
+      out += `• Education: ${requiresMasters ? 'Masters' : 'Bachelors'} preferred/required\n`;
     }
+    if (!langs.length && !requiresDegree) out += `• No explicit language/education requirements detected.\n`;
+    out += `\n`;
 
-    analysis += `## ${t('job.analysis.type.title')}\n\n`;
-    if (jobType === 'remote') {
-      analysis += `${t('job.analysis.type.remote')}\n\n`;
-    } else if (jobType === 'part-time') {
-      analysis += `${t('job.analysis.type.partTime')}\n\n`;
-    } else {
-      analysis += `${t('job.analysis.type.fullTime')}\n\n`;
-    }
+    out += `## ${t('job.analysis.general.title')}\n\n`;
+    out += `${t('job.analysis.general.advice')}\n`;
+    out += `\n• Tip: Mirror the exact keywords above in your CV (skills, seniority, tools).`;
 
-    analysis += `## ${t('job.analysis.general.title')}\n\n`;
-    analysis += `${t('job.analysis.general.advice')}\n\n`;
-
-    return analysis;
+    return out;
   };
 
   /**
@@ -177,7 +209,6 @@ export function JobAnalysis() {
           </div>
         </div>
 
-  {/* Analysis results section */}
         {showAnalysis && (
           <div className="bg-white dark:bg-zinc-900 rounded-lg p-4 border border-purple-100 dark:border-purple-900 shadow-sm">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-2">
@@ -194,7 +225,6 @@ export function JobAnalysis() {
           </div>
         )}
 
-  {/* Tips and advice section */}
         <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4 border border-purple-200 dark:border-purple-800">
           <div className="flex items-start gap-3">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600 mt-0.5 flex-shrink-0">

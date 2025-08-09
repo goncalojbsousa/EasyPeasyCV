@@ -34,7 +34,6 @@ interface LanguageProviderProps {
 export function LanguageProvider({ children }: LanguageProviderProps) {
   const [language, setLanguageState] = useState<Language>('pt');
   const [cvType, setCVTypeState] = useState<CVType>('development');
-  // Removed unused isInitialized state
 
   // Effect: Load language and CV type from localStorage on initialization.
   // If not set, detect browser language. Handles errors gracefully.
@@ -43,7 +42,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
       // Only run in browser
       if (typeof window !== 'undefined') {
         const savedLanguage = localStorage.getItem('cv-builder-language') as Language;
-        if (savedLanguage && (savedLanguage === 'pt' || savedLanguage === 'en')) {
+        if (savedLanguage && (savedLanguage === 'pt' || savedLanguage === 'en' || savedLanguage === 'es')) {
           setLanguageState(savedLanguage);
         } else {
           // Detect browser language if not set
@@ -63,11 +62,8 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
           setCVTypeState(savedCVType);
         }
       }
-
-  // Removed setIsInitialized(true) as isInitialized is unused
     } catch (error) {
       console.error('Error initializing language:', error);
-  // Removed setIsInitialized(true) as isInitialized is unused
     }
   }, []);
 
@@ -153,7 +149,7 @@ const ptTranslations: Record<string, string> = {
   'landing.features.title': 'Porquê escolher EasyPeasyCV?',
   'landing.features.subtitle': 'Tudo o que precisas para criar um CV profissional, sem complicações.',
   'landing.features.templates.title': 'Templates Profissionais',
-  'landing.features.templates.description': '3 templates elegantes e profissionais: Clássico, Moderno e Criativo',
+  'landing.features.templates.description': '6 templates elegantes e profissionais: Clássico, Profissional, Timeline, Moderno, Criativo e Minimal',
   'landing.features.customization.title': 'Personalização Total',
   'landing.features.customization.description': 'Escolhe cores, reorganiza secções e personaliza cada detalhe',
   'landing.features.responsive.title': 'Responsivo',
@@ -171,12 +167,21 @@ const ptTranslations: Record<string, string> = {
   'landing.templates.classic.name': 'Clássico',
   'landing.templates.classic.description': 'Elegante e tradicional',
   'landing.templates.classic.features': 'Layout limpo,Fonte profissional,Cores neutras',
+  'landing.templates.professional.name': 'Profissional',
+  'landing.templates.professional.description': 'Sério e tipograficamente refinado',
+  'landing.templates.professional.features': 'Cabeçalho sólido,Tipografia destacada,Detalhes subtis',
+  'landing.templates.timeline.name': 'Timeline',
+  'landing.templates.timeline.description': 'Experiência em formato de linha do tempo',
+  'landing.templates.timeline.features': 'Linha temporal,Marcos visuais,Leitura sequencial',
   'landing.templates.modern.name': 'Moderno',
   'landing.templates.modern.description': 'Limpo e contemporâneo',
   'landing.templates.modern.features': 'Design minimalista,Espaçamento generoso,Tipografia moderna',
   'landing.templates.creative.name': 'Criativo',
   'landing.templates.creative.description': 'Original e expressivo',
   'landing.templates.creative.features': 'Cores vibrantes,Layout único,Elementos visuais',
+  'landing.templates.minimal.name': 'Minimal',
+  'landing.templates.minimal.description': 'Essencial e direto ao ponto',
+  'landing.templates.minimal.features': 'Barra lateral limpa,Secções simples,Enfoque no conteúdo',
   'landing.templates.use.button': 'Usar Template',
 
   // How it works Section
@@ -462,15 +467,21 @@ const ptTranslations: Record<string, string> = {
   'template.selector': 'Selecionar Template',
   'template.classic.name': 'Clássico',
   'template.classic.description': 'Layout tradicional e profissional',
+  'template.professional.name': 'Profissional',
+  'template.professional.description': 'Layout profissional',
   'template.modern.name': 'Moderno',
   'template.modern.description': 'Design limpo e minimalista',
   'template.creative.name': 'Criativo',
   'template.creative.description': 'Layout inovador e expressivo',
+  'template.minimal.name': 'Minimalista',
+  'template.minimal.description': 'Design limpo e focado no essencial',
+  'template.timeline.name': 'Linha do Tempo',
+  'template.timeline.description': 'Experiência em formato cronológico',
   'color.selector': 'Selecionar Cor',
 
   // Actions
   'actions': 'Ações',
-  'cv.actions': 'Ações do CV',
+  'cv.actions': 'Opções do CV',
   'extra.features': 'Funcionalidades Extra',
 
   // CV Type Selector
@@ -866,7 +877,7 @@ const enTranslations: Record<string, string> = {
   'landing.features.title': 'Why choose EasyPeasyCV?',
   'landing.features.subtitle': 'Everything you need to create a professional CV, without complications.',
   'landing.features.templates.title': 'Professional Templates',
-  'landing.features.templates.description': '3 elegant and professional templates: Classic, Modern and Creative',
+  'landing.features.templates.description': '6 elegant and professional templates: Classic, Professional, Timeline, Modern, Creative and Minimal',
   'landing.features.customization.title': 'Full Customization',
   'landing.features.customization.description': 'Choose colors, reorder sections and customize every detail',
   'landing.features.responsive.title': 'Responsive',
@@ -884,12 +895,21 @@ const enTranslations: Record<string, string> = {
   'landing.templates.classic.name': 'Classic',
   'landing.templates.classic.description': 'Elegant and traditional',
   'landing.templates.classic.features': 'Clean layout,Professional font,Neutral colors',
+  'landing.templates.professional.name': 'Professional',
+  'landing.templates.professional.description': 'Serious look with refined typography',
+  'landing.templates.professional.features': 'Solid header,Typographic emphasis,Subtle accents',
+  'landing.templates.timeline.name': 'Timeline',
+  'landing.templates.timeline.description': 'Experience laid out as a timeline',
+  'landing.templates.timeline.features': 'Time rail,Visual milestones,Sequential reading',
   'landing.templates.modern.name': 'Modern',
   'landing.templates.modern.description': 'Clean and contemporary',
   'landing.templates.modern.features': 'Minimalist design,Generous spacing,Modern typography',
   'landing.templates.creative.name': 'Creative',
   'landing.templates.creative.description': 'Original and expressive',
   'landing.templates.creative.features': 'Vibrant colors,Unique layout,Visual elements',
+  'landing.templates.minimal.name': 'Minimal',
+  'landing.templates.minimal.description': 'Essential and straight to the point',
+  'landing.templates.minimal.features': 'Clean sidebar,Simple sections,Content-focused',
   'landing.templates.use.button': 'Use Template',
 
   // How it works Section
@@ -1171,15 +1191,21 @@ const enTranslations: Record<string, string> = {
   'template.selector': 'Select Template',
   'template.classic.name': 'Classic',
   'template.classic.description': 'Traditional and professional layout',
+  'template.professional.name': 'Professional',
+  'template.professional.description': 'Professional layout',
   'template.modern.name': 'Modern',
   'template.modern.description': 'Clean and minimalist design',
   'template.creative.name': 'Creative',
   'template.creative.description': 'Innovative and expressive layout',
+  'template.minimal.name': 'Minimal',
+  'template.minimal.description': 'Clean, essentials-first layout',
+  'template.timeline.name': 'Timeline',
+  'template.timeline.description': 'Chronological experience layout',
   'color.selector': 'Select Color',
 
   // Actions
   'actions': 'Actions',
-  'cv.actions': 'CV Actions',
+  'cv.actions': 'CV Options',
   'extra.features': 'Extra Features',
 
   // CV Type Selector
@@ -1715,7 +1741,7 @@ const esTranslations: Record<string, string> = {
   'landing.features.title': '¿Por qué elegir EasyPeasyCV?',
   'landing.features.subtitle': 'Todo lo que necesitas para crear un CV profesional, sin complicaciones.',
   'landing.features.templates.title': 'Plantillas Profesionales',
-  'landing.features.templates.description': '3 plantillas elegantes y profesionales: Clásica, Moderna y Creativa',
+  'landing.features.templates.description': '6 plantillas elegantes y profesionales: Clásica, Profesional, Cronología, Moderna, Creativa y Minimal',
   'landing.features.customization.title': 'Personalización Total',
   'landing.features.customization.description': 'Elige colores, reorganiza secciones y personaliza cada detalle',
   'landing.features.responsive.title': 'Responsivo',
@@ -1733,12 +1759,21 @@ const esTranslations: Record<string, string> = {
   'landing.templates.classic.name': 'Clásica',
   'landing.templates.classic.description': 'Elegante y tradicional',
   'landing.templates.classic.features': 'Diseño limpio,Fuente profesional,Colores neutros',
+  'landing.templates.professional.name': 'Profesional',
+  'landing.templates.professional.description': 'Serio y tipográficamente refinado',
+  'landing.templates.professional.features': 'Encabezado sólido,Tipografía destacada,Detalles sutiles',
+  'landing.templates.timeline.name': 'Cronología',
+  'landing.templates.timeline.description': 'Experiencia en formato de línea de tiempo',
+  'landing.templates.timeline.features': 'Línea temporal,Hitos visuales,Lectura secuencial',
   'landing.templates.modern.name': 'Moderna',
   'landing.templates.modern.description': 'Limpia y contemporánea',
   'landing.templates.modern.features': 'Diseño minimalista,Espaciado generoso,Tipografía moderna',
   'landing.templates.creative.name': 'Creativa',
   'landing.templates.creative.description': 'Original y expresiva',
   'landing.templates.creative.features': 'Colores vibrantes,Diseño único,Elementos visuales',
+  'landing.templates.minimal.name': 'Minimal',
+  'landing.templates.minimal.description': 'Esencial y directo al grano',
+  'landing.templates.minimal.features': 'Barra lateral limpia,Secciones simples,Enfoque en el contenido',
   'landing.templates.use.button': 'Usar Plantilla',
 
   // How it works Section
@@ -2032,15 +2067,21 @@ const esTranslations: Record<string, string> = {
   'template.selector': 'Seleccionar Plantilla',
   'template.classic.name': 'Clásica',
   'template.classic.description': 'Diseño tradicional y profesional',
+  'template.professional.name': 'Profesional',
+  'template.professional.description': 'Diseño profesional',
   'template.modern.name': 'Moderna',
   'template.modern.description': 'Diseño limpio y minimalista',
   'template.creative.name': 'Creativa',
   'template.creative.description': 'Diseño innovador y expresivo',
+  'template.minimal.name': 'Minimalista',
+  'template.minimal.description': 'Diseño limpio y enfocado en lo esencial',
+  'template.timeline.name': 'Línea de Tiempo',
+  'template.timeline.description': 'Experiencia en formato cronológico',
   'color.selector': 'Seleccionar Color',
 
   // Actions
   'actions': 'Acciones',
-  'cv.actions': 'Acciones del CV',
+  'cv.actions': 'Opciones del CV',
   'extra.features': 'Funcionalidades Extra',
   'extra.features.description': 'Herramientas adicionales para mejorar tu CV',
   'extra.features.job.analysis': 'Análisis de Vacantes',

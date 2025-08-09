@@ -25,6 +25,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^8.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@react-pdf/renderer": "^4.3.0",
     "next": "15.3.3",
     "next-intl": "^4.3.4",

@@ -9,7 +9,7 @@ A modern, responsive CV builder application built with Next.js, React, and TypeS
 
 ## 🌟 Features
 
-- **3 Professional Templates**: Classic, Modern, and Creative designs
+- **6 Professional Templates**: Classic, Modern, Creative, Minimal, Professional, and Timeline
 - **Full Customization**: Choose colors, reorder sections, and customize every detail
 - **Responsive Design**: Works perfectly on desktop, tablet, and mobile
 - **Auto-Save**: Your data is automatically saved in the browser
@@ -57,31 +57,76 @@ bun dev
 
 4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## 📁 Project Structure
-
-```
-cv-builder/
-├── app/
-│   ├── components/          # React components
-│   │   ├── cv_templates/    # CV template components
-│   │   └── ui/             # Reusable UI components
-│   ├── contexts/           # React contexts
-│   ├── types/              # TypeScript type definitions
-│   ├── utils/              # Utility functions
-│   ├── page.tsx            # Landing page
-│   └── builder/            # CV builder page
-├── public/                 # Static assets
-└── README.md
-```
-
 ## 🛠️ Tech Stack
 
-- **Framework**: Next.js 14 (App Router)
+- **Framework**: Next.js 15 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **PDF Generation**: @react-pdf/renderer
 - **State Management**: React Hooks
 - **Icons**: Custom SVG icons
+
+## 👩‍💻 Developer Guide
+
+### Scripts
+
+- **dev**: `npm run dev` — Starts Next.js with Turbopack for fast HMR.
+- **build**: `npm run build` — Production build.
+- **start**: `npm start` — Runs the production server after a build.
+- **lint**: `npm run lint` — ESLint via `eslint-config-next`.
+
+### Project Architecture
+
+- `app/`
+  - `page.tsx`: Landing page.
+  - `builder/`: Main CV builder page and subroutes.
+  - `components/`: Shared UI and feature components.
+    - `cv_templates/`: PDF-ready resume templates (Classic/Timeline/etc.).
+    - `ui/`: Reusable UI building blocks.
+  - `contexts/`: React contexts (e.g., `LanguageContext.tsx`).
+  - `types/`: Shared TypeScript types.
+  - `utils/`: Utility helpers.
+- `public/`: Static assets (images, icons).
+ - Root configs: `next.config.ts`, `tailwind.config.ts`, `postcss.config.mjs`, `eslint.config.mjs`, `tsconfig.json`.
+
+### Internationalization (i18n)
+
+- Implemented via `LanguageContext` (`app/contexts/LanguageContext.tsx`).
+- Persists user preference in `localStorage` and auto-detects browser language.
+- Use `t(key)` for translations.
+
+### PDF Rendering
+
+- Uses `@react-pdf/renderer` to generate print-ready PDFs.
+- Core components:
+  - `app/components/pdf_preview.tsx`: Preview of final PDF.
+  - `app/components/pdf_download_button.tsx`: Triggers PDF generation and download.
+  - Templates in `app/components/cv_templates/*` render structured resume content.
+
+### UI, Styling, and State
+
+- Tailwind CSS v4 with `@tailwindcss/postcss` pipeline.
+- Drag-and-drop ordering powered by `@dnd-kit` (e.g., in `academic_education.tsx`).
+- Client-side persistence (auto-save) in the browser; no backend required.
+
+### Development Workflow
+
+1. Install deps and run `npm run dev`.
+2. Implement changes in `app/*` with App Router conventions.
+3. Keep translations in `LanguageContext` in sync when adding UI labels.
+4. For PDF changes, update the corresponding template in `cv_templates/*`.
+5. Run `npm run lint` before committing.
+
+### Build & Deploy
+
+- Local production run: `npm run build && npm start`.
+- Works on platforms supporting Next.js 15 (e.g., Vercel). Ensure Node 18+.
+
+### Troubleshooting
+
+- Ensure Node 18+ to avoid Next.js 15 compatibility issues.
+- If Tailwind classes are missing, confirm Tailwind v4 config (`postcss.config.mjs`, `tailwind.config.ts`).
+- Clear `.next/` cache if you hit stale build artifacts.
 
 ## 🌍 Internationalization
 
@@ -91,17 +136,6 @@ The application supports multiple languages:
 - Spanish (es)
 
 Language switching is available in the header.
-
-## 🎨 Templates
-
-### Classic Template
-Elegant and traditional design suitable for most industries.
-
-### Modern Template
-Clean and contemporary layout with a professional look.
-
-### Creative Template
-Original and expressive design for creative professionals.
 
 ## 🤝 Contributing
 
@@ -140,3 +174,9 @@ If you find this project helpful, consider supporting it:
 
 - [GitHub Repository](https://github.com/goncalojbsousa/EasyPeasyCV)
 - [Issues](https://github.com/goncalojbsousa/EasyPeasyCV/issues)
+- [Website](https://www.easypeasycv.com/)
+
+## 🧭 Inspiration
+
+- https://github.com/codedgabriel/ats-curriculo
+- https://ats-curriculo.vercel.app/

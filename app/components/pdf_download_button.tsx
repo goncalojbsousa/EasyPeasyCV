@@ -2,7 +2,7 @@
 
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { CvDocument } from './cv_document';
-import { CvData, CvColor } from '../types/cv';
+import { CvData, CvColor, CvTemplate } from '../types/cv';
 
 /**
  * Props interface for the PdfDownloadButton component
@@ -11,7 +11,7 @@ interface PdfDownloadButtonProps extends CvData {
   /** Language for the PDF document (pt or en) */
   lang?: string;
   /** Selected CV template */
-  template?: 'classic' | 'modern' | 'creative';
+  template?: CvTemplate;
   /** Selected color theme */
   color?: CvColor;
   /** Custom children to render inside the button */

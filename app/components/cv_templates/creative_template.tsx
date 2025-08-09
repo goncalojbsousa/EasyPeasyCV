@@ -23,6 +23,19 @@ const styles = StyleSheet.create({
     fontFamily: 'Helvetica',
     backgroundColor: '#ffffff'
   },
+  // App-level layout (offset layout using fixed sidebar background)
+  mainWithSidebarOffset: {
+    padding: 30,
+    marginLeft: 190
+  },
+  sidebarContentAbs: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: 190,
+    padding: 24,
+    color: '#ffffff'
+  },
   header: { 
     backgroundColor: '#ec4899',
     padding: 30,
@@ -93,6 +106,53 @@ const styles = StyleSheet.create({
     borderBottomStyle: 'solid',
     paddingBottom: 6
   },
+  // Sidebar extras
+  monogramCircle: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12
+  },
+  monogramText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#ffffff',
+    letterSpacing: 1
+  },
+  sidebarSectionTitle: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: '#ffffff',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    marginTop: 16,
+    marginBottom: 8
+  },
+  sidebarText: {
+    fontSize: 10,
+    color: '#fdf2f8',
+    marginBottom: 6
+  },
+  divider: {
+    height: 1,
+    backgroundColor: 'rgba(255,255,255,0.25)',
+    marginVertical: 12
+  },
+  // Bars (used for languages)
+  barBg: {
+    height: 6,
+    backgroundColor: 'rgba(255,255,255,0.25)',
+    borderRadius: 3,
+    overflow: 'hidden'
+  },
+  barFill: {
+    height: 6,
+    backgroundColor: '#ffffff',
+    borderRadius: 3
+  },
   summary: {
     fontSize: 11,
     color: '#374151',
@@ -118,10 +178,16 @@ const styles = StyleSheet.create({
   roleAndDate: { 
     fontSize: 10, 
     color: '#6b7280', 
-    marginBottom: 4, 
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
-    alignItems: 'center' 
+    marginBottom: 4
+  },
+  metaLine: {
+    fontSize: 10,
+    color: '#6b7280'
+  },
+  titleLine: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: '#ec4899'
   },
   roleAndCompany: { 
     fontSize: 11, 
@@ -381,6 +447,24 @@ export function CreativeTemplate({
   
   // Create dynamic styles based on selected color
   const dynamicStyles = StyleSheet.create({
+    // First page wide background strip (non-fixed)
+    firstPageWideStrip: {
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      bottom: 0,
+      width: 190,
+      backgroundColor: colorTheme.primary
+    },
+    // Fixed background strip for all pages
+    bgStrip: {
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      bottom: 0,
+      width: 80,
+      backgroundColor: colorTheme.primary
+    },
     header: { 
       backgroundColor: colorTheme.primary,
       padding: 30,
@@ -557,226 +641,249 @@ export function CreativeTemplate({
     return normalized;
   };
 
+  // Map CEFR level to a percentage for proficiency bar
+  const languageLevelToPercent = (level: string) => {
+    const v = (translateLanguageLevel(level, 'en') || '').toUpperCase();
+    switch (v) {
+      case 'A1': return 20;
+      case 'A2': return 35;
+      case 'B1': return 55;
+      case 'B2': return 70;
+      case 'C1': return 85;
+      case 'C2': return 100;
+      default: return 50;
+    }
+  };
+
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {/* Header Section with colorful background */}
-        <View style={dynamicStyles.header}>
-          <Text style={styles.name}>{personalInfo?.name}</Text>
-          <Text style={styles.desiredRole}>{personalInfo?.desiredRole}</Text>
-          
-          {/* Contact Information */}
-          <View style={styles.contactRow}>
-            {contactItems.map((item, index) => (
-              <React.Fragment key={index}>
-                <Text style={styles.contactItem}>{item}</Text>
-                {index < contactItems.length - 1 && <Text style={styles.separator}>•</Text>}
-              </React.Fragment>
+        {/* Fixed background strip across all pages (thin) */}
+        <View fixed style={dynamicStyles.bgStrip} />
+        {/* First page wide strip (non-fixed) overlays thin on page 1 */}
+        <View style={dynamicStyles.firstPageWideStrip} />
+        {/* Absolute sidebar content (first page only) */}
+        <View style={styles.sidebarContentAbs}>
+            <Text style={styles.name}>{personalInfo?.name}</Text>
+            <Text style={styles.desiredRole}>{personalInfo?.desiredRole}</Text>
+            <View style={styles.divider} />
+            <Text style={styles.sidebarSectionTitle}>{lang === 'en' ? 'Contact' : 'Contacto'}</Text>
+            {contactItems.map((item, idx) => (
+              <Text key={idx} style={styles.sidebarText}>{item}</Text>
             ))}
-          </View>
-
-          {/* Social Links */}
-          {links.length > 0 && (
-            <View style={styles.linksRow}>
-              {links.map((link, index) => (
-                <Link key={index} src={getSocialUrl(link.type, link.value)} style={dynamicStyles.linkItem}>
-                  {translateLinkType(link.type, lang || 'pt', link.customName)}: {link.value}
-                </Link>
-              ))}
-            </View>
-          )}
+            {links.length > 0 && (
+              <View>
+                <View style={styles.divider} />
+                <Text style={styles.sidebarSectionTitle}>{lang === 'en' ? 'Links' : 'Links'}</Text>
+                {links.map((link, index) => (
+                  <Link key={index} src={getSocialUrl(link.type, link.value)} style={styles.sidebarText}>
+                    {translateLinkType(link.type, lang || 'pt', link.customName)}: {link.value}
+                  </Link>
+                ))}
+              </View>
+            )}
+            {languages.length > 0 && (
+              <View>
+                <View style={styles.divider} />
+                <Text style={styles.sidebarSectionTitle}>{lang === 'en' ? 'Languages' : 'Idiomas'}</Text>
+                {languages.map((language, index) => (
+                  <View key={index} style={{ marginBottom: 10 }}>
+                    <Text style={styles.sidebarText}>
+                      {language.name} ({translateLanguageLevel(language.level, lang || 'pt')})
+                    </Text>
+                    <View style={styles.barBg}>
+                      <View style={{ ...styles.barFill, width: `${languageLevelToPercent(language.level)}%` }} />
+                    </View>
+                  </View>
+                ))}
+              </View>
+            )}
         </View>
 
-        {/* Content Section */}
-        <View style={styles.content}>
-          {/* Professional Summary */}
-          {resume && (
-            <View style={styles.section}>
-                          <Text style={dynamicStyles.sectionTitle}>
-              {lang === 'en' ? 'Professional Summary' : lang === 'es' ? 'Resumen Profesional' : 'Resumo Profissional'}
-            </Text>
-              <Text style={dynamicStyles.summary}>{resume}</Text>
-            </View>
-          )}
-
-          {/* Professional Experience */}
-          {experiences.length > 0 && (
-            <View style={styles.section}>
-                          <Text style={dynamicStyles.sectionTitle}>
-              {lang === 'en' ? 'Professional Experience' : lang === 'es' ? 'Experiencia Profesional' : 'Experiência Profissional'}
-            </Text>
-              {experiences.map((exp, index) => (
-                <View key={index} style={styles.expBlock}>
-                  <View style={styles.roleAndDate}>
-                    <View style={styles.roleAndCompany}>
-                      <Text style={styles.jobRole}>{exp.role}</Text>
-                      <Text style={styles.companySeparator}> • </Text>
-                      <Text style={styles.companyName}>{exp.company}</Text>
-                    </View>
-                    <Text style={styles.dateRange}>
-                      {translateMonth(exp.startMonth, lang || 'pt')} {exp.startYear} - {exp.current ? (lang === 'en' ? 'Present' : 'Atual') : `${translateMonth(exp.endMonth, lang || 'pt')} ${exp.endYear}`}
-                    </Text>
-                  </View>
-                  {exp.tech && <Text style={dynamicStyles.tech}>{exp.tech}</Text>}
-                  {exp.activities && <Text style={styles.activities}>{exp.activities}</Text>}
-                  {exp.results && <Text style={styles.results}>{exp.results}</Text>}
-                </View>
-              ))}
-            </View>
-          )}
-
-          {/* Education */}
-          {education.length > 0 && (
-            <View style={styles.section}>
-                          <Text style={dynamicStyles.sectionTitle}>
-              {lang === 'en' ? 'Education' : lang === 'es' ? 'Educación' : 'Formação Académica'}
-            </Text>
-              {education.map((edu, index) => (
-                <View key={index} style={styles.eduBlock}>
-                  <View style={styles.roleAndDate}>
-                    <Text style={styles.eduTitle}>{edu.course}</Text>
-                    <Text style={styles.dateRange}>
-                      {translateMonth(edu.startMonth, lang || 'pt')} {edu.startYear} - {translateMonth(edu.endMonth, lang || 'pt')} {edu.endYear}
-                    </Text>
-                  </View>
-                  <Text style={styles.eduInst}>{edu.institution}</Text>
-                  {edu.description && <Text style={styles.eduDesc}>{edu.description}</Text>}
-                </View>
-              ))}
-            </View>
-          )}
-
-          {/* Skills and Languages */}
-          {(skills || languages.length > 0) && (
-            <View style={styles.section}>
-              <View style={styles.skillsLangRow}>
-                {skills && (
-                  <View style={styles.skillsCol}>
-                                <Text style={dynamicStyles.sectionTitle}>
-              {lang === 'en' ? 'Technical Skills' : lang === 'es' ? 'Competencias Técnicas' : 'Competências Técnicas'}
-            </Text>
-                    <View style={styles.skillsGrid}>
-                      {skills.split(',').map((skill, index) => (
-                        <Text key={index} style={styles.skillText}>
-                          {skill.trim()}
-                        </Text>
-                      ))}
-                    </View>
-                  </View>
-                )}
-                
-                {languages.length > 0 && (
-                  <View style={styles.langCol}>
-                                      <Text style={dynamicStyles.sectionTitle}>
-                    {lang === 'en' ? 'Languages' : 'Idiomas'}
-                  </Text>
-                    <View style={styles.langRow}>
-                      {languages.map((language, index) => (
-                        <Text key={index} style={styles.langItem}>
-                          {language.name} ({translateLanguageLevel(language.level, lang || 'pt')})
-                        </Text>
-                      ))}
-                    </View>
-                  </View>
-                )}
+        {/* Main content (shifted right) */}
+        <View style={styles.mainWithSidebarOffset}>
+            {/* Professional Summary */}
+            {resume && (
+              <View style={styles.section}>
+                <Text style={dynamicStyles.sectionTitle}>
+                  {lang === 'en' ? 'Professional Summary' : lang === 'es' ? 'Resumen Profesional' : 'Resumo Profissional'}
+                </Text>
+                <Text style={dynamicStyles.summary}>{resume}</Text>
               </View>
-            </View>
-          )}
+            )}
 
-          {/* Certifications */}
-          {certifications.length > 0 && (
-            <View style={styles.section}>
-              <Text style={dynamicStyles.sectionTitle}>
-                {lang === 'en' ? 'Certifications' : 'Certificações'}
-              </Text>
-              {certifications.map((cert, index) => {
-                const isLast = index === certifications.length - 1;
-                return (
-                  <View key={index} style={{
-                    ...styles.certBlock,
-                    marginBottom: isLast ? 0 : styles.certBlock.marginBottom,
-                    paddingBottom: isLast ? 0 : styles.certBlock.paddingBottom,
-                  }}>
-                  <View style={styles.roleAndDate}>
-                    <Text style={styles.certName}>{cert.name}</Text>
-                    <Text style={styles.certDate}>{cert.completionDate}</Text>
-                  </View>
-                  <Text style={styles.certIssuer}>{cert.issuer}</Text>
-                                  {cert.validationLink && (
-                  <Link src={cert.validationLink} style={dynamicStyles.certLink}>
-                    {lang === 'en' ? 'View Certificate' : 'Ver Certificado'}
-                  </Link>
-                )}
-                  {cert.description && <Text style={styles.certDesc}>{cert.description}</Text>}
-                </View>
-            );
-            })}
-            </View>
-          )}
-
-          {/* Volunteer Work */}
-                        {volunteers && volunteers.length > 0 && (
-                <View style={styles.section}>
+            {/* Professional Experience */}
+            {experiences.length > 0 && (
+              <View style={styles.section}>
+                <View wrap={false}>
                   <Text style={dynamicStyles.sectionTitle}>
-                    {lang === 'en' ? 'Volunteer Work' : 'Voluntariado'}
+                    {lang === 'en' ? 'Professional Experience' : lang === 'es' ? 'Experiencia Profesional' : 'Experiência Profissional'}
                   </Text>
-                  {volunteers.map((vol, index) => {
-                    const isLast = index === volunteers.length - 1;
-                return (
-                  <View key={index} style={{
-                    ...styles.volBlock,
-                    marginBottom: isLast ? 0 : styles.volBlock.marginBottom,
-                    paddingBottom: isLast ? 0 : styles.volBlock.paddingBottom,
-                  }}>
-                  <View style={styles.roleAndDate}>
-                    <Text style={styles.volRole}>{vol.role}</Text>
-                    <Text style={styles.dateRange}>
-                      {vol.startMonth && vol.startYear ? `${translateMonth(vol.startMonth, lang || 'pt')} ${vol.startYear}` : ''}
-                      {vol.startMonth && vol.startYear && (vol.endMonth || vol.endYear || vol.current) ? ' - ' : ''}
-                      {vol.current ? (lang === 'en' ? 'Present' : 'Atual') : vol.endMonth && vol.endYear ? `${translateMonth(vol.endMonth, lang || 'pt')} ${vol.endYear}` : ''}
-                    </Text>
-                  </View>
-                  <Text style={styles.volOrg}>{vol.organization}</Text>
-                  {vol.description && <Text style={styles.volDesc}>{vol.description}</Text>}
-                  {vol.impact && <Text style={styles.volImpact}>{vol.impact}</Text>}
+                  {experiences.length > 0 && (
+                    <View style={{ height: 0 }} />
+                  )}
                 </View>
-              );
-              })}
-            </View>
-          )}
-
-          {/* Projects */}
-          {projects.length > 0 && (
-            <View style={{ ...styles.section, marginBottom: 0 }}>
-                          <Text style={dynamicStyles.sectionTitle}>
-              {lang === 'en' ? 'Projects' : lang === 'es' ? 'Proyectos' : 'Projetos'}
-            </Text>
-              {projects.map((proj, index) => {
-                const isLast = index === projects.length - 1;
-                return (
-                  <View key={index} style={{
-                    ...styles.projBlock,
-                    marginBottom: isLast ? 0 : styles.projBlock.marginBottom,
-                    paddingBottom: isLast ? 0 : styles.projBlock.paddingBottom,
-                  }}>
-                  <View style={styles.roleAndDate}>
-                    <Text style={styles.projName}>{proj.name}</Text>
-                    <Text style={styles.projYear}>{proj.year}</Text>
+                {experiences.map((exp, index) => (
+                  <View key={index} style={styles.expBlock} wrap={false}>
+                    <View style={styles.roleAndDate}>
+                      <Text style={styles.titleLine}>{exp.role}</Text>
+                      <Text style={styles.metaLine}>
+                        {exp.company} • {translateMonth(exp.startMonth, lang || 'pt')} {exp.startYear} - {exp.current ? (lang === 'en' ? 'Present' : 'Atual') : `${translateMonth(exp.endMonth, lang || 'pt')} ${exp.endYear}`}
+                      </Text>
+                    </View>
+                    {exp.tech && <Text style={dynamicStyles.tech}>{exp.tech}</Text>}
+                    {exp.activities && <Text style={styles.activities}>{exp.activities}</Text>}
+                    {exp.results && <Text style={styles.results}>{exp.results}</Text>}
                   </View>
-                  {proj.tech && <Text style={dynamicStyles.projTech}>{proj.tech}</Text>}
-                  {proj.description && <Text style={styles.projDesc}>{proj.description}</Text>}
-                                  {proj.link && (
-                  <Link src={proj.link} style={dynamicStyles.projLink}>
-                    {lang === 'en' ? 'View Project' : lang === 'es' ? 'Ver Proyecto' : 'Ver Projeto'}
-                  </Link>
-                                )}
+                ))}
               </View>
-            );
-            })}
-            </View>
-          )}
+            )}
+
+            {/* Education */}
+            {education.length > 0 && (
+              <View style={styles.section}>
+                <View wrap={false}>
+                  <Text style={dynamicStyles.sectionTitle}>
+                    {lang === 'en' ? 'Education' : lang === 'es' ? 'Educación' : 'Formação Académica'}
+                  </Text>
+                  {education.length > 0 && (
+                    <View style={{ height: 0 }} />
+                  )}
+                </View>
+                {education.map((edu, index) => (
+                  <View key={index} style={styles.eduBlock} wrap={false}>
+                    <View style={styles.roleAndDate}>
+                      <Text style={styles.eduTitle}>{edu.course}</Text>
+                      <Text style={styles.dateRange}>
+                        {translateMonth(edu.startMonth, lang || 'pt')} {edu.startYear} - {translateMonth(edu.endMonth, lang || 'pt')} {edu.endYear}
+                      </Text>
+                    </View>
+                    <Text style={styles.eduInst}>{edu.institution}</Text>
+                    {edu.description && <Text style={styles.eduDesc}>{edu.description}</Text>}
+                  </View>
+                ))}
+              </View>
+            )}
+
+            {/* Skills */}
+            {skills && (
+              <View style={styles.section}>
+                <Text style={dynamicStyles.sectionTitle}>
+                  {lang === 'en' ? 'Technical Skills' : lang === 'es' ? 'Competencias Técnicas' : 'Competências Técnicas'}
+                </Text>
+                <View style={styles.skillsGrid}>
+                  {skills.split(',').map((skill, index) => (
+                    <Text key={index} style={styles.skillText}>
+                      {skill.trim()}
+                    </Text>
+                  ))}
+                </View>
+              </View>
+            )}
+
+            {/* Certifications */}
+            {certifications.length > 0 && (
+              <View style={styles.section}>
+                <View wrap={false}>
+                  <Text style={styles.sectionTitle}>{lang === 'en' ? 'Certifications' : 'Certificações'}</Text>
+                  {certifications.length > 0 && (
+                    <View style={{ height: 0 }} />
+                  )}
+                </View>
+                {certifications.map((cert, index) => {
+                  const isLast = index === certifications.length - 1;
+                  return (
+                    <View key={index} wrap={false} style={{
+                      ...styles.certBlock,
+                      marginBottom: isLast ? 0 : styles.certBlock.marginBottom,
+                      paddingBottom: isLast ? 0 : styles.certBlock.paddingBottom,
+                    }}>
+                      <View style={styles.roleAndDate}>
+                        <Text style={styles.certName}>{cert.name}</Text>
+                        <Text style={styles.certDate}>{cert.completionDate}</Text>
+                      </View>
+                      <Text style={styles.certIssuer}>{cert.issuer}</Text>
+                      {cert.validationLink && (
+                        <Link src={cert.validationLink} style={dynamicStyles.certLink}>
+                          {lang === 'en' ? 'View Certificate' : 'Ver Certificado'}
+                        </Link>
+                      )}
+                      {cert.description && <Text style={styles.certDesc}>{cert.description}</Text>}
+                    </View>
+                  );
+                })}
+              </View>
+            )}
+
+            {/* Volunteer Work */}
+            {volunteers && volunteers.length > 0 && (
+              <View style={styles.section}>
+                <View wrap={false}>
+                  <Text style={styles.sectionTitle}>{lang === 'en' ? 'Volunteer Work' : 'Voluntariado'}</Text>
+                  {volunteers.length > 0 && (
+                    <View style={{ height: 0 }} />
+                  )}
+                </View>
+                {volunteers.map((vol, index) => {
+                  const isLast = index === volunteers.length - 1;
+                  return (
+                    <View key={index} wrap={false} style={{
+                      ...styles.volBlock,
+                      marginBottom: isLast ? 0 : styles.volBlock.marginBottom,
+                      paddingBottom: isLast ? 0 : styles.volBlock.paddingBottom,
+                    }}>
+                      <View style={styles.roleAndDate}>
+                        <Text style={styles.volRole}>{vol.role}</Text>
+                        <Text style={styles.dateRange}>
+                          {vol.startMonth && vol.startYear ? `${translateMonth(vol.startMonth, lang || 'pt')} ${vol.startYear}` : ''}
+                          {vol.startMonth && vol.startYear && (vol.endMonth || vol.endYear || vol.current) ? ' - ' : ''}
+                          {vol.current ? (lang === 'en' ? 'Present' : 'Atual') : vol.endMonth && vol.endYear ? `${translateMonth(vol.endMonth, lang || 'pt')} ${vol.endYear}` : ''}
+                        </Text>
+                      </View>
+                      <Text style={styles.volOrg}>{vol.organization}</Text>
+                      {vol.description && <Text style={styles.volDesc}>{vol.description}</Text>}
+                      {vol.impact && <Text style={styles.volImpact}>{vol.impact}</Text>}
+                    </View>
+                  );
+                })}
+              </View>
+            )}
+
+            {/* Projects */}
+            {projects.length > 0 && (
+              <View style={{ ...styles.section, marginBottom: 0 }}>
+                <View wrap={false}>
+                  <Text style={styles.sectionTitle}>{lang === 'en' ? 'Projects' : lang === 'es' ? 'Proyectos' : 'Projetos'}</Text>
+                  {projects.length > 0 && (
+                    <View style={{ height: 0 }} />
+                  )}
+                </View>
+                {projects.map((proj, index) => {
+                  const isLast = index === projects.length - 1;
+                  return (
+                    <View key={index} wrap={false} style={{
+                      ...styles.projBlock,
+                      marginBottom: isLast ? 0 : styles.projBlock.marginBottom,
+                      paddingBottom: isLast ? 0 : styles.projBlock.paddingBottom,
+                    }}>
+                      <View style={styles.roleAndDate}>
+                        <Text style={styles.projName}>{proj.name}</Text>
+                        <Text style={styles.projYear}>{proj.year}</Text>
+                      </View>
+                      {proj.tech && <Text style={dynamicStyles.projTech}>{proj.tech}</Text>}
+                      {proj.description && <Text style={styles.projDesc}>{proj.description}</Text>}
+                      {proj.link && (
+                        <Link src={proj.link} style={dynamicStyles.projLink}>
+                          {lang === 'en' ? 'View Project' : lang === 'es' ? 'Ver Proyecto' : 'Ver Projeto'}
+                        </Link>
+                      )}
+                    </View>
+                  );
+                })}
+              </View>
+            )}
         </View>
       </Page>
     </Document>
   );
-} 
+}

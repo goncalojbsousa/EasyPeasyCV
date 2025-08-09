@@ -53,19 +53,83 @@ export default function Home() {
       name: t('landing.templates.classic.name'),
       description: t('landing.templates.classic.description'),
       color: "bg-blue-500",
-      features: t('landing.templates.classic.features').split(',')
+      features: t('landing.templates.classic.features').split(','),
+      icon: (
+        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+          <rect x="4" y="4" width="16" height="16" rx="2" fill="none" stroke="currentColor" strokeWidth="2"/>
+          <rect x="7" y="8" width="10" height="1" fill="currentColor"/>
+          <rect x="7" y="11" width="10" height="1" fill="currentColor"/>
+          <rect x="7" y="14" width="6" height="1" fill="currentColor"/>
+        </svg>
+      )
+    },
+    {
+      name: t('landing.templates.professional.name'),
+      description: t('landing.templates.professional.description'),
+      color: "bg-sky-500",
+      features: t('landing.templates.professional.features').split(','),
+      icon: (
+        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+          <rect x="3" y="7" width="18" height="12" rx="2" fill="none" stroke="currentColor" strokeWidth="2"/>
+          <path d="M9 7V6a3 3 0 0 1 3-3h0a3 3 0 0 1 3 3v1" stroke="currentColor" strokeWidth="2" fill="none"/>
+          <rect x="10" y="11" width="4" height="2" fill="currentColor"/>
+        </svg>
+      )
+    },
+    {
+      name: t('landing.templates.timeline.name'),
+      description: t('landing.templates.timeline.description'),
+      color: "bg-amber-500",
+      features: t('landing.templates.timeline.features').split(','),
+      icon: (
+        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+          <rect x="11" y="4" width="2" height="16" rx="1" fill="currentColor"/>
+          <circle cx="12" cy="6" r="2" fill="currentColor"/>
+          <circle cx="12" cy="12" r="2" fill="currentColor"/>
+          <circle cx="12" cy="18" r="2" fill="currentColor"/>
+        </svg>
+      )
     },
     {
       name: t('landing.templates.modern.name'),
       description: t('landing.templates.modern.description'),
-      color: "bg-green-500",
-      features: t('landing.templates.modern.features').split(',')
+      color: "bg-purple-500",
+      features: t('landing.templates.modern.features').split(','),
+      icon: (
+        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+          <rect x="2" y="2" width="20" height="20" rx="10" fill="none" stroke="currentColor" strokeWidth="2"/>
+          <path d="M8 12L11 15L16 10" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      )
     },
     {
       name: t('landing.templates.creative.name'),
       description: t('landing.templates.creative.description'),
-      color: "bg-purple-500",
-      features: t('landing.templates.creative.features').split(',')
+      color: "bg-pink-500",
+      features: t('landing.templates.creative.features').split(','),
+      icon: (
+        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+          <rect x="2" y="2" width="20" height="20" rx="10" fill="none" stroke="currentColor" strokeWidth="2"/>
+          <circle cx="8" cy="8" r="2" fill="currentColor"/>
+          <circle cx="16" cy="8" r="2" fill="currentColor"/>
+          <circle cx="8" cy="16" r="2" fill="currentColor"/>
+          <circle cx="16" cy="16" r="2" fill="currentColor"/>
+        </svg>
+      )
+    },
+    {
+      name: t('landing.templates.minimal.name'),
+      description: t('landing.templates.minimal.description'),
+      color: "bg-teal-500",
+      features: t('landing.templates.minimal.features').split(','),
+      icon: (
+        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+          <rect x="4" y="4" width="6" height="16" rx="1" fill="currentColor"/>
+          <rect x="12" y="6" width="8" height="2" fill="currentColor"/>
+          <rect x="12" y="10" width="8" height="2" fill="currentColor"/>
+          <rect x="12" y="14" width="6" height="2" fill="currentColor"/>
+        </svg>
+      )
     }
   ];
 
@@ -166,28 +230,17 @@ export default function Home() {
             {templates.map((template, index) => (
               <div
                 key={index}
-                className="text-center p-6 rounded-lg border border-gray-200 dark:border-zinc-700 hover:shadow-lg transition-all duration-300 bg-white dark:bg-zinc-800 group"
+                className="text-center px-6 pt-5 pb-6 rounded-lg border border-gray-200 dark:border-zinc-700 hover:shadow-lg transition-all duration-300 bg-white dark:bg-zinc-800 group"
               >
-                <div className={`w-16 h-16 ${template.color} rounded-lg mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold group-hover:scale-110 transition-transform duration-300`}>
-                  {template.name.charAt(0)}
+                <div className={`w-16 h-16 ${template.color} rounded-lg mx-auto mb-3 flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300`}>
+                  {template.icon}
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
                   {template.name}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-4">
+                <p className="text-gray-600 dark:text-gray-300 mb-0">
                   {template.description}
                 </p>
-                <ul className="text-sm text-gray-500 dark:text-gray-400 mb-6 space-y-1">
-                  {template.features.map((feature, featureIndex) => (
-                    <li key={featureIndex}>• {feature}</li>
-                  ))}
-                </ul>
-                <Link
-                  href="/builder"
-                  className="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300 text-sm"
-                >
-                  {t('landing.templates.use.button')}
-                </Link>
               </div>
             ))}
           </div>

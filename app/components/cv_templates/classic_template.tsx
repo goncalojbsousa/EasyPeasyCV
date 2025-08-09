@@ -1,12 +1,13 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Link } from '@react-pdf/renderer';
 import { CvData } from '../../types/cv';
+import { translateMonthForLang } from '../../utils/months';
 
 /**
  * Props interface for the ClassicTemplate component
  */
 interface ClassicTemplateProps extends CvData {
-  /** Language for the document (pt or en) */
+  /** Language for the document (pt, en or es) */
   lang?: string;
 }
 
@@ -91,19 +92,39 @@ export function ClassicTemplate({
     personalInfo?.countryCode && personalInfo?.phone ? `${personalInfo.countryCode.match(/\(([^)]+)\)/)?.[1] || personalInfo.countryCode} ${personalInfo.phone}` : personalInfo?.phone
   ].filter(Boolean);
 
-  // Helper to generate complete URLs for social media
-  const getSocialUrl = (type: string, value: string) => {
+  /**
+   * Build a fully-qualified URL for a social/contact entry.
+   * Supports email (mailto:), phone (tel:) and common platforms.
+   */
+  function getSocialUrl(type: string, value: string) {
     if (!value) return '';
-    if (type === 'LinkedIn') return value.startsWith('http') ? value : `https://linkedin.com/in/${value}`;
-    if (type === 'GitHub') return value.startsWith('http') ? value : `https://github.com/${value}`;
-    if (type === 'GitLab') return value.startsWith('http') ? value : `https://gitlab.com/${value}`;
-    if (type === 'Portfolio') return value.startsWith('http') ? value : `https://${value}`;
-    if (type === 'Outro') return value.startsWith('http') ? value : `https://${value}`;
-    return value;
+    const val = value.trim();
+    const hasProtocol = /^https?:\/\//i.test(val);
+    const lower = type.toLowerCase();
+
+    if (lower === 'email') return `mailto:${val}`;
+    if (lower === 'phone') return `tel:${val}`;
+
+    // If the value already includes a known domain but lacks protocol, prefix https
+    if (!hasProtocol) {
+      if (/linkedin\.com/i.test(val)) return `https://${val}`;
+      if (/github\.com/i.test(val)) return `https://${val}`;
+      if (/gitlab\.com/i.test(val)) return `https://${val}`;
+    }
+
+    if (!hasProtocol) {
+      if (lower === 'linkedin') return `https://www.linkedin.com/in/${val}`;
+      if (lower === 'github') return `https://github.com/${val}`;
+      if (lower === 'gitlab') return `https://gitlab.com/${val}`;
+      return `https://${val}`; // portfolio/other
+    }
+    return val;
   };
 
-  // Helper to translate link types
-  const translateLinkType = (type: string, lang: string, customName?: string) => {
+  /**
+   * Localize a link type label (e.g., LinkedIn, Website) for the given language.
+   */
+  function translateLinkType(type: string, lang: string, customName?: string) {
     // If it's "Other" type and has a custom name, return the custom name
     if (type === 'Other' && customName) {
       return customName;
@@ -118,6 +139,15 @@ export function ClassicTemplate({
         case 'Other': return 'Other';
         default: return type;
       }
+    } else if (lang === 'es') {
+      switch (type) {
+        case 'LinkedIn': return 'LinkedIn';
+        case 'GitHub': return 'GitHub';
+        case 'GitLab': return 'GitLab';
+        case 'Portfolio': return 'Portfolio';
+        case 'Other': return 'Otro';
+        default: return type;
+      }
     } else {
       switch (type) {
         case 'LinkedIn': return 'LinkedIn';
@@ -130,50 +160,23 @@ export function ClassicTemplate({
     }
   };
 
-  // Helper to translate months
-  const translateMonth = (month: string, lang: string) => {
-    if (lang === 'en') {
-      switch (month) {
-        case 'Jan': return 'Jan';
-        case 'Fev': return 'Feb';
-        case 'Mar': return 'Mar';
-        case 'Abr': return 'Apr';
-        case 'Mai': return 'May';
-        case 'Jun': return 'Jun';
-        case 'Jul': return 'Jul';
-        case 'Ago': return 'Aug';
-        case 'Set': return 'Sep';
-        case 'Out': return 'Oct';
-        case 'Nov': return 'Nov';
-        case 'Dez': return 'Dec';
-        default: return month;
-      }
-    } else {
-      switch (month) {
-        case 'Jan': return 'Jan';
-        case 'Feb': return 'Fev';
-        case 'Mar': return 'Mar';
-        case 'Apr': return 'Abr';
-        case 'May': return 'Mai';
-        case 'Jun': return 'Jun';
-        case 'Jul': return 'Jul';
-        case 'Aug': return 'Ago';
-        case 'Sep': return 'Set';
-        case 'Oct': return 'Out';
-        case 'Nov': return 'Nov';
-        case 'Dec': return 'Dez';
-        default: return month;
-      }
-    }
+  /**
+   * Translate month abbreviations across pt/en/es.
+   */
+  function translateMonth(month: string, lang: string) {
+    return translateMonthForLang(month, lang as 'pt' | 'en' | 'es');
   };
 
-  // Helper to translate "Current"
-  const translateCurrent = (lang: string) => {
+  /**
+   * Localize the "current" date label used in ranges.
+   */
+  function translateCurrent(lang: string) {
     if (lang === 'en') return 'Current';
     if (lang === 'es') return 'Actual';
     return 'Atual';
   };
 
+  // ... rest of the code remains the same ...
   // Helper to translate education types
   const translateEducationType = (type: string, lang: string) => {
     // Support i18n keys from the form
@@ -356,18 +359,21 @@ export function ClassicTemplate({
                     borderBottomStyle: showSeparator ? styles.eduBlock.borderBottomStyle : undefined,
                   }}
                 >
-                  <Text style={styles.eduTitle}>
-                    {edu.course}{edu.course && edu.type ? ' - ' : ''}{translateEducationType(edu.type, lang || 'pt')}
-                    {edu.status && <Text style={styles.certDate}> ({translateEducationStatus(edu.status, lang || 'pt')})</Text>}
-                  </Text>
+                  <View style={styles.roleAndDate}>
+                    <Text style={styles.eduTitle}>
+                      {edu.course}{edu.course && edu.type ? ' - ' : ''}{translateEducationType(edu.type, lang || 'pt')}
+                      {edu.status && <Text style={styles.certDate}> ({translateEducationStatus(edu.status, lang || 'pt')})</Text>}
+                    </Text>
+                    <Text style={styles.dateRange}>
+                      {(edu.startMonth || edu.startYear) ? (
+                        isEducationCompleted(edu.status) ?
+                          `${translateMonth(edu.startMonth || '', lang || 'pt')}${edu.startMonth && edu.startYear ? '/' : ''}${edu.startYear || ''} - ${translateMonth(edu.endMonth || '', lang || 'pt')}${edu.endMonth && edu.endYear ? '/' : ''}${edu.endYear || ''}` :
+                          `${translateMonth(edu.startMonth || '', lang || 'pt')}${edu.startMonth && edu.startYear ? '/' : ''}${edu.startYear || ''} - ${translateCurrent(lang || 'pt')}`
+                      ) : ''}
+                    </Text>
+                  </View>
                   <Text style={styles.eduInst}>
                     {edu.institution}
-                    {edu.institution && (edu.startMonth || edu.startYear) ? ' | ' : ''}
-                    {(edu.startMonth || edu.startYear) ? (
-                      isEducationCompleted(edu.status) ?
-                        `${translateMonth(edu.startMonth || '', lang || 'pt')}${edu.startMonth && edu.startYear ? '/' : ''}${edu.startYear || ''} - ${translateMonth(edu.endMonth || '', lang || 'pt')}${edu.endMonth && edu.endYear ? '/' : ''}${edu.endYear || ''}` :
-                        `${translateMonth(edu.startMonth || '', lang || 'pt')}${edu.startMonth && edu.startYear ? '/' : ''}${edu.startYear || ''} - ${translateCurrent(lang || 'pt')}`
-                    ) : ''}
                   </Text>
                   {edu.description && <Text style={styles.eduDesc}>• {edu.description}</Text>}
                 </View>
@@ -427,10 +433,10 @@ export function ClassicTemplate({
                     borderBottomStyle: showSeparator ? styles.certBlock.borderBottomStyle : undefined,
                   }}
                 >
-                  <Text style={styles.certName}>
-                    {cert.name}
-                    <Text style={styles.certDate}> ({cert.completionDate})</Text>
-                  </Text>
+                  <View style={styles.roleAndDate}>
+                    <Text style={styles.certName}>{cert.name}</Text>
+                    <Text style={styles.dateRange}>{cert.completionDate}</Text>
+                  </View>
                   <Text style={styles.certIssuer}>{cert.issuer}</Text>
                   {cert.validationLink && (
                     <Link src={cert.validationLink} style={styles.certLink}>
@@ -501,10 +507,10 @@ export function ClassicTemplate({
                     borderBottomStyle: showSeparator ? styles.projBlock.borderBottomStyle : undefined,
                   }}
                 >
-                  <Text style={styles.projName}>
-                    {proj.name}
-                    <Text style={styles.projYear}> ({proj.year})</Text>
-                  </Text>
+                  <View style={styles.roleAndDate}>
+                    <Text style={styles.projName}>{proj.name}</Text>
+                    <Text style={styles.dateRange}>{proj.year}</Text>
+                  </View>
                   {proj.tech && <Text style={styles.projTech}>{proj.tech}</Text>}
                   {proj.description && <Text style={styles.projDesc}>• {proj.description}</Text>}
                   {proj.link && (

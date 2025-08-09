@@ -5,7 +5,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { CompactCVTypeSelector } from './compact-cv-type-selector';
 import PdfDownloadButton from '../pdf_download_button';
 import { ThankYouModal } from '../thank_you_modal';
-import { Experience, Education, Language, Certification, Project, Volunteer, CvColor } from '../../types/cv';
+import { Experience, Education, Language, Certification, Project, Volunteer, CvColor, CvTemplate } from '../../types/cv';
 
 import { PersonalInfo, Link } from '../../types/cv';
 interface FloatingActionBarProps {
@@ -19,7 +19,7 @@ interface FloatingActionBarProps {
   certifications: Certification[];
   projects: Project[];
   volunteers: Volunteer[];
-  template?: 'classic' | 'modern' | 'creative';
+  template?: CvTemplate;
   color?: CvColor;
   onShowPdfPreview: () => void;
   onGeneratePDF: () => boolean;
@@ -27,7 +27,7 @@ interface FloatingActionBarProps {
   onScrollToJobAnalysis: () => void;
   onScrollToCVTips: () => void;
   onScrollToAtsExplanation: () => void;
-  onTemplateChange?: (template: 'classic' | 'modern' | 'creative') => void;
+  onTemplateChange?: (template: CvTemplate) => void;
 }
 
 /**
@@ -179,6 +179,39 @@ export function FloatingActionBar({
               </button>
               <button
                                  onClick={() => {
+                   onTemplateChange?.('professional');
+                   setIsTemplateDropdownOpen(false);
+                 }}
+                className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${template === 'professional' ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+              >
+                <div className="w-6 h-6 bg-sky-500 rounded flex items-center justify-center">
+                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <rect x="3" y="7" width="18" height="12" rx="2" fill="none" stroke="currentColor" strokeWidth="2"/>
+                    <path d="M9 7V6a3 3 0 0 1 3-3h0a3 3 0 0 1 3 3v1" stroke="currentColor" strokeWidth="2" fill="none"/>
+                    <rect x="10" y="11" width="4" height="2" fill="currentColor"/>
+                  </svg>
+                </div>
+                <span className="font-medium text-sm">{t('template.professional.name')}</span>
+              </button>
+              <button
+                                 onClick={() => {
+                   onTemplateChange?.('timeline');
+                   setIsTemplateDropdownOpen(false);
+                 }}
+                className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${template === 'timeline' ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+              >
+                <div className="w-6 h-6 bg-amber-500 rounded flex items-center justify-center">
+                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <rect x="11" y="4" width="2" height="16" rx="1" fill="currentColor"/>
+                    <circle cx="12" cy="6" r="2" fill="currentColor"/>
+                    <circle cx="12" cy="12" r="2" fill="currentColor"/>
+                    <circle cx="12" cy="18" r="2" fill="currentColor"/>
+                  </svg>
+                </div>
+                <span className="font-medium text-sm">{t('template.timeline.name')}</span>
+              </button>
+              <button
+                                 onClick={() => {
                    onTemplateChange?.('modern');
                    setIsTemplateDropdownOpen(false);
                  }}
@@ -209,6 +242,23 @@ export function FloatingActionBar({
                   </svg>
                 </div>
                 <span className="font-medium text-sm">{t('template.creative.name')}</span>
+              </button>
+              <button
+                                 onClick={() => {
+                   onTemplateChange?.('minimal');
+                   setIsTemplateDropdownOpen(false);
+                 }}
+                className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${template === 'minimal' ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+              >
+                <div className="w-6 h-6 bg-teal-500 rounded flex items-center justify-center">
+                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <rect x="4" y="4" width="6" height="16" rx="1" fill="currentColor"/>
+                    <rect x="12" y="6" width="8" height="2" fill="currentColor"/>
+                    <rect x="12" y="10" width="8" height="2" fill="currentColor"/>
+                    <rect x="12" y="14" width="6" height="2" fill="currentColor"/>
+                  </svg>
+                </div>
+                <span className="font-medium text-sm">{t('template.minimal.name')}</span>
               </button>
             </div>
           </div>
@@ -279,19 +329,6 @@ export function FloatingActionBar({
               {t('select.language')}
             </div>
             <div className="py-1">
-              <PdfDownloadButtonWithValidation lang="pt">
-                <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 cursor-pointer">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6">
-                    <path d="M5,4H13V28H5c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" fill="#2b6519"></path>
-                    <path d="M16,4h15V28h-15c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" transform="rotate(180 21.5 16)" fill="#ea3323"></path>
-                    <path d="M27,4H5c-2.209,0-4,1.791-4,4V24c0,2.209,1.791,4,4,4H27c2.209,0,4-1.791,4-4V8c0-2.209-1.791-4-4-4Zm3,20c0,1.654-1.346,3-3,3H5c-1.654,0-3-1.346-3-3V8c0-1.654,1.346-3,3-3H27c1.654,0,3,1.346,3,3V24Z" opacity=".15"></path>
-                    <path d="M27,5H5c-1.657,0-3,1.343-3,3v1c0-1.657,1.343-3,3-3H27c1.657,0,3,1.343,3,3v-1c0-1.657-1.343-3-3-3Z" fill="#fff" opacity=".2"></path>
-                    <circle cx="12" cy="16" r="5" fill="#ff5"></circle>
-                    <path d="M14.562,13.529l-5.125-.006v3.431h0c.004,.672,.271,1.307,.753,1.787,.491,.489,1.132,.759,1.805,.759,.684,0,1.328-.267,1.813-.75,.485-.484,.753-1.126,.753-1.808v-3.413Z" fill="#ea3323"></path>
-                  </svg>
-                  <span className="font-medium text-sm">{t('language.portuguese')}</span>
-                </div>
-              </PdfDownloadButtonWithValidation>
               <PdfDownloadButtonWithValidation lang="en">
                 <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 cursor-pointer">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6">
@@ -310,6 +347,19 @@ export function FloatingActionBar({
                     <path d="M27,5H5c-1.657,0-3,1.343-3,3v1c0-1.657,1.343-3,3-3H27c1.657,0,3,1.343,3,3v-1c0-1.657-1.343-3-3-3Z" fill="#fff" opacity=".2"></path>
                   </svg>
                   <span className="font-medium text-sm">{t('language.english')}</span>
+                </div>
+              </PdfDownloadButtonWithValidation>
+              <PdfDownloadButtonWithValidation lang="pt">
+                <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 cursor-pointer">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6">
+                    <path d="M5,4H13V28H5c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" fill="#2b6519"></path>
+                    <path d="M16,4h15V28h-15c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" transform="rotate(180 21.5 16)" fill="#ea3323"></path>
+                    <path d="M27,4H5c-2.209,0-4,1.791-4,4V24c0,2.209,1.791,4,4,4H27c2.209,0,4-1.791,4-4V8c0-2.209-1.791-4-4-4Zm3,20c0,1.654-1.346,3-3,3H5c-1.654,0-3-1.346-3-3V8c0-1.654,1.346-3,3-3H27c1.654,0,3,1.346,3,3V24Z" opacity=".15"></path>
+                    <path d="M27,5H5c-1.657,0-3,1.343-3,3v1c0-1.657,1.343-3,3-3H27c1.657,0,3,1.343,3,3v-1c0-1.657-1.343-3-3-3Z" fill="#fff" opacity=".2"></path>
+                    <circle cx="12" cy="16" r="5" fill="#ff5"></circle>
+                    <path d="M14.562,13.529l-5.125-.006v3.431h0c.004,.672,.271,1.307,.753,1.787,.491,.489,1.132,.759,1.805,.759,.684,0,1.328-.267,1.813-.75,.485-.484,.753-1.126,.753-1.808v-3.413Z" fill="#ea3323"></path>
+                  </svg>
+                  <span className="font-medium text-sm">{t('language.portuguese')}</span>
                 </div>
               </PdfDownloadButtonWithValidation>
               <PdfDownloadButtonWithValidation lang="es">
