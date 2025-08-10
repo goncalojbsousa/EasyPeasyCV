@@ -29,11 +29,6 @@ interface ProfessionalExperienceProps {
 }
 
 /**
- * Array of month abbreviations for date selection (shared util)
- */
-// MONTHS imported from '../utils/months'
-
-/**
  * Professional Experience component
  * Manages work experience entries with drag-and-drop reordering
  * @param experiences - Array of professional experience entries

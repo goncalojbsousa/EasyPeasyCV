@@ -21,6 +21,10 @@ export const metadata: Metadata = {
     'resume builder',
     'curriculo',
     'curriculum vitae',
+    'eazy cv builder',
+    'free cv builder',
+    'open source cv builder',
+    'cv builder online',
   ],
   alternates: {
     canonical: '/',
