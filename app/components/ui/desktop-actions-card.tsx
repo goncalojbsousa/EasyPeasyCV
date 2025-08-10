@@ -4,6 +4,7 @@ import type { JSX } from 'react';
 import type { CVType } from '../../contexts/LanguageContext';
 
 import { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { FormSection } from './form-section';
 import { Icons } from './icons';
@@ -75,24 +76,60 @@ export function DesktopActionsCard({
   const [showThankYouModal, setShowThankYouModal] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const cvTypeDropdownRef = useRef<HTMLDivElement>(null);
+  const [languageDropdownRect, setLanguageDropdownRect] = useState<DOMRect | null>(null);
+  const [cvTypeDropdownRect, setCvTypeDropdownRect] = useState<DOMRect | null>(null);
+  const languagePortalRef = useRef<HTMLDivElement>(null);
+  const cvTypePortalRef = useRef<HTMLDivElement>(null);
 
   // Effect to close dropdowns when clicking outside of them
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
+      const target = event.target as Node;
+      // Language dropdown (Generate PDF)
+      if (isDropdownOpen) {
+        const insideTrigger = dropdownRef.current?.contains(target);
+        const insidePortal = languagePortalRef.current?.contains(target);
+        if (!insideTrigger && !insidePortal) {
+          setIsDropdownOpen(false);
+        }
       }
-      if (cvTypeDropdownRef.current && !cvTypeDropdownRef.current.contains(event.target as Node)) {
-        setIsCVTypeDropdownOpen(false);
+      // CV Type dropdown
+      if (isCVTypeDropdownOpen) {
+        const insideTrigger = cvTypeDropdownRef.current?.contains(target);
+        const insidePortal = cvTypePortalRef.current?.contains(target);
+        if (!insideTrigger && !insidePortal) {
+          setIsCVTypeDropdownOpen(false);
+        }
       }
     }
 
     if (isDropdownOpen || isCVTypeDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('click', handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [isDropdownOpen, isCVTypeDropdownOpen]);
+
+  // Keep portal positions synced with trigger rects while open
+  useEffect(() => {
+    const updateRects = () => {
+      if (isDropdownOpen && dropdownRef.current) {
+        setLanguageDropdownRect(dropdownRef.current.getBoundingClientRect());
+      }
+      if (isCVTypeDropdownOpen && cvTypeDropdownRef.current) {
+        setCvTypeDropdownRect(cvTypeDropdownRef.current.getBoundingClientRect());
+      }
+    };
+    updateRects();
+    if (isDropdownOpen || isCVTypeDropdownOpen) {
+      window.addEventListener('scroll', updateRects, true);
+      window.addEventListener('resize', updateRects);
+    }
+    return () => {
+      window.removeEventListener('scroll', updateRects, true);
+      window.removeEventListener('resize', updateRects);
     };
   }, [isDropdownOpen, isCVTypeDropdownOpen]);
 
@@ -257,27 +294,38 @@ export function DesktopActionsCard({
                 </button>
 
                 {/* CV Type Dropdown */}
-                {isCVTypeDropdownOpen && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-2 z-50">
-                    <div className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-zinc-700">
-                      {t('cv.type.selector')}
+                {isCVTypeDropdownOpen && typeof document !== 'undefined' && cvTypeDropdownRect && createPortal(
+                  (
+                    <div
+                      ref={cvTypePortalRef}
+                      className="fixed bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-2 z-[1000]"
+                      style={{
+                        top: cvTypeDropdownRect.bottom + 8,
+                        left: cvTypeDropdownRect.left,
+                        width: cvTypeDropdownRect.width,
+                      }}
+                    >
+                      <div className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-zinc-700">
+                        {t('cv.type.selector')}
+                      </div>
+                      <div className="py-1 max-h-[60vh] overflow-auto">
+                        {['development', 'marketing', 'sales', 'hr', 'finance', 'design', 'health', 'education', 'admin', 'other'].map((type) => (
+                          <button
+                            key={type}
+                            onClick={() => {
+                              setCVType(type as CVType);
+                              setIsCVTypeDropdownOpen(false);
+                            }}
+                            className={`w-full flex items-center gap-2 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${cvType === type ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+                          >
+                            {getCVTypeIcon(type)}
+                            <span className="font-medium text-sm">{t(`cv.type.${type}`)}</span>
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                    <div className="py-1">
-                      {['development', 'marketing', 'sales', 'hr', 'finance', 'design', 'health', 'education', 'admin', 'other'].map((type) => (
-                        <button
-                          key={type}
-                          onClick={() => {
-                            setCVType(type as CVType);
-                            setIsCVTypeDropdownOpen(false);
-                          }}
-                          className={`w-full flex items-center gap-2 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${cvType === type ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
-                        >
-                          {getCVTypeIcon(type)}
-                          <span className="font-medium text-sm">{t(`cv.type.${type}`)}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+                  ),
+                  document.body
                 )}
               </div>
 
@@ -309,14 +357,23 @@ export function DesktopActionsCard({
                 </button>
 
                 {/* Language selection dropdown */}
-                {isDropdownOpen && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-2">
-                    <div className="px-4 py-2 text-sm text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-zinc-700">
-                      {t('select.language')}
-                    </div>
-                    <div className="py-1">
-                      <PdfDownloadButtonWithValidation lang="en">
-                        <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 cursor-pointer">
+                {isDropdownOpen && typeof document !== 'undefined' && languageDropdownRect && createPortal(
+                  (
+                    <div
+                      ref={languagePortalRef}
+                      className="fixed bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-2 z-[1000]"
+                      style={{
+                        top: languageDropdownRect.bottom + 8,
+                        left: languageDropdownRect.left,
+                        width: languageDropdownRect.width,
+                      }}
+                    >
+                      <div className="px-4 py-2 text-sm text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-zinc-700">
+                        {t('select.language')}
+                      </div>
+                      <div className="py-1">
+                        <PdfDownloadButtonWithValidation lang="en">
+                          <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 cursor-pointer">
                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6">
                             <rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="#071b65"></rect>
                             <path d="M5.101,4h-.101c-1.981,0-3.615,1.444-3.933,3.334L26.899,28h.101c1.981,0,3.615-1.444,3.933-3.334L5.101,4Z" fill="#fff"></path>
@@ -333,10 +390,10 @@ export function DesktopActionsCard({
                             <path d="M27,5H5c-1.657,0-3,1.343-3,3v1c0-1.657,1.343-3,3-3H27c1.657,0,3,1.343,3,3v-1c0-1.657-1.343-3-3-3Z" fill="#fff" opacity=".2"></path>
                           </svg>
                           <span className="font-medium text-sm">{t('language.english')}</span>
-                        </div>
-                      </PdfDownloadButtonWithValidation>
-                      <PdfDownloadButtonWithValidation lang="pt">
-                        <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 cursor-pointer">
+                          </div>
+                        </PdfDownloadButtonWithValidation>
+                        <PdfDownloadButtonWithValidation lang="pt">
+                          <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 cursor-pointer">
                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6">
                             <path d="M5,4H13V28H5c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" fill="#2b6519"></path>
                             <path d="M16,4h15V28h-15c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" transform="rotate(180 21.5 16)" fill="#ea3323"></path>
@@ -346,65 +403,69 @@ export function DesktopActionsCard({
                             <path d="M14.562,13.529l-5.125-.006v3.431h0c.004,.672,.271,1.307,.753,1.787,.491,.489,1.132,.759,1.805,.759,.684,0,1.328-.267,1.813-.75,.485-.484,.753-1.126,.753-1.808v-3.413Z" fill="#ea3323"></path>
                           </svg>
                           <span className="font-medium text-sm">{t('language.portuguese')}</span>
-                        </div>
-                      </PdfDownloadButtonWithValidation>
-                      <PdfDownloadButtonWithValidation lang="es">
-                        <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 cursor-pointer">
+                          </div>
+                        </PdfDownloadButtonWithValidation>
+                        <PdfDownloadButtonWithValidation lang="es">
+                          <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 cursor-pointer">
                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6">
                             <rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="#c60b1e"></rect>
                             <rect x="1" y="10" width="30" height="12" fill="#ffc400"></rect>
                             <rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="none" stroke="#000" opacity=".1"></rect>
                           </svg>
                           <span className="font-medium text-sm">{t('language.spanish')}</span>
-                        </div>
-                      </PdfDownloadButtonWithValidation>
+                          </div>
+                        </PdfDownloadButtonWithValidation>
+                      </div>
                     </div>
-                  </div>
+                  ),
+                  document.body
                 )}
               </div>
             </div>
+          {/* Separator between CV options and extra actions */}
+          <div className="my-4 border-t border-gray-200 dark:border-zinc-700" />
+
+          {/* Extra actions moved here from the removed Extra Features Card */}
+          <div className="space-y-4">
+            {/* Job Analysis Button */}
+            <button
+              onClick={onScrollToJobAnalysis}
+              className="w-full bg-purple-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors duration-300 flex items-center justify-center gap-2 shadow-sm"
+              title={t('job.analysis.action.description')}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+              </svg>
+              {t('job.analysis.action.button')}
+            </button>
+
+            {/* ATS Explanation Button */}
+            <button
+              onClick={onScrollToAtsExplanation}
+              className="w-full bg-green-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-300 flex items-center justify-center gap-2 shadow-sm"
+              title={t('ats.explanation.action.description')}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+              </svg>
+              {t('ats.explanation.action.button')}
+            </button>
+
+            {/* CV Tips Button */}
+            <button
+              onClick={onScrollToCVTips}
+              className="w-full bg-blue-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center gap-2 shadow-sm"
+              title={t('cv.tips.action.description')}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+              </svg>
+              {t('cv.tips.action.button')}
+            </button>
+          </div>
           </FormSection>
 
-          {/* Extra Features Card */}
-          <FormSection title={t('extra.features')} icon={Icons.actions}>
-            <div className="space-y-4">
-              {/* Job Analysis Button */}
-              <button
-                onClick={onScrollToJobAnalysis}
-                className="w-full bg-purple-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors duration-300 flex items-center justify-center gap-2 shadow-sm"
-                title={t('job.analysis.action.description')}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
-                </svg>
-                {t('job.analysis.action.button')}
-              </button>
-
-              {/* ATS Explanation Button */}
-              <button
-                onClick={onScrollToAtsExplanation}
-                className="w-full bg-green-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-300 flex items-center justify-center gap-2 shadow-sm"
-                title={t('ats.explanation.action.description')}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
-                </svg>
-                {t('ats.explanation.action.button')}
-              </button>
-
-              {/* CV Tips Button */}
-              <button
-                onClick={onScrollToCVTips}
-                className="w-full bg-blue-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center gap-2 shadow-sm"
-                title={t('cv.tips.action.description')}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
-                </svg>
-                {t('cv.tips.action.button')}
-              </button>
-            </div>
-          </FormSection>
+          
         </div>
       </div>
 

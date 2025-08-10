@@ -49,11 +49,6 @@ const EDUCATION_STATUS = [
 ];
 
 /**
- * Array of month abbreviations for date selection (shared util)
- */
-// MONTHS imported from '../utils/months'
-
-/**
  * Academic Education component
  * Manages educational background entries with drag-and-drop reordering
  * @param education - Array of education entries
