@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { pdf } from '@react-pdf/renderer';
 import { CvDocument } from './cv_document';
-import { CvData, CvColor } from '../types/cv';
+import { CvData, CvColor, CvTemplate } from '../types/cv';
 
 /**
  * Props interface for the PdfPreview component
@@ -16,7 +16,7 @@ interface PdfPreviewProps extends CvData {
   /** Language for the document (pt or en) */
   lang?: string;
   /** Selected CV template */
-  template?: 'classic' | 'modern' | 'creative';
+  template?: CvTemplate;
   /** Selected color theme */
   color?: CvColor;
 }

@@ -7,7 +7,7 @@ import { IconButton } from './ui/icon-button';
 import { EmptyState } from './ui/empty-state';
 import { Icons } from './ui/icons';
 import { useLanguage } from '../contexts/LanguageContext';
-import { useState } from 'react';
+import { SortableList } from './dnd/sortable-list';
 
 /**
  * Props interface for the Projects component
@@ -43,59 +43,11 @@ export function Projects({
   onReorderProjects
 }: ProjectsProps) {
   const { t } = useLanguage();
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   
   // Generates a display title for each project card based on available data
   const getProjectTitle = (proj: Project, idx: number) => {
     if (proj.name) return proj.name;
     return `${t('project.title')} ${idx + 1}`;
-  };
-
-  // Drag and drop handlers for reordering project entries
-  const handleDragStart = (e: React.DragEvent, index: number) => {
-    setDraggedIndex(index);
-    e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/html', index.toString());
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-    
-    // Enhanced auto-scroll with variable speed based on distance from edge
-    const scrollThreshold = 150; // pixels from top/bottom
-    const maxScrollSpeed = 15;
-    
-    if (e.clientY < scrollThreshold) {
-      // Scroll up with variable speed
-      const distanceFromEdge = scrollThreshold - e.clientY;
-      const scrollSpeed = Math.min(maxScrollSpeed, Math.max(5, distanceFromEdge / 10));
-      window.scrollBy(0, -scrollSpeed);
-    } else if (e.clientY > window.innerHeight - scrollThreshold) {
-      // Scroll down with variable speed
-      const distanceFromEdge = e.clientY - (window.innerHeight - scrollThreshold);
-      const scrollSpeed = Math.min(maxScrollSpeed, Math.max(5, distanceFromEdge / 10));
-      window.scrollBy(0, scrollSpeed);
-    }
-  };
-
-  const handleDragEnter = (index: number) => {
-    setDragOverIndex(index);
-  };
-
-  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
-    e.preventDefault();
-    if (draggedIndex !== null && draggedIndex !== dropIndex && onReorderProjects) {
-      onReorderProjects(draggedIndex, dropIndex);
-    }
-    setDraggedIndex(null);
-    setDragOverIndex(null);
-  };
-
-  const handleDragEnd = () => {
-    setDraggedIndex(null);
-    setDragOverIndex(null);
   };
 
   return (
@@ -109,113 +61,105 @@ export function Projects({
           <EmptyState message={t('empty.project')} />
         )}
         
-        {/* Render each project entry */}
-        {projects.map((proj, idx) => (
-          <div 
-            key={idx} 
-            className={`bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg shadow-sm relative mb-6 transition-all duration-300 ${
-              draggedIndex === idx ? 'opacity-50 scale-95' : ''
-            }`}
-            onDragOver={projects.length > 1 ? handleDragOver : undefined}
-            onDragEnter={projects.length > 1 ? () => handleDragEnter(idx) : undefined}
-            onDrop={projects.length > 1 ? (e) => handleDrop(e, idx) : undefined}
-          >
-            {/* Drop indicator - shows between items */}
-            {dragOverIndex === idx && draggedIndex !== idx && (
-              <div className="absolute left-0 -top-3 w-full h-0.5 bg-blue-500 rounded-full z-10"></div>
-            )}
-            {/* Card header with title */}
-            <div className="bg-gray-50 dark:bg-zinc-900 px-4 py-3 border-b border-gray-200 dark:border-zinc-700 rounded-t-lg transition-colors duration-300">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  {projects.length > 1 && (
-                    <div 
-                      className="text-gray-400 dark:text-zinc-500 cursor-move hover:text-gray-600 dark:hover:text-zinc-300 transition-colors duration-300"
-                      draggable
-                      onDragStart={(e) => handleDragStart(e, idx)}
-                      onDragOver={handleDragOver}
-                      onDragEnter={() => handleDragEnter(idx)}
-                      onDrop={(e) => handleDrop(e, idx)}
-                      onDragEnd={handleDragEnd}
-                    >
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                      </svg>
+        {/* Render each project entry using SortableList */}
+        <SortableList
+          length={projects.length}
+          onReorder={(from, to) => onReorderProjects && onReorderProjects(from, to)}
+          renderItem={(idx) => {
+            const proj = projects[idx];
+            return (
+              <div 
+                key={idx}
+                className="bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg shadow-sm relative mb-6 transition-all duration-300"
+              >
+                {/* Card header with title */}
+                <div className="bg-gray-50 dark:bg-zinc-900 px-4 py-3 border-b border-gray-200 dark:border-zinc-700 rounded-t-lg transition-colors duration-300">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      {/* Drag handle icon (visual) */}
+                      {projects.length > 1 && (
+                        <div className="text-gray-400 dark:text-zinc-500 cursor-grab hover:text-gray-600 dark:hover:text-zinc-300 transition-colors duration-300">
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                          </svg>
+                        </div>
+                      )}
+                      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        {getProjectTitle(proj, idx)}
+                      </h3>
                     </div>
-                  )}
-                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                    {getProjectTitle(proj, idx)}
-                  </h3>
+                    <IconButton 
+                      onClick={() => onRemoveProject(idx)} 
+                      variant="danger" 
+                      size="sm"
+                      ariaLabel="Remove project"
+                    >
+                      {Icons.remove}
+                    </IconButton>
+                  </div>
                 </div>
-                <IconButton 
-                  onClick={() => onRemoveProject(idx)} 
-                  variant="danger" 
-                  size="sm"
-                >
-                  {Icons.remove}
-                </IconButton>
+                
+                {/* Card content */}
+                <div className="p-4">
+                
+                {/* Project name and year fields */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
+                  <FormField label={t('field.project.name')}>
+                    <input
+                      type="text"
+                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                      placeholder={t(`cvType.placeholder.project.name`)}
+                      value={proj.name}
+                      onChange={e => onProjectChange(idx, 'name', e.target.value)}
+                    />
+                  </FormField>
+                  <FormField label={t('field.year')}>
+                    <input
+                      type="text"
+                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                      placeholder={t('placeholder.project.year')}
+                      value={proj.year}
+                      onChange={e => onProjectChange(idx, 'year', e.target.value)}
+                    />
+                  </FormField>
+                </div>
+                
+                {/* Technologies and project link fields */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
+                  <FormField label={t(`cvType.field.technologies`)}>
+                    <input
+                      type="text"
+                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                      placeholder={t(`cvType.placeholder.technologies`)}
+                      value={proj.tech}
+                      onChange={e => onProjectChange(idx, 'tech', e.target.value)}
+                    />
+                  </FormField>
+                  <FormField label={t('field.project.link')}>
+                    <input
+                      type="url"
+                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                      placeholder={t('placeholder.project.link')}
+                      value={proj.link}
+                      onChange={e => onProjectChange(idx, 'link', e.target.value)}
+                    />
+                  </FormField>
+                </div>
+                
+                {/* Project description field */}
+                <FormField label={t('field.description')}>
+                  <textarea
+                    className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                    placeholder={t(`cvType.placeholder.project.description`)}
+                    value={proj.description}
+                    onChange={e => onProjectChange(idx, 'description', e.target.value)}
+                  />
+                </FormField>
+                </div>
               </div>
-            </div>
-            
-            {/* Card content */}
-            <div className="p-4">
-            
-            {/* Project name and year fields */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
-              <FormField label={t('field.project.name')}>
-                <input
-                  type="text"
-                  className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                  placeholder={t(`cvType.placeholder.project.name`)}
-                  value={proj.name}
-                  onChange={e => onProjectChange(idx, 'name', e.target.value)}
-                />
-              </FormField>
-              <FormField label={t('field.year')}>
-                <input
-                  type="text"
-                  className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                  placeholder={t('placeholder.project.year')}
-                  value={proj.year}
-                  onChange={e => onProjectChange(idx, 'year', e.target.value)}
-                />
-              </FormField>
-            </div>
-            
-            {/* Technologies and project link fields */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
-              <FormField label={t(`cvType.field.technologies`)}>
-                <input
-                  type="text"
-                  className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                  placeholder={t(`cvType.placeholder.technologies`)}
-                  value={proj.tech}
-                  onChange={e => onProjectChange(idx, 'tech', e.target.value)}
-                />
-              </FormField>
-              <FormField label={t('field.project.link')}>
-                <input
-                  type="url"
-                  className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                  placeholder={t('placeholder.project.link')}
-                  value={proj.link}
-                  onChange={e => onProjectChange(idx, 'link', e.target.value)}
-                />
-              </FormField>
-            </div>
-            
-            {/* Project description field */}
-            <FormField label={t('field.description')}>
-              <textarea
-                className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                                  placeholder={t(`cvType.placeholder.project.description`)}
-                value={proj.description}
-                onChange={e => onProjectChange(idx, 'description', e.target.value)}
-              />
-            </FormField>
-            </div>
-          </div>
-        ))}
+            );
+          }}
+        />
         
         {/* Add project button at bottom */}
         <div className="flex justify-start mt-4">

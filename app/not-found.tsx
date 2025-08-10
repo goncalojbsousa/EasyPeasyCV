@@ -14,12 +14,12 @@ export default function NotFound() {
   const { t } = useLanguage();
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-zinc-900 transition-colors duration-300">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-zinc-900 transition-colors duration-300">
       {/* Header */}
       <Navbar />
 
       {/* Main content */}
-      <div className="max-w-7xl mx-auto pt-40 pb-24 px-4 sm:px-6">
+      <div className="flex-1 max-w-7xl mx-auto pt-40 pb-24 px-4 sm:px-6">
         <div className="text-center">
           {/* 404 Number */}
           <div className="text-9xl font-bold text-blue-600 dark:text-blue-400 mb-8">
@@ -50,33 +50,6 @@ export default function NotFound() {
             >
               {t('error.404.builder.button')}
             </Link>
-          </div>
-          
-          {/* Helpful Links */}
-          <div className="max-w-2xl mx-auto">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
-              {t('error.404.helpful.title')}
-            </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-              <div className="bg-white dark:bg-zinc-800 p-6 rounded-lg border border-gray-200 dark:border-zinc-700">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                  {t('error.404.helpful.features.title')}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm">
-                  {t('error.404.helpful.features.description')}
-                </p>
-              </div>
-              
-              <div className="bg-white dark:bg-zinc-800 p-6 rounded-lg border border-gray-200 dark:border-zinc-700">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                  {t('error.404.helpful.templates.title')}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm">
-                  {t('error.404.helpful.templates.description')}
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </div>

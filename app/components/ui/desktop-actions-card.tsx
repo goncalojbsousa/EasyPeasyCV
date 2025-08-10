@@ -9,7 +9,7 @@ import { FormSection } from './form-section';
 import { Icons } from './icons';
 import PdfDownloadButton from '../pdf_download_button';
 import { ThankYouModal } from '../thank_you_modal';
-import { Experience, Education, Language, Certification, Project, Volunteer, CvColor } from '../../types/cv';
+import { Experience, Education, Language, Certification, Project, Volunteer, CvColor, CvTemplate } from '../../types/cv';
 import { CvTypeSelector } from './cv-type-selector';
 import { ColorSelector } from './color-selector';
 
@@ -25,11 +25,11 @@ interface DesktopActionsCardProps {
   certifications: Certification[];
   projects: Project[];
   volunteers: Volunteer[];
-  template?: 'classic' | 'modern' | 'creative';
+  template?: CvTemplate;
   color?: CvColor;
-  selectedTemplate: 'classic' | 'modern' | 'creative';
+  selectedTemplate: CvTemplate;
   selectedColor: CvColor;
-  onTemplateChange: (template: 'classic' | 'modern' | 'creative') => void;
+  onTemplateChange: (template: CvTemplate) => void;
   onColorChange: (color: CvColor) => void;
   onShowPdfPreview: () => void;
   onGeneratePDF: () => boolean;
@@ -159,7 +159,7 @@ export function DesktopActionsCard({
   /**
    * PDF download button component with validation logic.
    * Prevents download if form validation fails, and shows a thank you modal after successful generation.
-   * @param lang - Language for the PDF (pt or en)
+   * @param lang - Language for the PDF (pt, en or es)
    * @param children - Content to display in the button
    */
   const PdfDownloadButtonWithValidation = ({ lang, children }: { lang: string; children: React.ReactNode }) => {
@@ -183,7 +183,7 @@ export function DesktopActionsCard({
     };
 
     return (
-      <div onClick={handleClick}>
+      <div onClickCapture={handleClick}>
         <PdfDownloadButton
           personalInfo={personalInfo}
           links={links}
@@ -315,19 +315,6 @@ export function DesktopActionsCard({
                       {t('select.language')}
                     </div>
                     <div className="py-1">
-                      <PdfDownloadButtonWithValidation lang="pt">
-                        <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 cursor-pointer">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6">
-                            <path d="M5,4H13V28H5c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" fill="#2b6519"></path>
-                            <path d="M16,4h15V28h-15c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" transform="rotate(180 21.5 16)" fill="#ea3323"></path>
-                            <path d="M27,4H5c-2.209,0-4,1.791-4,4V24c0,2.209,1.791,4,4,4H27c2.209,0,4-1.791,4-4V8c0-2.209-1.791-4-4-4Zm3,20c0,1.654-1.346,3-3,3H5c-1.654,0-3-1.346-3-3V8c0-1.654,1.346-3,3-3H27c1.654,0,3,1.346,3,3V24Z" opacity=".15"></path>
-                            <path d="M27,5H5c-1.657,0-3,1.343-3,3v1c0-1.657,1.343-3,3-3H27c1.657,0,3,1.343,3,3v-1c0-1.657-1.343-3-3-3Z" fill="#fff" opacity=".2"></path>
-                            <circle cx="12" cy="16" r="5" fill="#ff5"></circle>
-                            <path d="M14.562,13.529l-5.125-.006v3.431h0c.004,.672,.271,1.307,.753,1.787,.491,.489,1.132,.759,1.805,.759,.684,0,1.328-.267,1.813-.75,.485-.484,.753-1.126,.753-1.808v-3.413Z" fill="#ea3323"></path>
-                          </svg>
-                          <span className="font-medium text-sm">{t('language.portuguese')}</span>
-                        </div>
-                      </PdfDownloadButtonWithValidation>
                       <PdfDownloadButtonWithValidation lang="en">
                         <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 cursor-pointer">
                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6">
@@ -346,6 +333,29 @@ export function DesktopActionsCard({
                             <path d="M27,5H5c-1.657,0-3,1.343-3,3v1c0-1.657,1.343-3,3-3H27c1.657,0,3,1.343,3,3v-1c0-1.657-1.343-3-3-3Z" fill="#fff" opacity=".2"></path>
                           </svg>
                           <span className="font-medium text-sm">{t('language.english')}</span>
+                        </div>
+                      </PdfDownloadButtonWithValidation>
+                      <PdfDownloadButtonWithValidation lang="pt">
+                        <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 cursor-pointer">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6">
+                            <path d="M5,4H13V28H5c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" fill="#2b6519"></path>
+                            <path d="M16,4h15V28h-15c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" transform="rotate(180 21.5 16)" fill="#ea3323"></path>
+                            <path d="M27,4H5c-2.209,0-4,1.791-4,4V24c0,2.209,1.791,4,4,4H27c2.209,0,4-1.791,4-4V8c0-2.209-1.791-4-4-4Zm3,20c0,1.654-1.346,3-3,3H5c-1.654,0-3-1.346-3-3V8c0-1.654,1.346-3,3-3H27c1.654,0,3,1.346,3,3V24Z" opacity=".15"></path>
+                            <path d="M27,5H5c-1.657,0-3,1.343-3,3v1c0-1.657,1.343-3,3-3H27c1.657,0,3,1.343,3,3v-1c0-1.657-1.343-3-3-3Z" fill="#fff" opacity=".2"></path>
+                            <circle cx="12" cy="16" r="5" fill="#ff5"></circle>
+                            <path d="M14.562,13.529l-5.125-.006v3.431h0c.004,.672,.271,1.307,.753,1.787,.491,.489,1.132,.759,1.805,.759,.684,0,1.328-.267,1.813-.75,.485-.484,.753-1.126,.753-1.808v-3.413Z" fill="#ea3323"></path>
+                          </svg>
+                          <span className="font-medium text-sm">{t('language.portuguese')}</span>
+                        </div>
+                      </PdfDownloadButtonWithValidation>
+                      <PdfDownloadButtonWithValidation lang="es">
+                        <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 cursor-pointer">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6">
+                            <rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="#c60b1e"></rect>
+                            <rect x="1" y="10" width="30" height="12" fill="#ffc400"></rect>
+                            <rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="none" stroke="#000" opacity=".1"></rect>
+                          </svg>
+                          <span className="font-medium text-sm">{t('language.spanish')}</span>
                         </div>
                       </PdfDownloadButtonWithValidation>
                     </div>

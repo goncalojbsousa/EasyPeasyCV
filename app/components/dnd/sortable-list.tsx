@@ -1,0 +1,90 @@
+"use client";
+
+import React, { PropsWithChildren, useMemo } from "react";
+import {
+  DndContext,
+  DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  useSortable,
+  rectSortingStrategy,
+  sortableKeyboardCoordinates,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+
+// Generic SortableItem that wraps each list row
+function SortableItem({ id, children }: PropsWithChildren<{ id: number }>) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+
+  const style: React.CSSProperties = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    cursor: isDragging ? "grabbing" : "grab",
+    opacity: isDragging ? 0.6 : 1,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      {children}
+    </div>
+  );
+}
+
+export interface SortableListProps {
+  // Number of items in the list; items are identified by their current indices [0..length-1]
+  length: number;
+  // Render a row by index
+  renderItem: (idx: number) => React.ReactNode;
+  // Callback when an item is moved
+  onReorder: (from: number, to: number) => void;
+  // Disable sorting (e.g., when length <= 1)
+  disabled?: boolean;
+}
+
+/**
+ * SortableList (dnd-kit)
+ * - Uses indices as stable item ids for simplicity.
+ * - Emits onReorder(fromIndex, toIndex) on drag end.
+ */
+export function SortableList({ length, renderItem, onReorder, disabled }: SortableListProps) {
+  const items = useMemo(() => Array.from({ length }, (_, i) => i), [length]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over) return;
+
+    const from = Number(active.id);
+    const to = Number(over.id);
+    if (Number.isNaN(from) || Number.isNaN(to) || from === to) return;
+
+    onReorder(from, to);
+  };
+
+  if (disabled || length <= 1) {
+    return <>{items.map((idx) => <React.Fragment key={idx}>{renderItem(idx)}</React.Fragment>)}</>;
+  }
+
+  return (
+    <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+      <SortableContext items={items} strategy={rectSortingStrategy}>
+        {items.map((idx) => (
+          <SortableItem id={idx} key={idx}>
+            {renderItem(idx)}
+          </SortableItem>
+        ))}
+      </SortableContext>
+    </DndContext>
+  );
+}
+
+export default SortableList;

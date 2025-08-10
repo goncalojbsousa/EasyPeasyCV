@@ -17,6 +17,7 @@ export function ThemeToggle() {
         return (
             <button
                 className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-300"
+                aria-label="Toggle theme"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -40,6 +41,7 @@ export function ThemeToggle() {
         <button
             className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-300"
             onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+            aria-label={resolvedTheme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
         >
             {resolvedTheme === 'dark' ? (
                 // Sun icon: shown in dark mode, click to switch to light mode

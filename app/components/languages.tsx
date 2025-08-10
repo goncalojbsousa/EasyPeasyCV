@@ -104,6 +104,7 @@ export function Languages({
               variant="danger" 
               size="sm"
               className="absolute top-2 right-4"
+              ariaLabel="Remove language"
             >
               {Icons.remove}
             </IconButton>

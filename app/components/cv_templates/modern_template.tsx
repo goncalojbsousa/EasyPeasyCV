@@ -459,12 +459,27 @@ export function ModernTemplate({
   // Helper to generate complete URLs for social media
   const getSocialUrl = (type: string, value: string) => {
     if (!value) return '';
-    if (type === 'LinkedIn') return value.startsWith('http') ? value : `https://linkedin.com/in/${value}`;
-    if (type === 'GitHub') return value.startsWith('http') ? value : `https://github.com/${value}`;
-    if (type === 'GitLab') return value.startsWith('http') ? value : `https://gitlab.com/${value}`;
-    if (type === 'Portfolio') return value.startsWith('http') ? value : `https://${value}`;
-    if (type === 'Outro') return value.startsWith('http') ? value : `https://${value}`;
-    return value;
+    const val = value.trim();
+    const hasProtocol = /^https?:\/\//i.test(val);
+    const lower = type.toLowerCase();
+
+    if (lower === 'email') return `mailto:${val}`;
+    if (lower === 'phone') return `tel:${val}`;
+
+    // If value contains a known domain but lacks protocol, prefix https
+    if (!hasProtocol) {
+      if (/linkedin\.com/i.test(val)) return `https://${val}`;
+      if (/github\.com/i.test(val)) return `https://${val}`;
+      if (/gitlab\.com/i.test(val)) return `https://${val}`;
+    }
+
+    if (!hasProtocol) {
+      if (lower === 'linkedin') return `https://www.linkedin.com/in/${val}`;
+      if (lower === 'github') return `https://github.com/${val}`;
+      if (lower === 'gitlab') return `https://gitlab.com/${val}`;
+      return `https://${val}`; // portfolio/other
+    }
+    return val;
   };
 
   // Helper to translate link types
@@ -544,23 +559,6 @@ export function ModernTemplate({
       'language.level.b2': { pt: 'B2', en: 'B2' },
       'language.level.c1': { pt: 'C1', en: 'C1' },
       'language.level.c2': { pt: 'C2', en: 'C2' },
-      // Legacy levels for backward compatibility
-      'Básico': { pt: 'Básico', en: 'Basic' },
-      'Intermediário': { pt: 'Intermediário', en: 'Intermediate' },
-      'Avançado': { pt: 'Avançado', en: 'Advanced' },
-      'Fluente': { pt: 'Fluente', en: 'Fluent' },
-      'Nativo': { pt: 'Nativo', en: 'Native' },
-      'Basic': { pt: 'Básico', en: 'Basic' },
-      'Intermediate': { pt: 'Intermediário', en: 'Intermediate' },
-      'Advanced': { pt: 'Avançado', en: 'Advanced' },
-      'Fluent': { pt: 'Fluente', en: 'Fluent' },
-      'Native': { pt: 'Nativo', en: 'Native' },
-      // Old translation keys for backward compatibility
-      'language.level.basic': { pt: 'Básico', en: 'Basic' },
-      'language.level.intermediate': { pt: 'Intermediário', en: 'Intermediate' },
-      'language.level.advanced': { pt: 'Avançado', en: 'Advanced' },
-      'language.level.fluent': { pt: 'Fluente', en: 'Fluent' },
-      'language.level.native': { pt: 'Nativo', en: 'Native' },
     };
     
     return levelMap[level as keyof typeof levelMap]?.[lang as keyof typeof levelMap[keyof typeof levelMap]] || level;
