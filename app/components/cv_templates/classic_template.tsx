@@ -518,6 +518,11 @@ export function ClassicTemplate({
                       {proj.link}
                     </Link>
                   )}
+                  {proj.sourceCode && (
+                    <Link src={proj.sourceCode} style={styles.projLink}>
+                      {proj.sourceCode}
+                    </Link>
+                  )}
                 </View>
               );
             })}

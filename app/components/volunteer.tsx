@@ -156,8 +156,8 @@ export function VolunteerWork({
                   </FormField>
                 </div>
                 
-                {/* Start month and year with dropdowns */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
+                {/* Date range fields */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-4">
                   <FormField label={t('field.start.month')}>
                     <div ref={el => { dropdownRefs.current[`startMonth-${idx}`] = el; }} className="relative">
                       <button
@@ -166,7 +166,7 @@ export function VolunteerWork({
                         onClick={() => toggleDropdown(`startMonth-${idx}`)}
                         tabIndex={0}
                       >
-                        <span>{getTranslatedMonthWithT(t, vol.startMonth) || t('select.month')}</span>
+                        <span>{vol.startMonth ? getTranslatedMonthWithT(t, vol.startMonth) : t('select.month')}</span>
                         <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`startMonth-${idx}`] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
                       </button>
                       {openDropdowns[`startMonth-${idx}`] && (
@@ -197,22 +197,7 @@ export function VolunteerWork({
                       onChange={e => onVolunteerChange(idx, 'startYear', e.target.value)}
                     />
                   </FormField>
-                </div>
-                
-                {/* Current toggle and conditional end date fields */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
-                  <FormField label={t('field.current')}>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={vol.current}
-                        onChange={e => onVolunteerChange(idx, 'current', e.target.checked)}
-                        id={`volunteer-current-${idx}`}
-                        className="mr-2"
-                      />
-                      <label htmlFor={`volunteer-current-${idx}`} className="text-sm text-gray-900 dark:text-gray-100">{t('field.current')}</label>
-                    </div>
-                  </FormField>
+                  {/* End date fields (hidden when current is selected) */}
                   {!vol.current && (
                     <>
                       <FormField label={t('field.end.month')}>
@@ -223,7 +208,7 @@ export function VolunteerWork({
                             onClick={() => toggleDropdown(`endMonth-${idx}`)}
                             tabIndex={0}
                           >
-                            <span>{getTranslatedMonthWithT(t, vol.endMonth) || t('select.month')}</span>
+                            <span>{vol.endMonth ? getTranslatedMonthWithT(t, vol.endMonth) : t('select.month')}</span>
                             <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`endMonth-${idx}`] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
                           </button>
                           {openDropdowns[`endMonth-${idx}`] && (
@@ -256,6 +241,18 @@ export function VolunteerWork({
                       </FormField>
                     </>
                   )}
+                </div>
+
+                {/* Current toggle */}
+                <div className="flex items-center gap-2 mb-4">
+                  <input
+                    type="checkbox"
+                    checked={vol.current}
+                    onChange={e => onVolunteerChange(idx, 'current', e.target.checked)}
+                    id={`volunteer-current-${idx}`}
+                    className="mr-2"
+                  />
+                  <label htmlFor={`volunteer-current-${idx}`} className="text-sm text-gray-900 dark:text-gray-100">{t('field.current')}</label>
                 </div>
                 
                 {/* Description field */}

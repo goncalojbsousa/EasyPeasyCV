@@ -127,15 +127,15 @@ export function Projects({
                   </FormField>
                 </div>
                 
-                {/* Technologies and project link fields */}
+                {/* Source code and project link fields */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
-                  <FormField label={t(`cvType.field.technologies`)}>
+                  <FormField label={t('field.project.sourceCode')}>
                     <input
-                      type="text"
+                      type="url"
                       className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                      placeholder={t(`cvType.placeholder.technologies`)}
-                      value={proj.tech}
-                      onChange={e => onProjectChange(idx, 'tech', e.target.value)}
+                      placeholder={t('placeholder.project.sourceCode')}
+                      value={proj.sourceCode || ''}
+                      onChange={e => onProjectChange(idx, 'sourceCode', e.target.value)}
                     />
                   </FormField>
                   <FormField label={t('field.project.link')}>
@@ -145,6 +145,19 @@ export function Projects({
                       placeholder={t('placeholder.project.link')}
                       value={proj.link}
                       onChange={e => onProjectChange(idx, 'link', e.target.value)}
+                    />
+                  </FormField>
+                </div>
+
+                {/* Technologies field */}
+                <div className="grid grid-cols-1 gap-4 sm:gap-6 mb-4">
+                  <FormField label={t(`cvType.field.technologies`)}>
+                    <input
+                      type="text"
+                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                      placeholder={t(`cvType.placeholder.technologies`)}
+                      value={proj.tech}
+                      onChange={e => onProjectChange(idx, 'tech', e.target.value)}
                     />
                   </FormField>
                 </div>

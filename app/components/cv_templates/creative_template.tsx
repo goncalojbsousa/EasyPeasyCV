@@ -877,6 +877,11 @@ export function CreativeTemplate({
                           {lang === 'en' ? 'View Project' : lang === 'es' ? 'Ver Proyecto' : 'Ver Projeto'}
                         </Link>
                       )}
+                      {proj.sourceCode && (
+                        <Link src={proj.sourceCode} style={dynamicStyles.projLink}>
+                          {lang === 'en' ? 'Source Code' : lang === 'es' ? 'Código fuente' : 'Código-fonte'}
+                        </Link>
+                      )}
                     </View>
                   );
                 })}

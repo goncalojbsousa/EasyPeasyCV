@@ -379,7 +379,7 @@ export default function Builder() {
   const handleAddProject = () => {
     setProjects([
       ...projects,
-      { name: '', description: '', link: '', tech: '', year: '' }
+      { name: '', description: '', link: '', sourceCode: '', tech: '', year: '' }
     ]);
   };
   /**
