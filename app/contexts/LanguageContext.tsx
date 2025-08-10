@@ -129,7 +129,6 @@ export function useLanguage() {
 
 // Portuguese translations
 const ptTranslations: Record<string, string> = {
-  // ... existing translations ...
   // Header
   'app.title': 'EasyPeasyCV',
   'app.subtitle': 'Crie um currículo profissional em minutos',
@@ -848,7 +847,6 @@ const ptTranslations: Record<string, string> = {
 
 // English translations
 const enTranslations: Record<string, string> = {
-  // ... existing translations ...
   'landing.benefits.title': 'EasyPeasyCV Advantages',
   'landing.benefits.subtitle': 'Discover why EasyPeasyCV is the right choice for your professional CV',
   'landing.benefits.privacy.title': 'Complete Privacy',
