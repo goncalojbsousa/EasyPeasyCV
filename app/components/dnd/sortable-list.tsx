@@ -27,7 +27,14 @@ const DragHandleContext = createContext<DragHandleValue | null>(null);
 
 export function useDragHandle() {
   const ctx = useContext(DragHandleContext);
-  if (!ctx) return { attributes: {}, listeners: {}, setActivatorNodeRef: () => {} } as any;
+  if (!ctx) {
+    const noop = () => {};
+    return {
+      attributes: {} as ReturnType<typeof useSortable>["attributes"],
+      listeners: {} as ReturnType<typeof useSortable>["listeners"],
+      setActivatorNodeRef: noop as ReturnType<typeof useSortable>["setActivatorNodeRef"],
+    };
+  }
   return ctx;
 }
 
@@ -39,10 +46,11 @@ type DragHandleProps = React.PropsWithChildren<{
 // DragHandle component to be used inside item headers
 export function DragHandle({ className = "", ariaLabel = "Drag item", children }: DragHandleProps) {
   const { attributes, listeners, setActivatorNodeRef } = useDragHandle();
+  const setButtonActivatorRef = (el: HTMLButtonElement | null) => setActivatorNodeRef(el);
   return (
     <button
       type="button"
-      ref={setActivatorNodeRef as any}
+      ref={setButtonActivatorRef}
       {...attributes}
       {...listeners}
       aria-label={ariaLabel}
