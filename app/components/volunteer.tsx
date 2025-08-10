@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { SortableList } from './dnd/sortable-list';
+import { SortableList, DragHandle } from './dnd/sortable-list';
 import { Volunteer } from '../types/cv';
 import { FormSection } from './ui/form-section';
 import { FormField } from './ui/form-field';
@@ -107,11 +107,14 @@ export function VolunteerWork({
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
                       {volunteers.length > 1 && (
-                        <div className="text-gray-400 dark:text-zinc-500 cursor-grab hover:text-gray-600 dark:hover:text-zinc-300 transition-colors duration-300">
+                        <DragHandle
+                          ariaLabel="Reorder volunteer"
+                          className="text-gray-400 dark:text-zinc-500 hover:text-gray-600 dark:hover:text-zinc-300 transition-colors duration-300"
+                        >
                           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
                           </svg>
-                        </div>
+                        </DragHandle>
                       )}
                       <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                         {getVolunteerTitle(vol, idx)}
@@ -153,8 +156,8 @@ export function VolunteerWork({
                   </FormField>
                 </div>
                 
-                {/* Start month and year with dropdowns */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
+                {/* Date range fields */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-4">
                   <FormField label={t('field.start.month')}>
                     <div ref={el => { dropdownRefs.current[`startMonth-${idx}`] = el; }} className="relative">
                       <button
@@ -163,7 +166,7 @@ export function VolunteerWork({
                         onClick={() => toggleDropdown(`startMonth-${idx}`)}
                         tabIndex={0}
                       >
-                        <span>{getTranslatedMonthWithT(t, vol.startMonth) || t('select.month')}</span>
+                        <span>{vol.startMonth ? getTranslatedMonthWithT(t, vol.startMonth) : t('select.month')}</span>
                         <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`startMonth-${idx}`] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
                       </button>
                       {openDropdowns[`startMonth-${idx}`] && (
@@ -194,22 +197,7 @@ export function VolunteerWork({
                       onChange={e => onVolunteerChange(idx, 'startYear', e.target.value)}
                     />
                   </FormField>
-                </div>
-                
-                {/* Current toggle and conditional end date fields */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
-                  <FormField label={t('field.current')}>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={vol.current}
-                        onChange={e => onVolunteerChange(idx, 'current', e.target.checked)}
-                        id={`volunteer-current-${idx}`}
-                        className="mr-2"
-                      />
-                      <label htmlFor={`volunteer-current-${idx}`} className="text-sm text-gray-900 dark:text-gray-100">{t('field.current')}</label>
-                    </div>
-                  </FormField>
+                  {/* End date fields (hidden when current is selected) */}
                   {!vol.current && (
                     <>
                       <FormField label={t('field.end.month')}>
@@ -220,7 +208,7 @@ export function VolunteerWork({
                             onClick={() => toggleDropdown(`endMonth-${idx}`)}
                             tabIndex={0}
                           >
-                            <span>{getTranslatedMonthWithT(t, vol.endMonth) || t('select.month')}</span>
+                            <span>{vol.endMonth ? getTranslatedMonthWithT(t, vol.endMonth) : t('select.month')}</span>
                             <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`endMonth-${idx}`] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
                           </button>
                           {openDropdowns[`endMonth-${idx}`] && (
@@ -253,6 +241,18 @@ export function VolunteerWork({
                       </FormField>
                     </>
                   )}
+                </div>
+
+                {/* Current toggle */}
+                <div className="flex items-center gap-2 mb-4">
+                  <input
+                    type="checkbox"
+                    checked={vol.current}
+                    onChange={e => onVolunteerChange(idx, 'current', e.target.checked)}
+                    id={`volunteer-current-${idx}`}
+                    className="mr-2"
+                  />
+                  <label htmlFor={`volunteer-current-${idx}`} className="text-sm text-gray-900 dark:text-gray-100">{t('field.current')}</label>
                 </div>
                 
                 {/* Description field */}

@@ -336,6 +336,11 @@ export function MinimalTemplate({
                         {lang === 'en' ? 'View Project' : lang === 'es' ? 'Ver Proyecto' : 'Ver Projeto'}
                       </Link>
                     )}
+                    {proj.sourceCode && (
+                      <Link src={proj.sourceCode} style={styles.projLink}>
+                        {lang === 'en' ? 'Source Code' : lang === 'es' ? 'Código fuente' : 'Código-fonte'}
+                      </Link>
+                    )}
                   </View>
                 ))}
               </View>

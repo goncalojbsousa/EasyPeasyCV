@@ -9,7 +9,7 @@ import { Icons } from './ui/icons';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useState, useEffect, useRef } from 'react';
 
-import { SortableList } from './dnd/sortable-list';
+import { SortableList, DragHandle } from './dnd/sortable-list';
 import { MONTHS_EN as MONTHS, toEN, getTranslatedMonthWithT } from '../utils/months';
 
 /**
@@ -118,11 +118,14 @@ export function ProfessionalExperience({
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
                       {experiences.length > 1 && (
-                        <div className="text-gray-400 dark:text-zinc-500 cursor-grab hover:text-gray-600 dark:hover:text-zinc-300 transition-colors duration-300">
+                        <DragHandle
+                          ariaLabel="Reorder experience"
+                          className="text-gray-400 dark:text-zinc-500 hover:text-gray-600 dark:hover:text-zinc-300 transition-colors duration-300"
+                        >
                           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
                           </svg>
-                        </div>
+                        </DragHandle>
                       )}
                       <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                         {getExperienceTitle(exp, idx)}

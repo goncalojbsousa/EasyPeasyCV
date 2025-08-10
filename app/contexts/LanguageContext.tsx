@@ -129,7 +129,6 @@ export function useLanguage() {
 
 // Portuguese translations
 const ptTranslations: Record<string, string> = {
-  // ... existing translations ...
   // Header
   'app.title': 'EasyPeasyCV',
   'app.subtitle': 'Crie um currículo profissional em minutos',
@@ -344,6 +343,7 @@ const ptTranslations: Record<string, string> = {
   'field.year': 'Ano',
   'field.project.technologies': 'Tecnologias',
   'field.project.link': 'Link',
+  'field.project.sourceCode': 'Código-fonte',
   'add.project': 'Adicionar Projeto',
   'project.title': 'Projeto',
 
@@ -367,11 +367,12 @@ const ptTranslations: Record<string, string> = {
   'placeholder.certification': 'Ex: Certificação AWS Cloud Practitioner',
   'placeholder.issuer': 'Ex: Udemy, Alura, AWS',
   'placeholder.hours': 'Ex: 40 horas',
-  'placeholder.validation.link': 'Ex: https://certificate.institution.com/123456',
+  'placeholder.validation.link': 'Ex: www.certificate.institution.com/123456',
   'placeholder.project.name': 'Ex: Portfolio Website',
   'placeholder.project.year': 'Ex: 2023',
   'placeholder.project.tech': 'Ex: React, Node.js, MongoDB',
-  'placeholder.project.link': 'Ex: https://github.com/user/project',
+  'placeholder.project.link': 'Ex: www.meuprojeto.com',
+  'placeholder.project.sourceCode': 'Ex: www.github.com/user/repo',
   'placeholder.project.description': 'Breve descrição do projeto, objetivos, resultados...',
   'placeholder.organization': 'Ex: Cruz Vermelha Portuguesa',
   'placeholder.volunteer.role': 'Ex: Voluntário de Apoio Social',
@@ -846,7 +847,6 @@ const ptTranslations: Record<string, string> = {
 
 // English translations
 const enTranslations: Record<string, string> = {
-  // ... existing translations ...
   'landing.benefits.title': 'EasyPeasyCV Advantages',
   'landing.benefits.subtitle': 'Discover why EasyPeasyCV is the right choice for your professional CV',
   'landing.benefits.privacy.title': 'Complete Privacy',
@@ -1068,6 +1068,7 @@ const enTranslations: Record<string, string> = {
   'field.year': 'Year',
   'field.project.technologies': 'Technologies',
   'field.project.link': 'Link',
+  'field.project.sourceCode': 'Source Code',
   'add.project': 'Add Project',
   'project.title': 'Project',
 
@@ -1091,11 +1092,12 @@ const enTranslations: Record<string, string> = {
   'placeholder.certification': 'Ex: AWS Cloud Practitioner Certification',
   'placeholder.issuer': 'Ex: Udemy, Alura, AWS',
   'placeholder.hours': 'Ex: 40 hours',
-  'placeholder.validation.link': 'Ex: https://certificate.institution.com/123456',
+  'placeholder.validation.link': 'Ex: www.certificate.institution.com/123456',
   'placeholder.project.name': 'Ex: Portfolio Website',
   'placeholder.project.year': 'Ex: 2023',
   'placeholder.project.tech': 'Ex: React, Node.js, MongoDB',
-  'placeholder.project.link': 'Ex: https://github.com/user/project',
+  'placeholder.project.link': 'Ex: www.myproject.com',
+  'placeholder.project.sourceCode': 'Ex: www.github.com/user/repo',
   'placeholder.project.description': 'Brief project description, objectives, results...',
   'placeholder.organization': 'Ex: Red Cross Portugal',
   'placeholder.volunteer.role': 'Ex: Social Support Volunteer',
@@ -1940,6 +1942,7 @@ const esTranslations: Record<string, string> = {
   'field.year': 'Año',
   'field.project.technologies': 'Tecnologías',
   'field.project.link': 'Enlace',
+  'field.project.sourceCode': 'Código fuente',
   'add.project': 'Añadir Proyecto',
   'project.title': 'Proyecto',
   'section.projects': 'Proyectos',
@@ -1967,11 +1970,12 @@ const esTranslations: Record<string, string> = {
   'placeholder.certification': 'Ej: Certificación AWS Cloud Practitioner',
   'placeholder.issuer': 'Ej: Udemy, Alura, AWS',
   'placeholder.hours': 'Ej: 40 horas',
-  'placeholder.validation.link': 'Ej: https://certificate.institution.com/123456',
+  'placeholder.validation.link': 'Ej: www.certificate.institution.com/123456',
   'placeholder.project.name': 'Ej: Portfolio Website',
   'placeholder.project.year': 'Ej: 2023',
   'placeholder.project.tech': 'Ej: React, Node.js, MongoDB',
-  'placeholder.project.link': 'Ej: https://github.com/user/project',
+  'placeholder.project.link': 'Ej: www.miproyecto.com',
+  'placeholder.project.sourceCode': 'Ej: www.github.com/user/repo',
   'placeholder.project.description': 'Breve descripción del proyecto, objetivos, resultados...',
   'placeholder.organization': 'Ej: Cruz Roja Española',
   'placeholder.volunteer.role': 'Ej: Voluntario de Apoyo Social',

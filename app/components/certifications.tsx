@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { SortableList } from './dnd/sortable-list';
+import { SortableList, DragHandle } from './dnd/sortable-list';
 import { Certification } from '../types/cv';
 import { FormSection } from './ui/form-section';
 import { FormField } from './ui/form-field';
@@ -397,11 +397,14 @@ export function Certifications({
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
                       {certifications.length > 1 && (
-                        <div className="text-gray-400 dark:text-zinc-500 cursor-grab hover:text-gray-600 dark:hover:text-zinc-300 transition-colors duration-300">
+                        <DragHandle
+                          ariaLabel="Reorder certification"
+                          className="text-gray-400 dark:text-zinc-500 hover:text-gray-600 dark:hover:text-zinc-300 transition-colors duration-300"
+                        >
                           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
                           </svg>
-                        </div>
+                        </DragHandle>
                       )}
                       <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                         {getCertificationTitle(cert, idx)}

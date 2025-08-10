@@ -13,6 +13,15 @@ export const metadata: Metadata = {
     template: '%s | EasyPeasyCV',
   },
   description: 'Create a professional, modern, and ATS-optimized CV in minutes. 100% free and secure. No registration required.',
+  keywords: [
+    'EasyPeasyCV',
+    'Easy Peasy CV',
+    'easy peasy cv',
+    'cv builder',
+    'resume builder',
+    'curriculo',
+    'curriculum vitae',
+  ],
   alternates: {
     canonical: '/',
   },
@@ -79,6 +88,10 @@ function SEOHead() {
     <>
       <title>{meta.title}</title>
       <meta name="description" content={meta.description} />
+      <meta
+        name="keywords"
+        content="EasyPeasyCV, Easy Peasy CV, easy peasy cv, cv builder, resume builder, curriculo, curriculum vitae"
+      />
       <meta property="og:title" content={meta.title} />
       <meta property="og:description" content={meta.description} />
       <meta property="og:image" content="https://www.easypeasycv.com/socialmedia.webp" />

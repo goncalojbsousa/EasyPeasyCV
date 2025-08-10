@@ -118,6 +118,8 @@ export interface Project {
   description: string;
   /** Project URL or repository link */
   link: string;
+  /** Source code repository URL (e.g., GitHub) */
+  sourceCode?: string;
   /** Technologies used in the project */
   tech: string;
   /** Year of project completion */
