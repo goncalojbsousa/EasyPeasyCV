@@ -11,8 +11,8 @@ import { Icons } from './icons';
 import PdfDownloadButton from '../pdf_download_button';
 import { ThankYouModal } from '../thank_you_modal';
 import { Experience, Education, Language, Certification, Project, Volunteer, CvColor, CvTemplate } from '../../types/cv';
-import { CvTypeSelector } from './cv-type-selector';
 import { ColorSelector } from './color-selector';
+import { TemplateSelectorModal } from '../template_selector_modal';
 
 import { PersonalInfo, Link } from '../../types/cv';
 interface DesktopActionsCardProps {
@@ -74,6 +74,7 @@ export function DesktopActionsCard({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isCVTypeDropdownOpen, setIsCVTypeDropdownOpen] = useState(false);
   const [showThankYouModal, setShowThankYouModal] = useState(false);
+  const [showTemplateModal, setShowTemplateModal] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const cvTypeDropdownRef = useRef<HTMLDivElement>(null);
   const [languageDropdownRect, setLanguageDropdownRect] = useState<DOMRect | null>(null);
@@ -250,15 +251,22 @@ export function DesktopActionsCard({
           {/* CV Actions Card */}
           <FormSection title={t('cv.actions')} icon={Icons.actions}>
             <div className="space-y-4">
-              {/* Template Selector */}
+              {/* Template Selector (Button opens modal) */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('template.selector')}
                 </label>
-                <CvTypeSelector
-                  selectedTemplate={selectedTemplate}
-                  onTemplateChange={onTemplateChange}
-                />
+                <button
+                  onClick={() => setShowTemplateModal(true)}
+                  className="w-full flex items-center justify-between p-3 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm hover:bg-gray-50 dark:hover:bg-zinc-700 hover:border-gray-400 dark:hover:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left text-sm text-gray-900 dark:text-gray-100"
+                >
+                  <span className="font-medium">
+                    {t(`template.${selectedTemplate}.name`)}
+                  </span>
+                  <svg className="w-4 h-4 text-gray-400 dark:text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                  </svg>
+                </button>
               </div>
 
               {/* Color Selector - Only show for non-classic templates */}
@@ -468,6 +476,16 @@ export function DesktopActionsCard({
           
         </div>
       </div>
+
+      {/* Template Selector Modal */}
+      <TemplateSelectorModal
+        show={showTemplateModal}
+        selectedTemplate={selectedTemplate}
+        onSelect={(tpl) => {
+          onTemplateChange(tpl);
+        }}
+        onClose={() => setShowTemplateModal(false)}
+      />
 
       {/* Thank You Modal */}
       <ThankYouModal
