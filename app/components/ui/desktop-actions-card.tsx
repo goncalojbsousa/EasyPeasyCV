@@ -2,7 +2,7 @@
 import type { JSX } from 'react';
 import type { CVType } from '../../contexts/LanguageContext';
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { FormSection } from './form-section';

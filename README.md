@@ -16,6 +16,7 @@ A modern, responsive CV builder application built with Next.js, React, and TypeS
 - **Multi-language**: Available in Portuguese, English and Spanish
 - **Privacy-First**: Everything stays in your browser, no external servers
 - **PDF Export**: Generate professional PDFs instantly
+- **Data Import/Export (XML)**: Export your CV data to XML and re-import later
 - **ATS Optimized**: Templates designed to pass Applicant Tracking Systems
 
 ## 🚀 Getting Started
@@ -102,6 +103,18 @@ bun dev
   - `app/components/pdf_preview.tsx`: Preview of final PDF.
   - `app/components/pdf_download_button.tsx`: Triggers PDF generation and download.
   - Templates in `app/components/cv_templates/*` render structured resume content.
+
+### Data Import/Export (XML)
+
+- Available on the Builder page.
+- Desktop: right sidebar card `Data > XML` menu in `DesktopActionsCard` (`app/components/ui/desktop-actions-card.tsx`).
+- Actions:
+  - Export: saves a `cv-data.xml` file with your current CV data.
+  - Import: choose a previously saved XML file to restore all sections (personal info, experiences, education, skills, links, etc.).
+- Implementation details:
+  - Serialization/parsing in `app/utils/xml.ts` via `cvDataToXml()` and `xmlToCvData()`.
+  - Handlers wired in the Builder page (`app/builder/page.tsx`): `handleExportXml()` and `handleImportXml()`.
+  - No server is used; all processing happens locally in the browser.
 
 ### UI, Styling, and State
 
