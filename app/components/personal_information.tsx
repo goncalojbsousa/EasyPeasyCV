@@ -7,7 +7,7 @@ import { Icons } from './ui/icons';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useState, useEffect, useRef } from 'react';
 
-import { SortableList } from './dnd/sortable-list';
+import { SortableList, DragHandle } from './dnd/sortable-list';
 /**
  * Props interface for the PersonalInformation component
  */
@@ -579,11 +579,11 @@ export function PersonalInformation({
                       className="flex items-center gap-2 bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-600 rounded-full px-3 py-1 text-sm transition-all relative"
                     >
                       {links.length > 1 && (
-                        <div className="text-gray-400 dark:text-zinc-500 cursor-grab hover:text-gray-600 dark:hover:text-zinc-300 transition-colors duration-300">
+                        <DragHandle ariaLabel="Reordenar link" className="text-gray-400 dark:text-zinc-500 hover:text-gray-600 dark:hover:text-zinc-300 transition-colors duration-300">
                           <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
                           </svg>
-                        </div>
+                        </DragHandle>
                       )}
                       <span className="font-medium text-gray-700 dark:text-gray-300">{translateLinkType(link.type, link.customName)}:</span>
                       <span className="text-gray-600 dark:text-gray-400">{displayValue}</span>
