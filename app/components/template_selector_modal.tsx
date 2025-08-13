@@ -52,25 +52,27 @@ export function TemplateSelectorModal({ show, selectedTemplate, onSelect, onClos
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-xl w-full max-w-5xl p-6 relative">
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors duration-200"
-          aria-label="Close"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
+      <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-2xl w-full max-w-5xl relative overflow-hidden flex flex-col">
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-zinc-700">
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+            {t('template.selector')}
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-300"
+            aria-label="Close"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
 
-        {/* Title */}
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-          {t('template.selector')}
-        </h3>
-
-        {/* Grid of templates */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* Content */}
+        <div className="p-4 bg-gray-50 dark:bg-zinc-800">
+          {/* Grid of templates */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {Object.entries(templatePreviews).map(([key, meta]) => {
             const k = key as CvTemplate;
             const isSelected = selectedTemplate === k;
@@ -145,6 +147,7 @@ export function TemplateSelectorModal({ show, selectedTemplate, onSelect, onClos
               </div>
             );
           })}
+          </div>
         </div>
 
         {/* Fullscreen preview modal */}

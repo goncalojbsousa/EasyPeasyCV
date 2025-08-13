@@ -20,6 +20,7 @@ import { FloatingActionBar } from '../components/ui/floating-action-bar';
 import { DesktopActionsCard } from '../components/ui/desktop-actions-card';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Experience, Education, Language, Certification, Project, Volunteer, CvColor, CvTemplate } from '../types/cv';
+import { cvDataToXml, xmlToCvData } from '../utils/xml';
 
 /**
  * CV Builder page component
@@ -41,6 +42,8 @@ export default function Builder() {
   });
   const [links, setLinks] = useState<{ type: string, value: string }[]>([]);
   const [resume, setResume] = useState('');
+  // Tracks the source of loaded data for the top notification
+  const [dataLoadedSource, setDataLoadedSource] = useState<'local' | 'xml' | null>(null);
 
   // Custom setResume function for handling resume text changes
   const handleResumeChange = (value: string) => {
@@ -61,6 +64,61 @@ export default function Builder() {
   const [isMobile, setIsMobile] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<CvTemplate>('classic');
   const [selectedColor, setSelectedColor] = useState<CvColor>('blue');
+
+  // Export current CV data to XML and trigger download
+  const handleExportXml = () => {
+    try {
+      const data = {
+        personalInfo,
+        links,
+        resume,
+        experiences,
+        education,
+        skills,
+        languages,
+        certifications,
+        projects,
+        volunteers,
+        template: selectedTemplate,
+        color: selectedColor,
+      };
+      const xml = cvDataToXml(data);
+      const blob = new Blob([xml], { type: 'application/xml;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'cv-data.xml';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error('XML export failed', e);
+    }
+  };
+
+  // Import CV data from XML string and populate state
+  const handleImportXml = (xml: string) => {
+    try {
+      const data = xmlToCvData(xml);
+      setPersonalInfo(data.personalInfo || personalInfo);
+      setLinks(data.links || []);
+      setResume(data.resume || '');
+      setExperiences(data.experiences || []);
+      setEducation(data.education || []);
+      setSkills(data.skills || '');
+      setLanguages(data.languages || []);
+      setCertifications(data.certifications || []);
+      setProjects(data.projects || []);
+      setVolunteers(data.volunteers || []);
+      setSelectedTemplate(data.template || 'classic');
+      setSelectedColor(data.color || 'blue');
+      setDataLoaded(true);
+      setDataLoadedSource('xml');
+    } catch (e) {
+      console.error('XML import failed', e);
+    }
+  };
 
   /**
    * Function to load data from localStorage
@@ -93,6 +151,7 @@ export default function Builder() {
         setSelectedTemplate(data.template || 'classic');
         setSelectedColor(data.color || 'blue');
         setDataLoaded(true);
+        setDataLoadedSource('local');
       }
     } catch {
       // Silently handle error loading saved data
@@ -700,10 +759,12 @@ export default function Builder() {
         <div className="lg:grid lg:grid-cols-[1fr_320px] lg:gap-8">
           {/* Form content */}
           <div className="flex flex-col gap-6 sm:gap-8">
-            {/* Data loaded notification */}
+            {/* Data loaded/imported notification */}
             {dataLoaded && (
               <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg shadow-sm transition-colors duration-300">
-                <p className="text-green-700 dark:text-green-400 text-sm">{t('data.loaded')}</p>
+                <p className="text-green-700 dark:text-green-400 text-sm">
+                  {dataLoadedSource === 'xml' ? t('data.loaded.xml') : t('data.loaded.local')}
+                </p>
               </div>
             )}
 
@@ -857,6 +918,8 @@ export default function Builder() {
             onScrollToJobAnalysis={scrollToJobAnalysis}
             onScrollToCVTips={scrollToCVTips}
             onScrollToAtsExplanation={scrollToAtsExplanation}
+            onExportXml={handleExportXml}
+            onImportXml={handleImportXml}
           />
         </div>
       </div>
