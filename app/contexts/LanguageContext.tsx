@@ -234,6 +234,8 @@ const ptTranslations: Record<string, string> = {
 
   // Notifications
   'data.loaded': 'Dados carregados automaticamente do navegador.',
+  'data.loaded.local': 'Dados carregados automaticamente do navegador.',
+  'data.loaded.xml': 'Dados importados a partir de XML.',
   'cv.generated': 'Currículo gerado com sucesso! O download deve começar automaticamente.',
   'fill.example': 'Preencher com dados de exemplo',
   'validation.required': 'Por favor, preencha todos os campos obrigatórios:',
@@ -962,6 +964,8 @@ const enTranslations: Record<string, string> = {
 
   // Notifications
   'data.loaded': 'Data automatically loaded from browser.',
+  'data.loaded.local': 'Data automatically loaded from browser.',
+  'data.loaded.xml': 'Data imported from XML.',
   'cv.generated': 'Resume generated successfully! Download should start automatically.',
   'fill.example': 'Fill with example data',
   'validation.required': 'Please fill in all required fields:',
@@ -1831,6 +1835,8 @@ const esTranslations: Record<string, string> = {
 
   // Notifications
   'data.loaded': 'Datos cargados automáticamente del navegador.',
+  'data.loaded.local': 'Datos cargados automáticamente del navegador.',
+  'data.loaded.xml': 'Datos importados desde XML.',
   'cv.generated': '¡Currículum generado con éxito! La descarga debe comenzar automáticamente.',
   'fill.example': 'Rellenar con datos de ejemplo',
   'validation.required': 'Por favor, rellena todos los campos obligatorios:',
