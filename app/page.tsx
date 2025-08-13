@@ -85,7 +85,14 @@ export default function Home() {
           <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
             {t('landing.hero.subtitle')}
           </p>
-          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <Link
+              href="/builder"
+              className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+            >
+              {t('landing.create.cv.button')}
+            </Link>
+          </div>
 
           {/* Stats Section */}
           <div className="grid grid-cols-2 gap-6 max-w-sm mx-auto">
