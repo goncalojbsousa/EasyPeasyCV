@@ -1,9 +1,8 @@
-
 'use client';
 import type { JSX } from 'react';
 import type { CVType } from '../../contexts/LanguageContext';
 
-import { useState, useRef, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { FormSection } from './form-section';
@@ -38,6 +37,8 @@ interface DesktopActionsCardProps {
   onScrollToJobAnalysis: () => void;
   onScrollToCVTips: () => void;
   onScrollToAtsExplanation: () => void;
+  onExportXml: () => void;
+  onImportXml: (xml: string) => void;
 }
 
 /**
@@ -68,7 +69,9 @@ export function DesktopActionsCard({
   onShowSuccessMessage,
   onScrollToJobAnalysis,
   onScrollToCVTips,
-  onScrollToAtsExplanation
+  onScrollToAtsExplanation,
+  onExportXml,
+  onImportXml
 }: DesktopActionsCardProps) {
   const { t, cvType, setCVType } = useLanguage();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -81,6 +84,11 @@ export function DesktopActionsCard({
   const [cvTypeDropdownRect, setCvTypeDropdownRect] = useState<DOMRect | null>(null);
   const languagePortalRef = useRef<HTMLDivElement>(null);
   const cvTypePortalRef = useRef<HTMLDivElement>(null);
+  const importInputRef = useRef<HTMLInputElement>(null);
+  const dataDropdownRef = useRef<HTMLDivElement>(null);
+  const [isDataDropdownOpen, setIsDataDropdownOpen] = useState(false);
+  const dataPortalRef = useRef<HTMLDivElement>(null);
+  const [dataDropdownRect, setDataDropdownRect] = useState<DOMRect | null>(null);
 
   // Effect to close dropdowns when clicking outside of them
   useEffect(() => {
@@ -102,37 +110,56 @@ export function DesktopActionsCard({
           setIsCVTypeDropdownOpen(false);
         }
       }
+      // Data (Import/Export) dropdown
+      if (isDataDropdownOpen) {
+        const insideTrigger = dataDropdownRef.current?.contains(target);
+        const insidePortal = dataPortalRef.current?.contains(target as Node);
+        if (!insideTrigger && !insidePortal) {
+          setIsDataDropdownOpen(false);
+        }
+      }
     }
 
-    if (isDropdownOpen || isCVTypeDropdownOpen) {
+    if (isDropdownOpen || isCVTypeDropdownOpen || isDataDropdownOpen) {
       document.addEventListener('click', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };
-  }, [isDropdownOpen, isCVTypeDropdownOpen]);
+  }, [isDropdownOpen, isCVTypeDropdownOpen, isDataDropdownOpen]);
 
   // Keep portal positions synced with trigger rects while open
   useEffect(() => {
-    const updateRects = () => {
-      if (isDropdownOpen && dropdownRef.current) {
-        setLanguageDropdownRect(dropdownRef.current.getBoundingClientRect());
-      }
-      if (isCVTypeDropdownOpen && cvTypeDropdownRef.current) {
-        setCvTypeDropdownRect(cvTypeDropdownRef.current.getBoundingClientRect());
-      }
-    };
-    updateRects();
-    if (isDropdownOpen || isCVTypeDropdownOpen) {
-      window.addEventListener('scroll', updateRects, true);
-      window.addEventListener('resize', updateRects);
+    if (isDropdownOpen && dropdownRef.current) {
+      const rect = dropdownRef.current.getBoundingClientRect();
+      setLanguageDropdownRect(rect);
     }
-    return () => {
-      window.removeEventListener('scroll', updateRects, true);
-      window.removeEventListener('resize', updateRects);
+    if (isCVTypeDropdownOpen && cvTypeDropdownRef.current) {
+      const rect = cvTypeDropdownRef.current.getBoundingClientRect();
+      setCvTypeDropdownRect(rect);
+    }
+    if (isDataDropdownOpen && dataDropdownRef.current) {
+      const rect = dataDropdownRef.current.getBoundingClientRect();
+      setDataDropdownRect(rect);
+    }
+  }, [isDropdownOpen, isCVTypeDropdownOpen, isDataDropdownOpen]);
+
+  // Reposition on resize/scroll while open
+  useEffect(() => {
+    if (!isDataDropdownOpen) return;
+    const update = () => {
+      if (dataDropdownRef.current) {
+        setDataDropdownRect(dataDropdownRef.current.getBoundingClientRect());
+      }
     };
-  }, [isDropdownOpen, isCVTypeDropdownOpen]);
+    window.addEventListener('resize', update);
+    window.addEventListener('scroll', update, true);
+    return () => {
+      window.removeEventListener('resize', update);
+      window.removeEventListener('scroll', update, true);
+    };
+  }, [isDataDropdownOpen]);
 
   /**
    * Returns the appropriate icon for each CV type.
@@ -470,6 +497,68 @@ export function DesktopActionsCard({
               </svg>
               {t('cv.tips.action.button')}
             </button>
+            
+            {/* Data: Import/Export dropdown */}
+            <div className="relative mt-2" ref={dataDropdownRef}>
+              <button
+                onClick={() => setIsDataDropdownOpen((v) => !v)}
+                className="w-full bg-gray-200 text-gray-900 dark:bg-zinc-700 dark:text-gray-100 px-4 py-3 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-zinc-600 transition-colors duration-300 flex items-center justify-center gap-2 shadow-sm"
+                title={t('data.xml.title')}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3H4V5Zm16 5H4v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9Z"/></svg>
+                {t('data.xml.title')}
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className={`w-4 h-4 transition-transform duration-200 ${isDataDropdownOpen ? 'rotate-180' : ''}`}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                </svg>
+              </button>
+              {isDataDropdownOpen && dataDropdownRect && createPortal(
+                <div
+                  ref={dataPortalRef}
+                  className="bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-1 z-[9999] animate-fade-in"
+                  style={{
+                    position: 'fixed',
+                    top: dataDropdownRect.bottom + 8,
+                    left: dataDropdownRect.left,
+                    width: dataDropdownRect.width,
+                  }}
+                >
+                  <button
+                    type="button"
+                    className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 flex items-center gap-2"
+                    onClick={() => { setIsDataDropdownOpen(false); onExportXml(); }}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M12 16a1 1 0 0 1-.707-.293l-3-3 1.414-1.414L11 12.586V4h2v8.586l1.293-1.293 1.414 1.414-3 3A1 1 0 0 1 12 16Z"/><path d="M5 20h14a1 1 0 1 0 0-2H5a1 1 0 1 0 0 2Z"/></svg>
+                    <span>{t('data.xml.export')}</span>
+                  </button>
+                  <input
+                    ref={importInputRef}
+                    type="file"
+                    accept=".xml,application/xml,text/xml"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      const reader = new FileReader();
+                      reader.onload = () => {
+                        const text = typeof reader.result === 'string' ? reader.result : '';
+                        if (text) onImportXml(text);
+                        if (importInputRef.current) importInputRef.current.value = '';
+                        setIsDataDropdownOpen(false);
+                      };
+                      reader.readAsText(file);
+                    }}
+                  />
+                  <button
+                    type="button"
+                    className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 flex items-center gap-2"
+                    onClick={() => { importInputRef.current?.click(); }}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M12 8a1 1 0 0 1 .707.293l3 3-1.414 1.414L13 11.414V20h-2v-8.586l-1.293 1.293-1.414-1.414 3-3A1 1 0 0 1 12 8Z"/><path d="M5 4h14a1 1 0 1 1 0 2H5a1 1 0 1 1 0-2Z"/></svg>
+                    <span>{t('data.xml.import')}</span>
+                  </button>
+                </div>, document.body)
+              }
+            </div>
           </div>
           </FormSection>
 

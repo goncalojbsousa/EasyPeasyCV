@@ -47,91 +47,16 @@ export default function Home() {
     }
   ];
 
-  // CV templates available for selection
-  const templates = [
-    {
-      name: t('landing.templates.classic.name'),
-      description: t('landing.templates.classic.description'),
-      color: "bg-blue-500",
-      features: t('landing.templates.classic.features').split(','),
-      icon: (
-        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-          <rect x="4" y="4" width="16" height="16" rx="2" fill="none" stroke="currentColor" strokeWidth="2"/>
-          <rect x="7" y="8" width="10" height="1" fill="currentColor"/>
-          <rect x="7" y="11" width="10" height="1" fill="currentColor"/>
-          <rect x="7" y="14" width="6" height="1" fill="currentColor"/>
-        </svg>
-      )
-    },
-    {
-      name: t('landing.templates.professional.name'),
-      description: t('landing.templates.professional.description'),
-      color: "bg-sky-500",
-      features: t('landing.templates.professional.features').split(','),
-      icon: (
-        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-          <rect x="3" y="7" width="18" height="12" rx="2" fill="none" stroke="currentColor" strokeWidth="2"/>
-          <path d="M9 7V6a3 3 0 0 1 3-3h0a3 3 0 0 1 3 3v1" stroke="currentColor" strokeWidth="2" fill="none"/>
-          <rect x="10" y="11" width="4" height="2" fill="currentColor"/>
-        </svg>
-      )
-    },
-    {
-      name: t('landing.templates.timeline.name'),
-      description: t('landing.templates.timeline.description'),
-      color: "bg-amber-500",
-      features: t('landing.templates.timeline.features').split(','),
-      icon: (
-        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-          <rect x="11" y="4" width="2" height="16" rx="1" fill="currentColor"/>
-          <circle cx="12" cy="6" r="2" fill="currentColor"/>
-          <circle cx="12" cy="12" r="2" fill="currentColor"/>
-          <circle cx="12" cy="18" r="2" fill="currentColor"/>
-        </svg>
-      )
-    },
-    {
-      name: t('landing.templates.modern.name'),
-      description: t('landing.templates.modern.description'),
-      color: "bg-purple-500",
-      features: t('landing.templates.modern.features').split(','),
-      icon: (
-        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-          <rect x="2" y="2" width="20" height="20" rx="10" fill="none" stroke="currentColor" strokeWidth="2"/>
-          <path d="M8 12L11 15L16 10" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      )
-    },
-    {
-      name: t('landing.templates.creative.name'),
-      description: t('landing.templates.creative.description'),
-      color: "bg-pink-500",
-      features: t('landing.templates.creative.features').split(','),
-      icon: (
-        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-          <rect x="2" y="2" width="20" height="20" rx="10" fill="none" stroke="currentColor" strokeWidth="2"/>
-          <circle cx="8" cy="8" r="2" fill="currentColor"/>
-          <circle cx="16" cy="8" r="2" fill="currentColor"/>
-          <circle cx="8" cy="16" r="2" fill="currentColor"/>
-          <circle cx="16" cy="16" r="2" fill="currentColor"/>
-        </svg>
-      )
-    },
-    {
-      name: t('landing.templates.minimal.name'),
-      description: t('landing.templates.minimal.description'),
-      color: "bg-teal-500",
-      features: t('landing.templates.minimal.features').split(','),
-      icon: (
-        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-          <rect x="4" y="4" width="6" height="16" rx="1" fill="currentColor"/>
-          <rect x="12" y="6" width="8" height="2" fill="currentColor"/>
-          <rect x="12" y="10" width="8" height="2" fill="currentColor"/>
-          <rect x="12" y="14" width="6" height="2" fill="currentColor"/>
-        </svg>
-      )
-    }
+  // Mirror template previews used in the selector
+  const previewTemplates: { key: string; img: string; nameKey: string; descriptionKey: string }[] = [
+    { key: 'classic',      img: '/classic_preview.webp',      nameKey: 'template.classic.name',      descriptionKey: 'template.classic.description' },
+    { key: 'professional', img: '/professional_preview.webp', nameKey: 'template.professional.name', descriptionKey: 'template.professional.description' },
+    { key: 'timeline',     img: '/timeline_preview.webp',     nameKey: 'template.timeline.name',     descriptionKey: 'template.timeline.description' },
+    { key: 'modern',       img: '/modern_preview.webp',       nameKey: 'template.modern.name',       descriptionKey: 'template.modern.description' },
+    { key: 'minimal',      img: '/minimal_preview.webp',      nameKey: 'template.minimal.name',      descriptionKey: 'template.minimal.description' },
+    { key: 'creative',     img: '/creative_preview.webp',     nameKey: 'template.creative.name',     descriptionKey: 'template.creative.description' },
   ];
+
 
   // Key statistics to highlight on the landing page
   const stats = [
@@ -160,14 +85,7 @@ export default function Home() {
           <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
             {t('landing.hero.subtitle')}
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Link
-              href="/builder"
-              className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-            >
-              {t('landing.create.cv.button')}
-            </Link>
-          </div>
+          
 
           {/* Stats Section */}
           <div className="grid grid-cols-2 gap-6 max-w-sm mx-auto">
@@ -226,24 +144,44 @@ export default function Home() {
               {t('landing.templates.subtitle')}
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {templates.map((template, index) => (
-              <div
-                key={index}
-                className="text-center px-6 pt-5 pb-6 rounded-lg border border-gray-200 dark:border-zinc-700 hover:shadow-lg transition-all duration-300 bg-white dark:bg-zinc-800 group"
-              >
-                <div className={`w-16 h-16 ${template.color} rounded-lg mx-auto mb-3 flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300`}>
-                  {template.icon}
+          {previewTemplates.length === 0 ? (
+            <div className="flex flex-col items-center justify-center border border-dashed border-gray-300 dark:border-zinc-700 rounded-xl p-10 bg-white dark:bg-zinc-800">
+              <svg className="w-12 h-12 text-gray-400 dark:text-gray-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">{t('template.selector')}</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400 text-center max-w-md">
+                {t('landing.templates.subtitle')}
+              </p>
+              
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {previewTemplates.map((tpl) => (
+                <div key={tpl.key} className="rounded-xl overflow-hidden border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 hover:shadow-lg transition-all duration-200">
+                  <div className="relative h-48 bg-gray-100 dark:bg-zinc-700 overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={tpl.img}
+                      alt={`${t(tpl.nameKey)} preview`}
+                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+                  </div>
+                  <div className="p-4">
+                    <h4 className="font-medium text-gray-900 dark:text-white">
+                      {t(tpl.nameKey)}
+                    </h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                      {t(tpl.descriptionKey)}
+                    </p>
+                    
+                  </div>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
-                  {template.name}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-0">
-                  {template.description}
-                </p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
