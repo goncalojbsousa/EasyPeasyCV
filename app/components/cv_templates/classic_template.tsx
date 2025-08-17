@@ -84,6 +84,8 @@ export function ClassicTemplate({
   volunteers,
   lang,
 }: ClassicTemplateProps) {
+  // Normalize language: treat 'br' as 'pt' for template translations
+  const l = (lang === 'br' ? 'pt' : (lang || 'pt')) as 'pt' | 'en' | 'es';
   
   const contactItems = [
     personalInfo?.city,
@@ -130,7 +132,7 @@ export function ClassicTemplate({
       return customName;
     }
     
-    if (lang === 'en') {
+    if ((lang === 'en')) {
       switch (type) {
         case 'LinkedIn': return 'LinkedIn';
         case 'GitHub': return 'GitHub';
@@ -139,7 +141,7 @@ export function ClassicTemplate({
         case 'Other': return 'Other';
         default: return type;
       }
-    } else if (lang === 'es') {
+    } else if ((lang === 'es')) {
       switch (type) {
         case 'LinkedIn': return 'LinkedIn';
         case 'GitHub': return 'GitHub';
@@ -164,15 +166,17 @@ export function ClassicTemplate({
    * Translate month abbreviations across pt/en/es.
    */
   function translateMonth(month: string, lang: string) {
-    return translateMonthForLang(month, lang as 'pt' | 'en' | 'es');
+    const target = (lang === 'br' ? 'pt' : lang) as 'pt' | 'en' | 'es';
+    return translateMonthForLang(month, target);
   };
 
   /**
    * Localize the "current" date label used in ranges.
    */
   function translateCurrent(lang: string) {
-    if (lang === 'en') return 'Current';
-    if (lang === 'es') return 'Actual';
+    const target = (lang === 'br' ? 'pt' : lang);
+    if (target === 'en') return 'Current';
+    if (target === 'es') return 'Actual';
     return 'Atual';
   };
 
@@ -285,7 +289,7 @@ export function ClassicTemplate({
             <View style={styles.linksRow}>
               {links.map((link, index) => (
                 <Link key={index} src={getSocialUrl(link.type, link.value)} style={styles.linkItem}>
-                  {translateLinkType(link.type, lang || 'pt', link.customName)}: {link.value}
+                  {translateLinkType(link.type, l, link.customName)}: {link.value}
                 </Link>
               ))}
             </View>
@@ -296,7 +300,7 @@ export function ClassicTemplate({
         {resume && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
-              {lang === 'en' ? 'Professional Summary' : lang === 'es' ? 'Resumen Profesional' : 'Resumo Profissional'}
+              {l === 'en' ? 'Professional Summary' : l === 'es' ? 'Resumen Profesional' : 'Resumo Profissional'}
             </Text>
             <Text>{resume}</Text>
           </View>
@@ -306,7 +310,7 @@ export function ClassicTemplate({
         {experiences.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
-              {lang === 'en' ? 'Professional Experience' : lang === 'es' ? 'Experiencia Profesional' : 'Experiência Profissional'}
+              {l === 'en' ? 'Professional Experience' : l === 'es' ? 'Experiencia Profesional' : 'Experiência Profissional'}
             </Text>
             {experiences.map((exp, index) => {
               const showSeparator = experiences.length > 1 && index < experiences.length - 1;
@@ -328,7 +332,7 @@ export function ClassicTemplate({
                       {exp.company && <Text style={styles.companyName}>{exp.company}</Text>}
                     </View>
                     <Text style={styles.dateRange}>
-                      {`${translateMonth(exp.startMonth || '', lang || 'pt')}${exp.startMonth && exp.startYear ? '/' : ''}${exp.startYear || ''} - ${exp.current ? translateCurrent(lang || 'pt') : ((translateMonth(exp.endMonth || '', lang || 'pt')) + (exp.endMonth && exp.endYear ? '/' : '') + (exp.endYear || ''))}`}
+                      {`${translateMonth(exp.startMonth || '', l)}${exp.startMonth && exp.startYear ? '/' : ''}${exp.startYear || ''} - ${exp.current ? translateCurrent(l) : ((translateMonth(exp.endMonth || '', l)) + (exp.endMonth && exp.endYear ? '/' : '') + (exp.endYear || ''))}`}
                     </Text>
                   </View>
                   {exp.tech && <Text style={styles.tech}>{exp.tech}</Text>}
@@ -344,7 +348,7 @@ export function ClassicTemplate({
         {education.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
-              {lang === 'en' ? 'Education' : lang === 'es' ? 'Educación' : 'Formação Académica'}
+              {l === 'en' ? 'Education' : l === 'es' ? 'Educación' : 'Formação Académica'}
             </Text>
             {education.map((edu, index) => {
               const showSeparator = education.length > 1 && index < education.length - 1;
@@ -361,14 +365,14 @@ export function ClassicTemplate({
                 >
                   <View style={styles.roleAndDate}>
                     <Text style={styles.eduTitle}>
-                      {edu.course}{edu.course && edu.type ? ' - ' : ''}{translateEducationType(edu.type, lang || 'pt')}
-                      {edu.status && <Text style={styles.certDate}> ({translateEducationStatus(edu.status, lang || 'pt')})</Text>}
+                      {edu.course}{edu.course && edu.type ? ' - ' : ''}{translateEducationType(edu.type, l)}
+                      {edu.status && <Text style={styles.certDate}> ({translateEducationStatus(edu.status, l)})</Text>}
                     </Text>
                     <Text style={styles.dateRange}>
                       {(edu.startMonth || edu.startYear) ? (
                         isEducationCompleted(edu.status) ?
-                          `${translateMonth(edu.startMonth || '', lang || 'pt')}${edu.startMonth && edu.startYear ? '/' : ''}${edu.startYear || ''} - ${translateMonth(edu.endMonth || '', lang || 'pt')}${edu.endMonth && edu.endYear ? '/' : ''}${edu.endYear || ''}` :
-                          `${translateMonth(edu.startMonth || '', lang || 'pt')}${edu.startMonth && edu.startYear ? '/' : ''}${edu.startYear || ''} - ${translateCurrent(lang || 'pt')}`
+                          `${translateMonth(edu.startMonth || '', l)}${edu.startMonth && edu.startYear ? '/' : ''}${edu.startYear || ''} - ${translateMonth(edu.endMonth || '', l)}${edu.endMonth && edu.endYear ? '/' : ''}${edu.endYear || ''}` :
+                          `${translateMonth(edu.startMonth || '', l)}${edu.startMonth && edu.startYear ? '/' : ''}${edu.startYear || ''} - ${translateCurrent(l)}`
                       ) : ''}
                     </Text>
                   </View>
@@ -389,7 +393,7 @@ export function ClassicTemplate({
               {skills && (
                 <View style={styles.skillsCol}>
                               <Text style={styles.sectionTitle}>
-              {lang === 'en' ? 'Technical Skills' : lang === 'es' ? 'Competencias Técnicas' : 'Competências Técnicas'}
+              {l === 'en' ? 'Technical Skills' : l === 'es' ? 'Competencias Técnicas' : 'Competências Técnicas'}
             </Text>
                   <Text style={styles.skillText}>{skills}</Text>
                 </View>
@@ -398,12 +402,12 @@ export function ClassicTemplate({
               {languages.length > 0 && (
                 <View style={styles.langCol}>
                   <Text style={styles.sectionTitle}>
-                    {lang === 'en' ? 'Languages' : 'Idiomas'}
+                    {l === 'en' ? 'Languages' : 'Idiomas'}
                   </Text>
                   <View style={styles.langRow}>
                     {languages.map((language, index) => (
                       <Text key={index} style={styles.langItem}>
-                        {language.name} ({translateLanguageLevel(language.level, lang || 'pt')})
+                        {language.name} ({translateLanguageLevel(language.level, l)})
                       </Text>
                     ))}
                   </View>
@@ -417,7 +421,7 @@ export function ClassicTemplate({
         {certifications.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
-              {lang === 'en' ? 'Certifications' : 'Certificações'}
+              {l === 'en' ? 'Certifications' : 'Certificações'}
             </Text>
             {certifications.map((cert, index) => {
               const showSeparator = certifications.length > 1 && index < certifications.length - 1;
@@ -454,7 +458,7 @@ export function ClassicTemplate({
                       {volunteers && volunteers.length > 0 && (
                 <View style={styles.section}>
                   <Text style={styles.sectionTitle}>
-                    {lang === 'en' ? 'Volunteer Work' : 'Voluntariado'}
+                    {l === 'en' ? 'Volunteer Work' : 'Voluntariado'}
                   </Text>
                   {volunteers.map((vol, index) => {
                     const showSeparator = volunteers.length > 1 && index < volunteers.length - 1;
@@ -473,9 +477,9 @@ export function ClassicTemplate({
                   <View style={styles.roleAndDate}>
                     <Text style={styles.volRole}>{vol.role}</Text>
                     <Text style={styles.dateRange}>
-                      {vol.startMonth && vol.startYear ? `${translateMonth(vol.startMonth, lang || 'pt')} ${vol.startYear}` : ''}
+                      {vol.startMonth && vol.startYear ? `${translateMonth(vol.startMonth, l)} ${vol.startYear}` : ''}
                       {vol.startMonth && vol.startYear && (vol.endMonth || vol.endYear || vol.current) ? ' - ' : ''}
-                      {vol.current ? translateCurrent(lang || 'pt') : vol.endMonth && vol.endYear ? `${translateMonth(vol.endMonth, lang || 'pt')} ${vol.endYear}` : ''}
+                      {vol.current ? translateCurrent(l) : vol.endMonth && vol.endYear ? `${translateMonth(vol.endMonth, l)} ${vol.endYear}` : ''}
                     </Text>
                   </View>
                   <Text style={styles.volOrg}>{vol.organization}</Text>
@@ -491,7 +495,7 @@ export function ClassicTemplate({
         {projects.length > 0 && (
           <View style={{ ...styles.section, marginBottom: 0 }}>
             <Text style={styles.sectionTitle}>
-              {lang === 'en' ? 'Projects' : lang === 'es' ? 'Proyectos' : 'Projetos'}
+              {l === 'en' ? 'Projects' : l === 'es' ? 'Proyectos' : 'Projetos'}
             </Text>
             {projects.map((proj, index) => {
               const showSeparator = projects.length > 1 && index < projects.length - 1;
