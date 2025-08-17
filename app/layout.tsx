@@ -54,7 +54,7 @@ export const metadata: Metadata = {
       },
     ],
     locale: 'en_US',
-    alternateLocale: ['pt_PT', 'es_ES'],
+    alternateLocale: ['pt_PT', 'pt_BR', 'es_ES'],
     type: 'website',
   },
   twitter: {
@@ -74,6 +74,10 @@ const metaByLang: Record<Language, { title: string; description: string }> = {
   pt: {
     title: 'EasyPeasyCV | Crie o seu currículo profissional online',
     description: 'Crie um currículo profissional, moderno e otimizado para ATS em minutos. 100% grátis e seguro. Não é necessário registo.',
+  },
+  br: {
+    title: 'EasyPeasyCV | Crie seu currículo profissional online',
+    description: 'Crie um currículo profissional, moderno e otimizado para ATS em minutos. 100% grátis e seguro. Não é necessário cadastro.',
   },
   es: {
     title: 'EasyPeasyCV | Crea tu currículum profesional en línea',
