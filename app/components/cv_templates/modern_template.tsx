@@ -572,7 +572,9 @@ export function ModernTemplate({
         {/* Header Section */}
         <View style={dynamicStyles.header}>
           <Text style={styles.name}>{personalInfo?.name}</Text>
-          <Text style={dynamicStyles.desiredRole}>{personalInfo?.desiredRole}</Text>
+          {personalInfo?.desiredRole && (
+            <Text style={dynamicStyles.desiredRole}>{personalInfo.desiredRole}</Text>
+          )}
           
           {/* Contact Information */}
           <View style={styles.contactRow}>

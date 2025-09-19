@@ -5,7 +5,7 @@ export interface PersonalInfo {
   /** Full name of the person */
   name: string;
   /** Desired job role or position */
-  desiredRole: string;
+  desiredRole?: string;
   /** City of residence */
   city: string;
   /** Postal code */
@@ -185,4 +185,4 @@ export interface CvData {
   template?: CvTemplate;
   /** Selected color theme */
   color?: CvColor;
-} 
+}

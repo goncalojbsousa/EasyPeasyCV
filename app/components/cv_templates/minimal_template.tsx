@@ -205,7 +205,9 @@ export function MinimalTemplate({
           {/* Sidebar */}
           <View style={styles.sidebar}>
             <Text style={styles.sideSectionTitle}>{personalInfo.name}</Text>
-            <Text style={[styles.contactItem, styles.desiredRole, dynamic.accentText]}>{personalInfo.desiredRole}</Text>
+            {personalInfo.desiredRole && (
+              <Text style={[styles.contactItem, styles.desiredRole, dynamic.accentText]}>{personalInfo.desiredRole}</Text>
+            )}
 
             <Text style={styles.sideSectionTitle}>{lang === 'en' ? 'Contacts' : lang === 'es' ? 'Contactos' : 'Contactos'}</Text>
             <Text style={styles.contactItem}>{personalInfo.city} {personalInfo.postalCode ? `• ${personalInfo.postalCode}` : ''}</Text>
@@ -248,7 +250,9 @@ export function MinimalTemplate({
           <View style={styles.main}>
             <View style={styles.header}>
               <Text style={styles.name}>{personalInfo.name}</Text>
-              <Text style={[styles.desiredRole, dynamic.accentText]}>{personalInfo.desiredRole}</Text>
+              {personalInfo.desiredRole && (
+                <Text style={[styles.desiredRole, dynamic.accentText]}>{personalInfo.desiredRole}</Text>
+              )}
             </View>
 
             {resume && (

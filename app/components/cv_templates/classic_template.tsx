@@ -274,7 +274,9 @@ export function ClassicTemplate({
         {/* Header Section */}
         <View style={styles.header}>
           <Text style={styles.name}>{personalInfo?.name}</Text>
-          <Text style={styles.desiredRole}>{personalInfo?.desiredRole}</Text>
+          {personalInfo?.desiredRole && (
+            <Text style={styles.desiredRole}>{personalInfo.desiredRole}</Text>
+          )}
           
           {/* Contact Information */}
           <View style={styles.contactRow}>

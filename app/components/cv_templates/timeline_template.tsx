@@ -201,7 +201,9 @@ export function TimelineTemplate({
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.name}>{personalInfo.name}</Text>
-          <Text style={[styles.desiredRole, dynamic.desiredRole]}>{personalInfo.desiredRole}</Text>
+          {personalInfo.desiredRole && (
+            <Text style={[styles.desiredRole, dynamic.desiredRole]}>{personalInfo.desiredRole}</Text>
+          )}
           <View style={styles.contactRow}>
             <Text style={styles.contactItem}>{personalInfo.city} {personalInfo.postalCode ? `• ${personalInfo.postalCode}` : ''}</Text>
             <Text style={styles.separator}>|</Text>

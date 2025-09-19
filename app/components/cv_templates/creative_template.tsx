@@ -668,7 +668,9 @@ export function CreativeTemplate({
         {/* Absolute sidebar content (first page only) */}
         <View style={styles.sidebarContentAbs}>
             <Text style={styles.name}>{personalInfo?.name}</Text>
-            <Text style={styles.desiredRole}>{personalInfo?.desiredRole}</Text>
+            {personalInfo?.desiredRole && (
+              <Text style={styles.desiredRole}>{personalInfo.desiredRole}</Text>
+            )}
             <View style={styles.divider} />
             <Text style={styles.sidebarSectionTitle}>{lang === 'en' ? 'Contact' : 'Contacto'}</Text>
             {contactItems.map((item, idx) => (

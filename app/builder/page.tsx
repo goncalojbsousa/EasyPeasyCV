@@ -101,7 +101,10 @@ export default function Builder() {
   const handleImportXml = (xml: string) => {
     try {
       const data = xmlToCvData(xml);
-      setPersonalInfo(data.personalInfo || personalInfo);
+      setPersonalInfo({
+        ...personalInfo,
+        ...data.personalInfo
+      });
       setLinks(data.links || []);
       setResume(data.resume || '');
       setExperiences(data.experiences || []);
@@ -211,7 +214,7 @@ export default function Builder() {
 
     if (!personalInfo.name.trim()) errors.name = true;
     if (!personalInfo.email.trim()) errors.email = true;
-    if (!personalInfo.desiredRole.trim()) errors.desiredRole = true;
+    // Removed desiredRole validation - field is now optional
 
     setValidationErrors(errors);
 
@@ -219,7 +222,7 @@ export default function Builder() {
     if (Object.keys(errors).length === 0) {
       setShowValidationErrors(false);
     }
-  }, [personalInfo.name, personalInfo.email, personalInfo.desiredRole]);
+  }, [personalInfo.name, personalInfo.email]);
 
   /**
    * Function to save data to localStorage
@@ -782,7 +785,6 @@ export default function Builder() {
                 <ul className="text-red-600 dark:text-red-400 text-xs mt-1 list-disc list-inside">
                   {validationErrors.name && <li>{t('validation.name')}</li>}
                   {validationErrors.email && <li>{t('validation.email')}</li>}
-                  {validationErrors.desiredRole && <li>{t('validation.role')}</li>}
                   {validationErrors.resume && <li>{t('validation.resume')}</li>}
                 </ul>
               </div>
@@ -970,4 +972,4 @@ export default function Builder() {
       />
     </div>
   );
-} 
+}
