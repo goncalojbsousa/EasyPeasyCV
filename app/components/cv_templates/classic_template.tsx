@@ -246,23 +246,25 @@ export function ClassicTemplate({
       'language.level.b2': { pt: 'B2', en: 'B2', es: 'B2' },
       'language.level.c1': { pt: 'C1', en: 'C1', es: 'C1' },
       'language.level.c2': { pt: 'C2', en: 'C2', es: 'C2' },
+      // Native level
+      'language.level.native': { pt: 'Nativo', en: 'Native', es: 'Nativo' },
     } as const;
 
-    // 1) Direct map lookup (type-safe)
+    // Direct map lookup
     type LevelKey = keyof typeof levelMap;
     if (Object.prototype.hasOwnProperty.call(levelMap, normalized)) {
       const direct = levelMap[normalized as LevelKey];
       return direct[lang as keyof typeof direct] ?? normalized;
     }
 
-    // 2) Generic key fallback: language.level.<cefr>
+    // Generic key fallback: language.level.<cefr>
     if (normalized.toLowerCase().startsWith('language.level.')) {
       const suf = normalized.substring('language.level.'.length).toUpperCase();
       const valid = ['A1','A2','B1','B2','C1','C2'];
       if (valid.includes(suf)) return suf; // CEFR labels are language-agnostic
     }
 
-    // 3) Last resort: return normalized value
+    // Last resort: return normalized value
     return normalized;
   };
 
@@ -272,7 +274,9 @@ export function ClassicTemplate({
         {/* Header Section */}
         <View style={styles.header}>
           <Text style={styles.name}>{personalInfo?.name}</Text>
-          <Text style={styles.desiredRole}>{personalInfo?.desiredRole}</Text>
+          {personalInfo?.desiredRole && (
+            <Text style={styles.desiredRole}>{personalInfo.desiredRole}</Text>
+          )}
           
           {/* Contact Information */}
           <View style={styles.contactRow}>
@@ -535,4 +539,4 @@ export function ClassicTemplate({
       </Page>
     </Document>
   );
-} 
+}

@@ -1,4 +1,4 @@
-  'use client';
+'use client';
 
 import { PersonalInfo, Link } from '../types/cv';
 import { FormSection } from './ui/form-section';
@@ -442,7 +442,7 @@ export function PersonalInformation({
               data-error={showValidationErrors && validationErrors.name ? "true" : "false"}
             />
           </FormField>
-          <FormField label={t(`cvType.field.desired.role`)} required>
+          <FormField label={t(`cvType.field.desired.role`)}>
             <input 
               type="text" 
               placeholder={t(`cvType.placeholder.desired.role`)} 

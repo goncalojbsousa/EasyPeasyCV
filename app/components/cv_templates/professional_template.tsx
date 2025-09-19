@@ -140,12 +140,12 @@ function translateCurrent(lang: string) {
   return lang === 'en' ? 'Present' : lang === 'es' ? 'Actualidad' : 'Atual';
 }
 
-// Translates language level values to localized labels
+// Translates language level values to localized labels (CEFR codes + Native only)
 function translateLanguageLevel(level: string, lang: string) {
   const direct: Record<string, Record<string, string>> = {
-    pt: { a1: 'A1', a2: 'A2', b1: 'B1', b2: 'B2', c1: 'C1', c2: 'C2', basic: 'Básico', intermediate: 'Intermédio', advanced: 'Avançado', native: 'Nativo', fluent: 'Fluente' },
-    en: { a1: 'A1', a2: 'A2', b1: 'B1', b2: 'B2', c1: 'C1', c2: 'C2', basic: 'Basic', intermediate: 'Intermediate', advanced: 'Advanced', native: 'Native', fluent: 'Fluent' },
-    es: { a1: 'A1', a2: 'A2', b1: 'B1', b2: 'B2', c1: 'C1', c2: 'C2', basic: 'Básico', intermediate: 'Intermedio', advanced: 'Avanzado', native: 'Nativo', fluent: 'Fluido' },
+    pt: { a1: 'A1', a2: 'A2', b1: 'B1', b2: 'B2', c1: 'C1', c2: 'C2', native: 'Nativo' },
+    en: { a1: 'A1', a2: 'A2', b1: 'B1', b2: 'B2', c1: 'C1', c2: 'C2', native: 'Native' },
+    es: { a1: 'A1', a2: 'A2', b1: 'B1', b2: 'B2', c1: 'C1', c2: 'C2', native: 'Nativo' },
   };
   const key = level?.toLowerCase();
   if (direct[lang]?.[key]) return direct[lang][key];

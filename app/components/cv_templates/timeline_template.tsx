@@ -151,7 +151,7 @@ function translateCurrent(lang: string) {
   return 'Atualidade';
 }
 
-// Translates language level values (e.g., 'language.level.c1', 'C1', 'fluent') to localized labels
+// Translates language level values (CEFR codes + Native only)
 function translateLanguageLevel(level: string, lang: string) {
   if (!level) return '';
   const key = level.trim().toLowerCase();
@@ -161,15 +161,15 @@ function translateLanguageLevel(level: string, lang: string) {
   const last = parts[parts.length - 1];
   if (cefrMap[last]) return cefrMap[last];
 
-  const verbal = {
-    en: { native: 'Native', fluent: 'Fluent', advanced: 'Advanced', intermediate: 'Intermediate', basic: 'Basic', beginner: 'Beginner' },
-    es: { native: 'Nativo', fluent: 'Fluido', advanced: 'Avanzado', intermediate: 'Intermedio', basic: 'Básico', beginner: 'Principiante' },
-    pt: { native: 'Nativo', fluent: 'Fluente', advanced: 'Avançado', intermediate: 'Intermédio', basic: 'Básico', beginner: 'Iniciante' },
+  const native = {
+    en: { native: 'Native' },
+    es: { native: 'Nativo' },
+    pt: { native: 'Nativo' },
   } as const;
-  type VerbalDict = Record<keyof typeof verbal.en, string>;
-  const dict: VerbalDict = lang === 'en' ? verbal.en : lang === 'es' ? verbal.es : verbal.pt;
-  const verbalKey = last in dict ? last : key.replace('language.level.', '');
-  if (verbalKey in dict) return dict[verbalKey as keyof VerbalDict];
+  type NativeDict = Record<keyof typeof native.en, string>;
+  const dict: NativeDict = lang === 'en' ? native.en : lang === 'es' ? native.es : native.pt;
+  const nativeKey = last in dict ? last : key.replace('language.level.', '');
+  if (nativeKey in dict) return dict[nativeKey as keyof NativeDict];
   if (cefrMap[key]) return cefrMap[key];
   return level;
 }
@@ -201,7 +201,9 @@ export function TimelineTemplate({
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.name}>{personalInfo.name}</Text>
-          <Text style={[styles.desiredRole, dynamic.desiredRole]}>{personalInfo.desiredRole}</Text>
+          {personalInfo.desiredRole && (
+            <Text style={[styles.desiredRole, dynamic.desiredRole]}>{personalInfo.desiredRole}</Text>
+          )}
           <View style={styles.contactRow}>
             <Text style={styles.contactItem}>{personalInfo.city} {personalInfo.postalCode ? `• ${personalInfo.postalCode}` : ''}</Text>
             <Text style={styles.separator}>|</Text>

@@ -25,7 +25,7 @@ interface LanguagesProps {
 
 /**
  * Available language levels for dropdown selection
- * Using CEFR (Common European Framework of Reference for Languages)
+ * Using CEFR (Common European Framework of Reference for Languages) + Native
  */
 const LANGUAGE_LEVELS = [
   'language.level.a1',
@@ -33,7 +33,8 @@ const LANGUAGE_LEVELS = [
   'language.level.b1',
   'language.level.b2',
   'language.level.c1',
-  'language.level.c2'
+  'language.level.c2',
+  'language.level.native'
 ];
 
 /**
@@ -164,4 +165,4 @@ export function Languages({
       </FormSection>
     </form>
   );
-} 
+}
