@@ -338,6 +338,7 @@ const ptTranslations: Record<string, string> = {
   'language.level.b2': 'B2',
   'language.level.c1': 'C1',
   'language.level.c2': 'C2',
+  'language.level.native': 'Nativo',
 
   // Certifications
   'field.certification': 'Certificação',
@@ -1069,6 +1070,7 @@ const enTranslations: Record<string, string> = {
   'language.level.b2': 'B2',
   'language.level.c1': 'C1',
   'language.level.c2': 'C2',
+  'language.level.native': 'Native',
 
   // Certifications
   'field.certification': 'Certification',
@@ -1949,6 +1951,7 @@ const esTranslations: Record<string, string> = {
   'language.level.b2': 'B2',
   'language.level.c1': 'C1',
   'language.level.c2': 'C2',
+  'language.level.native': 'Nativo',
 
   // Certifications
   'field.certification': 'Certificación',
@@ -2532,6 +2535,7 @@ const brTranslations: Record<string, string> = {
   'language.level.b2': 'B2',
   'language.level.c1': 'C1',
   'language.level.c2': 'C2',
+  'language.level.native': 'Nativo',
 
   // Certifications
   'field.certification': 'Certificação',

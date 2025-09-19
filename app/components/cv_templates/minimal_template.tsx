@@ -134,7 +134,7 @@ function translateCurrent(lang: string) {
   return 'Atual';
 }
 
-// Translates language level values (e.g., 'language.level.c1', 'C1', 'fluent') to localized labels
+// Translates language level values (CEFR codes + Native only)
 function translateLanguageLevel(level: string, lang: string) {
   if (!level) return '';
   const key = level.trim().toLowerCase();
@@ -154,41 +154,20 @@ function translateLanguageLevel(level: string, lang: string) {
   const last = parts[parts.length - 1];
   if (cefrMap[last]) return cefrMap[last];
 
-  // Common verbal levels
-  const verbalLevels = {
-    en: {
-      native: 'Native',
-      fluent: 'Fluent',
-      advanced: 'Advanced',
-      intermediate: 'Intermediate',
-      basic: 'Basic',
-      beginner: 'Beginner',
-    },
-    es: {
-      native: 'Nativo',
-      fluent: 'Fluido',
-      advanced: 'Avanzado',
-      intermediate: 'Intermedio',
-      basic: 'Básico',
-      beginner: 'Principiante',
-    },
-    pt: {
-      native: 'Nativo',
-      fluent: 'Fluente',
-      advanced: 'Avançado',
-      intermediate: 'Intermédio',
-      basic: 'Básico',
-      beginner: 'Iniciante',
-    },
+  // Native level only
+  const nativeLevels = {
+    en: { native: 'Native' },
+    es: { native: 'Nativo' },
+    pt: { native: 'Nativo' },
   } as const;
 
-  type VerbalDict = Record<keyof typeof verbalLevels.en, string>;
+  type NativeDict = Record<keyof typeof nativeLevels.en, string>;
   const l: 'pt'|'en'|'es' = lang === 'en' ? 'en' : lang === 'es' ? 'es' : 'pt';
-  const dict: VerbalDict = l === 'en' ? verbalLevels.en : l === 'es' ? verbalLevels.es : verbalLevels.pt;
+  const dict: NativeDict = l === 'en' ? nativeLevels.en : l === 'es' ? nativeLevels.es : nativeLevels.pt;
 
   // Handle keys like 'language.level.native' too
-  const verbalKey = (last in dict ? last : key.replace('language.level.', '')) as keyof VerbalDict;
-  if (verbalKey in dict) return dict[verbalKey];
+  const nativeKey = (last in dict ? last : key.replace('language.level.', '')) as keyof NativeDict;
+  if (nativeKey in dict) return dict[nativeKey];
 
   // Fallback: if it's already something like 'C1' return as-is uppercase
   if (cefrMap[key]) return cefrMap[key];

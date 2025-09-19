@@ -610,7 +610,7 @@ export function CreativeTemplate({
     }
   };
 
-  // Helper to translate language levels
+  // Helper to translate language levels (CEFR codes + Native only)
   const translateLanguageLevel = (level: string, lang: string) => {
     if (!level) return '';
 
@@ -624,6 +624,8 @@ export function CreativeTemplate({
       'language.level.b2': { pt: 'B2', en: 'B2', es: 'B2' },
       'language.level.c1': { pt: 'C1', en: 'C1', es: 'C1' },
       'language.level.c2': { pt: 'C2', en: 'C2', es: 'C2' },
+      // Native level
+      'language.level.native': { pt: 'Nativo', en: 'Native', es: 'Nativo' },
     } as const;
 
     type LevelKey = keyof typeof levelMap;
@@ -651,6 +653,7 @@ export function CreativeTemplate({
       case 'B2': return 70;
       case 'C1': return 85;
       case 'C2': return 100;
+      case 'NATIVE': return 100;
       default: return 50;
     }
   };

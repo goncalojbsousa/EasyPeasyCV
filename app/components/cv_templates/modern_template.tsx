@@ -547,18 +547,20 @@ export function ModernTemplate({
     }
   };
 
-  // Helper to translate language levels
+  // Helper to translate language levels (CEFR codes + Native only)
   const translateLanguageLevel = (level: string, lang: string) => {
     if (!level) return '';
     
     const levelMap = {
       // CEFR levels
-      'language.level.a1': { pt: 'A1', en: 'A1' },
-      'language.level.a2': { pt: 'A2', en: 'A2' },
-      'language.level.b1': { pt: 'B1', en: 'B1' },
-      'language.level.b2': { pt: 'B2', en: 'B2' },
-      'language.level.c1': { pt: 'C1', en: 'C1' },
-      'language.level.c2': { pt: 'C2', en: 'C2' },
+      'language.level.a1': { pt: 'A1', en: 'A1', es: 'A1' },
+      'language.level.a2': { pt: 'A2', en: 'A2', es: 'A2' },
+      'language.level.b1': { pt: 'B1', en: 'B1', es: 'B1' },
+      'language.level.b2': { pt: 'B2', en: 'B2', es: 'B2' },
+      'language.level.c1': { pt: 'C1', en: 'C1', es: 'C1' },
+      'language.level.c2': { pt: 'C2', en: 'C2', es: 'C2' },
+      // Native level
+      'language.level.native': { pt: 'Nativo', en: 'Native', es: 'Nativo' },
     };
     
     return levelMap[level as keyof typeof levelMap]?.[lang as keyof typeof levelMap[keyof typeof levelMap]] || level;
@@ -788,4 +790,4 @@ export function ModernTemplate({
       </Page>
     </Document>
   );
-} 
+}
