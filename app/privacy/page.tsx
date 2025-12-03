@@ -120,7 +120,7 @@ export default function PrivacyPolicy() {
               </p>
               <div className="bg-gray-50 dark:bg-zinc-700 rounded-lg p-4">
                 <p className="text-gray-700 dark:text-gray-300">
-                  <strong>GitHub:</strong> <a href="https://github.com/goncalojbsousa/cv-builder/issues" className="text-blue-600 dark:text-blue-400 hover:underline">github.com/goncalojbsousa/cv-builder/issues</a>
+                  <strong>GitHub:</strong> <a href="https://github.com/goncalojbsousa/cv-builder/issues" className="text-sky-600 dark:text-sky-400 hover:underline">github.com/goncalojbsousa/cv-builder/issues</a>
                 </p>
               </div>
             </section>
@@ -130,7 +130,7 @@ export default function PrivacyPolicy() {
           <div className="text-center mt-12">
             <Link
               href="/"
-              className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
+              className="bg-sky-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-sky-700 transition-colors duration-300"
             >
               {t('privacy.back.home')}
             </Link>

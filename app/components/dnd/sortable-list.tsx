@@ -54,7 +54,7 @@ export function DragHandle({ className = "", ariaLabel = "Drag item", children }
       {...attributes}
       {...listeners}
       aria-label={ariaLabel}
-      className={`cursor-grab active:cursor-grabbing ${className}`}
+      className={`cursor-grab active:cursor-grabbing rounded-md motion-safe:transition-colors hover:bg-gray-100/60 dark:hover:bg-zinc-800/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 ${className}`}
       style={{ touchAction: 'none' }}
     >
       {children}

@@ -13,7 +13,7 @@ export function Footer() {
 
   return (
     <footer className="bg-white dark:bg-zinc-900 border-t border-gray-200 dark:border-zinc-700 py-6 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="w-full px-4 sm:px-6">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
           {/* Copyright section - Left */}
           <div className="text-center sm:text-left">
@@ -28,7 +28,7 @@ export function Footer() {
               href="https://ko-fi.com/easypeasycv"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 text-sm"
+              className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-300 text-sm"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -66,13 +66,13 @@ export function Footer() {
           <div className="flex items-center gap-4">
             <Link
               href="/privacy"
-              className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 text-sm"
+              className="text-gray-600 dark:text-gray-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-300 text-sm"
             >
               {t('footer.privacy')}
             </Link>
             <Link
               href="/terms"
-              className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 text-sm"
+              className="text-gray-600 dark:text-gray-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-300 text-sm"
             >
               {t('footer.terms')}
             </Link>
@@ -81,4 +81,4 @@ export function Footer() {
       </div>
     </footer>
   );
-} 
+}

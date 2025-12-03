@@ -137,7 +137,7 @@ export function CvTypeSelector({ selectedTemplate, onTemplateChange }: CvTypeSel
       {/* Template selector button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full p-4 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        className="w-full p-4 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
@@ -212,7 +212,7 @@ export function CvTypeSelector({ selectedTemplate, onTemplateChange }: CvTypeSel
                     setIsOpen(false);
                   }}
                   className={`w-full p-3 rounded-lg transition-all duration-200 text-left hover:bg-gray-50 dark:hover:bg-zinc-700 ${
-                    selectedTemplate === key ? 'bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800' : ''
+                    selectedTemplate === key ? 'bg-sky-50 dark:bg-sky-900/20 border border-sky-200 dark:border-sky-800' : ''
                   }`}
                 >
                   <div className="flex items-center space-x-3">

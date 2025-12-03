@@ -66,21 +66,21 @@ export function ThankYouModal({ show, onClose }: ThankYouModalProps) {
           </p>
 
           {/* Donation section with Ko-fi link */}
-          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 mb-6">
+          <div className="bg-sky-50 dark:bg-sky-900/20 rounded-lg p-4 mb-6">
             <div className="flex items-center justify-center mb-3">
-              <svg className="w-8 h-8 text-blue-600 dark:text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-8 h-8 text-sky-600 dark:text-sky-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
               </svg>
-              <span className="text-blue-600 dark:text-blue-400 font-medium text-sm">
+              <span className="text-sky-600 dark:text-sky-400 font-medium text-sm">
                 {t('donation.title')}
               </span>
             </div>
-            <p className="text-blue-700 dark:text-blue-300 text-xs mb-4">
+            <p className="text-sky-700 dark:text-sky-300 text-xs mb-4">
               {t('donation.message')}
             </p>
             <button
               onClick={handleDonationClick}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm flex items-center justify-center gap-2"
+              className="w-full bg-sky-600 hover:bg-sky-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm flex items-center justify-center gap-2"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />

@@ -110,7 +110,7 @@ export function Projects({
                   <FormField label={t('field.project.name')}>
                     <input
                       type="text"
-                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                       placeholder={t(`cvType.placeholder.project.name`)}
                       value={proj.name}
                       onChange={e => onProjectChange(idx, 'name', e.target.value)}
@@ -119,7 +119,7 @@ export function Projects({
                   <FormField label={t('field.year')}>
                     <input
                       type="text"
-                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                       placeholder={t('placeholder.project.year')}
                       value={proj.year}
                       onChange={e => onProjectChange(idx, 'year', e.target.value)}
@@ -132,7 +132,7 @@ export function Projects({
                   <FormField label={t('field.project.sourceCode')}>
                     <input
                       type="url"
-                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                       placeholder={t('placeholder.project.sourceCode')}
                       value={proj.sourceCode || ''}
                       onChange={e => onProjectChange(idx, 'sourceCode', e.target.value)}
@@ -141,7 +141,7 @@ export function Projects({
                   <FormField label={t('field.project.link')}>
                     <input
                       type="url"
-                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                       placeholder={t('placeholder.project.link')}
                       value={proj.link}
                       onChange={e => onProjectChange(idx, 'link', e.target.value)}
@@ -154,7 +154,7 @@ export function Projects({
                   <FormField label={t(`cvType.field.technologies`)}>
                     <input
                       type="text"
-                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                       placeholder={t(`cvType.placeholder.technologies`)}
                       value={proj.tech}
                       onChange={e => onProjectChange(idx, 'tech', e.target.value)}
@@ -165,7 +165,7 @@ export function Projects({
                 {/* Project description field */}
                 <FormField label={t('field.description')}>
                   <textarea
-                    className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                    className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                     placeholder={t(`cvType.placeholder.project.description`)}
                     value={proj.description}
                     onChange={e => onProjectChange(idx, 'description', e.target.value)}

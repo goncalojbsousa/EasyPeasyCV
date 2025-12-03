@@ -167,7 +167,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
       <div className="relative">
         <input
           type="text"
-          className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all pr-14 text-gray-900 dark:text-gray-100"
+          className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all pr-14 text-gray-900 dark:text-gray-100"
           placeholder={placeholder}
           value={formatDisplayDate(value)}
           readOnly
@@ -203,7 +203,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
               <button
                 type="button"
                 onClick={() => setShowYearPicker(!showYearPicker)}
-                className="text-lg font-semibold text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 px-2 py-1 rounded"
+                className="text-lg font-semibold text-gray-900 dark:text-gray-100 hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-300 px-2 py-1 rounded"
                 aria-label="Change month"
               >
                 {t(monthNames[currentDate.getMonth()])}
@@ -211,7 +211,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
               <button
                 type="button"
                 onClick={() => setShowYearPicker(!showYearPicker)}
-                className="text-lg font-semibold text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 px-2 py-1 rounded"
+                className="text-lg font-semibold text-gray-900 dark:text-gray-100 hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-300 px-2 py-1 rounded"
                 aria-label="Change year"
               >
                 {currentDate.getFullYear()}
@@ -266,7 +266,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
                     className={`
                       p-2 text-sm rounded transition-all duration-150
                       ${year === currentDate.getFullYear()
-                        ? 'bg-blue-600 text-white font-semibold shadow-md'
+                        ? 'bg-sky-600 text-white font-semibold shadow-md'
                         : 'hover:bg-gray-200 dark:hover:bg-zinc-600 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
                       }
                     `}
@@ -297,9 +297,9 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
                   p-2 text-sm rounded-lg transition-all duration-150
                   ${!day ? 'invisible' : ''}
                   ${day && selectedDate && day.toDateString() === selectedDate.toDateString()
-                    ? 'bg-blue-600 text-white font-semibold shadow-md'
+                    ? 'bg-sky-600 text-white font-semibold shadow-md'
                     : day && day.toDateString() === new Date().toDateString()
-                    ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-semibold hover:bg-blue-200 dark:hover:bg-blue-900/50'
+                    ? 'bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400 font-semibold hover:bg-sky-200 dark:hover:bg-sky-900/50'
                     : day
                     ? 'hover:bg-gray-100 dark:hover:bg-zinc-700 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
                     : ''
@@ -325,7 +325,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
             <button
               type="button"
               onClick={goToToday}
-              className="px-3 py-1 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition-colors"
+              className="px-3 py-1 text-sm text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 rounded transition-colors"
             >
               {t('calendar.today')}
             </button>
@@ -429,7 +429,7 @@ export function Certifications({
                   <FormField label={t('field.certification')}>
                     <input
                       type="text"
-                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                       placeholder={t('placeholder.certification')}
                       value={cert.name}
                       onChange={e => onCertificationChange(idx, 'name', e.target.value)}
@@ -438,7 +438,7 @@ export function Certifications({
                   <FormField label={t('field.issuer')}>
                     <input
                       type="text"
-                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                       placeholder={t('placeholder.issuer')}
                       value={cert.issuer}
                       onChange={e => onCertificationChange(idx, 'issuer', e.target.value)}
@@ -458,7 +458,7 @@ export function Certifications({
                   <FormField label={t('field.hours')}>
                     <input
                       type="text"
-                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                       placeholder={t('placeholder.hours')}
                       value={cert.hours}
                       onChange={e => onCertificationChange(idx, 'hours', e.target.value)}
@@ -467,7 +467,7 @@ export function Certifications({
                   <FormField label={t('field.validation.link')}>
                     <input
                       type="url"
-                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                       placeholder={t('placeholder.validation.link')}
                       value={cert.validationLink}
                       onChange={e => onCertificationChange(idx, 'validationLink', e.target.value)}
@@ -478,7 +478,7 @@ export function Certifications({
                 {/* Description field */}
                 <FormField label={t('field.description')}>
                   <textarea
-                    className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                    className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                     placeholder={t('placeholder.certification.description')}
                     value={cert.description}
                     onChange={e => onCertificationChange(idx, 'description', e.target.value)}

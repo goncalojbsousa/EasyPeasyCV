@@ -11,13 +11,17 @@ interface IconButtonProps {
   /** Child elements (usually icons) to render inside the button */
   children: ReactNode;
   /** Visual variant of the button */
-  variant?: 'primary' | 'danger';
+  variant?: 'primary' | 'secondary' | 'tertiary' | 'danger';
   /** Size variant of the button */
   size?: 'sm' | 'md' | 'lg';
   /** Additional CSS classes to apply */
   className?: string;
   /** Accessible label for icon-only buttons */
   ariaLabel?: string;
+  /** Disabled state */
+  disabled?: boolean;
+  /** Loading state (disables button and shows reduced opacity) */
+  loading?: boolean;
 }
 
 /**
@@ -30,16 +34,20 @@ export function IconButton({
   variant = 'primary', 
   size = 'md',
   className = '',
-  ariaLabel
+  ariaLabel,
+  disabled = false,
+  loading = false
 }: IconButtonProps) {
   // Base CSS classes for all button variants
-  const baseClasses = "font-semibold flex items-center gap-2 transition-colors duration-300";
+  const baseClasses = "relative font-semibold flex items-center justify-center select-none motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900 disabled:opacity-60 disabled:cursor-not-allowed";
   
   // CSS classes for different visual variants
   const variantClasses = {
-    primary: "bg-blue-600 text-white hover:bg-blue-700",
+    primary: "bg-sky-600 text-white hover:bg-sky-700 active:bg-sky-800",
+    secondary: "bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 active:bg-gray-700 dark:active:bg-gray-200",
+    tertiary: "border border-gray-300 dark:border-zinc-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-800 active:bg-gray-100 dark:active:bg-gray-700",
     danger: "text-gray-400 dark:text-zinc-500 hover:text-red-500 dark:hover:text-red-400"
-  };
+  } as const;
   
   // CSS classes for different size variants
   const sizeClasses = {
@@ -53,9 +61,16 @@ export function IconButton({
       type="button"
       onClick={onClick}
       aria-label={ariaLabel}
-      className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} rounded-lg ${className}`}
+      disabled={disabled || loading}
+      className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} rounded-xl shadow-sm ${className}`}
     >
-      {children}
+      <span className={`inline-flex items-center gap-2 ${loading ? 'opacity-0' : ''}`}>{children}</span>
+      {loading && (
+        <svg className="absolute inset-0 m-auto h-5 w-5 animate-spin text-current" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+        </svg>
+      )}
     </button>
   );
-} 
+}

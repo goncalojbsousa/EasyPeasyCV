@@ -164,7 +164,7 @@ export function AcademicEducation({
                     <div ref={el => { dropdownRefs.current[`type-${idx}`] = el; }} className="relative">
                       <button
                         type="button"
-                        className="w-full flex items-center justify-between p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left text-gray-900 dark:text-gray-100"
+                        className="w-full flex items-center justify-between p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-left text-gray-900 dark:text-gray-100"
                         onClick={() => toggleDropdown(`type-${idx}`)}
                         tabIndex={0}
                       >
@@ -177,7 +177,7 @@ export function AcademicEducation({
                             <button
                               key={type}
                               type="button"
-                              className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${ed.type === type ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+                              className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 ${ed.type === type ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
                               onClick={() => {
                                 onEducationChange(idx, 'type', type);
                                 setOpenDropdowns(prev => ({ ...prev, [`type-${idx}`]: false }));
@@ -207,7 +207,7 @@ export function AcademicEducation({
                             <button
                               key={status}
                               type="button"
-                              className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${ed.status === status ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+                              className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 ${ed.status === status ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
                               onClick={() => {
                                 onEducationChange(idx, 'status', status);
                                 setOpenDropdowns(prev => ({ ...prev, [`status-${idx}`]: false }));
@@ -227,7 +227,7 @@ export function AcademicEducation({
                   <FormField label={t('field.course')}>
                     <input
                       type="text"
-                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                       placeholder={t('placeholder.course')}
                       value={ed.course}
                       onChange={e => onEducationChange(idx, 'course', e.target.value)}
@@ -236,7 +236,7 @@ export function AcademicEducation({
                   <FormField label={t('field.institution')}>
                     <input
                       type="text"
-                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                       placeholder={t('placeholder.institution')}
                       value={ed.institution}
                       onChange={e => onEducationChange(idx, 'institution', e.target.value)}
@@ -250,7 +250,7 @@ export function AcademicEducation({
                     <div ref={el => { dropdownRefs.current[`startMonth-${idx}`] = el; }} className="relative">
                       <button
                         type="button"
-                        className="w-full flex items-center justify-between p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left text-sm text-gray-900 dark:text-gray-100"
+                        className="w-full flex items-center justify-between p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-left text-sm text-gray-900 dark:text-gray-100"
                         onClick={() => toggleDropdown(`startMonth-${idx}`)}
                         tabIndex={0}
                       >
@@ -263,7 +263,7 @@ export function AcademicEducation({
                             <button
                               key={month}
                               type="button"
-                              className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${toEN(ed.startMonth) === month ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+                              className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 ${toEN(ed.startMonth) === month ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
                               onClick={() => {
                                 onEducationChange(idx, 'startMonth', month);
                                 setOpenDropdowns(prev => ({ ...prev, [`startMonth-${idx}`]: false }));
@@ -293,7 +293,7 @@ export function AcademicEducation({
                         <div ref={el => { dropdownRefs.current[`endMonth-${idx}`] = el; }} className="relative">
                           <button
                             type="button"
-                            className="w-full flex items-center justify-between p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left text-sm text-gray-900 dark:text-gray-100"
+                            className="w-full flex items-center justify-between p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-left text-sm text-gray-900 dark:text-gray-100"
                             onClick={() => toggleDropdown(`endMonth-${idx}`)}
                             tabIndex={0}
                           >
@@ -306,7 +306,7 @@ export function AcademicEducation({
                                 <button
                                   key={month}
                                   type="button"
-                                  className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${toEN(ed.endMonth) === month ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+                                  className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 ${toEN(ed.endMonth) === month ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
                                   onClick={() => {
                                     onEducationChange(idx, 'endMonth', month);
                                     setOpenDropdowns(prev => ({ ...prev, [`endMonth-${idx}`]: false }));
@@ -322,7 +322,7 @@ export function AcademicEducation({
                       <FormField label={t('field.end.year')}>
                         <input
                           type="text"
-                          className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                          className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                           placeholder={t('placeholder.year')}
                           value={ed.endYear}
                           onChange={e => onEducationChange(idx, 'endYear', e.target.value)}

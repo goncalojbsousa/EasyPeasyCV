@@ -16,8 +16,8 @@ export function Navbar() {
   const { t } = useLanguage();
 
   return (
-    <header className="bg-white dark:bg-zinc-800 shadow-sm fixed top-0 left-0 right-0 z-50 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b border-gray-200/80 dark:border-zinc-700/60 bg-white/70 dark:bg-zinc-900/60 backdrop-blur supports-[backdrop-filter]:bg-white/60 supports-[backdrop-filter]:dark:bg-zinc-900/50 transition-colors">
+      <div className="w-full px-4 sm:px-6 py-3 flex justify-between items-center">
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-3">
             <Image
@@ -29,7 +29,7 @@ export function Navbar() {
               priority
             />
             <div>
-              <h1 className="text-2xl font-bold text-blue-600">{t('app.title')}</h1>
+              <h1 className="text-2xl font-bold text-sky-600">{t('app.title')}</h1>
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 {t('app.subtitle')}
               </p>
@@ -38,7 +38,7 @@ export function Navbar() {
         </div>
         <div className="flex items-center gap-3">
           <LanguageSelector />
-          <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors duration-300">
+          <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900">
             <ThemeToggle />
           </div>
         </div>

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet, Link } from '@react-pdf/renderer';
-import { CvData, CvColor } from '../../types/cv';
+import { Document, Page, Text, View, StyleSheet, Link, Image } from '@react-pdf/renderer';
+import { CvData, CvColor, CvRenderSettings } from '../../types/cv';
 import { getColorTheme } from '../../utils/color-themes';
 
 /**
@@ -11,29 +11,44 @@ interface TimelineTemplateProps extends CvData {
   lang?: string;
   /** Optional color theme */
   color?: CvColor;
+  settings?: CvRenderSettings;
 }
 
 /**
  * Timeline template styles with vertical rail and nodes
  */
-const styles = StyleSheet.create({
-  page: { padding: 30, fontSize: 10, fontFamily: 'Helvetica', backgroundColor: '#ffffff' },
-  header: { marginBottom: 18, paddingBottom: 10, borderBottomWidth: 2, borderBottomColor: '#e5e7eb', borderBottomStyle: 'solid' },
-  name: { fontSize: 24, fontWeight: 'bold', color: '#0f172a' },
-  desiredRole: { fontSize: 12, color: '#2563eb', fontWeight: 'bold', marginTop: 4 },
+const cmToPt = (cm: number) => cm * 28.3465;
+const buildStyles = (settings?: CvRenderSettings) => {
+  const s = settings;
+  const scale = s?.layout.textScale || 1.0;
+  const familyRaw = s?.layout.fontFamily || 'Helvetica';
+  const fontFamily = s?.layout.fontFamily === 'Custom' ? (s?.layout.customFont?.name || 'Helvetica') : (familyRaw === 'Arial' ? 'Helvetica' : familyRaw);
+  const margins = s?.layout.marginsCm ?? { top: 1.5, right: 1.5, bottom: 1.5, left: 1.5 };
+  const lineHeight = s?.layout.lineSpacing ?? 1.4;
+  const sectionSpacing = s?.layout.sectionSpacingPx ?? 16;
+  const linkFontSize = ((s?.header.iconSizePx ?? 18) / 2) * scale;
+  const isATS = false;
+  const neutral = { primary: '#0f172a', accent: '#666666', border: '#e5e7eb' };
+  const nameSpacing = Math.max(8, Math.round(((s?.header.nameFontSize ?? 24) * scale) * 0.6));
+  const roleSpacing = Math.max(6, Math.round((12 * scale) * 0.3));
+  return StyleSheet.create({
+  page: { paddingTop: cmToPt(margins.top), paddingRight: cmToPt(margins.right), paddingBottom: cmToPt(margins.bottom), paddingLeft: cmToPt(margins.left), fontSize: 10 * scale, fontFamily, backgroundColor: '#ffffff', lineHeight },
+  header: { marginBottom: 18, paddingBottom: 10, borderBottomWidth: s?.header.dividerThickness ?? 2, borderBottomColor: isATS ? neutral.border : '#e5e7eb', borderBottomStyle: s?.header.dividerStyle ?? 'solid' },
+  name: { fontSize: (s?.header.nameFontSize ?? 24) * scale, fontWeight: s?.header.nameFontWeight === 'heavy' ? 800 : s?.header.nameFontWeight === 'bold' ? 700 : 400, color: s?.header.nameColor || (isATS ? neutral.primary : '#0f172a'), marginBottom: nameSpacing },
+  desiredRole: { fontSize: 12 * scale, color: isATS ? neutral.accent : '#2563eb', fontWeight: 'bold', marginTop: 4, marginBottom: roleSpacing, fontStyle: s?.header.titleStyle === 'italic' ? 'italic' : 'normal', textTransform: s?.header.titleStyle === 'uppercase' ? 'uppercase' : 'none' },
   contactRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 6 },
   contactItem: { fontSize: 9, color: '#475569', marginRight: 12 },
   separator: { fontSize: 9, color: '#cbd5e1', marginHorizontal: 8 },
-  linksRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 6 },
-  linkItem: { fontSize: 9, color: '#2563eb', textDecoration: 'underline', marginRight: 14, marginBottom: 2 },
+  linksRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 6, justifyContent: s?.header.iconAlignment === 'center' ? 'center' : s?.header.iconAlignment === 'right' ? 'flex-end' : 'flex-start' },
+  linkItem: { fontSize: linkFontSize, color: isATS ? neutral.accent : '#2563eb', textDecoration: 'underline', marginRight: s?.header.iconSpacingPx ?? 14, marginBottom: 2 },
 
-  section: { marginBottom: 16 },
+  section: { marginBottom: sectionSpacing },
   sectionTitle: { fontSize: 12, fontWeight: 'bold', color: '#0f172a', marginBottom: 10, textTransform: 'uppercase', letterSpacing: 0.5 },
 
   // Timeline layout
   timelineRow: { flexDirection: 'row' },
   rail: { width: 14, alignItems: 'center' },
-  railLine: { width: 2, backgroundColor: '#e5e7eb', flex: 1 },
+  railLine: { width: 2, backgroundColor: isATS ? neutral.border : '#e5e7eb', flex: 1 },
   nodeWrap: { position: 'absolute', left: 5, width: 8, height: 8, borderRadius: 4, backgroundColor: '#2563eb' },
   content: { flex: 1, paddingLeft: 14, paddingBottom: 12 },
   date: { fontSize: 9, color: '#64748b', marginBottom: 2 },
@@ -70,6 +85,7 @@ const styles = StyleSheet.create({
   volDesc: { fontSize: 9, color: '#334155' },
   volImpact: { fontSize: 9, fontStyle: 'italic', color: '#059669' },
 });
+};
 
 // Helper functions for social links and text localization
 /**
@@ -187,8 +203,10 @@ export function TimelineTemplate({
   volunteers,
   lang,
   color = 'blue',
+  settings,
 }: TimelineTemplateProps) {
   const theme = getColorTheme(color);
+  const styles = buildStyles(settings);
   const dynamic = StyleSheet.create({
     desiredRole: { color: theme.primary },
     node: { backgroundColor: theme.primary },
@@ -200,8 +218,11 @@ export function TimelineTemplate({
       <Page size="A4" style={styles.page}>
         {/* Header */}
         <View style={styles.header}>
+          {settings?.header.titlePosition === 'above' && personalInfo.desiredRole && (
+            <Text style={[styles.desiredRole, dynamic.desiredRole]}>{personalInfo.desiredRole}</Text>
+          )}
           <Text style={styles.name}>{personalInfo.name}</Text>
-          {personalInfo.desiredRole && (
+          {(!settings || settings?.header.titlePosition === 'below') && personalInfo.desiredRole && (
             <Text style={[styles.desiredRole, dynamic.desiredRole]}>{personalInfo.desiredRole}</Text>
           )}
           <View style={styles.contactRow}>
@@ -220,6 +241,9 @@ export function TimelineTemplate({
               ))}
             </View>
           )}
+          {settings?.photo?.enabled && settings?.photo?.dataUrl && (
+            <Image src={settings.photo.dataUrl as string} style={{ width: 90, height: 90, borderRadius: 6, marginTop: 8 }} />
+          )}
         </View>
 
         {/* Summary */}
@@ -234,28 +258,59 @@ export function TimelineTemplate({
         {experiences && experiences.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{lang === 'en' ? 'Experience' : lang === 'es' ? 'Experiencia' : 'Experiência'}</Text>
-            {experiences.map((exp, i) => (
-              <View key={i} style={styles.timelineRow}>
-                <View style={styles.rail}>
-                  <View style={styles.railLine} />
-                  <View style={[styles.nodeWrap, dynamic.node]} />
-                </View>
-                <View style={styles.content}>
-                  <View style={styles.rowBetween}>
-                    <Text style={styles.role}>{exp.role}</Text>
-                    <Text style={styles.date}>
-                      {exp.startMonth && exp.startYear ? `${translateMonth(exp.startMonth, lang || 'pt')} ${exp.startYear}` : ''}
-                      {exp.startMonth && exp.startYear && (exp.endMonth || exp.endYear || exp.current) ? ' - ' : ''}
-                      {exp.current ? translateCurrent(lang || 'pt') : exp.endMonth && exp.endYear ? `${translateMonth(exp.endMonth, lang || 'pt')} ${exp.endYear}` : ''}
-                    </Text>
+            {(settings?.layout.columns ?? 1) === 1 ? (
+              experiences.map((exp, i) => (
+                <View key={i} style={styles.timelineRow}>
+                  <View style={styles.rail}>
+                    <View style={styles.railLine} />
+                    <View style={[styles.nodeWrap, dynamic.node]} />
                   </View>
-                  <Text style={styles.meta}>{exp.company}</Text>
-                  {exp.tech && <Text style={styles.tech}>{exp.tech}</Text>}
-                  {exp.activities && <Text style={styles.activities}>• {exp.activities}</Text>}
-                  {exp.results && <Text style={styles.results}>• {exp.results}</Text>}
+                  <View style={styles.content}>
+                    <View style={styles.rowBetween}>
+                      <Text style={styles.role}>{exp.role}</Text>
+                      <Text style={styles.date}>
+                        {exp.startMonth && exp.startYear ? `${translateMonth(exp.startMonth, lang || 'pt')} ${exp.startYear}` : ''}
+                        {exp.startMonth && exp.startYear && (exp.endMonth || exp.endYear || exp.current) ? ' - ' : ''}
+                        {exp.current ? translateCurrent(lang || 'pt') : exp.endMonth && exp.endYear ? `${translateMonth(exp.endMonth, lang || 'pt')} ${exp.endYear}` : ''}
+                      </Text>
+                    </View>
+                    <Text style={styles.meta}>{exp.company}</Text>
+                    {exp.tech && <Text style={styles.tech}>{exp.tech}</Text>}
+                    {exp.activities && <Text style={styles.activities}>• {exp.activities}</Text>}
+                    {exp.results && <Text style={styles.results}>• {exp.results}</Text>}
+                  </View>
                 </View>
+              ))
+            ) : (
+              <View style={{ flexDirection: 'row', gap: 12 }}>
+                {Array.from({ length: settings?.layout.columns ?? 1 }).map((_, ci) => (
+                  <View key={ci} style={{ flex: 1 }}>
+                    {experiences.filter((_, idx) => idx % (settings?.layout.columns ?? 1) === ci).map((exp, i) => (
+                      <View key={i} style={styles.timelineRow}>
+                        <View style={styles.rail}>
+                          <View style={styles.railLine} />
+                          <View style={[styles.nodeWrap, dynamic.node]} />
+                        </View>
+                        <View style={styles.content}>
+                          <View style={styles.rowBetween}>
+                            <Text style={styles.role}>{exp.role}</Text>
+                            <Text style={styles.date}>
+                              {exp.startMonth && exp.startYear ? `${translateMonth(exp.startMonth, lang || 'pt')} ${exp.startYear}` : ''}
+                              {exp.startMonth && exp.startYear && (exp.endMonth || exp.endYear || exp.current) ? ' - ' : ''}
+                              {exp.current ? translateCurrent(lang || 'pt') : exp.endMonth && exp.endYear ? `${translateMonth(exp.endMonth, lang || 'pt')} ${exp.endYear}` : ''}
+                            </Text>
+                          </View>
+                          <Text style={styles.meta}>{exp.company}</Text>
+                          {exp.tech && <Text style={styles.tech}>{exp.tech}</Text>}
+                          {exp.activities && <Text style={styles.activities}>• {exp.activities}</Text>}
+                          {exp.results && <Text style={styles.results}>• {exp.results}</Text>}
+                        </View>
+                      </View>
+                    ))}
+                  </View>
+                ))}
               </View>
-            ))}
+            )}
           </View>
         )}
 

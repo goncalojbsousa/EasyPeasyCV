@@ -1,6 +1,6 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet, Link } from '@react-pdf/renderer';
-import { CvData, CvColor } from '../../types/cv';
+import { Document, Page, Text, View, StyleSheet, Link, Image } from '@react-pdf/renderer';
+import { CvData, CvColor, CvRenderSettings } from '../../types/cv';
 import { getColorTheme } from '../../utils/color-themes';
 
 /**
@@ -11,16 +11,28 @@ interface ModernTemplateProps extends CvData {
   lang?: string;
   /** Color theme for the template */
   color?: CvColor;
+  settings?: CvRenderSettings;
 }
 
 /**
  * Modern template styles with clean and minimalist design
  */
-const styles = StyleSheet.create({
+const cmToPt = (cm: number) => cm * 28.3465;
+const buildBaseStyles = (settings?: CvRenderSettings) => {
+  const s = settings;
+  const scale = s?.layout.textScale || 1.0;
+  const familyRaw = s?.layout.fontFamily || 'Helvetica';
+  const fontFamily = s?.layout.fontFamily === 'Custom' ? (s?.layout.customFont?.name || 'Helvetica') : (familyRaw === 'Arial' ? 'Helvetica' : familyRaw);
+  const margins = s?.layout.marginsCm ?? { top: 1.5, right: 1.5, bottom: 1.5, left: 1.5 };
+  const lineHeight = s?.layout.lineSpacing ?? 1.4;
+  return StyleSheet.create({
   page: { 
-    padding: 30, 
-    fontSize: 10, 
-    fontFamily: 'Helvetica',
+    paddingTop: cmToPt(margins.top),
+    paddingRight: cmToPt(margins.right),
+    paddingBottom: cmToPt(margins.bottom),
+    paddingLeft: cmToPt(margins.left),
+    fontSize: 10 * scale, 
+    fontFamily,
     backgroundColor: '#ffffff'
   },
   header: { 
@@ -31,13 +43,13 @@ const styles = StyleSheet.create({
     borderBottomStyle: 'solid'
   },
   name: { 
-    fontSize: 24, 
+    fontSize: 24 * scale, 
     fontWeight: 'bold', 
     marginBottom: 4,
     color: '#1f2937'
   },
   desiredRole: { 
-    fontSize: 14, 
+    fontSize: 14 * scale, 
     color: '#3b82f6', 
     fontWeight: 'bold', 
     marginBottom: 8,
@@ -52,12 +64,12 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap'
   },
   contactItem: { 
-    fontSize: 9, 
+    fontSize: 9 * scale, 
     color: '#6b7280', 
     marginRight: 15 
   },
   separator: { 
-    fontSize: 9, 
+    fontSize: 9 * scale, 
     color: '#d1d5db', 
     marginHorizontal: 8 
   },
@@ -67,17 +79,17 @@ const styles = StyleSheet.create({
     marginTop: 8 
   },
   linkItem: { 
-    fontSize: 9, 
+    fontSize: 9 * scale, 
     color: '#3b82f6', 
     textDecoration: 'underline', 
     marginRight: 20, 
     marginBottom: 3 
   },
   section: { 
-    marginBottom: 15 
+    marginBottom: (s?.layout.sectionSpacingPx ?? 15) 
   },
   sectionTitle: { 
-    fontSize: 12, 
+    fontSize: 12 * scale, 
     fontWeight: 'bold', 
     color: '#1f2937',
     marginBottom: 8,
@@ -97,7 +109,7 @@ const styles = StyleSheet.create({
     paddingLeft: 12
   },
   roleAndDate: { 
-    fontSize: 9, 
+    fontSize: 9 * scale, 
     color: '#6b7280', 
     marginBottom: 3, 
     flexDirection: 'row', 
@@ -105,44 +117,44 @@ const styles = StyleSheet.create({
     alignItems: 'center' 
   },
   roleAndCompany: { 
-    fontSize: 10, 
+    fontSize: 10 * scale, 
     color: '#1f2937', 
     flexDirection: 'row',
     alignItems: 'center'
   },
   jobRole: { 
-    fontSize: 10, 
+    fontSize: 10 * scale, 
     fontWeight: 'bold', 
     color: '#1f2937' 
   },
   companyName: { 
-    fontSize: 10, 
+    fontSize: 10 * scale, 
     color: '#6b7280' 
   },
   companySeparator: { 
-    fontSize: 10, 
+    fontSize: 10 * scale, 
     color: '#6b7280',
     marginLeft: 6,
     marginRight: 2
   },
   dateRange: { 
-    fontSize: 9, 
+    fontSize: 9 * scale, 
     color: '#6b7280' 
   },
   tech: { 
-    fontSize: 9, 
+    fontSize: 9 * scale, 
     color: '#3b82f6', 
     marginBottom: 4,
     fontWeight: 'bold'
   },
   activities: { 
-    fontSize: 9, 
+    fontSize: 9 * scale, 
     marginBottom: 3, 
     marginLeft: 0,
     color: '#374151'
   },
   results: { 
-    fontSize: 9, 
+    fontSize: 9 * scale, 
     fontStyle: 'italic', 
     marginLeft: 0, 
     marginBottom: 3,
@@ -157,17 +169,17 @@ const styles = StyleSheet.create({
     paddingLeft: 12
   },
   eduTitle: { 
-    fontSize: 10, 
+    fontSize: 10 * scale, 
     fontWeight: 'bold', 
     color: '#1f2937' 
   },
   eduInst: { 
-    fontSize: 9, 
+    fontSize: 9 * scale, 
     color: '#6b7280', 
     marginBottom: 3 
   },
   eduDesc: { 
-    fontSize: 9, 
+    fontSize: 9 * scale, 
     marginLeft: 0, 
     marginBottom: 3,
     color: '#374151'
@@ -190,7 +202,7 @@ const styles = StyleSheet.create({
     flex: 1 
   },
   skillText: { 
-    fontSize: 9, 
+    fontSize: 9 * scale, 
     color: '#1f2937', 
     marginBottom: 2,
     marginRight: 8,
@@ -204,7 +216,7 @@ const styles = StyleSheet.create({
     gap: 8 
   },
   langItem: { 
-    fontSize: 9, 
+    fontSize: 9 * scale, 
     marginRight: 10,
     backgroundColor: '#f3f4f6',
     padding: 4,
@@ -219,30 +231,30 @@ const styles = StyleSheet.create({
     paddingLeft: 12
   },
   certName: { 
-    fontSize: 10, 
+    fontSize: 10 * scale, 
     fontWeight: 'bold', 
     color: '#1f2937', 
     marginBottom: 3 
   },
   certDate: { 
-    fontSize: 9, 
+    fontSize: 9 * scale, 
     fontStyle: 'italic', 
     color: '#6b7280', 
     marginLeft: 0 
   },
   certIssuer: { 
-    fontSize: 9, 
+    fontSize: 9 * scale, 
     color: '#6b7280', 
     marginBottom: 3 
   },
   certLink: { 
-    fontSize: 9, 
+    fontSize: 9 * scale, 
     color: '#3b82f6', 
     textDecoration: 'underline', 
     marginBottom: 3 
   },
   certDesc: { 
-    fontSize: 9, 
+    fontSize: 9 * scale, 
     marginLeft: 0, 
     marginBottom: 3,
     color: '#374151'
@@ -256,30 +268,30 @@ const styles = StyleSheet.create({
     paddingLeft: 12
   },
   projName: { 
-    fontSize: 10, 
+    fontSize: 10 * scale, 
     fontWeight: 'bold', 
     color: '#1f2937', 
     marginBottom: 3 
   },
   projYear: { 
-    fontSize: 9, 
+    fontSize: 9 * scale, 
     color: '#6b7280', 
     marginLeft: 0 
   },
   projTech: { 
-    fontSize: 9, 
+    fontSize: 9 * scale, 
     color: '#3b82f6', 
     marginBottom: 4,
     fontWeight: 'bold'
   },
   projDesc: { 
-    fontSize: 9, 
+    fontSize: 9 * scale, 
     marginLeft: 0, 
     marginBottom: 3,
     color: '#374151'
   },
   projLink: { 
-    fontSize: 9, 
+    fontSize: 9 * scale, 
     color: '#3b82f6', 
     textDecoration: 'underline', 
     marginLeft: 0 
@@ -293,36 +305,37 @@ const styles = StyleSheet.create({
     paddingLeft: 12
   },
   volRole: { 
-    fontSize: 10, 
+    fontSize: 10 * scale, 
     fontWeight: 'bold', 
     color: '#1f2937', 
     marginBottom: 3 
   },
   volOrg: { 
-    fontSize: 9, 
+    fontSize: 9 * scale, 
     color: '#6b7280', 
     marginBottom: 3 
   },
   volDesc: { 
-    fontSize: 9, 
+    fontSize: 9 * scale, 
     marginLeft: 0, 
     marginBottom: 3,
     color: '#374151'
   },
   volImpact: { 
-    fontSize: 9, 
+    fontSize: 9 * scale, 
     fontStyle: 'italic', 
     marginLeft: 0, 
     marginBottom: 3,
     color: '#059669'
   },
   summary: {
-    fontSize: 10,
+    fontSize: 10 * scale,
     color: '#374151',
-    lineHeight: 1.4,
+    lineHeight,
     marginBottom: 15
   }
-});
+  });
+};
 
 /**
  * Modern CV Template component
@@ -343,9 +356,13 @@ export function ModernTemplate({
   volunteers,
   lang,
   color = 'blue',
+  settings,
 }: ModernTemplateProps) {
   
   const colorTheme = getColorTheme(color);
+  const styles = buildBaseStyles(settings);
+  const isATS = false;
+  const neutral = { primary: '#0f172a', secondary: '#333333', muted: '#666666', border: '#e5e7eb' };
   
   // Create dynamic styles based on selected color
   const dynamicStyles = StyleSheet.create({
@@ -353,26 +370,32 @@ export function ModernTemplate({
       marginBottom: 20, 
       paddingBottom: 15,
       borderBottomWidth: 2,
-      borderBottomColor: colorTheme.primary,
+      borderBottomColor: isATS ? neutral.border : colorTheme.primary,
       borderBottomStyle: 'solid'
     },
+    name: {
+      fontSize: (settings?.header.nameFontSize ?? 22) * (settings?.layout.textScale ?? 1),
+      fontWeight: settings?.header.nameFontWeight === 'heavy' ? 800 : settings?.header.nameFontWeight === 'bold' ? 700 : 400,
+      color: settings?.header.nameColor || (isATS ? neutral.primary : '#1f2937')
+    },
     desiredRole: { 
-      fontSize: 14, 
-      color: colorTheme.primary, 
+      fontSize: 14 * (settings?.layout.textScale ?? 1), 
+      color: isATS ? neutral.secondary : colorTheme.primary, 
       fontWeight: 'bold', 
       marginBottom: 8,
-      textTransform: 'uppercase',
+      textTransform: settings?.header.titleStyle === 'uppercase' ? 'uppercase' : 'none',
+      fontStyle: settings?.header.titleStyle === 'italic' ? 'italic' : 'normal',
       letterSpacing: 1
     },
     sectionTitle: { 
-      fontSize: 12, 
+      fontSize: 12 * (settings?.layout.textScale ?? 1), 
       fontWeight: 'bold', 
-      color: '#1f2937',
+      color: isATS ? neutral.primary : '#1f2937',
       marginBottom: 8,
       textTransform: 'uppercase',
       letterSpacing: 0.5,
       borderBottomWidth: 1,
-      borderBottomColor: '#e5e7eb',
+      borderBottomColor: isATS ? neutral.border : '#e5e7eb',
       borderBottomStyle: 'solid',
       paddingBottom: 4
     },
@@ -380,13 +403,13 @@ export function ModernTemplate({
       marginBottom: 12, 
       paddingBottom: 8,
       borderLeftWidth: 3,
-      borderLeftColor: colorTheme.primary,
+      borderLeftColor: isATS ? neutral.border : colorTheme.primary,
       borderLeftStyle: 'solid',
       paddingLeft: 12
     },
     tech: { 
-      fontSize: 9, 
-      color: colorTheme.primary, 
+      fontSize: 9 * (settings?.layout.textScale ?? 1), 
+      color: isATS ? neutral.secondary : colorTheme.primary, 
       marginBottom: 4,
       fontWeight: 'bold'
     },
@@ -394,7 +417,7 @@ export function ModernTemplate({
       marginBottom: 12, 
       paddingBottom: 8,
       borderLeftWidth: 3,
-      borderLeftColor: colorTheme.secondary,
+      borderLeftColor: isATS ? neutral.border : colorTheme.secondary,
       borderLeftStyle: 'solid',
       paddingLeft: 12
     },
@@ -402,7 +425,7 @@ export function ModernTemplate({
       marginBottom: 12, 
       paddingBottom: 8,
       borderLeftWidth: 3,
-      borderLeftColor: colorTheme.light,
+      borderLeftColor: isATS ? neutral.border : colorTheme.light,
       borderLeftStyle: 'solid',
       paddingLeft: 12
     },
@@ -410,7 +433,7 @@ export function ModernTemplate({
       marginBottom: 12, 
       paddingBottom: 8,
       borderLeftWidth: 3,
-      borderLeftColor: colorTheme.dark,
+      borderLeftColor: isATS ? neutral.border : colorTheme.dark,
       borderLeftStyle: 'solid',
       paddingLeft: 12
     },
@@ -428,26 +451,36 @@ export function ModernTemplate({
       marginBottom: 4,
       fontWeight: 'bold'
     },
+    linksRow: {
+      flexDirection: 'row', flexWrap: 'wrap', marginTop: 8,
+      justifyContent: settings?.header.iconAlignment === 'center' ? 'center' : settings?.header.iconAlignment === 'right' ? 'flex-end' : 'flex-start'
+    },
     linkItem: { 
-      fontSize: 9, 
-      color: colorTheme.primary, 
+      fontSize: ((settings?.header.iconSizePx ?? 18) / 2) * (settings?.layout.textScale ?? 1), 
+      color: isATS ? neutral.secondary : colorTheme.primary, 
       textDecoration: 'underline', 
-      marginRight: 20, 
+      marginRight: settings?.header.iconSpacingPx ?? 20, 
       marginBottom: 3 
     },
     certLink: { 
-      fontSize: 9, 
-      color: colorTheme.primary, 
+      fontSize: 9 * (settings?.layout.textScale ?? 1), 
+      color: isATS ? neutral.secondary : colorTheme.primary, 
       textDecoration: 'underline', 
       marginBottom: 3 
     },
     projLink: { 
-      fontSize: 9, 
-      color: colorTheme.primary, 
+      fontSize: 9 * (settings?.layout.textScale ?? 1), 
+      color: isATS ? neutral.secondary : colorTheme.primary, 
       textDecoration: 'underline', 
       marginLeft: 0 
     }
   });
+  const columns = settings?.layout.columns ?? 1;
+  const chunk = <T,>(arr: T[], n: number) => {
+    const res: T[][] = Array.from({ length: n }, () => []);
+    arr.forEach((item, i) => { res[i % n].push(item); });
+    return res;
+  };
   
   const contactItems = [
     personalInfo?.city,
@@ -571,9 +604,12 @@ export function ModernTemplate({
       <Page size="A4" style={styles.page}>
         {/* Header Section */}
         <View style={dynamicStyles.header}>
-          <Text style={styles.name}>{personalInfo?.name}</Text>
-          {personalInfo?.desiredRole && (
-            <Text style={dynamicStyles.desiredRole}>{personalInfo.desiredRole}</Text>
+          {settings?.header.titlePosition === 'above' && (
+            <Text style={dynamicStyles.desiredRole}>{personalInfo?.desiredRole}</Text>
+          )}
+          <Text style={dynamicStyles.name}>{personalInfo?.name}</Text>
+          {(!settings || settings?.header.titlePosition === 'below') && (
+            <Text style={dynamicStyles.desiredRole}>{personalInfo?.desiredRole}</Text>
           )}
           
           {/* Contact Information */}
@@ -588,13 +624,16 @@ export function ModernTemplate({
 
           {/* Social Links */}
           {links.length > 0 && (
-            <View style={styles.linksRow}>
-                             {links.map((link, index) => (
-                 <Link key={index} src={getSocialUrl(link.type, link.value)} style={dynamicStyles.linkItem}>
-                   {translateLinkType(link.type, lang || 'pt', link.customName)}: {link.value}
-                 </Link>
-               ))}
+            <View style={dynamicStyles.linksRow}>
+              {links.map((link, index) => (
+                <Link key={index} src={getSocialUrl(link.type, link.value)} style={dynamicStyles.linkItem}>
+                  {translateLinkType(link.type, lang || 'pt', link.customName)}: {link.value}
+                </Link>
+              ))}
             </View>
+          )}
+          {settings?.photo?.enabled && settings?.photo?.dataUrl && (
+            <Image src={settings.photo.dataUrl as string} style={{ width: 90, height: 90, borderRadius: 6, marginTop: 8 }} />
           )}
         </View>
 
@@ -614,23 +653,49 @@ export function ModernTemplate({
             <Text style={dynamicStyles.sectionTitle}>
               {lang === 'en' ? 'Professional Experience' : lang === 'es' ? 'Experiencia Profesional' : 'Experiência Profissional'}
             </Text>
-            {experiences.map((exp, index) => (
-              <View key={index} style={dynamicStyles.expBlock}>
-                <View style={styles.roleAndDate}>
-                  <View style={styles.roleAndCompany}>
-                    <Text style={styles.jobRole}>{exp.role}</Text>
-                    <Text style={styles.companySeparator}> • </Text>
-                    <Text style={styles.companyName}>{exp.company}</Text>
+            {columns === 1 ? (
+              experiences.map((exp, index) => (
+                <View key={index} style={dynamicStyles.expBlock}>
+                  <View style={styles.roleAndDate}>
+                    <View style={styles.roleAndCompany}>
+                      <Text style={styles.jobRole}>{exp.role}</Text>
+                      <Text style={styles.companySeparator}> • </Text>
+                      <Text style={styles.companyName}>{exp.company}</Text>
+                    </View>
+                    <Text style={styles.dateRange}>
+                      {translateMonth(exp.startMonth, lang || 'pt')} {exp.startYear} - {exp.current ? (lang === 'en' ? 'Present' : 'Atual') : `${translateMonth(exp.endMonth, lang || 'pt')} ${exp.endYear}`}
+                    </Text>
                   </View>
-                  <Text style={styles.dateRange}>
-                    {translateMonth(exp.startMonth, lang || 'pt')} {exp.startYear} - {exp.current ? (lang === 'en' ? 'Present' : 'Atual') : `${translateMonth(exp.endMonth, lang || 'pt')} ${exp.endYear}`}
-                  </Text>
+                  {exp.tech && <Text style={dynamicStyles.tech}>{exp.tech}</Text>}
+                  {exp.activities && <Text style={styles.activities}>{exp.activities}</Text>}
+                  {exp.results && <Text style={styles.results}>{exp.results}</Text>}
                 </View>
-                {exp.tech && <Text style={dynamicStyles.tech}>{exp.tech}</Text>}
-                {exp.activities && <Text style={styles.activities}>{exp.activities}</Text>}
-                {exp.results && <Text style={styles.results}>{exp.results}</Text>}
+              ))
+            ) : (
+              <View style={{ flexDirection: 'row', gap: 12 }}>
+                {chunk(experiences, columns).map((col, ci) => (
+                  <View key={ci} style={{ flex: 1 }}>
+                    {col.map((exp, index) => (
+                      <View key={index} style={dynamicStyles.expBlock}>
+                        <View style={styles.roleAndDate}>
+                          <View style={styles.roleAndCompany}>
+                            <Text style={styles.jobRole}>{exp.role}</Text>
+                            <Text style={styles.companySeparator}> • </Text>
+                            <Text style={styles.companyName}>{exp.company}</Text>
+                          </View>
+                          <Text style={styles.dateRange}>
+                            {translateMonth(exp.startMonth, lang || 'pt')} {exp.startYear} - {exp.current ? (lang === 'en' ? 'Present' : 'Atual') : `${translateMonth(exp.endMonth, lang || 'pt')} ${exp.endYear}`}
+                          </Text>
+                        </View>
+                        {exp.tech && <Text style={dynamicStyles.tech}>{exp.tech}</Text>}
+                        {exp.activities && <Text style={styles.activities}>{exp.activities}</Text>}
+                        {exp.results && <Text style={styles.results}>{exp.results}</Text>}
+                      </View>
+                    ))}
+                  </View>
+                ))}
               </View>
-            ))}
+            )}
           </View>
         )}
 
@@ -640,18 +705,39 @@ export function ModernTemplate({
             <Text style={dynamicStyles.sectionTitle}>
               {lang === 'en' ? 'Education' : lang === 'es' ? 'Educación' : 'Formação Académica'}
             </Text>
-            {education.map((edu, index) => (
-              <View key={index} style={dynamicStyles.eduBlock}>
-                <View style={styles.roleAndDate}>
-                  <Text style={styles.eduTitle}>{edu.course}</Text>
-                  <Text style={styles.dateRange}>
-                    {translateMonth(edu.startMonth, lang || 'pt')} {edu.startYear} - {translateMonth(edu.endMonth, lang || 'pt')} {edu.endYear}
-                  </Text>
+            {columns === 1 ? (
+              education.map((edu, index) => (
+                <View key={index} style={dynamicStyles.eduBlock}>
+                  <View style={styles.roleAndDate}>
+                    <Text style={styles.eduTitle}>{edu.course}</Text>
+                    <Text style={styles.dateRange}>
+                      {translateMonth(edu.startMonth, lang || 'pt')} {edu.startYear} - {translateMonth(edu.endMonth, lang || 'pt')} {edu.endYear}
+                    </Text>
+                  </View>
+                  <Text style={styles.eduInst}>{edu.institution}</Text>
+                  {edu.description && <Text style={styles.eduDesc}>{edu.description}</Text>}
                 </View>
-                <Text style={styles.eduInst}>{edu.institution}</Text>
-                {edu.description && <Text style={styles.eduDesc}>{edu.description}</Text>}
+              ))
+            ) : (
+              <View style={{ flexDirection: 'row', gap: 12 }}>
+                {chunk(education, columns).map((col, ci) => (
+                  <View key={ci} style={{ flex: 1 }}>
+                    {col.map((edu, index) => (
+                      <View key={index} style={dynamicStyles.eduBlock}>
+                        <View style={styles.roleAndDate}>
+                          <Text style={styles.eduTitle}>{edu.course}</Text>
+                          <Text style={styles.dateRange}>
+                            {translateMonth(edu.startMonth, lang || 'pt')} {edu.startYear} - {translateMonth(edu.endMonth, lang || 'pt')} {edu.endYear}
+                          </Text>
+                        </View>
+                        <Text style={styles.eduInst}>{edu.institution}</Text>
+                        {edu.description && <Text style={styles.eduDesc}>{edu.description}</Text>}
+                      </View>
+                    ))}
+                  </View>
+                ))}
               </View>
-            ))}
+            )}
           </View>
         )}
 

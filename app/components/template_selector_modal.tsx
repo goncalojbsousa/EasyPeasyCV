@@ -92,8 +92,8 @@ export function TemplateSelectorModal({ show, selectedTemplate, onSelect, onClos
                     onClose();
                   }
                 }}
-                className={`group text-left rounded-xl overflow-hidden border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  isSelected ? 'border-blue-500 ring-2 ring-blue-200 dark:ring-blue-900/30' : 'border-gray-200 dark:border-zinc-700'
+                className={`group text-left rounded-xl overflow-hidden border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500 ${
+                  isSelected ? 'border-sky-500 ring-2 ring-sky-200 dark:ring-sky-900/30' : 'border-gray-200 dark:border-zinc-700'
                 }`}
               >
                 <div className="relative h-56 bg-gray-100 dark:bg-zinc-700 overflow-hidden">
@@ -125,7 +125,7 @@ export function TemplateSelectorModal({ show, selectedTemplate, onSelect, onClos
                     </button>
                   </div>
                   {isSelected && (
-                    <div className="absolute inset-0 ring-2 ring-offset-2 ring-blue-500 ring-offset-white dark:ring-offset-zinc-800 pointer-events-none" />
+                    <div className="absolute inset-0 ring-2 ring-offset-2 ring-sky-500 ring-offset-white dark:ring-offset-zinc-800 pointer-events-none" />
                   )}
                 </div>
                 <div className="p-4 bg-white dark:bg-zinc-800">

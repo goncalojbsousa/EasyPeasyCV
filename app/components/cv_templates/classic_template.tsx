@@ -1,6 +1,6 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet, Link } from '@react-pdf/renderer';
-import { CvData } from '../../types/cv';
+import { Document, Page, Text, View, StyleSheet, Link, Image } from '@react-pdf/renderer';
+import { CvData, CvRenderSettings } from '../../types/cv';
 import { translateMonthForLang } from '../../utils/months';
 
 /**
@@ -9,61 +9,98 @@ import { translateMonthForLang } from '../../utils/months';
 interface ClassicTemplateProps extends CvData {
   /** Language for the document (pt, en or es) */
   lang?: string;
+  settings?: CvRenderSettings;
 }
 
 /**
  * Classic template styles with traditional and professional design
  */
-const styles = StyleSheet.create({
-    page: { padding: 30, fontSize: 11, fontFamily: 'Helvetica' },
-    header: { marginBottom: 13, paddingBottom: 8 },
-    name: { fontSize: 20, fontWeight: 'bold', marginBottom: 2 },
-    desiredRole: { fontSize: 13, color: '#2563eb', fontWeight: 'bold', marginBottom: 8 },
-    contactRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', marginBottom: 2 },
-    contactItem: { fontSize: 10, color: '#374151', marginRight: 12 },
-    separator: { fontSize: 12, color: '#d1d5db', marginHorizontal: 8 },
-    linksRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 2, marginBottom: 2 },
-    linkItem: { fontSize: 9, color: '#2563eb', textDecoration: 'underline', marginRight: 20, marginBottom: 2 },
-    section: { marginBottom: 13 },
-    sectionTitle: { fontSize: 13, fontWeight: 'bold', color: '#1e293b', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1, borderBottomWidth: 1, borderBottomColor: '#e5e7eb', borderBottomStyle: 'solid', paddingBottom: 4 },
-    expBlock: { marginBottom: 12, paddingBottom: 6, borderBottomWidth: 0.5, borderBottomColor: '#e5e7eb', borderBottomStyle: 'solid' },
-    roleAndDate: { fontSize: 10, color: '#64748b', marginBottom: 2, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-    roleAndCompany: { fontSize: 11, color: '#0f172a', flexDirection: 'row' },
-    jobRole: { fontSize: 11, fontWeight: 'bold', color: '#0f172a' },
-    companyName: { fontSize: 11, color: '#64748b' },
-    companySeparator: { fontSize: 11, color: '#64748b' },
-    dateRange: { fontSize: 10, color: '#64748b' },
-    tech: { fontSize: 10, color: '#2563eb', marginBottom: 2 },
-    activities: { fontSize: 10, marginBottom: 2, marginLeft: 8 },
-    results: { fontSize: 10, fontStyle: 'italic', marginLeft: 8, marginBottom: 2 },
-    eduBlock: { marginBottom: 12, paddingBottom: 6, borderBottomWidth: 0.5, borderBottomColor: '#e5e7eb', borderBottomStyle: 'solid' },
-    eduTitle: { fontSize: 11, fontWeight: 'bold', color: '#0f172a' },
-    eduInst: { fontSize: 10, color: '#64748b', marginBottom: 2 },
-    eduDesc: { fontSize: 10, marginLeft: 8, marginBottom: 2 },
-    skillsLangRow: { flexDirection: 'row', gap: 32, marginBottom: 13 },
+const cmToPt = (cm: number) => cm * 28.3465;
+const buildStyles = (settings?: CvRenderSettings) => {
+  const s = settings;
+  const scale = s?.layout.textScale || 1.0;
+  const familyRaw = s?.layout.fontFamily || 'Helvetica';
+  const fontFamily = s?.layout.fontFamily === 'Custom' ? (s?.layout.customFont?.name || 'Helvetica') : (familyRaw === 'Arial' ? 'Helvetica' : familyRaw);
+  const ats = false;
+  const neutral = {
+    primary: '#000000',
+    secondary: '#333333',
+    muted: '#666666',
+    light: '#999999',
+    border: '#e5e7eb',
+  };
+  const colors = ats ? neutral : {
+    primary: '#0f172a',
+    secondary: '#2563eb',
+    muted: '#64748b',
+    light: '#374151',
+    border: '#e5e7eb',
+  };
+  const sectionSpacing = s?.layout.sectionSpacingPx ?? 13;
+  const margins = s?.layout.marginsCm ?? { top: 1.5, right: 1.5, bottom: 1.5, left: 1.5 };
+  const lineHeight = s?.layout.lineSpacing ?? 1.4;
+  const nameSize = (s?.header.nameFontSize ?? 20) * scale;
+  const desiredRoleSize = (13) * scale;
+  const nameSpacing = Math.max(8, Math.round(nameSize * 0.6));
+  const roleSpacing = Math.max(6, Math.round(desiredRoleSize * 0.3));
+  const dividerWidth = s?.header.dividerThickness ?? 1;
+  const dividerStyle = s?.header.dividerStyle ?? 'solid';
+  const linkFontSize = ((s?.header.iconSizePx ?? 18) / 2) * scale;
+
+  return StyleSheet.create({
+    page: { paddingTop: cmToPt(margins.top), paddingRight: cmToPt(margins.right), paddingBottom: cmToPt(margins.bottom), paddingLeft: cmToPt(margins.left), fontSize: 11 * scale, fontFamily, lineHeight },
+    header: { marginBottom: 10, paddingBottom: 8, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
+    headerLeft: { flex: 1, paddingRight: 8 },
+    headerRight: { width: 110 },
+    name: { fontSize: nameSize, fontWeight: s?.header.nameFontWeight === 'heavy' ? 800 : s?.header.nameFontWeight === 'bold' ? 700 : 400, marginBottom: nameSpacing, color: s?.header.nameColor || colors.primary },
+    desiredRole: { fontSize: desiredRoleSize, color: ats ? neutral.secondary : colors.secondary, fontWeight: 'bold', marginBottom: roleSpacing, textTransform: s?.header.titleStyle === 'uppercase' ? 'uppercase' : 'none', fontStyle: s?.header.titleStyle === 'italic' ? 'italic' : 'normal' },
+    divider: { borderBottomWidth: dividerWidth, borderBottomColor: ats ? neutral.muted : colors.border, borderBottomStyle: dividerStyle as any, marginTop: 6 },
+    contactRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', marginBottom: 2, flexWrap: 'wrap' },
+    contactItem: { fontSize: 10 * scale, color: ats ? neutral.muted : colors.light, marginRight: 12 },
+    separator: { fontSize: 12 * scale, color: '#d1d5db', marginHorizontal: 8 },
+    linksRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 2, marginBottom: 2, justifyContent: s?.header.iconAlignment === 'center' ? 'center' : s?.header.iconAlignment === 'right' ? 'flex-end' : 'flex-start' },
+    linkItem: { fontSize: linkFontSize, color: ats ? neutral.muted : colors.secondary, textDecoration: 'underline', marginRight: s?.header.iconSpacingPx ?? 10, marginBottom: 2 },
+    section: { marginBottom: sectionSpacing },
+    sectionTitle: { fontSize: 13 * scale, fontWeight: 'bold', color: colors.primary, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1, borderBottomWidth: 1, borderBottomColor: colors.border, borderBottomStyle: 'solid', paddingBottom: 4 },
+    expBlock: { marginBottom: 12, paddingBottom: 6, borderBottomWidth: 0.5, borderBottomColor: colors.border, borderBottomStyle: 'solid' },
+    roleAndDate: { fontSize: 10 * scale, color: ats ? neutral.muted : colors.muted, marginBottom: 2, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+    roleAndCompany: { fontSize: 11 * scale, color: colors.primary, flexDirection: 'row' },
+    jobRole: { fontSize: 11 * scale, fontWeight: 'bold', color: colors.primary },
+    companyName: { fontSize: 11 * scale, color: ats ? neutral.muted : colors.muted },
+    companySeparator: { fontSize: 11 * scale, color: ats ? neutral.muted : colors.muted },
+    dateRange: { fontSize: 10 * scale, color: ats ? neutral.muted : colors.muted },
+    tech: { fontSize: 10 * scale, color: ats ? neutral.muted : colors.secondary, marginBottom: 2 },
+    activities: { fontSize: 10 * scale, marginBottom: 2, marginLeft: 8 },
+    results: { fontSize: 10 * scale, fontStyle: 'italic', marginLeft: 8, marginBottom: 2 },
+    eduBlock: { marginBottom: 12, paddingBottom: 6, borderBottomWidth: 0.5, borderBottomColor: colors.border, borderBottomStyle: 'solid' },
+    eduTitle: { fontSize: 11 * scale, fontWeight: 'bold', color: colors.primary },
+    eduInst: { fontSize: 10 * scale, color: ats ? neutral.muted : colors.muted, marginBottom: 2 },
+    eduDesc: { fontSize: 10 * scale, marginLeft: 8, marginBottom: 2 },
+    skillsLangRow: { flexDirection: 'row', gap: 32, marginBottom: sectionSpacing },
     skillsCol: { flex: 1, marginRight: 16 },
     langCol: { flex: 1 },
-    skillText: { fontSize: 10, color: '#0f172a', marginBottom: 2 },
+    skillText: { fontSize: 10 * scale, color: colors.primary, marginBottom: 2 },
     langRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-    langItem: { fontSize: 10, marginRight: 12 },
-    certBlock: { marginBottom: 12, paddingBottom: 6, borderBottomWidth: 0.5, borderBottomColor: '#e5e7eb', borderBottomStyle: 'solid' },
-    certName: { fontSize: 11, fontWeight: 'bold', color: '#0f172a', marginBottom: 2 },
-    certDate: { fontSize: 10, fontStyle: 'italic', color: '#64748b', marginLeft: 4 },
-    certIssuer: { fontSize: 10, color: '#64748b', marginBottom: 2 },
-    certLink: { fontSize: 9, color: '#2563eb', textDecoration: 'underline', marginBottom: 2 },
-    certDesc: { fontSize: 10, marginLeft: 8, marginBottom: 2 },
-    projBlock: { marginBottom: 12, paddingBottom: 6, borderBottomWidth: 0.5, borderBottomColor: '#e5e7eb', borderBottomStyle: 'solid' },
-    projName: { fontSize: 11, fontWeight: 'bold', color: '#0f172a', marginBottom: 2 },
-    projYear: { fontSize: 10, color: '#64748b', marginLeft: 4 },
-    projTech: { fontSize: 10, color: '#2563eb', marginBottom: 2 },
-    projDesc: { fontSize: 10, marginLeft: 8, marginBottom: 2 },
-    projLink: { fontSize: 9, color: '#2563eb', textDecoration: 'underline', marginLeft: 8 },
-    volBlock: { marginBottom: 12, paddingBottom: 6, borderBottomWidth: 0.5, borderBottomColor: '#e5e7eb', borderBottomStyle: 'solid' },
-    volRole: { fontSize: 11, fontWeight: 'bold', color: '#0f172a', marginBottom: 2 },
-    volOrg: { fontSize: 10, color: '#64748b', marginBottom: 2 },
-    volDesc: { fontSize: 10, marginLeft: 8, marginBottom: 2 },
-    volImpact: { fontSize: 10, fontStyle: 'italic', marginLeft: 8, marginBottom: 2 },
+    langItem: { fontSize: 10 * scale, marginRight: 12 },
+    certBlock: { marginBottom: 12, paddingBottom: 6, borderBottomWidth: 0.5, borderBottomColor: colors.border, borderBottomStyle: 'solid' },
+    certName: { fontSize: 11 * scale, fontWeight: 'bold', color: colors.primary, marginBottom: 2 },
+    certDate: { fontSize: 10 * scale, fontStyle: 'italic', color: ats ? neutral.muted : colors.muted, marginLeft: 4 },
+    certIssuer: { fontSize: 10 * scale, color: ats ? neutral.muted : colors.muted, marginBottom: 2 },
+    certLink: { fontSize: linkFontSize, color: ats ? neutral.muted : colors.secondary, textDecoration: 'underline', marginBottom: 2 },
+    certDesc: { fontSize: 10 * scale, marginLeft: 8, marginBottom: 2 },
+    projBlock: { marginBottom: 12, paddingBottom: 6, borderBottomWidth: 0.5, borderBottomColor: colors.border, borderBottomStyle: 'solid' },
+    projName: { fontSize: 11 * scale, fontWeight: 'bold', color: colors.primary, marginBottom: 2 },
+    projYear: { fontSize: 10 * scale, color: ats ? neutral.muted : colors.muted, marginLeft: 4 },
+    projTech: { fontSize: 10 * scale, color: ats ? neutral.muted : colors.secondary, marginBottom: 2 },
+    projDesc: { fontSize: 10 * scale, marginLeft: 8, marginBottom: 2 },
+    projLink: { fontSize: linkFontSize, color: ats ? neutral.muted : colors.secondary, textDecoration: 'underline', marginLeft: 8 },
+    volBlock: { marginBottom: 12, paddingBottom: 6, borderBottomWidth: 0.5, borderBottomColor: colors.border, borderBottomStyle: 'solid' },
+    volRole: { fontSize: 11 * scale, fontWeight: 'bold', color: colors.primary, marginBottom: 2 },
+    volOrg: { fontSize: 10 * scale, color: ats ? neutral.muted : colors.muted, marginBottom: 2 },
+    volDesc: { fontSize: 10 * scale, marginLeft: 8, marginBottom: 2 },
+    volImpact: { fontSize: 10 * scale, fontStyle: 'italic', marginLeft: 8, marginBottom: 2 },
   });
+};
 
 /**
  * Classic CV Template component
@@ -83,9 +120,11 @@ export function ClassicTemplate({
   projects,
   volunteers,
   lang,
+  settings,
 }: ClassicTemplateProps) {
   // Normalize language: treat 'br' as 'pt' for template translations
   const l = (lang === 'br' ? 'pt' : (lang || 'pt')) as 'pt' | 'en' | 'es';
+  const styles = buildStyles(settings);
   
   const contactItems = [
     personalInfo?.city,
@@ -271,32 +310,41 @@ export function ClassicTemplate({
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {/* Header Section */}
         <View style={styles.header}>
-          <Text style={styles.name}>{personalInfo?.name}</Text>
-          {personalInfo?.desiredRole && (
-            <Text style={styles.desiredRole}>{personalInfo.desiredRole}</Text>
-          )}
-          
-          {/* Contact Information */}
-          <View style={styles.contactRow}>
-            {contactItems.map((item, index) => (
-              <React.Fragment key={index}>
-                <Text style={styles.contactItem}>{item}</Text>
-                {index < contactItems.length - 1 && <Text style={styles.separator}>|</Text>}
-              </React.Fragment>
-            ))}
-          </View>
-
-          {/* Social Links */}
-          {links.length > 0 && (
-            <View style={styles.linksRow}>
-              {links.map((link, index) => (
-                <Link key={index} src={getSocialUrl(link.type, link.value)} style={styles.linkItem}>
-                  {translateLinkType(link.type, l, link.customName)}: {link.value}
-                </Link>
+          <View style={styles.headerLeft}>
+            {settings?.header.titlePosition === 'above' && personalInfo?.desiredRole && (
+              <Text style={styles.desiredRole}>{personalInfo?.desiredRole}</Text>
+            )}
+            <Text style={styles.name}>{personalInfo?.name}</Text>
+            {(!settings || settings?.header.titlePosition === 'below') && personalInfo?.desiredRole && (
+              <Text style={styles.desiredRole}>{personalInfo?.desiredRole}</Text>
+            )}
+            
+            {/* Contact Information */}
+            <View style={styles.contactRow}>
+              {contactItems.map((item, index) => (
+                <React.Fragment key={index}>
+                  <Text style={styles.contactItem}>{item}</Text>
+                  {index < contactItems.length - 1 && <Text style={styles.separator}>|</Text>}
+                </React.Fragment>
               ))}
             </View>
+
+            {/* Social Links */}
+            {links.length > 0 && (
+              <View style={styles.linksRow}>
+                {links.map((link, index) => (
+                  <Link key={index} src={getSocialUrl(link.type, link.value)} style={styles.linkItem}>
+                    {translateLinkType(link.type, l, link.customName)}: {link.value}
+                  </Link>
+                ))}
+              </View>
+            )}
+
+            <View style={styles.divider} />
+          </View>
+          {settings?.photo?.enabled && settings?.photo?.dataUrl && (
+            <Image src={settings.photo.dataUrl as string} style={styles.headerRight} />
           )}
         </View>
 
@@ -316,7 +364,7 @@ export function ClassicTemplate({
             <Text style={styles.sectionTitle}>
               {l === 'en' ? 'Professional Experience' : l === 'es' ? 'Experiencia Profesional' : 'Experiência Profissional'}
             </Text>
-            {experiences.map((exp, index) => {
+            {((settings?.layout.columns ?? 1) === 1) ? experiences.map((exp, index) => {
               const showSeparator = experiences.length > 1 && index < experiences.length - 1;
               return (
                 <View
@@ -344,7 +392,31 @@ export function ClassicTemplate({
                   {exp.results && <Text style={styles.results}>• {exp.results}</Text>}
                 </View>
               );
-            })}
+            }) : (
+              <View style={{ flexDirection: 'row', gap: 12 }}>
+                {Array.from({ length: settings?.layout.columns ?? 1 }).map((_, ci) => (
+                  <View key={ci} style={{ flex: 1 }}>
+                    {experiences.filter((_, i) => i % (settings?.layout.columns ?? 1) === ci).map((exp, index) => (
+                      <View key={index} style={styles.expBlock}>
+                        <View style={styles.roleAndDate}>
+                          <View style={styles.roleAndCompany}>
+                            {exp.role && <Text style={styles.jobRole}>{exp.role} </Text>}
+                            {(exp.role && exp.company) && <Text style={styles.companySeparator}>- </Text>}
+                            {exp.company && <Text style={styles.companyName}>{exp.company}</Text>}
+                          </View>
+                          <Text style={styles.dateRange}>
+                            {`${translateMonth(exp.startMonth || '', l)}${exp.startMonth && exp.startYear ? '/' : ''}${exp.startYear || ''} - ${exp.current ? translateCurrent(l) : ((translateMonth(exp.endMonth || '', l)) + (exp.endMonth && exp.endYear ? '/' : '') + (exp.endYear || ''))}`}
+                          </Text>
+                        </View>
+                        {exp.tech && <Text style={styles.tech}>{exp.tech}</Text>}
+                        {exp.activities && <Text style={styles.activities}>• {exp.activities}</Text>}
+                        {exp.results && <Text style={styles.results}>• {exp.results}</Text>}
+                      </View>
+                    ))}
+                  </View>
+                ))}
+              </View>
+            )}
           </View>
         )}
 
@@ -354,7 +426,7 @@ export function ClassicTemplate({
             <Text style={styles.sectionTitle}>
               {l === 'en' ? 'Education' : l === 'es' ? 'Educación' : 'Formação Académica'}
             </Text>
-            {education.map((edu, index) => {
+            {((settings?.layout.columns ?? 1) === 1) ? education.map((edu, index) => {
               const showSeparator = education.length > 1 && index < education.length - 1;
               return (
                 <View
@@ -386,7 +458,33 @@ export function ClassicTemplate({
                   {edu.description && <Text style={styles.eduDesc}>• {edu.description}</Text>}
                 </View>
               );
-            })}
+            }) : (
+              <View style={{ flexDirection: 'row', gap: 12 }}>
+                {Array.from({ length: settings?.layout.columns ?? 1 }).map((_, ci) => (
+                  <View key={ci} style={{ flex: 1 }}>
+                    {education.filter((_, i) => i % (settings?.layout.columns ?? 1) === ci).map((edu, index) => (
+                      <View key={index} style={styles.eduBlock}>
+                        <View style={styles.roleAndDate}>
+                          <Text style={styles.eduTitle}>
+                            {edu.course}{edu.course && edu.type ? ' - ' : ''}{translateEducationType(edu.type, l)}
+                            {edu.status && <Text style={styles.certDate}> ({translateEducationStatus(edu.status, l)})</Text>}
+                          </Text>
+                          <Text style={styles.dateRange}>
+                            {(edu.startMonth || edu.startYear) ? (
+                              isEducationCompleted(edu.status) ?
+                                `${translateMonth(edu.startMonth || '', l)}${edu.startMonth && edu.startYear ? '/' : ''}${edu.startYear || ''} - ${translateMonth(edu.endMonth || '', l)}${edu.endMonth && edu.endYear ? '/' : ''}${edu.endYear || ''}` :
+                                `${translateMonth(edu.startMonth || '', l)}${edu.startMonth && edu.startYear ? '/' : ''}${edu.startYear || ''} - ${translateCurrent(l)}`
+                            ) : ''}
+                          </Text>
+                        </View>
+                        <Text style={styles.eduInst}>{edu.institution}</Text>
+                        {edu.description && <Text style={styles.eduDesc}>• {edu.description}</Text>}
+                      </View>
+                    ))}
+                  </View>
+                ))}
+              </View>
+            )}
           </View>
         )}
 

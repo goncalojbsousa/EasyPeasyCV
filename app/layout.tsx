@@ -5,6 +5,7 @@ import { LanguageProvider, Language } from './contexts/LanguageContext';
 import { LanguageHtmlAttribute } from './components/language-html-attribute';
 import { ThemeProvider } from 'next-themes';
 import { ReactNode } from 'react';
+import { Inter } from 'next/font/google';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.easypeasycv.com'),
@@ -65,6 +66,8 @@ export const metadata: Metadata = {
     images: ['https://www.easypeasycv.com/socialmedia.webp'],
   },
 };
+
+const inter = Inter({ subsets: ['latin'] });
 
 const metaByLang: Record<Language, { title: string; description: string }> = {
   en: {
@@ -136,14 +139,14 @@ export default function RootLayout({
     <html suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="theme-color" content="#2563eb" />
+        <meta name="theme-color" content="#0284c7" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <link rel="preconnect" href="https://www.easypeasycv.com" crossOrigin="" />
         <link rel="dns-prefetch" href="https://www.easypeasycv.com" />
         <SEOHead />
       </head>
-      <body>
+      <body className={`${inter.className} antialiased`}>
         <LanguageProvider>
           <LanguageHtmlAttribute />
           <ThemeProvider

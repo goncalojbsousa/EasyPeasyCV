@@ -71,24 +71,24 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-zinc-900 transition-colors duration-300">
+    <div className="min-h-screen bg-gray-50 dark:bg-zinc-900 transition-colors">
   {/* Header */}
       <Navbar />
 
   {/* Hero Section */}
       <section className="pt-40 pb-24 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto text-center">
+        <div className="w-full text-center">
 
-          <h1 className="text-4xl sm:text-6xl font-bold text-gray-900 dark:text-white mb-6">
+          <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-gray-900 dark:text-white mb-6">
             {t('landing.hero.title')}
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-300 mb-10 max-w-3xl mx-auto">
             {t('landing.hero.subtitle')}
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-14">
             <Link
               href="/builder"
-              className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              className="inline-flex items-center justify-center bg-sky-600 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-sm hover:bg-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900 transition-colors"
             >
               {t('landing.create.cv.button')}
             </Link>
@@ -98,7 +98,7 @@ export default function Home() {
           <div className="grid grid-cols-2 gap-6 max-w-sm mx-auto">
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-1">
+                <div className="text-3xl font-bold text-sky-600 dark:text-sky-400 mb-1">
                   {stat.number}
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-400">
@@ -111,10 +111,10 @@ export default function Home() {
       </section>
 
   {/* Features Section */}
-      <section className="py-16 px-4 sm:px-6 bg-white dark:bg-zinc-800">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-20 px-4 sm:px-6 bg-white dark:bg-zinc-800">
+        <div className="w-full">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-4">
               {t('landing.features.title')}
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
@@ -125,7 +125,7 @@ export default function Home() {
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="p-6 rounded-lg border border-gray-200 dark:border-zinc-700 hover:shadow-lg transition-all duration-300 bg-gray-50 dark:bg-zinc-900 group"
+                className="p-6 rounded-xl border border-gray-200/80 dark:border-zinc-700/60 bg-gray-50 dark:bg-zinc-900 transition-colors hover:border-gray-300 dark:hover:border-zinc-600 focus-within:ring-2 focus-within:ring-sky-500"
               >
                 <div className="text-4xl mb-4">{feature.icon}</div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
@@ -141,10 +141,10 @@ export default function Home() {
       </section>
 
   {/* Templates Section */}
-      <section className="py-16 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-20 px-4 sm:px-6">
+        <div className="w-full">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-4">
               {t('landing.templates.title')}
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
@@ -166,13 +166,13 @@ export default function Home() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {previewTemplates.map((tpl) => (
-                <div key={tpl.key} className="rounded-xl overflow-hidden border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 hover:shadow-lg transition-all duration-200">
+                <div key={tpl.key} className="rounded-2xl overflow-hidden border border-gray-200/80 dark:border-zinc-700/60 bg-white dark:bg-zinc-800 transition-colors hover:border-gray-300 dark:hover:border-zinc-600">
                   <div className="relative h-48 bg-gray-100 dark:bg-zinc-700 overflow-hidden">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={tpl.img}
                       alt={`${t(tpl.nameKey)} preview`}
-                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-cover object-top"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
                   </div>
@@ -193,10 +193,10 @@ export default function Home() {
       </section>
 
   {/* How it works Section */}
-      <section className="py-16 px-4 sm:px-6 bg-white dark:bg-zinc-800">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-20 px-4 sm:px-6 bg-white dark:bg-zinc-800">
+        <div className="w-full">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-4">
               {t('landing.how.title')}
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
@@ -205,8 +205,8 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full mx-auto mb-4 flex items-center justify-center">
-                <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">1</span>
+              <div className="w-16 h-16 bg-sky-100 dark:bg-sky-900 rounded-full mx-auto mb-4 flex items-center justify-center">
+                <span className="text-2xl font-bold text-sky-600 dark:text-sky-400">1</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                 {t('landing.how.step1.title')}
@@ -242,10 +242,10 @@ export default function Home() {
       </section>
 
   {/* Benefits Section */}
-      <section className="py-16 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-20 px-4 sm:px-6">
+        <div className="w-full">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-4">
               {t('landing.benefits.title')}
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
@@ -253,10 +253,10 @@ export default function Home() {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-white dark:bg-zinc-800 p-6 rounded-lg border border-gray-200 dark:border-zinc-700">
+            <div className="bg-white dark:bg-zinc-800 p-6 rounded-xl border border-gray-200/80 dark:border-zinc-700/60">
               <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mr-3">
-                  <svg className="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-12 h-12 bg-sky-100 dark:bg-sky-900 rounded-full flex items-center justify-center mr-3">
+                  <svg className="w-6 h-6 text-sky-600 dark:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
                 </div>
@@ -269,7 +269,7 @@ export default function Home() {
                 {t('landing.benefits.privacy.description')}
               </p>
             </div>
-            <div className="bg-white dark:bg-zinc-800 p-6 rounded-lg border border-gray-200 dark:border-zinc-700">
+            <div className="bg-white dark:bg-zinc-800 p-6 rounded-xl border border-gray-200/80 dark:border-zinc-700/60">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mr-3">
                   <svg className="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -285,7 +285,7 @@ export default function Home() {
                 {t('landing.benefits.ats.description')}
               </p>
             </div>
-            <div className="bg-white dark:bg-zinc-800 p-6 rounded-lg border border-gray-200 dark:border-zinc-700">
+            <div className="bg-white dark:bg-zinc-800 p-6 rounded-xl border border-gray-200/80 dark:border-zinc-700/60">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mr-3">
                   <svg className="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -306,8 +306,8 @@ export default function Home() {
       </section>
 
   {/* Open Source Section */}
-      <section className="py-16 px-4 sm:px-6 bg-white dark:bg-zinc-800">
-        <div className="max-w-7xl mx-auto text-center">
+      <section className="py-20 px-4 sm:px-6 bg-white dark:bg-zinc-800">
+        <div className="w-full text-center">
           <div className="mb-8">
             <div className="inline-flex items-center gap-2 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 px-4 py-2 rounded-full text-sm font-medium">
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -316,7 +316,7 @@ export default function Home() {
               {t('landing.opensource.title')}
             </div>
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-6">
             {t('landing.opensource.title')}
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
@@ -327,7 +327,7 @@ export default function Home() {
               href="https://github.com/goncalojbsousa/cv-builder"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-8 py-4 rounded-lg font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors duration-300 text-lg"
+              className="inline-flex items-center justify-center bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-8 py-4 rounded-xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900 transition-colors text-lg"
             >
               {t('landing.opensource.contribute.button')}
             </a>
@@ -335,7 +335,7 @@ export default function Home() {
               href="https://ko-fi.com/easypeasycv"
               target="_blank"
               rel="noopener noreferrer"
-              className="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-8 py-4 rounded-lg font-semibold hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors duration-300 text-lg"
+              className="inline-flex items-center justify-center border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-8 py-4 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900 transition-colors text-lg"
             >
               {t('landing.opensource.support.button')}
             </a>
@@ -344,17 +344,17 @@ export default function Home() {
       </section>
 
   {/* Call to Action Section */}
-      <section className="py-16 px-4 sm:px-6 bg-gradient-to-r from-blue-600 to-blue-700">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-white mb-6">
+      <section className="py-20 px-4 sm:px-6 bg-gradient-to-r from-sky-600 to-sky-700">
+        <div className="w-full text-center">
+          <h2 className="text-3xl font-bold tracking-tight text-white mb-6">
             {t('landing.cta.title')}
           </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-sky-100 mb-8 max-w-2xl mx-auto">
             {t('landing.cta.subtitle')}
           </p>
           <Link
             href="/builder"
-            className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-300 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 inline-block"
+            className="inline-flex items-center justify-center bg-white text-sky-600 px-8 py-4 rounded-xl font-semibold hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-sky-600 transition-colors text-lg shadow-sm"
           >
             {t('landing.cta.button')}
           </Link>

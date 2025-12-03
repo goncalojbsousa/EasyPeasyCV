@@ -127,7 +127,7 @@ export function LanguageSelector() {
           <div className="py-1">
             <button
               onClick={() => handleLanguageChange('en')}
-              className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${language === 'en' ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+              className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 ${language === 'en' ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="sm:w-6 sm:h-6">
                 <rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="#071b65"></rect>
@@ -148,7 +148,7 @@ export function LanguageSelector() {
             </button>
             <button
               onClick={() => handleLanguageChange('pt')}
-              className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${language === 'pt' ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+              className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 ${language === 'pt' ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="sm:w-6 sm:h-6">
                 <path d="M5,4H13V28H5c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" fill="#2b6519"></path>
@@ -162,7 +162,7 @@ export function LanguageSelector() {
             </button>
             <button
               onClick={() => handleLanguageChange('br')}
-              className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${language === 'br' ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+              className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 ${language === 'br' ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="sm:w-6 sm:h-6">
                 <rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="#459a45"></rect>
@@ -176,7 +176,7 @@ export function LanguageSelector() {
             </button>
             <button
               onClick={() => handleLanguageChange('es')}
-              className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${language === 'es' ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+              className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 ${language === 'es' ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="sm:w-6 sm:h-6">
                 <path fill="#f1c142" d="M1 10H31V22H1z"></path>

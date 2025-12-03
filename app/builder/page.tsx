@@ -16,10 +16,11 @@ import { AtsExplanation } from '../components/ats_explanation';
 import { Navbar } from '../components/navbar';
 import { Footer } from '../components/footer';
 import { PdfPreview } from '../components/pdf_preview';
+import { LivePdfPane } from '../components/live_pdf_pane';
 import { FloatingActionBar } from '../components/ui/floating-action-bar';
-import { DesktopActionsCard } from '../components/ui/desktop-actions-card';
+import { BottomActionBar } from '../components/ui/bottom-action-bar';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Experience, Education, Language, Certification, Project, Volunteer, CvColor, CvTemplate } from '../types/cv';
+import { Experience, Education, Language, Certification, Project, Volunteer, CvColor, CvTemplate, CvRenderSettings } from '../types/cv';
 import { cvDataToXml, xmlToCvData } from '../utils/xml';
 
 /**
@@ -64,6 +65,36 @@ export default function Builder() {
   const [isMobile, setIsMobile] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<CvTemplate>('classic');
   const [selectedColor, setSelectedColor] = useState<CvColor>('blue');
+  const [renderSettings, setRenderSettings] = useState<CvRenderSettings>({
+    layout: {
+      fontFamily: 'Helvetica',
+      customFont: null,
+      textScale: 1.0,
+      marginsCm: { top: 1.5, right: 1.5, bottom: 1.5, left: 1.5 },
+      lineSpacing: 1.4,
+      sectionSpacingPx: 12,
+      columns: 1,
+      atsSafe: false,
+    },
+    header: {
+      nameFontSize: 22,
+      nameFontWeight: 'bold',
+      nameColor: '#000000',
+      titleStyle: 'normal',
+      titlePosition: 'below',
+      dividerThickness: 1,
+      dividerStyle: 'solid',
+      iconSizePx: 18,
+      iconSpacingPx: 9,
+      iconAlignment: 'left',
+    },
+    photo: {
+      enabled: false,
+      aspectRatio: '1:1',
+      crop: null,
+      dataUrl: null,
+    },
+  });
 
   // Export current CV data to XML and trigger download
   const handleExportXml = () => {
@@ -758,10 +789,10 @@ export default function Builder() {
       <Navbar />
 
       {/* Main content area */}
-      <div className="max-w-7xl mx-auto pt-28 pb-24 px-4 sm:px-6">
-        <div className="lg:grid lg:grid-cols-[1fr_320px] lg:gap-8">
-          {/* Form content */}
-          <div className="flex flex-col gap-6 sm:gap-8">
+      <div className="w-full max-w-[1600px] 2xl:max-w-[1800px] mx-auto pt-28 pb-24 px-4 sm:px-6">
+        {/* Form + Live preview grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
+          <div className="lg:col-span-6 flex flex-col gap-6 sm:gap-8">
             {/* Data loaded/imported notification */}
             {dataLoaded && (
               <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg shadow-sm transition-colors duration-300">
@@ -869,7 +900,7 @@ export default function Builder() {
 
             {/* Example data button (hidden in production) */}
             {process.env.NODE_ENV !== 'production' && (
-              <div className="max-w-6xl mx-auto mt-8 mb-8 flex justify-center">
+              <div className="w-full mt-8 mb-8 flex justify-center">
                 <button
                   onClick={fillWithExampleData}
                   className="bg-green-600 text-white px-4 sm:px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-300 shadow-lg text-sm sm:text-base w-full sm:w-auto"
@@ -896,33 +927,27 @@ export default function Builder() {
             </div>
           </div>
 
-          {/* Desktop Actions Card */}
-          <DesktopActionsCard
-            personalInfo={personalInfo}
-            links={links}
-            resume={resume}
-            experiences={experiences}
-            education={education}
-            skills={skills}
-            languages={languages}
-            certifications={certifications}
-            projects={projects}
-            volunteers={volunteers}
-            template={selectedTemplate}
-            color={selectedColor}
-            selectedTemplate={selectedTemplate}
-            selectedColor={selectedColor}
-            onTemplateChange={setSelectedTemplate}
-            onColorChange={setSelectedColor}
-            onShowPdfPreview={handleShowPdfPreview}
-            onGeneratePDF={handleGeneratePDF}
-            onShowSuccessMessage={() => setShowSuccessMessage(true)}
-            onScrollToJobAnalysis={scrollToJobAnalysis}
-            onScrollToCVTips={scrollToCVTips}
-            onScrollToAtsExplanation={scrollToAtsExplanation}
-            onExportXml={handleExportXml}
-            onImportXml={handleImportXml}
-          />
+          {/* Live PDF Preview (desktop only) */}
+          <div className="hidden lg:block lg:col-span-6">
+            <div className="sticky top-28 h-[calc(100vh-7rem)]">
+              <LivePdfPane
+                personalInfo={personalInfo}
+                links={links}
+                resume={resume}
+                experiences={experiences}
+                education={education}
+                skills={skills}
+                languages={languages}
+                certifications={certifications}
+                projects={projects}
+                volunteers={volunteers}
+                lang={language}
+                template={selectedTemplate}
+                color={selectedColor}
+                settings={renderSettings}
+              />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -946,6 +971,35 @@ export default function Builder() {
         lang={language}
         template={selectedTemplate}
         color={selectedColor}
+        settings={renderSettings}
+      />
+
+      {/* Bottom Action Bar (Desktop) */}
+      <BottomActionBar
+        personalInfo={personalInfo}
+        links={links}
+        resume={resume}
+        experiences={experiences}
+        education={education}
+        skills={skills}
+        languages={languages}
+        certifications={certifications}
+        projects={projects}
+        volunteers={volunteers}
+        selectedTemplate={selectedTemplate}
+        selectedColor={selectedColor}
+        onTemplateChange={setSelectedTemplate}
+        onColorChange={setSelectedColor}
+        onShowPdfPreview={handleShowPdfPreview}
+        onGeneratePDF={handleGeneratePDF}
+        onShowSuccessMessage={() => setShowSuccessMessage(true)}
+        onScrollToJobAnalysis={scrollToJobAnalysis}
+        onScrollToCVTips={scrollToCVTips}
+        onScrollToAtsExplanation={scrollToAtsExplanation}
+        onExportXml={handleExportXml}
+        onImportXml={handleImportXml}
+        settings={renderSettings}
+        onSettingsChange={setRenderSettings}
       />
 
       {/* Floating Action Bar (Mobile/Tablet) */}

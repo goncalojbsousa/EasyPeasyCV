@@ -115,7 +115,7 @@ export function Languages({
               <FormField label={t('field.language')}>
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                  className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                   placeholder={t('placeholder.language')}
                   value={lang.name}
                   onChange={e => onLanguageChange(idx, 'name', e.target.value)}
@@ -125,7 +125,7 @@ export function Languages({
                 <div ref={el => { dropdownRefs.current[`level-${idx}`] = el; }} className="relative">
                   <button
                     type="button"
-                    className="w-full flex items-center justify-between p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left text-gray-900 dark:text-gray-100"
+                    className="w-full flex items-center justify-between p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-left text-gray-900 dark:text-gray-100"
                     onClick={() => toggleDropdown(`level-${idx}`)}
                     tabIndex={0}
                   >
@@ -138,7 +138,7 @@ export function Languages({
                         <button
                           key={level}
                           type="button"
-                          className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${lang.level === level ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+                          className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 ${lang.level === level ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
                           onClick={() => {
                             onLanguageChange(idx, 'level', level);
                             setOpenDropdowns(prev => ({ ...prev, [`level-${idx}`]: false }));

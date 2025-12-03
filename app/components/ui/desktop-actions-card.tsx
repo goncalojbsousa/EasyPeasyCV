@@ -9,7 +9,7 @@ import { FormSection } from './form-section';
 import { Icons } from './icons';
 import PdfDownloadButton from '../pdf_download_button';
 import { ThankYouModal } from '../thank_you_modal';
-import { Experience, Education, Language, Certification, Project, Volunteer, CvColor, CvTemplate } from '../../types/cv';
+import { Experience, Education, Language, Certification, Project, Volunteer, CvColor, CvTemplate, CvRenderSettings } from '../../types/cv';
 import { ColorSelector } from './color-selector';
 import { TemplateSelectorModal } from '../template_selector_modal';
 
@@ -39,6 +39,7 @@ interface DesktopActionsCardProps {
   onScrollToAtsExplanation: () => void;
   onExportXml: () => void;
   onImportXml: (xml: string) => void;
+  settings?: CvRenderSettings;
 }
 
 /**
@@ -71,7 +72,8 @@ export function DesktopActionsCard({
   onScrollToCVTips,
   onScrollToAtsExplanation,
   onExportXml,
-  onImportXml
+  onImportXml,
+  settings
 }: DesktopActionsCardProps) {
   const { t, cvType, setCVType } = useLanguage();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -263,6 +265,7 @@ export function DesktopActionsCard({
           lang={lang}
           template={template}
           color={color}
+          settings={settings}
           onPdfGenerated={handlePdfGenerated}
         >
           {children}
@@ -285,7 +288,7 @@ export function DesktopActionsCard({
                 </label>
                 <button
                   onClick={() => setShowTemplateModal(true)}
-                  className="w-full flex items-center justify-between p-3 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm hover:bg-gray-50 dark:hover:bg-zinc-700 hover:border-gray-400 dark:hover:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left text-sm text-gray-900 dark:text-gray-100"
+                  className="w-full flex items-center justify-between p-3 border border-gray-300 dark:border-zinc-600 rounded-xl bg-white dark:bg-zinc-800 shadow-sm hover:bg-gray-50 dark:hover:bg-zinc-700 hover:border-gray-400 dark:hover:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-sky-500 focus:border-sky-500 transition-all text-left text-sm text-gray-900 dark:text-gray-100"
                 >
                   <span className="font-medium">
                     {t(`template.${selectedTemplate}.name`)}
@@ -317,7 +320,7 @@ export function DesktopActionsCard({
                 </label>
                 <button
                   onClick={() => setIsCVTypeDropdownOpen(!isCVTypeDropdownOpen)}
-                  className="w-full flex items-center justify-between p-3 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm hover:bg-gray-50 dark:hover:bg-zinc-700 hover:border-gray-400 dark:hover:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left text-sm text-gray-900 dark:text-gray-100"
+                  className="w-full flex items-center justify-between p-3 border border-gray-300 dark:border-zinc-600 rounded-xl bg-white dark:bg-zinc-800 shadow-sm hover:bg-gray-50 dark:hover:bg-zinc-700 hover:border-gray-400 dark:hover:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-sky-500 focus:border-sky-500 transition-all text-left text-sm text-gray-900 dark:text-gray-100"
                 >
                   <div className="flex items-center gap-2">
                     {getCVTypeIcon(cvType)}
@@ -333,7 +336,7 @@ export function DesktopActionsCard({
                   (
                     <div
                       ref={cvTypePortalRef}
-                      className="fixed bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-2 z-[1000]"
+                      className="fixed bg-white dark:bg-zinc-800 rounded-xl shadow-xl border border-gray-200/80 dark:border-zinc-700/60 py-2 z-[1000]"
                       style={{
                         top: cvTypeDropdownRect.bottom + 8,
                         left: cvTypeDropdownRect.left,
@@ -351,7 +354,7 @@ export function DesktopActionsCard({
                               setCVType(type as CVType);
                               setIsCVTypeDropdownOpen(false);
                             }}
-                            className={`w-full flex items-center gap-2 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${cvType === type ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+                            className={`w-full flex items-center gap-2 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 ${cvType === type ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
                           >
                             {getCVTypeIcon(type)}
                             <span className="font-medium text-sm">{t(`cv.type.${type}`)}</span>
@@ -367,7 +370,7 @@ export function DesktopActionsCard({
               {/* Preview Button */}
               <button
                 onClick={onShowPdfPreview}
-                className="w-full bg-green-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-300 flex items-center justify-center gap-2 shadow-sm"
+                className="w-full bg-green-600 text-white px-4 py-3 rounded-xl font-semibold hover:bg-green-700 active:bg-green-800 transition-colors duration-200 flex items-center justify-center gap-2 shadow-sm"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -380,7 +383,7 @@ export function DesktopActionsCard({
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="w-full bg-blue-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center gap-2 shadow-sm"
+                  className="w-full bg-sky-600 text-white px-4 py-3 rounded-xl font-semibold hover:bg-sky-700 active:bg-sky-800 transition-colors duration-200 flex items-center justify-center gap-2 shadow-sm"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
@@ -408,7 +411,7 @@ export function DesktopActionsCard({
                       </div>
                       <div className="py-1">
                         <PdfDownloadButtonWithValidation lang="en">
-                          <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 cursor-pointer">
+                          <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 cursor-pointer">
                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6">
                             <rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="#071b65"></rect>
                             <path d="M5.101,4h-.101c-1.981,0-3.615,1.444-3.933,3.334L26.899,28h.101c1.981,0,3.615-1.444,3.933-3.334L5.101,4Z" fill="#fff"></path>
@@ -428,7 +431,7 @@ export function DesktopActionsCard({
                           </div>
                         </PdfDownloadButtonWithValidation>
                         <PdfDownloadButtonWithValidation lang="pt">
-                          <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 cursor-pointer">
+                          <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 cursor-pointer">
                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6">
                             <path d="M5,4H13V28H5c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" fill="#2b6519"></path>
                             <path d="M16,4h15V28h-15c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" transform="rotate(180 21.5 16)" fill="#ea3323"></path>
@@ -441,7 +444,7 @@ export function DesktopActionsCard({
                           </div>
                         </PdfDownloadButtonWithValidation>
                         <PdfDownloadButtonWithValidation lang="br">
-                          <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 cursor-pointer">
+                          <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 cursor-pointer">
                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6">
                             <rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="#459a45"></rect>
                             <path d="M27,4H5c-2.209,0-4,1.791-4,4V24c0,2.209,1.791,4,4,4H27c2.209,0,4-1.791,4-4V8c0-2.209-1.791-4-4-4Zm3,20c0,1.654-1.346,3-3,3H5c-1.654,0-3-1.346-3-3V8c0-1.654,1.346-3,3-3H27c1.654,0,3,1.346,3,3V24Z" opacity=".15"></path>
@@ -454,7 +457,7 @@ export function DesktopActionsCard({
                           </div>
                         </PdfDownloadButtonWithValidation>
                         <PdfDownloadButtonWithValidation lang="es">
-                          <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 cursor-pointer">
+                          <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 cursor-pointer">
                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6">
                             <rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="#c60b1e"></rect>
                             <rect x="1" y="10" width="30" height="12" fill="#ffc400"></rect>
@@ -478,7 +481,7 @@ export function DesktopActionsCard({
             {/* Job Analysis Button */}
             <button
               onClick={onScrollToJobAnalysis}
-              className="w-full bg-purple-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors duration-300 flex items-center justify-center gap-2 shadow-sm"
+              className="w-full bg-sky-600 text-white px-4 py-3 rounded-xl font-semibold hover:bg-sky-700 active:bg-sky-800 transition-colors duration-200 flex items-center justify-center gap-2 shadow-sm"
               title={t('job.analysis.action.description')}
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
@@ -490,7 +493,7 @@ export function DesktopActionsCard({
             {/* ATS Explanation Button */}
             <button
               onClick={onScrollToAtsExplanation}
-              className="w-full bg-green-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-300 flex items-center justify-center gap-2 shadow-sm"
+              className="w-full bg-green-600 text-white px-4 py-3 rounded-xl font-semibold hover:bg-green-700 active:bg-green-800 transition-colors duration-200 flex items-center justify-center gap-2 shadow-sm"
               title={t('ats.explanation.action.description')}
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
@@ -502,7 +505,7 @@ export function DesktopActionsCard({
             {/* CV Tips Button */}
             <button
               onClick={onScrollToCVTips}
-              className="w-full bg-blue-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center gap-2 shadow-sm"
+              className="w-full bg-sky-600 text-white px-4 py-3 rounded-xl font-semibold hover:bg-sky-700 active:bg-sky-800 transition-colors duration-200 flex items-center justify-center gap-2 shadow-sm"
               title={t('cv.tips.action.description')}
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
@@ -515,7 +518,7 @@ export function DesktopActionsCard({
             <div className="relative mt-2" ref={dataDropdownRef}>
               <button
                 onClick={() => setIsDataDropdownOpen((v) => !v)}
-                className="w-full bg-gray-200 text-gray-900 dark:bg-zinc-700 dark:text-gray-100 px-4 py-3 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-zinc-600 transition-colors duration-300 flex items-center justify-center gap-2 shadow-sm"
+                className="w-full bg-gray-200 text-gray-900 dark:bg-zinc-700 dark:text-gray-100 px-4 py-3 rounded-xl font-semibold hover:bg-gray-300 dark:hover:bg-zinc-600 active:bg-gray-400/70 dark:active:bg-zinc-500 transition-colors duration-200 flex items-center justify-center gap-2 shadow-sm"
                 title={t('data.xml.title')}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3H4V5Zm16 5H4v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9Z"/></svg>
@@ -527,7 +530,7 @@ export function DesktopActionsCard({
               {isDataDropdownOpen && dataDropdownRect && createPortal(
                 <div
                   ref={dataPortalRef}
-                  className="bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-1 z-[9999] animate-fade-in"
+                  className="bg-white dark:bg-zinc-800 rounded-xl shadow-xl border border-gray-200 dark:border-zinc-700 py-2 z-[9999] animate-fade-in"
                   style={{
                     position: 'fixed',
                     top: dataDropdownRect.bottom + 8,
@@ -535,9 +538,12 @@ export function DesktopActionsCard({
                     width: dataDropdownRect.width,
                   }}
                 >
+                  <div className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-zinc-700">
+                    {t('data.xml.title')}
+                  </div>
                   <button
                     type="button"
-                    className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 flex items-center gap-2"
+                    className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 flex items-center gap-2"
                     onClick={() => { setIsDataDropdownOpen(false); onExportXml(); }}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M12 16a1 1 0 0 1-.707-.293l-3-3 1.414-1.414L11 12.586V4h2v8.586l1.293-1.293 1.414 1.414-3 3A1 1 0 0 1 12 16Z"/><path d="M5 20h14a1 1 0 1 0 0-2H5a1 1 0 1 0 0 2Z"/></svg>
@@ -563,7 +569,7 @@ export function DesktopActionsCard({
                   />
                   <button
                     type="button"
-                    className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 flex items-center gap-2"
+                    className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 flex items-center gap-2"
                     onClick={() => { importInputRef.current?.click(); }}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M12 8a1 1 0 0 1 .707.293l3 3-1.414 1.414L13 11.414V20h-2v-8.586l-1.293 1.293-1.414-1.414 3-3A1 1 0 0 1 12 8Z"/><path d="M5 4h14a1 1 0 1 1 0 2H5a1 1 0 1 1 0-2Z"/></svg>
@@ -596,4 +602,4 @@ export function DesktopActionsCard({
       />
     </div>
   );
-} 
+}

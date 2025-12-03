@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
+
 import { CvColor } from '../../types/cv';
 import { useLanguage } from '../../contexts/LanguageContext';
 
@@ -87,23 +89,42 @@ const colors: Record<CvColor, {
  */
 export function ColorSelector({ selectedColor, onColorChange, show = true }: ColorSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [portalPos, setPortalPos] = useState<{ left: number; top: number; width: number } | null>(null);
 
   // Effect to close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     }
 
+    function updatePosition() {
+      if (!buttonRef.current) return;
+      const rect = buttonRef.current.getBoundingClientRect();
+      // Position above the button (open upwards)
+      setPortalPos({ left: rect.left, top: rect.top - 8, width: rect.width });
+    }
+
     if (isOpen) {
+      updatePosition();
       document.addEventListener('mousedown', handleClickOutside);
+      window.addEventListener('scroll', updatePosition, true);
+      window.addEventListener('resize', updatePosition);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('scroll', updatePosition, true);
+      window.removeEventListener('resize', updatePosition);
     };
   }, [isOpen]);
 
@@ -124,8 +145,9 @@ export function ColorSelector({ selectedColor, onColorChange, show = true }: Col
   return (
     <div className="relative" ref={dropdownRef}>
       <button
+        ref={buttonRef}
         onClick={toggleDropdown}
-        className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-zinc-800"
+        className="flex h-9 items-center justify-between w-auto px-3 rounded-md border border-gray-300/70 dark:border-zinc-600/70 bg-white/90 dark:bg-zinc-800/90 text-[13px] font-medium text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-zinc-700 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900"
       >
         <div className="flex items-center space-x-2">
           <div
@@ -144,14 +166,21 @@ export function ColorSelector({ selectedColor, onColorChange, show = true }: Col
         </svg>
       </button>
 
-      {isOpen && (
-        <div className="absolute z-10 w-full mt-1 bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-600 rounded-md shadow-lg">
+      {isOpen && portalPos && createPortal(
+        <div
+          onMouseDown={(e) => e.stopPropagation()}
+          className="z-[70] bg-white dark:bg-zinc-800 rounded-xl shadow-xl border border-gray-200 dark:border-zinc-700 max-h-[60vh] overflow-auto"
+          style={{ position: 'fixed', left: portalPos.left, top: portalPos.top, width: portalPos.width, transform: 'translateY(-100%)' }}
+        >
+          <div className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-zinc-700">
+            {t('color.selector')}
+          </div>
           <div className="py-1">
             {Object.entries(colors).map(([colorKey, colorData]) => (
               <button
                 key={colorKey}
                 onClick={() => handleColorSelect(colorKey as CvColor)}
-                className="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700 focus:outline-none focus:bg-gray-100 dark:focus:bg-zinc-700"
+                className="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200"
               >
                 <div
                   className="w-4 h-4 rounded-full border border-gray-300 dark:border-zinc-500 mr-2"
@@ -161,7 +190,8 @@ export function ColorSelector({ selectedColor, onColorChange, show = true }: Col
               </button>
             ))}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

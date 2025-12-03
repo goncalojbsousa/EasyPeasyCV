@@ -5,7 +5,7 @@ export interface PersonalInfo {
   /** Full name of the person */
   name: string;
   /** Desired job role or position */
-  desiredRole?: string;
+  desiredRole: string;
   /** City of residence */
   city: string;
   /** Postal code */
@@ -185,4 +185,49 @@ export interface CvData {
   template?: CvTemplate;
   /** Selected color theme */
   color?: CvColor;
+}
+
+export type FontFamilyOption = 'Helvetica' | 'Times-Roman' | 'Arial' | 'Custom';
+
+export interface CustomFontConfig {
+  name: string;
+  dataUrl: string;
+  style?: 'normal' | 'bold' | 'italic' | 'boldItalic';
+}
+
+export interface CvLayoutSettings {
+  fontFamily: FontFamilyOption;
+  customFont?: CustomFontConfig | null;
+  textScale: number;
+  marginsCm: { top: number; right: number; bottom: number; left: number };
+  lineSpacing: number;
+  sectionSpacingPx: number;
+  columns: 1 | 2 | 3;
+  atsSafe: boolean;
+}
+
+export interface HeaderOptions {
+  nameFontSize: number;
+  nameFontWeight: 'normal' | 'bold' | 'heavy';
+  nameColor: string;
+  titleStyle: 'normal' | 'italic' | 'uppercase';
+  titlePosition: 'above' | 'below';
+  dividerThickness: 1 | 2 | 3;
+  dividerStyle: 'solid' | 'dashed';
+  iconSizePx: 16 | 18 | 20 | 22 | 24;
+  iconSpacingPx: 5 | 7 | 9 | 11 | 13 | 15;
+  iconAlignment: 'left' | 'center' | 'right';
+}
+
+export interface PhotoOptions {
+  enabled: boolean;
+  aspectRatio: '1:1' | '3:4' | '4:3';
+  crop?: { x: number; y: number; width: number; height: number } | null;
+  dataUrl?: string | null;
+}
+
+export interface CvRenderSettings {
+  layout: CvLayoutSettings;
+  header: HeaderOptions;
+  photo: PhotoOptions;
 }

@@ -161,13 +161,13 @@ export function FloatingActionBar({
             </div>
             <div className="py-1">
               <button
-                                 onClick={() => {
-                   onTemplateChange?.('classic');
-                   setIsTemplateDropdownOpen(false);
-                 }}
-                className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${template === 'classic' ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+                onClick={() => {
+                  onTemplateChange?.('classic');
+                  setIsTemplateDropdownOpen(false);
+                }}
+                className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 ${template === 'classic' ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
               >
-                <div className="w-6 h-6 bg-blue-500 rounded flex items-center justify-center">
+                <div className="w-6 h-6 bg-sky-500 rounded flex items-center justify-center">
                   <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
                     <rect x="4" y="4" width="16" height="16" rx="2" fill="none" stroke="currentColor" strokeWidth="2"/>
                     <rect x="7" y="8" width="10" height="1" fill="currentColor"/>
@@ -178,11 +178,11 @@ export function FloatingActionBar({
                 <span className="font-medium text-sm">{t('template.classic.name')}</span>
               </button>
               <button
-                                 onClick={() => {
-                   onTemplateChange?.('professional');
-                   setIsTemplateDropdownOpen(false);
-                 }}
-                className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${template === 'professional' ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+                onClick={() => {
+                  onTemplateChange?.('professional');
+                  setIsTemplateDropdownOpen(false);
+                }}
+                className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 ${template === 'professional' ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
               >
                 <div className="w-6 h-6 bg-sky-500 rounded flex items-center justify-center">
                   <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -194,11 +194,11 @@ export function FloatingActionBar({
                 <span className="font-medium text-sm">{t('template.professional.name')}</span>
               </button>
               <button
-                                 onClick={() => {
-                   onTemplateChange?.('timeline');
-                   setIsTemplateDropdownOpen(false);
-                 }}
-                className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${template === 'timeline' ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+                onClick={() => {
+                  onTemplateChange?.('timeline');
+                  setIsTemplateDropdownOpen(false);
+                }}
+                className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 ${template === 'timeline' ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
               >
                 <div className="w-6 h-6 bg-amber-500 rounded flex items-center justify-center">
                   <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -211,11 +211,11 @@ export function FloatingActionBar({
                 <span className="font-medium text-sm">{t('template.timeline.name')}</span>
               </button>
               <button
-                                 onClick={() => {
-                   onTemplateChange?.('modern');
-                   setIsTemplateDropdownOpen(false);
-                 }}
-                className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${template === 'modern' ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+                onClick={() => {
+                  onTemplateChange?.('modern');
+                  setIsTemplateDropdownOpen(false);
+                }}
+                className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 ${template === 'modern' ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
               >
                 <div className="w-6 h-6 bg-purple-500 rounded flex items-center justify-center">
                   <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -226,11 +226,11 @@ export function FloatingActionBar({
                 <span className="font-medium text-sm">{t('template.modern.name')}</span>
               </button>
               <button
-                                 onClick={() => {
-                   onTemplateChange?.('creative');
-                   setIsTemplateDropdownOpen(false);
-                 }}
-                className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${template === 'creative' ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+                onClick={() => {
+                  onTemplateChange?.('creative');
+                  setIsTemplateDropdownOpen(false);
+                }}
+                className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 ${template === 'creative' ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
               >
                 <div className="w-6 h-6 bg-pink-500 rounded flex items-center justify-center">
                   <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -244,11 +244,11 @@ export function FloatingActionBar({
                 <span className="font-medium text-sm">{t('template.creative.name')}</span>
               </button>
               <button
-                                 onClick={() => {
-                   onTemplateChange?.('minimal');
-                   setIsTemplateDropdownOpen(false);
-                 }}
-                className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${template === 'minimal' ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
+                onClick={() => {
+                  onTemplateChange?.('minimal');
+                  setIsTemplateDropdownOpen(false);
+                }}
+                className={`w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 ${template === 'minimal' ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
               >
                 <div className="w-6 h-6 bg-teal-500 rounded flex items-center justify-center">
                   <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -268,7 +268,7 @@ export function FloatingActionBar({
       {/* Job Analysis Button */}
       <button
         onClick={onScrollToJobAnalysis}
-        className="hidden md:flex bg-purple-600 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 transition-colors duration-300 items-center justify-center"
+        className="hidden md:flex bg-sky-600 text-white p-4 rounded-full shadow-lg hover:bg-sky-700 transition-colors duration-300 items-center justify-center"
         title={t('job.analysis.action.description')}
       >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
@@ -290,7 +290,7 @@ export function FloatingActionBar({
       {/* CV Tips Button */}
       <button
         onClick={onScrollToCVTips}
-        className="hidden md:flex bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-colors duration-300 items-center justify-center"
+        className="hidden md:flex bg-sky-600 text-white p-4 rounded-full shadow-lg hover:bg-sky-700 transition-colors duration-300 items-center justify-center"
         title={t('cv.tips.action.description')}
       >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
@@ -314,7 +314,7 @@ export function FloatingActionBar({
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          className="bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center"
+          className="bg-sky-600 text-white p-4 rounded-full shadow-lg hover:bg-sky-700 transition-colors duration-300 flex items-center justify-center"
           title={t('generate.resume')}
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
@@ -330,7 +330,7 @@ export function FloatingActionBar({
             </div>
             <div className="py-1">
               <PdfDownloadButtonWithValidation lang="en">
-                <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 cursor-pointer">
+                <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 cursor-pointer">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6">
                     <rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="#071b65"></rect>
                     <path d="M5.101,4h-.101c-1.981,0-3.615,1.444-3.933,3.334L26.899,28h.101c1.981,0,3.615-1.444,3.933-3.334L5.101,4Z" fill="#fff"></path>
@@ -345,12 +345,14 @@ export function FloatingActionBar({
                     <path d="M2.328,26.957c.414,.374,.904,.656,1.447,.832l9.225-7.38v-1.408h-.75L2.328,26.957Z" fill="#b92932"></path>
                     <path d="M27,4H5c-2.209,0-4,1.791-4,4V24c0,2.209,1.791,4,4,4H27c2.209,0,4-1.791,4-4V8c0-2.209-1.791-4-4-4Zm3,20c0,1.654-1.346,3-3,3H5c-1.654,0-3-1.346-3-3V8c0-1.654,1.346-3,3-3H27c1.654,0,3,1.346,3,3V24Z" opacity=".15"></path>
                     <path d="M27,5H5c-1.657,0-3,1.343-3,3v1c0-1.657,1.343-3,3-3H27c1.657,0,3,1.343,3,3v-1c0-1.657-1.343-3-3-3Z" fill="#fff" opacity=".2"></path>
+                    <circle cx="12" cy="16" r="5" fill="#ff5"></circle>
+                    <path d="M14.562,13.529l-5.125-.006v3.431h0c.004,.672,.271,1.307,.753,1.787,.491,.489,1.132,.759,1.805,.759,.684,0,1.328-.267,1.813-.75,.485-.484,.753-1.126,.753-1.808v-3.413Z" fill="#ea3323"></path>
                   </svg>
                   <span className="font-medium text-sm">{t('language.english')}</span>
                 </div>
               </PdfDownloadButtonWithValidation>
               <PdfDownloadButtonWithValidation lang="pt">
-                <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 cursor-pointer">
+                <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 cursor-pointer">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6">
                     <path d="M5,4H13V28H5c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" fill="#2b6519"></path>
                     <path d="M16,4h15V28h-15c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" transform="rotate(180 21.5 16)" fill="#ea3323"></path>

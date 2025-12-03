@@ -1,11 +1,11 @@
 import React from 'react';
-import { CvData, CvColor } from '../types/cv';
+import { CvData, CvColor, CvRenderSettings, CvTemplate } from '../types/cv';
+import { Font } from '@react-pdf/renderer';
 import { ClassicTemplate } from './cv_templates/classic_template';
+import { ProfessionalTemplate } from './cv_templates/professional_template';
+import { TimelineTemplate } from './cv_templates/timeline_template';
 import { ModernTemplate } from './cv_templates/modern_template';
 import { CreativeTemplate } from './cv_templates/creative_template';
-import { MinimalTemplate } from './cv_templates/minimal_template';
-import { TimelineTemplate } from './cv_templates/timeline_template';
-import { ProfessionalTemplate } from './cv_templates/professional_template';
 
 /**
  * Props interface for the CvDocument component
@@ -15,6 +15,10 @@ interface CvDocumentProps extends CvData {
   lang?: string;
   /** Color theme for the template */
   color?: CvColor;
+  /** Render settings for layout/header/photo */
+  settings?: CvRenderSettings;
+  /** Template selection */
+  template?: CvTemplate;
 }
 
 /**
@@ -35,118 +39,49 @@ export function CvDocument({
   projects,
   volunteers,
   lang,
-  template = 'classic',
   color = 'blue',
+  settings,
+  template = 'classic',
 }: CvDocumentProps) {
 
-  // Select the appropriate template based on the template prop
+  const registerCustomFont = () => {
+    if (settings?.layout.fontFamily === 'Custom' && settings.layout.customFont?.dataUrl && settings.layout.customFont?.name) {
+      try {
+        Font.register({ family: settings.layout.customFont.name, src: settings.layout.customFont.dataUrl, fontStyle: 'normal', fontWeight: 'normal' });
+      } catch {}
+    }
+  };
+  registerCustomFont();
+
+  const commonProps = {
+    personalInfo,
+    links,
+    resume,
+    experiences,
+    education,
+    skills,
+    languages,
+    certifications,
+    projects,
+    volunteers,
+    color,
+    settings,
+    lang,
+  };
+
+  // For PDF generation we must return a @react-pdf/renderer Document
   switch (template) {
     case 'professional':
-      return (
-        <ProfessionalTemplate
-          personalInfo={personalInfo}
-          links={links}
-          resume={resume}
-          experiences={experiences}
-          education={education}
-          skills={skills}
-          languages={languages}
-          certifications={certifications}
-          projects={projects}
-          volunteers={volunteers}
-          lang={lang}
-          color={color}
-        />
-      );
-    case 'minimal':
-      return (
-        <MinimalTemplate
-          personalInfo={personalInfo}
-          links={links}
-          resume={resume}
-          experiences={experiences}
-          education={education}
-          skills={skills}
-          languages={languages}
-          certifications={certifications}
-          projects={projects}
-          volunteers={volunteers}
-          lang={lang}
-          color={color}
-        />
-      );
-
+      return <ProfessionalTemplate {...commonProps} />;
     case 'timeline':
-      return (
-        <TimelineTemplate
-          personalInfo={personalInfo}
-          links={links}
-          resume={resume}
-          experiences={experiences}
-          education={education}
-          skills={skills}
-          languages={languages}
-          certifications={certifications}
-          projects={projects}
-          volunteers={volunteers}
-          lang={lang}
-          color={color}
-        />
-      );
+      return <TimelineTemplate {...commonProps} />;
     case 'modern':
-      return (
-        <ModernTemplate
-          personalInfo={personalInfo}
-          links={links}
-          resume={resume}
-          experiences={experiences}
-          education={education}
-          skills={skills}
-          languages={languages}
-          certifications={certifications}
-          projects={projects}
-          volunteers={volunteers}
-          lang={lang}
-          color={color}
-        />
-      );
-
+      return <ModernTemplate {...commonProps} />;
+    case 'minimal':
     case 'creative':
-      return (
-        <CreativeTemplate
-          personalInfo={personalInfo}
-          links={links}
-          resume={resume}
-          experiences={experiences}
-          education={education}
-          skills={skills}
-          languages={languages}
-          certifications={certifications}
-          projects={projects}
-          volunteers={volunteers}
-          lang={lang}
-          color={color}
-        />
-      );
-
-
-
+      return <CreativeTemplate {...commonProps} />;
     case 'classic':
     default:
-      return (
-        <ClassicTemplate
-          personalInfo={personalInfo}
-          links={links}
-          resume={resume}
-          experiences={experiences}
-          education={education}
-          skills={skills}
-          languages={languages}
-          certifications={certifications}
-          projects={projects}
-          volunteers={volunteers}
-          lang={lang}
-        />
-      );
+      return <ClassicTemplate {...commonProps} />;
   }
 }

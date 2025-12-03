@@ -1,6 +1,6 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet, Link } from '@react-pdf/renderer';
-import { CvData, CvColor } from '../../types/cv';
+import { Document, Page, Text, View, StyleSheet, Link, Image } from '@react-pdf/renderer';
+import { CvData, CvColor, CvRenderSettings } from '../../types/cv';
 import { getColorTheme } from '../../utils/color-themes';
 
 /**
@@ -11,17 +11,32 @@ interface CreativeTemplateProps extends CvData {
   lang?: string;
   /** Color theme for the template */
   color?: CvColor;
+  settings?: CvRenderSettings;
 }
 
 /**
  * Creative template styles with innovative and expressive design
  */
-const styles = StyleSheet.create({
+const cmToPt = (cm: number) => cm * 28.3465;
+const buildStyles = (settings?: CvRenderSettings) => {
+  const s = settings;
+  const scale = s?.layout.textScale || 1.0;
+  const familyRaw = s?.layout.fontFamily || 'Helvetica';
+  const fontFamily = s?.layout.fontFamily === 'Custom' ? (s?.layout.customFont?.name || 'Helvetica') : (familyRaw === 'Arial' ? 'Helvetica' : familyRaw);
+  const margins = s?.layout.marginsCm ?? { top: 0.5, right: 0.5, bottom: 0.5, left: 0.5 };
+  const lineHeight = s?.layout.lineSpacing ?? 1.4;
+  const sectionSpacing = s?.layout.sectionSpacingPx ?? 20;
+  const linkFontSize = ((s?.header.iconSizePx ?? 18) / 2) * scale;
+  return StyleSheet.create({
   page: { 
-    padding: 0, 
-    fontSize: 10, 
-    fontFamily: 'Helvetica',
-    backgroundColor: '#ffffff'
+    paddingTop: cmToPt(margins.top),
+    paddingRight: cmToPt(margins.right),
+    paddingBottom: cmToPt(margins.bottom),
+    paddingLeft: cmToPt(margins.left),
+    fontSize: 10 * scale, 
+    fontFamily,
+    backgroundColor: '#ffffff',
+    lineHeight
   },
   // App-level layout (offset layout using fixed sidebar background)
   mainWithSidebarOffset: {
@@ -42,19 +57,19 @@ const styles = StyleSheet.create({
     color: '#ffffff'
   },
   name: { 
-    fontSize: 32, 
-    fontWeight: 'bold', 
+    fontSize: (s?.header.nameFontSize ?? 32) * scale, 
+    fontWeight: s?.header.nameFontWeight === 'heavy' ? 800 : s?.header.nameFontWeight === 'bold' ? 700 : 400, 
     marginBottom: 8,
     color: '#ffffff',
-    textTransform: 'uppercase',
+    textTransform: s?.header.titleStyle === 'uppercase' ? 'uppercase' : 'none',
     letterSpacing: 2
   },
   desiredRole: { 
-    fontSize: 16, 
+    fontSize: 16 * scale, 
     color: '#fdf2f8', 
     fontWeight: 'bold', 
     marginBottom: 15,
-    fontStyle: 'italic'
+    fontStyle: s?.header.titleStyle === 'italic' ? 'italic' : 'normal'
   },
   contactRow: { 
     flexDirection: 'row', 
@@ -76,13 +91,14 @@ const styles = StyleSheet.create({
   linksRow: { 
     flexDirection: 'row', 
     flexWrap: 'wrap', 
-    marginTop: 10 
+    marginTop: 10,
+    justifyContent: s?.header.iconAlignment === 'center' ? 'center' : s?.header.iconAlignment === 'right' ? 'flex-end' : 'flex-start' 
   },
   linkItem: { 
-    fontSize: 10, 
+    fontSize: linkFontSize, 
     color: '#ffffff', 
     textDecoration: 'underline', 
-    marginRight: 20, 
+    marginRight: s?.header.iconSpacingPx ?? 20, 
     marginBottom: 4,
     backgroundColor: 'rgba(255,255,255,0.1)',
     padding: 4,
@@ -92,7 +108,7 @@ const styles = StyleSheet.create({
     padding: 30
   },
   section: { 
-    marginBottom: 20 
+    marginBottom: sectionSpacing 
   },
   sectionTitle: { 
     fontSize: 14, 
@@ -421,6 +437,7 @@ const styles = StyleSheet.create({
     marginLeft: 0 
   }
 });
+};
 
 /**
  * Creative CV Template component
@@ -441,9 +458,11 @@ export function CreativeTemplate({
   volunteers,
   lang,
   color = 'pink',
+  settings,
 }: CreativeTemplateProps) {
   
   const colorTheme = getColorTheme(color);
+  const styles = buildStyles(settings);
   
   // Create dynamic styles based on selected color
   const dynamicStyles = StyleSheet.create({
@@ -667,11 +686,17 @@ export function CreativeTemplate({
         <View style={dynamicStyles.firstPageWideStrip} />
         {/* Absolute sidebar content (first page only) */}
         <View style={styles.sidebarContentAbs}>
+            {settings?.header.titlePosition === 'above' && (
+              <Text style={styles.desiredRole}>{personalInfo?.desiredRole}</Text>
+            )}
             <Text style={styles.name}>{personalInfo?.name}</Text>
-            {personalInfo?.desiredRole && (
-              <Text style={styles.desiredRole}>{personalInfo.desiredRole}</Text>
+            {(!settings || settings?.header.titlePosition === 'below') && (
+              <Text style={styles.desiredRole}>{personalInfo?.desiredRole}</Text>
             )}
             <View style={styles.divider} />
+            {settings?.photo?.enabled && settings?.photo?.dataUrl && (
+              <Image src={settings.photo.dataUrl as string} style={{ width: 90, height: 90, borderRadius: 8, marginBottom: 12 }} />
+            )}
             <Text style={styles.sidebarSectionTitle}>{lang === 'en' ? 'Contact' : 'Contacto'}</Text>
             {contactItems.map((item, idx) => (
               <Text key={idx} style={styles.sidebarText}>{item}</Text>
@@ -680,11 +705,13 @@ export function CreativeTemplate({
               <View>
                 <View style={styles.divider} />
                 <Text style={styles.sidebarSectionTitle}>{lang === 'en' ? 'Links' : 'Links'}</Text>
-                {links.map((link, index) => (
-                  <Link key={index} src={getSocialUrl(link.type, link.value)} style={styles.sidebarText}>
-                    {translateLinkType(link.type, lang || 'pt', link.customName)}: {link.value}
-                  </Link>
-                ))}
+                <View style={styles.linksRow}>
+                  {links.map((link, index) => (
+                    <Link key={index} src={getSocialUrl(link.type, link.value)} style={styles.linkItem}>
+                      {translateLinkType(link.type, lang || 'pt', link.customName)}: {link.value}
+                    </Link>
+                  ))}
+                </View>
               </View>
             )}
             {languages.length > 0 && (
@@ -728,19 +755,41 @@ export function CreativeTemplate({
                     <View style={{ height: 0 }} />
                   )}
                 </View>
-                {experiences.map((exp, index) => (
-                  <View key={index} style={styles.expBlock} wrap={false}>
-                    <View style={styles.roleAndDate}>
-                      <Text style={styles.titleLine}>{exp.role}</Text>
-                      <Text style={styles.metaLine}>
-                        {exp.company} • {translateMonth(exp.startMonth, lang || 'pt')} {exp.startYear} - {exp.current ? (lang === 'en' ? 'Present' : 'Atual') : `${translateMonth(exp.endMonth, lang || 'pt')} ${exp.endYear}`}
-                      </Text>
+                {(settings?.layout.columns ?? 1) === 1 ? (
+                  experiences.map((exp, index) => (
+                    <View key={index} style={styles.expBlock} wrap={false}>
+                      <View style={styles.roleAndDate}>
+                        <Text style={styles.titleLine}>{exp.role}</Text>
+                        <Text style={styles.metaLine}>
+                          {exp.company} • {translateMonth(exp.startMonth, lang || 'pt')} {exp.startYear} - {exp.current ? (lang === 'en' ? 'Present' : 'Atual') : `${translateMonth(exp.endMonth, lang || 'pt')} ${exp.endYear}`}
+                        </Text>
+                      </View>
+                      {exp.tech && <Text style={dynamicStyles.tech}>{exp.tech}</Text>}
+                      {exp.activities && <Text style={styles.activities}>{exp.activities}</Text>}
+                      {exp.results && <Text style={styles.results}>{exp.results}</Text>}
                     </View>
-                    {exp.tech && <Text style={dynamicStyles.tech}>{exp.tech}</Text>}
-                    {exp.activities && <Text style={styles.activities}>{exp.activities}</Text>}
-                    {exp.results && <Text style={styles.results}>{exp.results}</Text>}
+                  ))
+                ) : (
+                  <View style={{ flexDirection: 'row', gap: 12 }}>
+                    {Array.from({ length: settings?.layout.columns ?? 1 }).map((_, ci) => (
+                      <View key={ci} style={{ flex: 1 }}>
+                        {experiences.filter((_, idx) => idx % (settings?.layout.columns ?? 1) === ci).map((exp, index) => (
+                          <View key={index} style={styles.expBlock} wrap={false}>
+                            <View style={styles.roleAndDate}>
+                              <Text style={styles.titleLine}>{exp.role}</Text>
+                              <Text style={styles.metaLine}>
+                                {exp.company} • {translateMonth(exp.startMonth, lang || 'pt')} {exp.startYear} - {exp.current ? (lang === 'en' ? 'Present' : 'Atual') : `${translateMonth(exp.endMonth, lang || 'pt')} ${exp.endYear}`}
+                              </Text>
+                            </View>
+                            {exp.tech && <Text style={dynamicStyles.tech}>{exp.tech}</Text>}
+                            {exp.activities && <Text style={styles.activities}>{exp.activities}</Text>}
+                            {exp.results && <Text style={styles.results}>{exp.results}</Text>}
+                          </View>
+                        ))}
+                      </View>
+                    ))}
                   </View>
-                ))}
+                )}
               </View>
             )}
 
@@ -755,18 +804,39 @@ export function CreativeTemplate({
                     <View style={{ height: 0 }} />
                   )}
                 </View>
-                {education.map((edu, index) => (
-                  <View key={index} style={styles.eduBlock} wrap={false}>
-                    <View style={styles.roleAndDate}>
-                      <Text style={styles.eduTitle}>{edu.course}</Text>
-                      <Text style={styles.dateRange}>
-                        {translateMonth(edu.startMonth, lang || 'pt')} {edu.startYear} - {translateMonth(edu.endMonth, lang || 'pt')} {edu.endYear}
-                      </Text>
+                {(settings?.layout.columns ?? 1) === 1 ? (
+                  education.map((edu, index) => (
+                    <View key={index} style={styles.eduBlock} wrap={false}>
+                      <View style={styles.roleAndDate}>
+                        <Text style={styles.eduTitle}>{edu.course}</Text>
+                        <Text style={styles.dateRange}>
+                          {translateMonth(edu.startMonth, lang || 'pt')} {edu.startYear} - {translateMonth(edu.endMonth, lang || 'pt')} {edu.endYear}
+                        </Text>
+                      </View>
+                      <Text style={styles.eduInst}>{edu.institution}</Text>
+                      {edu.description && <Text style={styles.eduDesc}>{edu.description}</Text>}
                     </View>
-                    <Text style={styles.eduInst}>{edu.institution}</Text>
-                    {edu.description && <Text style={styles.eduDesc}>{edu.description}</Text>}
+                  ))
+                ) : (
+                  <View style={{ flexDirection: 'row', gap: 12 }}>
+                    {Array.from({ length: settings?.layout.columns ?? 1 }).map((_, ci) => (
+                      <View key={ci} style={{ flex: 1 }}>
+                        {education.filter((_, idx) => idx % (settings?.layout.columns ?? 1) === ci).map((edu, index) => (
+                          <View key={index} style={styles.eduBlock} wrap={false}>
+                            <View style={styles.roleAndDate}>
+                              <Text style={styles.eduTitle}>{edu.course}</Text>
+                              <Text style={styles.dateRange}>
+                                {translateMonth(edu.startMonth, lang || 'pt')} {edu.startYear} - {translateMonth(edu.endMonth, lang || 'pt')} {edu.endYear}
+                              </Text>
+                            </View>
+                            <Text style={styles.eduInst}>{edu.institution}</Text>
+                            {edu.description && <Text style={styles.eduDesc}>{edu.description}</Text>}
+                          </View>
+                        ))}
+                      </View>
+                    ))}
                   </View>
-                ))}
+                )}
               </View>
             )}
 

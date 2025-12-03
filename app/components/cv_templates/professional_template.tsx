@@ -1,6 +1,6 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Link } from '@react-pdf/renderer';
-import { CvData, CvColor } from '../../types/cv';
+import { CvData, CvColor, CvRenderSettings } from '../../types/cv';
 import { getColorTheme } from '../../utils/color-themes';
 
 /**
@@ -11,84 +11,77 @@ interface ProfessionalTemplateProps extends CvData {
   lang?: string;
   /** Optional color theme */
   color?: CvColor;
+  settings?: CvRenderSettings;
 }
 
-/**
- * Professional template styles: single-column, typographic emphasis,
- * subtle separators and colored accents. Inspired by classic but distinct.
- */
-const base = StyleSheet.create({
-  page: { padding: 30, fontSize: 10, fontFamily: 'Helvetica', backgroundColor: '#ffffff' },
-
-  // Header
-  header: { marginBottom: 16 },
-  name: { fontSize: 22, fontWeight: 'bold', color: '#0f172a' },
-  desiredRole: { fontSize: 12, color: '#334155', marginTop: 2 },
-
-  accentBar: { height: 3, marginTop: 10, marginBottom: 10, backgroundColor: '#2563eb' },
-
-  // Contact & links
-  contactRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 4 },
-  contactItem: { fontSize: 9, color: '#475569', marginRight: 12 },
-  separator: { fontSize: 9, color: '#cbd5e1', marginHorizontal: 8 },
-  linksRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 4 },
-  linkItem: { fontSize: 9, color: '#2563eb', textDecoration: 'underline', marginRight: 14, marginBottom: 2 },
-
-  // Sections
-  section: { marginBottom: 14 },
-  sectionHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 6 },
-  sectionAccent: { width: 3, height: 12, marginRight: 6, backgroundColor: '#2563eb', borderRadius: 2 },
-  sectionTitle: { fontSize: 12, fontWeight: 'bold', color: '#0f172a', letterSpacing: 0.3 },
-  summary: { fontSize: 10, color: '#334155', lineHeight: 1.4 },
-
-  // Experience
-  expBlock: { marginBottom: 10, paddingBottom: 8, borderBottomWidth: 0.5, borderBottomColor: '#e5e7eb', borderBottomStyle: 'solid' },
-  roleAndDate: { fontSize: 9, color: '#64748b', marginBottom: 3, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  roleAndCompany: { fontSize: 10, color: '#0f172a', flexDirection: 'row' },
-  jobRole: { fontSize: 10, fontWeight: 'bold', color: '#0f172a' },
-  companyName: { fontSize: 10, color: '#64748b' },
-  companySeparator: { fontSize: 10, color: '#64748b' },
-  dateRange: { fontSize: 9, color: '#64748b' },
-  tech: { fontSize: 9, color: '#2563eb', marginBottom: 3, fontWeight: 'bold' },
-  activities: { fontSize: 9, color: '#334155', marginBottom: 2, marginLeft: 8 },
-  results: { fontSize: 9, fontStyle: 'italic', color: '#059669', marginLeft: 8 },
-
-  // Education
-  eduBlock: { marginBottom: 10 },
-  eduTitle: { fontSize: 10, fontWeight: 'bold', color: '#0f172a' },
-  eduInst: { fontSize: 9, color: '#64748b', marginBottom: 2 },
-  eduDesc: { fontSize: 9, color: '#334155', marginLeft: 8 },
-
-  // Skills & Languages
-  skillsLangRow: { flexDirection: 'row', gap: 24 },
-  skillsCol: { flex: 1 },
-  langCol: { flex: 1 },
-  skillText: { fontSize: 9, color: '#0f172a' },
-  langItem: { fontSize: 9, color: '#0f172a', marginBottom: 2 },
-
-  // Projects
-  projBlock: { marginBottom: 10 },
-  projName: { fontSize: 10, fontWeight: 'bold', color: '#0f172a' },
-  projYear: { fontSize: 9, color: '#64748b', marginLeft: 6 },
-  projTech: { fontSize: 9, color: '#2563eb', marginBottom: 2 },
-  projDesc: { fontSize: 9, color: '#334155', marginLeft: 8 },
-  projLink: { fontSize: 9, color: '#2563eb', textDecoration: 'underline' },
-
-  // Certifications
-  certBlock: { marginBottom: 10 },
-  certName: { fontSize: 10, fontWeight: 'bold', color: '#0f172a' },
-  certDate: { fontSize: 9, fontStyle: 'italic', color: '#64748b' },
-  certIssuer: { fontSize: 9, color: '#64748b' },
-  certLink: { fontSize: 9, color: '#2563eb', textDecoration: 'underline' },
-  certDesc: { fontSize: 9, color: '#334155' },
-
-  // Volunteer
-  volBlock: { marginBottom: 10 },
-  volRole: { fontSize: 10, fontWeight: 'bold', color: '#0f172a' },
-  volOrg: { fontSize: 9, color: '#64748b' },
-  volDesc: { fontSize: 9, color: '#334155' },
-  volImpact: { fontSize: 9, fontStyle: 'italic', color: '#059669' },
-});
+const cmToPt = (cm: number) => cm * 28.3465;
+const buildStyles = (settings?: CvRenderSettings) => {
+  const s = settings;
+  const scale = s?.layout.textScale || 1.0;
+  const familyRaw = s?.layout.fontFamily || 'Helvetica';
+  const fontFamily = s?.layout.fontFamily === 'Custom' ? (s?.layout.customFont?.name || 'Helvetica') : (familyRaw === 'Arial' ? 'Helvetica' : familyRaw);
+  const margins = s?.layout.marginsCm ?? { top: 1.5, right: 1.5, bottom: 1.5, left: 1.5 };
+  const lineHeight = s?.layout.lineSpacing ?? 1.4;
+  const sectionSpacing = s?.layout.sectionSpacingPx ?? 14;
+  const isATS = false;
+  const neutral = { primary: '#0f172a', accent: '#666666', border: '#e5e7eb' };
+  const linkFontSize = ((s?.header.iconSizePx ?? 18) / 2) * scale;
+  const nameSpacing = Math.max(8, Math.round(((s?.header.nameFontSize ?? 22) * scale) * 0.6));
+  const roleSpacing = Math.max(6, Math.round((12 * scale) * 0.3));
+  return StyleSheet.create({
+    page: { paddingTop: cmToPt(margins.top), paddingRight: cmToPt(margins.right), paddingBottom: cmToPt(margins.bottom), paddingLeft: cmToPt(margins.left), fontSize: 10 * scale, fontFamily, backgroundColor: '#ffffff', lineHeight },
+    header: { marginBottom: 16, paddingBottom: 8, borderBottomWidth: s?.header.dividerThickness ?? 1, borderBottomColor: isATS ? neutral.border : '#e5e7eb', borderBottomStyle: s?.header.dividerStyle ?? 'solid' },
+    name: { fontSize: (s?.header.nameFontSize ?? 22) * scale, fontWeight: s?.header.nameFontWeight === 'heavy' ? 800 : s?.header.nameFontWeight === 'bold' ? 700 : 400, color: s?.header.nameColor || (isATS ? neutral.primary : '#0f172a'), marginBottom: nameSpacing },
+    desiredRole: { fontSize: 12 * scale, color: isATS ? neutral.accent : '#334155', marginTop: 4, marginBottom: roleSpacing, fontStyle: s?.header.titleStyle === 'italic' ? 'italic' : 'normal', textTransform: s?.header.titleStyle === 'uppercase' ? 'uppercase' : 'none' },
+    accentBar: { height: 3, marginTop: 10, marginBottom: 10, backgroundColor: isATS ? neutral.border : '#2563eb' },
+    contactRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 4 },
+    contactItem: { fontSize: 9 * scale, color: isATS ? neutral.accent : '#475569', marginRight: 12 },
+    separator: { fontSize: 9 * scale, color: isATS ? neutral.border : '#cbd5e1', marginHorizontal: 8 },
+    linksRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 4, justifyContent: s?.header.iconAlignment === 'center' ? 'center' : s?.header.iconAlignment === 'right' ? 'flex-end' : 'flex-start' },
+    linkItem: { fontSize: linkFontSize, color: isATS ? neutral.accent : '#2563eb', textDecoration: 'underline', marginRight: s?.header.iconSpacingPx ?? 14, marginBottom: 2 },
+    section: { marginBottom: sectionSpacing },
+    sectionHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 6 },
+    sectionAccent: { width: 3, height: 12, marginRight: 6, backgroundColor: isATS ? neutral.border : '#2563eb', borderRadius: 2 },
+    sectionTitle: { fontSize: 12 * scale, fontWeight: 'bold', color: isATS ? neutral.primary : '#0f172a', letterSpacing: 0.3 },
+    summary: { fontSize: 10 * scale, color: isATS ? neutral.accent : '#334155' },
+    expBlock: { marginBottom: 10, paddingBottom: 8, borderBottomWidth: 0.5, borderBottomColor: isATS ? neutral.border : '#e5e7eb', borderBottomStyle: 'solid' },
+    roleAndDate: { fontSize: 9 * scale, color: isATS ? neutral.accent : '#64748b', marginBottom: 3, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+    roleAndCompany: { fontSize: 10 * scale, color: isATS ? neutral.primary : '#0f172a', flexDirection: 'row' },
+    jobRole: { fontSize: 10 * scale, fontWeight: 'bold', color: isATS ? neutral.primary : '#0f172a' },
+    companyName: { fontSize: 10 * scale, color: isATS ? neutral.accent : '#64748b' },
+    companySeparator: { fontSize: 10 * scale, color: isATS ? neutral.accent : '#64748b' },
+    dateRange: { fontSize: 9 * scale, color: isATS ? neutral.accent : '#64748b' },
+    tech: { fontSize: 9 * scale, color: isATS ? neutral.accent : '#2563eb', marginBottom: 3, fontWeight: 'bold' },
+    activities: { fontSize: 9 * scale, color: isATS ? neutral.primary : '#334155', marginBottom: 2, marginLeft: 8 },
+    results: { fontSize: 9 * scale, fontStyle: 'italic', color: '#059669', marginLeft: 8 },
+    eduBlock: { marginBottom: 10 },
+    eduTitle: { fontSize: 10 * scale, fontWeight: 'bold', color: isATS ? neutral.primary : '#0f172a' },
+    eduInst: { fontSize: 9 * scale, color: isATS ? neutral.accent : '#64748b', marginBottom: 2 },
+    eduDesc: { fontSize: 9 * scale, color: isATS ? neutral.primary : '#334155', marginLeft: 8 },
+    skillsLangRow: { flexDirection: 'row', gap: 24 },
+    skillsCol: { flex: 1 },
+    langCol: { flex: 1 },
+    skillText: { fontSize: 9 * scale, color: isATS ? neutral.primary : '#0f172a' },
+    langItem: { fontSize: 9 * scale, color: isATS ? neutral.primary : '#0f172a', marginBottom: 2 },
+    projBlock: { marginBottom: 10 },
+    projName: { fontSize: 10 * scale, fontWeight: 'bold', color: isATS ? neutral.primary : '#0f172a' },
+    projYear: { fontSize: 9 * scale, color: isATS ? neutral.accent : '#64748b', marginLeft: 6 },
+    projTech: { fontSize: 9 * scale, color: isATS ? neutral.accent : '#2563eb', marginBottom: 2 },
+    projDesc: { fontSize: 9 * scale, color: isATS ? neutral.primary : '#334155', marginLeft: 8 },
+    projLink: { fontSize: 9 * scale, color: isATS ? neutral.accent : '#2563eb', textDecoration: 'underline' },
+    certBlock: { marginBottom: 10 },
+    certName: { fontSize: 10 * scale, fontWeight: 'bold', color: isATS ? neutral.primary : '#0f172a' },
+    certDate: { fontSize: 9 * scale, fontStyle: 'italic', color: isATS ? neutral.accent : '#64748b' },
+    certIssuer: { fontSize: 9 * scale, color: isATS ? neutral.accent : '#64748b' },
+    certLink: { fontSize: 9 * scale, color: isATS ? neutral.accent : '#2563eb', textDecoration: 'underline' },
+    certDesc: { fontSize: 9 * scale, color: isATS ? neutral.primary : '#334155' },
+    volBlock: { marginBottom: 10 },
+    volRole: { fontSize: 10 * scale, fontWeight: 'bold', color: isATS ? neutral.primary : '#0f172a' },
+    volOrg: { fontSize: 9 * scale, color: isATS ? neutral.accent : '#64748b' },
+    volDesc: { fontSize: 9 * scale, color: isATS ? neutral.primary : '#334155' },
+    volImpact: { fontSize: 9 * scale, fontStyle: 'italic', color: '#059669' },
+  });
+};
 
 // Helpers
 function getSocialUrl(type: string, value: string) {
@@ -167,8 +160,10 @@ export function ProfessionalTemplate({
   volunteers,
   lang = 'pt',
   color = 'blue',
+  settings,
 }: ProfessionalTemplateProps) {
   const theme = getColorTheme(color);
+  const styles = buildStyles(settings);
   const dynamic = StyleSheet.create({
     accentBar: { backgroundColor: theme.primary },
     sectionAccent: { backgroundColor: theme.primary },
@@ -181,36 +176,39 @@ export function ProfessionalTemplate({
 
   return (
     <Document>
-      <Page size="A4" style={base.page}>
+      <Page size="A4" style={styles.page}>
         {/* Header */}
-        <View style={base.header}>
-          <Text style={base.name}>{personalInfo.name}</Text>
-          {personalInfo.desiredRole ? (
-            <Text style={base.desiredRole}>{personalInfo.desiredRole}</Text>
+        <View style={styles.header}>
+          {settings?.header.titlePosition === 'above' && personalInfo.desiredRole ? (
+            <Text style={styles.desiredRole}>{personalInfo.desiredRole}</Text>
           ) : null}
-          <View style={[base.accentBar, dynamic.accentBar]} />
+          <Text style={styles.name}>{personalInfo.name}</Text>
+          {(!settings || settings?.header.titlePosition === 'below') && personalInfo.desiredRole ? (
+            <Text style={styles.desiredRole}>{personalInfo.desiredRole}</Text>
+          ) : null}
+          <View style={[styles.accentBar, dynamic.accentBar]} />
 
           {/* Contact */}
-          <View style={base.contactRow}>
-            {personalInfo.city && <Text style={base.contactItem}>{personalInfo.city}</Text>}
+          <View style={styles.contactRow}>
+            {personalInfo.city && <Text style={styles.contactItem}>{personalInfo.city}</Text>}
             {personalInfo.postalCode && (
               <>
-                <Text style={base.separator}>•</Text>
-                <Text style={base.contactItem}>{personalInfo.postalCode}</Text>
+                <Text style={styles.separator}>•</Text>
+                <Text style={styles.contactItem}>{personalInfo.postalCode}</Text>
               </>
             )}
             {personalInfo.email && (
               <>
-                <Text style={base.separator}>•</Text>
-                <Link src={`mailto:${personalInfo.email}`} style={[base.contactItem, dynamic.linkItem]}>
+                <Text style={styles.separator}>•</Text>
+                <Link src={`mailto:${personalInfo.email}`} style={[styles.contactItem, dynamic.linkItem]}>
                   {personalInfo.email}
                 </Link>
               </>
             )}
             {personalInfo.phone && (
               <>
-                <Text style={base.separator}>•</Text>
-                <Link src={`tel:${personalInfo.phone}`} style={[base.contactItem, dynamic.linkItem]}>
+                <Text style={styles.separator}>•</Text>
+                <Link src={`tel:${personalInfo.phone}`} style={[styles.contactItem, dynamic.linkItem]}>
                   {personalInfo.phone}
                 </Link>
               </>
@@ -219,9 +217,9 @@ export function ProfessionalTemplate({
 
           {/* Links */}
           {links && links.length > 0 && (
-            <View style={base.linksRow}>
+            <View style={styles.linksRow}>
               {links.map((l, i) => (
-                <Link key={i} src={getSocialUrl(l.type, l.value)} style={[base.linkItem, dynamic.linkItem]}>
+                <Link key={i} src={getSocialUrl(l.type, l.value)} style={[styles.linkItem, dynamic.linkItem]}>
                   {translateLinkType(l.type, lang, l.customName)}
                 </Link>
               ))}
@@ -231,97 +229,148 @@ export function ProfessionalTemplate({
 
         {/* Summary */}
         {resume && (
-          <View style={base.section}>
-            <View style={base.sectionHeader}>
-              <View style={[base.sectionAccent, dynamic.sectionAccent]} />
-              <Text style={base.sectionTitle}>
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <View style={[styles.sectionAccent, dynamic.sectionAccent]} />
+              <Text style={styles.sectionTitle}>
                 {lang === 'en' ? 'Professional Summary' : lang === 'es' ? 'Resumen Profesional' : 'Resumo Profissional'}
               </Text>
             </View>
-            <Text style={base.summary}>{resume}</Text>
+            <Text style={styles.summary}>{resume}</Text>
           </View>
         )}
 
         {/* Experience */}
         {experiences && experiences.length > 0 && (
-          <View style={base.section}>
-            <View style={base.sectionHeader}>
-              <View style={[base.sectionAccent, dynamic.sectionAccent]} />
-              <Text style={base.sectionTitle}>
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <View style={[styles.sectionAccent, dynamic.sectionAccent]} />
+              <Text style={styles.sectionTitle}>
                 {lang === 'en' ? 'Professional Experience' : lang === 'es' ? 'Experiencia Profesional' : 'Experiência Profissional'}
               </Text>
             </View>
-            {experiences.map((exp, i) => (
-              <View key={i} style={base.expBlock}>
-                <View style={base.roleAndDate}>
-                  <View style={base.roleAndCompany}>
-                    <Text style={base.jobRole}>{exp.role}</Text>
+            {(settings?.layout.columns ?? 1) === 1 ? experiences.map((exp, i) => (
+              <View key={i} style={styles.expBlock}>
+                <View style={styles.roleAndDate}>
+                  <View style={styles.roleAndCompany}>
+                    <Text style={styles.jobRole}>{exp.role}</Text>
                     {(exp.company) && (
                       <>
-                        <Text style={base.companySeparator}> • </Text>
-                        <Text style={base.companyName}>{exp.company}</Text>
+                        <Text style={styles.companySeparator}> • </Text>
+                        <Text style={styles.companyName}>{exp.company}</Text>
                       </>
                     )}
                   </View>
-                  <Text style={base.dateRange}>
+                  <Text style={styles.dateRange}>
                     {exp.startMonth && exp.startYear ? `${translateMonth(exp.startMonth, lang)} ${exp.startYear}` : ''}
                     {(exp.startMonth && exp.startYear) && (exp.endMonth || exp.endYear || exp.current) ? ' - ' : ''}
                     {exp.current ? translateCurrent(lang) : (exp.endMonth && exp.endYear ? `${translateMonth(exp.endMonth, lang)} ${exp.endYear}` : '')}
                   </Text>
                 </View>
-                {exp.tech && <Text style={[base.tech, dynamic.tech]}>{exp.tech}</Text>}
-                {exp.activities && <Text style={base.activities}>• {exp.activities}</Text>}
-                {exp.results && <Text style={base.results}>• {exp.results}</Text>}
+                {exp.tech && <Text style={[styles.tech, dynamic.tech]}>{exp.tech}</Text>}
+                {exp.activities && <Text style={styles.activities}>• {exp.activities}</Text>}
+                {exp.results && <Text style={styles.results}>• {exp.results}</Text>}
               </View>
-            ))}
+            )) : (
+              <View style={{ flexDirection: 'row', gap: 12 }}>
+                {Array.from({ length: settings?.layout.columns ?? 1 }).map((_, ci) => (
+                  <View key={ci} style={{ flex: 1 }}>
+                    {experiences.filter((_, idx) => idx % (settings?.layout.columns ?? 1) === ci).map((exp, i) => (
+                      <View key={i} style={styles.expBlock}>
+                        <View style={styles.roleAndDate}>
+                          <View style={styles.roleAndCompany}>
+                            <Text style={styles.jobRole}>{exp.role}</Text>
+                            {(exp.company) && (
+                              <>
+                                <Text style={styles.companySeparator}> • </Text>
+                                <Text style={styles.companyName}>{exp.company}</Text>
+                              </>
+                            )}
+                          </View>
+                          <Text style={styles.dateRange}>
+                            {exp.startMonth && exp.startYear ? `${translateMonth(exp.startMonth, lang)} ${exp.startYear}` : ''}
+                            {(exp.startMonth && exp.startYear) && (exp.endMonth || exp.endYear || exp.current) ? ' - ' : ''}
+                            {exp.current ? translateCurrent(lang) : (exp.endMonth && exp.endYear ? `${translateMonth(exp.endMonth, lang)} ${exp.endYear}` : '')}
+                          </Text>
+                        </View>
+                        {exp.tech && <Text style={[styles.tech, dynamic.tech]}>{exp.tech}</Text>}
+                        {exp.activities && <Text style={styles.activities}>• {exp.activities}</Text>}
+                        {exp.results && <Text style={styles.results}>• {exp.results}</Text>}
+                      </View>
+                    ))}
+                  </View>
+                ))}
+              </View>
+            )}
           </View>
         )}
 
         {/* Education */}
         {education && education.length > 0 && (
-          <View style={base.section}>
-            <View style={base.sectionHeader}>
-              <View style={[base.sectionAccent, dynamic.sectionAccent]} />
-              <Text style={base.sectionTitle}>
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <View style={[styles.sectionAccent, dynamic.sectionAccent]} />
+              <Text style={styles.sectionTitle}>
                 {lang === 'en' ? 'Education' : lang === 'es' ? 'Educación' : 'Educação'}
               </Text>
             </View>
-            {education.map((edu, i) => (
-              <View key={i} style={base.eduBlock}>
-                <View style={base.roleAndDate}>
-                  <Text style={base.eduTitle}>{edu.course}</Text>
-                  <Text style={base.dateRange}>
+            {(settings?.layout.columns ?? 1) === 1 ? education.map((edu, i) => (
+              <View key={i} style={styles.eduBlock}>
+                <View style={styles.roleAndDate}>
+                  <Text style={styles.eduTitle}>{edu.course}</Text>
+                  <Text style={styles.dateRange}>
                     {edu.startMonth && edu.startYear ? `${translateMonth(edu.startMonth, lang)} ${edu.startYear}` : ''}
                     {(edu.startMonth && edu.startYear) && (edu.endMonth || edu.endYear) ? ' - ' : ''}
                     {(edu.endMonth && edu.endYear) ? `${translateMonth(edu.endMonth, lang)} ${edu.endYear}` : ''}
                   </Text>
                 </View>
-                <Text style={base.eduInst}>{edu.institution}</Text>
-                {edu.description && <Text style={base.eduDesc}>• {edu.description}</Text>}
+                <Text style={styles.eduInst}>{edu.institution}</Text>
+                {edu.description && <Text style={styles.eduDesc}>• {edu.description}</Text>}
               </View>
-            ))}
+            )) : (
+              <View style={{ flexDirection: 'row', gap: 12 }}>
+                {Array.from({ length: settings?.layout.columns ?? 1 }).map((_, ci) => (
+                  <View key={ci} style={{ flex: 1 }}>
+                    {education.filter((_, idx) => idx % (settings?.layout.columns ?? 1) === ci).map((edu, i) => (
+                      <View key={i} style={styles.eduBlock}>
+                        <View style={styles.roleAndDate}>
+                          <Text style={styles.eduTitle}>{edu.course}</Text>
+                          <Text style={styles.dateRange}>
+                            {edu.startMonth && edu.startYear ? `${translateMonth(edu.startMonth, lang)} ${edu.startYear}` : ''}
+                            {(edu.startMonth && edu.startYear) && (edu.endMonth || edu.endYear) ? ' - ' : ''}
+                            {(edu.endMonth && edu.endYear) ? `${translateMonth(edu.endMonth, lang)} ${edu.endYear}` : ''}
+                          </Text>
+                        </View>
+                        <Text style={styles.eduInst}>{edu.institution}</Text>
+                        {edu.description && <Text style={styles.eduDesc}>• {edu.description}</Text>}
+                      </View>
+                    ))}
+                  </View>
+                ))}
+              </View>
+            )}
           </View>
         )}
 
         {/* Skills & Languages */}
         {(skills || (languages && languages.length > 0)) && (
-          <View style={base.section}>
-            <View style={base.sectionHeader}>
-              <View style={[base.sectionAccent, dynamic.sectionAccent]} />
-              <Text style={base.sectionTitle}>
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <View style={[styles.sectionAccent, dynamic.sectionAccent]} />
+              <Text style={styles.sectionTitle}>
                 {lang === 'en' ? 'Skills & Languages' : lang === 'es' ? 'Habilidades e Idiomas' : 'Competências e Idiomas'}
               </Text>
             </View>
-            <View style={base.skillsLangRow}>
+            <View style={styles.skillsLangRow}>
               {skills ? (
-                <View style={base.skillsCol}>
-                  <Text style={base.skillText}>{skills}</Text>
+                <View style={styles.skillsCol}>
+                  <Text style={styles.skillText}>{skills}</Text>
                 </View>
               ) : null}
               {languages && languages.length > 0 ? (
-                <View style={base.langCol}>
+                <View style={styles.langCol}>
                   {languages.map((lg, i) => (
-                    <Text key={i} style={base.langItem}>
+                    <Text key={i} style={styles.langItem}>
                       {lg.name} — {translateLanguageLevel(lg.level, lang)}
                     </Text>
                   ))}
@@ -333,26 +382,26 @@ export function ProfessionalTemplate({
 
         {/* Projects */}
         {projects && projects.length > 0 && (
-          <View style={base.section}>
-            <View style={base.sectionHeader}>
-              <View style={[base.sectionAccent, dynamic.sectionAccent]} />
-              <Text style={base.sectionTitle}>{lang === 'en' ? 'Projects' : lang === 'es' ? 'Proyectos' : 'Projetos'}</Text>
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <View style={[styles.sectionAccent, dynamic.sectionAccent]} />
+              <Text style={styles.sectionTitle}>{lang === 'en' ? 'Projects' : lang === 'es' ? 'Proyectos' : 'Projetos'}</Text>
             </View>
             {projects.map((proj, i) => (
-              <View key={i} style={base.projBlock}>
-                <View style={base.roleAndDate}>
-                  <Text style={base.projName}>{proj.name}</Text>
-                  <Text style={base.projYear}>{proj.year}</Text>
+              <View key={i} style={styles.projBlock}>
+                <View style={styles.roleAndDate}>
+                  <Text style={styles.projName}>{proj.name}</Text>
+                  <Text style={styles.projYear}>{proj.year}</Text>
                 </View>
-                {proj.tech && <Text style={[base.projTech, dynamic.projTech]}>{proj.tech}</Text>}
-                {proj.description && <Text style={base.projDesc}>• {proj.description}</Text>}
+                {proj.tech && <Text style={[styles.projTech, dynamic.projTech]}>{proj.tech}</Text>}
+                {proj.description && <Text style={styles.projDesc}>• {proj.description}</Text>}
                 {proj.link && (
-                  <Link src={proj.link} style={[base.projLink, dynamic.projLink]}>
+                  <Link src={proj.link} style={[styles.projLink, dynamic.projLink]}>
                     {lang === 'en' ? 'View Project' : lang === 'es' ? 'Ver Proyecto' : 'Ver Projeto'}
                   </Link>
                 )}
                 {proj.sourceCode && (
-                  <Link src={proj.sourceCode} style={[base.projLink, dynamic.projLink]}>
+                  <Link src={proj.sourceCode} style={[styles.projLink, dynamic.projLink]}>
                     {lang === 'en' ? 'Source Code' : lang === 'es' ? 'Código fuente' : 'Código-fonte'}
                   </Link>
                 )}
@@ -363,24 +412,24 @@ export function ProfessionalTemplate({
 
         {/* Certifications */}
         {certifications && certifications.length > 0 && (
-          <View style={base.section}>
-            <View style={base.sectionHeader}>
-              <View style={[base.sectionAccent, dynamic.sectionAccent]} />
-              <Text style={base.sectionTitle}>{lang === 'en' ? 'Certifications' : lang === 'es' ? 'Certificaciones' : 'Certificações'}</Text>
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <View style={[styles.sectionAccent, dynamic.sectionAccent]} />
+              <Text style={styles.sectionTitle}>{lang === 'en' ? 'Certifications' : lang === 'es' ? 'Certificaciones' : 'Certificações'}</Text>
             </View>
             {certifications.map((cert, i) => (
-              <View key={i} style={base.certBlock}>
-                <View style={base.roleAndDate}>
-                  <Text style={base.certName}>{cert.name}</Text>
-                  <Text style={base.certDate}>{cert.completionDate}</Text>
+              <View key={i} style={styles.certBlock}>
+                <View style={styles.roleAndDate}>
+                  <Text style={styles.certName}>{cert.name}</Text>
+                  <Text style={styles.certDate}>{cert.completionDate}</Text>
                 </View>
-                <Text style={base.certIssuer}>{cert.issuer}</Text>
+                <Text style={styles.certIssuer}>{cert.issuer}</Text>
                 {cert.validationLink && (
-                  <Link src={cert.validationLink} style={[base.certLink, dynamic.certLink]}>
+                  <Link src={cert.validationLink} style={[styles.certLink, dynamic.certLink]}>
                     {lang === 'en' ? 'View Certificate' : lang === 'es' ? 'Ver Certificado' : 'Ver Certificado'}
                   </Link>
                 )}
-                {cert.description && <Text style={base.certDesc}>{cert.description}</Text>}
+                {cert.description && <Text style={styles.certDesc}>{cert.description}</Text>}
               </View>
             ))}
           </View>
@@ -388,24 +437,24 @@ export function ProfessionalTemplate({
 
         {/* Volunteer */}
         {volunteers && volunteers.length > 0 && (
-          <View style={{ ...base.section, marginBottom: 0 }}>
-            <View style={base.sectionHeader}>
-              <View style={[base.sectionAccent, dynamic.sectionAccent]} />
-              <Text style={base.sectionTitle}>{lang === 'en' ? 'Volunteer Work' : 'Voluntariado'}</Text>
+          <View style={{ ...styles.section, marginBottom: 0 }}>
+            <View style={styles.sectionHeader}>
+              <View style={[styles.sectionAccent, dynamic.sectionAccent]} />
+              <Text style={styles.sectionTitle}>{lang === 'en' ? 'Volunteer Work' : 'Voluntariado'}</Text>
             </View>
             {volunteers.map((vol, i) => (
-              <View key={i} style={base.volBlock}>
-                <View style={base.roleAndDate}>
-                  <Text style={base.volRole}>{vol.role}</Text>
-                  <Text style={base.dateRange}>
+              <View key={i} style={styles.volBlock}>
+                <View style={styles.roleAndDate}>
+                  <Text style={styles.volRole}>{vol.role}</Text>
+                  <Text style={styles.dateRange}>
                     {vol.startMonth && vol.startYear ? `${translateMonth(vol.startMonth, lang)} ${vol.startYear}` : ''}
                     {(vol.startMonth && vol.startYear) && (vol.endMonth || vol.endYear || vol.current) ? ' - ' : ''}
                     {vol.current ? translateCurrent(lang) : (vol.endMonth && vol.endYear ? `${translateMonth(vol.endMonth, lang)} ${vol.endYear}` : '')}
                   </Text>
                 </View>
-                <Text style={base.volOrg}>{vol.organization}</Text>
-                {vol.description && <Text style={base.volDesc}>• {vol.description}</Text>}
-                {vol.impact && <Text style={base.volImpact}>• {vol.impact}</Text>}
+                <Text style={styles.volOrg}>{vol.organization}</Text>
+                {vol.description && <Text style={styles.volDesc}>• {vol.description}</Text>}
+                {vol.impact && <Text style={styles.volImpact}>• {vol.impact}</Text>}
               </View>
             ))}
           </View>

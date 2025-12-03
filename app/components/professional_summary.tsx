@@ -32,7 +32,7 @@ export function ProfessionalSummary({
       <FormSection title={t('section.professional.summary')} icon={Icons.professionalSummary}>
         <FormField label={t('field.professional.summary')}>
           <textarea
-            className="w-full p-3 sm:p-4 border rounded-lg bg-white dark:bg-zinc-800 min-h-[120px] shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100 border-gray-300 dark:border-zinc-600"
+            className="w-full p-3 sm:p-4 border rounded-lg bg-white dark:bg-zinc-800 min-h-[120px] shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100 border-gray-300 dark:border-zinc-600"
             placeholder={t(`cvType.placeholder.professional.summary`)}
             value={resume}
             onChange={e => onResumeChange(e.target.value)}

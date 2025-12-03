@@ -77,28 +77,13 @@ export default function PdfDownloadButton(props: PdfDownloadButtonProps) {
     }
   };
 
-  // When children are provided, render them as-is (for dropdown items)
-  // Otherwise, render as a button with default styling
-  if (children) {
-    return (
-      <button
-        onClick={handleGenerateAndDownload}
-        disabled={isLoading}
-        className="w-full text-left"
-        style={{ pointerEvents: isLoading ? 'none' : 'auto', opacity: isLoading ? 0.6 : 1 }}
-      >
-        {children}
-      </button>
-    );
-  }
-
   return (
     <button
       onClick={handleGenerateAndDownload}
       disabled={isLoading}
       className="inline-flex items-center justify-center px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
     >
-      {isLoading ? 'Gerando PDF...' : 'Gerar Currículo em PDF'}
+      {isLoading ? 'Gerando PDF...' : (children || 'Gerar Currículo em PDF')}
     </button>
   );
 }
