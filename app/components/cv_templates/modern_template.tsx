@@ -716,6 +716,13 @@ export function ModernTemplate({
                   </View>
                   <Text style={styles.eduInst}>{edu.institution}</Text>
                   {edu.description && <Text style={styles.eduDesc}>{edu.description}</Text>}
+                  {edu.achievements && (
+                    <View style={{ marginTop: 2 }}>
+                      {(edu.achievements || '').split(/\r\n|\r|\n/).filter(Boolean).map((line, li) => (
+                        <Text key={li} style={styles.eduDesc}>• {line}</Text>
+                      ))}
+                    </View>
+                  )}
                 </View>
               ))
             ) : (
@@ -732,6 +739,13 @@ export function ModernTemplate({
                         </View>
                         <Text style={styles.eduInst}>{edu.institution}</Text>
                         {edu.description && <Text style={styles.eduDesc}>{edu.description}</Text>}
+                        {edu.achievements && (
+                          <View style={{ marginTop: 2 }}>
+                            {(edu.achievements || '').split(/\r\n|\r|\n/).filter(Boolean).map((line, li) => (
+                              <Text key={li} style={styles.eduDesc}>• {line}</Text>
+                            ))}
+                          </View>
+                        )}
                       </View>
                     ))}
                   </View>
@@ -833,7 +847,13 @@ export function ModernTemplate({
                 </View>
                 <Text style={styles.volOrg}>{vol.organization}</Text>
                 {vol.description && <Text style={styles.volDesc}>{vol.description}</Text>}
-                {vol.impact && <Text style={styles.volImpact}>{vol.impact}</Text>}
+                {vol.impact && (
+                  <View style={{ marginTop: 2 }}>
+                    {(vol.impact || '').split(/\r\n|\r|\n/).filter(Boolean).map((line, li) => (
+                      <Text key={li} style={styles.volImpact}>• {line}</Text>
+                    ))}
+                  </View>
+                )}
               </View>
             );
             })}
@@ -860,6 +880,13 @@ export function ModernTemplate({
                 </View>
                 {proj.tech && <Text style={dynamicStyles.projTech}>{proj.tech}</Text>}
                 {proj.description && <Text style={styles.projDesc}>{proj.description}</Text>}
+                {proj.impact && (
+                  <View style={{ marginTop: 2 }}>
+                    {(proj.impact || '').split(/\r\n|\r|\n/).filter(Boolean).map((line, li) => (
+                      <Text key={li} style={styles.projDesc}>• {line}</Text>
+                    ))}
+                  </View>
+                )}
                 {proj.link && (
                   <Link src={proj.link} style={dynamicStyles.projLink}>
                     {lang === 'en' ? 'View Project' : lang === 'es' ? 'Ver Proyecto' : 'Ver Projeto'}

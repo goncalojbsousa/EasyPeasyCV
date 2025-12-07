@@ -333,13 +333,25 @@ export function AcademicEducation({
                 </div>
                 
                 {/* Description field */}
-                <FormField label={t('field.description')}>
-                                  <textarea
+                <div className="mb-4">
+                  <FormField label={t('field.description')}>
+                    <textarea
                       className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                       placeholder={t('placeholder.education.description')}
                       value={ed.description}
                       onChange={e => onEducationChange(idx, 'description', e.target.value)}
                     />
+                  </FormField>
+                </div>
+
+                {/* Achievements field */}
+                <FormField label={t('field.achievements')} helperText={t('field.achievements.helper')}>
+                  <textarea
+                    className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                    placeholder={t('placeholder.education.achievements')}
+                    value={ed.achievements}
+                    onChange={e => onEducationChange(idx, 'achievements', e.target.value)}
+                  />
                 </FormField>
                 </div>
               </div>

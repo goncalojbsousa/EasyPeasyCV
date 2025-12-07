@@ -395,7 +395,7 @@ export default function Builder() {
    */
   const handleAddEducation = () => {
     setEducation([...education, {
-      type: '', status: '', course: '', institution: '', startMonth: '', startYear: '', endMonth: '', endYear: '', description: ''
+      type: '', status: '', course: '', institution: '', startMonth: '', startYear: '', endMonth: '', endYear: '', description: '', achievements: ''
     }]);
   };
   /**
@@ -472,7 +472,7 @@ export default function Builder() {
   const handleAddProject = () => {
     setProjects([
       ...projects,
-      { name: '', description: '', link: '', sourceCode: '', tech: '', year: '' }
+      { name: '', description: '', link: '', sourceCode: '', tech: '', year: '', impact: '' }
     ]);
   };
   /**
@@ -724,6 +724,7 @@ export default function Builder() {
         endMonth: 'Jun',
         endYear: '2018',
         description: 'Relevant coursework: Data Structures, Algorithms, Operating Systems, Computer Networks.',
+        achievements: 'Graduated with honors, top 10% of class. Published research paper on distributed systems.',
       },
     ]);
     setSkills('React, Node.js, TypeScript, MongoDB, PostgreSQL, Redux, Git, Docker, AWS, Linux');
@@ -748,6 +749,7 @@ export default function Builder() {
         tech: 'React, Node.js, PostgreSQL, Redux, Stripe, JWT',
         link: 'github.com/johndoe/ecommerce-platform',
         year: '2022',
+        impact: 'Successfully processed over 1000 orders in the first month, generated $50K in revenue.',
       },
       {
         name: 'Task Management App',
@@ -755,6 +757,7 @@ export default function Builder() {
         tech: 'React, Redux, LocalStorage',
         link: 'github.com/johndoe/task-manager',
         year: '2023',
+        impact: 'Used by 500+ users daily, improved productivity by 40% according to user feedback.',
       },
     ]);
     setVolunteers([

@@ -42,6 +42,11 @@ const templatePreviews: Record<CvTemplate, { img: string; nameKey: string; descr
     nameKey: 'template.creative.name',
     descriptionKey: 'template.creative.description',
   },
+  renewed: {
+    img: '/renewed_preview.webp',
+    nameKey: 'template.renewed.name',
+    descriptionKey: 'template.renewed.description',
+  },
 };
 
 export function TemplateSelectorModal({ show, selectedTemplate, onSelect, onClose }: TemplateSelectorModalProps) {

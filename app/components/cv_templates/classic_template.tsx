@@ -455,7 +455,14 @@ export function ClassicTemplate({
                   <Text style={styles.eduInst}>
                     {edu.institution}
                   </Text>
-                  {edu.description && <Text style={styles.eduDesc}>• {edu.description}</Text>}
+                  {edu.description && <Text style={styles.eduDesc}>{edu.description}</Text>}
+                  {edu.achievements && (
+                    <View style={{ marginTop: 2 }}>
+                      {(edu.achievements || '').split(/\r\n|\r|\n/).filter(Boolean).map((line, li) => (
+                        <Text key={li} style={styles.eduDesc}>• {line}</Text>
+                      ))}
+                    </View>
+                  )}
                 </View>
               );
             }) : (
@@ -478,7 +485,14 @@ export function ClassicTemplate({
                           </Text>
                         </View>
                         <Text style={styles.eduInst}>{edu.institution}</Text>
-                        {edu.description && <Text style={styles.eduDesc}>• {edu.description}</Text>}
+                        {edu.description && <Text style={styles.eduDesc}>{edu.description}</Text>}
+                        {edu.achievements && (
+                          <View style={{ marginTop: 2 }}>
+                            {(edu.achievements || '').split(/\r\n|\r|\n/).filter(Boolean).map((line, li) => (
+                              <Text key={li} style={styles.eduDesc}>• {line}</Text>
+                            ))}
+                          </View>
+                        )}
                       </View>
                     ))}
                   </View>
@@ -585,8 +599,14 @@ export function ClassicTemplate({
                     </Text>
                   </View>
                   <Text style={styles.volOrg}>{vol.organization}</Text>
-                  {vol.description && <Text style={styles.volDesc}>• {vol.description}</Text>}
-                  {vol.impact && <Text style={styles.volImpact}>• {vol.impact}</Text>}
+                  {vol.description && <Text style={styles.volDesc}>{vol.description}</Text>}
+                  {vol.impact && (
+                    <View style={{ marginTop: 2 }}>
+                      {(vol.impact || '').split(/\r\n|\r|\n/).filter(Boolean).map((line, li) => (
+                        <Text key={li} style={styles.volImpact}>• {line}</Text>
+                      ))}
+                    </View>
+                  )}
                 </View>
               );
             })}
@@ -618,7 +638,14 @@ export function ClassicTemplate({
                     <Text style={styles.dateRange}>{proj.year}</Text>
                   </View>
                   {proj.tech && <Text style={styles.projTech}>{proj.tech}</Text>}
-                  {proj.description && <Text style={styles.projDesc}>• {proj.description}</Text>}
+                  {proj.description && <Text style={styles.projDesc}>{proj.description}</Text>}
+                  {proj.impact && (
+                    <View style={{ marginTop: 2 }}>
+                      {(proj.impact || '').split(/\r\n|\r|\n/).filter(Boolean).map((line, li) => (
+                        <Text key={li} style={styles.projDesc}>• {line}</Text>
+                      ))}
+                    </View>
+                  )}
                   {proj.link && (
                     <Link src={proj.link} style={styles.projLink}>
                       {proj.link}

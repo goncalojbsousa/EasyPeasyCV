@@ -6,6 +6,7 @@ import { ProfessionalTemplate } from './cv_templates/professional_template';
 import { TimelineTemplate } from './cv_templates/timeline_template';
 import { ModernTemplate } from './cv_templates/modern_template';
 import { CreativeTemplate } from './cv_templates/creative_template';
+import { RenewedTemplate } from './cv_templates/renewed_template';
 
 /**
  * Props interface for the CvDocument component
@@ -71,6 +72,8 @@ export function CvDocument({
 
   // For PDF generation we must return a @react-pdf/renderer Document
   switch (template) {
+    case 'renewed':
+      return <RenewedTemplate {...commonProps} />;
     case 'professional':
       return <ProfessionalTemplate {...commonProps} />;
     case 'timeline':

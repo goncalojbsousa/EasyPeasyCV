@@ -256,17 +256,19 @@ export function VolunteerWork({
                 </div>
                 
                 {/* Description field */}
-                <FormField label={t('field.description')}>
-                  <textarea
-                    className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-                    placeholder={t('placeholder.volunteer.description')}
-                    value={vol.description}
-                    onChange={e => onVolunteerChange(idx, 'description', e.target.value)}
-                  />
-                </FormField>
+                <div className="mb-4">
+                  <FormField label={t('field.description')}>
+                    <textarea
+                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+                      placeholder={t('placeholder.volunteer.description')}
+                      value={vol.description}
+                      onChange={e => onVolunteerChange(idx, 'description', e.target.value)}
+                    />
+                  </FormField>
+                </div>
                 
                 {/* Impact field */}
-                <FormField label={t('field.impact')}>
+                <FormField label={t('field.impact')} helperText={t('field.achievements.helper')}>
                   <textarea
                     className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                     placeholder={t('placeholder.volunteer.impact')}
