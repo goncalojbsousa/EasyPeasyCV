@@ -89,33 +89,39 @@ function formatMonthYear(month?: string, year?: string, lang?: string) {
 }
 
 function formatDateRange(startMonth?: string, startYear?: string, endMonth?: string, endYear?: string, current?: boolean, lang?: string) {
-  // Only return the compact "Mon YYYY - Mon YYYY" format when both month and year are present
-  const hasStart = !!(startMonth && startYear);
-  const hasEnd = !!(endMonth && endYear);
-  if (!hasStart) {
-    // fallback to any available pieces
-    if (startYear) return startYear;
+  const start = (() => {
+    if (startMonth && startYear) return formatMonthYear(startMonth, startYear, lang);
+    if (startYear || startMonth) {
+      const month = startMonth ? translateMonth(startMonth, lang || 'pt') : '';
+      const divider = startMonth && startYear ? '/' : '';
+      return `${month}${divider}${startYear || ''}`.trim();
+    }
     return '';
-  }
+  })();
 
-  const start = formatMonthYear(startMonth, startYear, lang);
-  if (current) return `${start} - ${translateCurrent(lang || 'pt')}`;
-  if (hasEnd) {
-    const end = formatMonthYear(endMonth, endYear, lang);
-    return `${start} - ${end}`;
-  }
+  const end = (() => {
+    if (current) return translateCurrent(lang || 'pt');
+    if (endMonth && endYear) return formatMonthYear(endMonth, endYear, lang);
+    if (endYear || endMonth) {
+      const month = endMonth ? translateMonth(endMonth, lang || 'pt') : '';
+      const divider = endMonth && endYear ? '/' : '';
+      return `${month}${divider}${endYear || ''}`.trim();
+    }
+    return '';
+  })();
 
-  // if end doesn't have both month+year but has year, show fallback
-  if (endYear) return `${start} - ${endYear}`;
-  return start;
+  if (start && end) return `${start} - ${end}`;
+  if (start) return start;
+  if (end) return end;
+  return '';
 }
 
-export function RenewedTemplate({ personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, lang, settings, color, sectionOrder }: RenewedTemplateProps) {
+export function RenewedTemplate({ personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, customSections, lang, settings, color, sectionOrder }: RenewedTemplateProps) {
   const l = (lang === 'br' ? 'pt' : (lang || 'pt')) as 'pt' | 'en' | 'es';
   const styles = buildStyles(settings);
   
   // Default section order if not provided
-  const defaultOrder: import('../../types/cv').SectionKey[] = [
+  const defaultOrder: import('../../types/cv').PredefinedSectionKey[] = [
     'professional_summary',
     'professional_experience',
     'academic_education',
@@ -126,7 +132,9 @@ export function RenewedTemplate({ personalInfo, links, resume, experiences, educ
     'volunteer',
   ];
   
-  const order = sectionOrder || defaultOrder;
+  const customOrder = (customSections || []).map((cs) => `custom_${cs.id}` as import('../../types/cv').SectionKey);
+  const baseOrder = sectionOrder && sectionOrder.length > 0 ? sectionOrder : defaultOrder;
+  const order = [...baseOrder, ...customOrder.filter((k) => !baseOrder.includes(k))];
 
   const contactItems = [personalInfo?.city, personalInfo?.postalCode, personalInfo?.email, personalInfo?.countryCode && personalInfo?.phone ? `${personalInfo.countryCode.match(/\(([^)]+)\)/)?.[1] || personalInfo.countryCode} ${personalInfo.phone}` : personalInfo?.phone].filter(Boolean);
   
@@ -316,6 +324,56 @@ export function RenewedTemplate({ personalInfo, links, resume, experiences, educ
         ) : null;
         
       default:
+        if (sectionKey.startsWith('custom_')) {
+          const customId = sectionKey.replace('custom_', '');
+          const section = (customSections || []).find((cs) => cs.id === customId);
+          if (!section) return null;
+
+          const meaningfulFields = (section.fields || []).filter((f) => f.label || f.value || f.bullets || f.subtitle || f.startYear || f.endYear || f.startMonth || f.endMonth || f.current);
+          if (!section.title && meaningfulFields.length === 0) return null;
+
+          return (
+            <View style={styles.section} key={sectionKey}>
+              <Text style={styles.sectionTitle}>
+                {section.title || (l === 'en' ? 'CUSTOM SECTION' : l === 'es' ? 'SECCIÓN PERSONALIZADA' : 'SECÇÃO PERSONALIZADA')}
+              </Text>
+              {meaningfulFields.map((field, idx) => (
+                <View key={field.id || idx} style={{ marginBottom: 8 }}>
+                  {(field.label || field.subtitle || field.startYear || field.endYear || field.startMonth || field.endMonth || field.current) ? (
+                    <View style={styles.expHeaderRow}>
+                      <View style={styles.expLeft}>
+                        {field.label ? <Text style={styles.jobRole}>{field.label}</Text> : null}
+                        {field.subtitle ? <Text style={styles.company}>{field.subtitle}</Text> : null}
+                      </View>
+                      <View style={styles.expRight}>
+                        <Text>
+                          {(() => {
+                            const dr = formatDateRange(field.startMonth, field.startYear, field.endMonth, field.endYear, field.current, l);
+                            if (dr) return dr;
+                            const start = (field.startMonth || field.startYear) ? `${translateMonth(field.startMonth || '', l)}${field.startMonth && field.startYear ? '/' : ''}${field.startYear || ''}` : '';
+                            const end = field.current ? translateCurrent(l) : (field.endMonth || field.endYear ? `${translateMonth(field.endMonth || '', l)}${field.endMonth && field.endYear ? '/' : ''}${field.endYear || ''}` : '');
+                            if (!start && !end) return '';
+                            return `${start}${start && end ? ' - ' : ''}${end}`;
+                          })()}
+                        </Text>
+                      </View>
+                    </View>
+                  ) : null}
+                  {field.value ? (
+                    <Text style={styles.activitiesText}>{field.value}</Text>
+                  ) : null}
+                  {field.bullets ? (
+                    <View style={{ marginTop: 2 }}>
+                      {(field.bullets || '').split(/\r\n|\r|\n/).filter(Boolean).map((line, li) => (
+                        <Text key={li} style={styles.bullets}>• {line}</Text>
+                      ))}
+                    </View>
+                  ) : null}
+                </View>
+              ))}
+            </View>
+          );
+        }
         return null;
     }
   };

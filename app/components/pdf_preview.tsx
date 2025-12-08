@@ -45,6 +45,7 @@ export function PdfPreview({
   certifications,
   projects,
   volunteers,
+  customSections,
   show = false,
   onClose,
   lang = 'pt',
@@ -77,7 +78,7 @@ export function PdfPreview({
       generatePdf();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [show, personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, lang, template, color, settings, sectionOrder]);
+  }, [show, personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, customSections, lang, template, color, settings, sectionOrder]);
 
   // Prevent body scroll when the modal is open
   useEffect(() => {
@@ -109,6 +110,7 @@ export function PdfPreview({
           certifications={certifications}
           projects={projects}
           volunteers={volunteers}
+          customSections={customSections}
           lang={lang}
           template={template}
           color={color}

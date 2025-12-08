@@ -8,7 +8,7 @@ import { ThankYouModal } from '../thank_you_modal';
 import { ColorSelector } from './color-selector';
 import { TemplateSelectorModal } from '../template_selector_modal';
 import type { PersonalInfo, Link } from '../../types/cv';
-import type { Experience, Education, Language, Certification, Project, Volunteer, CvColor, CvTemplate, CvRenderSettings } from '../../types/cv';
+import type { Experience, Education, Language, Certification, Project, Volunteer, CvColor, CvTemplate, CvRenderSettings, CustomSection } from '../../types/cv';
 
 interface BottomActionBarProps {
   personalInfo: PersonalInfo;
@@ -21,6 +21,7 @@ interface BottomActionBarProps {
   certifications: Certification[];
   projects: Project[];
   volunteers: Volunteer[];
+  customSections: CustomSection[];
   selectedTemplate: 'renewed';
   selectedColor: CvColor;
   onTemplateChange: (template: 'renewed') => void;
@@ -50,6 +51,7 @@ export function BottomActionBar({
   certifications,
   projects,
   volunteers,
+  customSections,
   sectionOrder,
   selectedTemplate,
   selectedColor,
@@ -228,6 +230,7 @@ export function BottomActionBar({
           certifications={certifications}
           projects={projects}
           volunteers={volunteers}
+          customSections={customSections}
           lang={lang}
           template={selectedTemplate}
           color={selectedColor}

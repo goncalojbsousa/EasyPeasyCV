@@ -46,6 +46,7 @@ export default function PdfDownloadButton(props: PdfDownloadButtonProps) {
           certifications={pdfProps.certifications}
           projects={pdfProps.projects}
           volunteers={pdfProps.volunteers}
+          customSections={pdfProps.customSections}
           lang={pdfProps.lang}
           template={pdfProps.template}
           color={pdfProps.color}

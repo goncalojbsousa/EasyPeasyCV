@@ -13,6 +13,7 @@ import { VolunteerWork } from '../components/volunteer';
 import { CVTips } from '../components/cv_tips';
 import { JobAnalysis } from '../components/job_analysis';
 import { AtsExplanation } from '../components/ats_explanation';
+import { CustomSectionCard } from '../components/custom_sections';
 import { Navbar } from '../components/navbar';
 import { Footer } from '../components/footer';
 import { PdfPreview } from '../components/pdf_preview';
@@ -20,7 +21,7 @@ import { LivePdfPane } from '../components/live_pdf_pane';
 import { FloatingActionBar } from '../components/ui/floating-action-bar';
 import { BottomActionBar } from '../components/ui/bottom-action-bar';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Experience, Education, Language, Certification, Project, Volunteer, CvColor, CvTemplate, CvRenderSettings } from '../types/cv';
+import { Experience, Education, Language, Certification, Project, Volunteer, CvColor, CvTemplate, CvRenderSettings, CustomSection, SectionKey } from '../types/cv';
 import { cvDataToXml, xmlToCvData } from '../utils/xml';
 
 /**
@@ -96,18 +97,7 @@ export default function Builder() {
     },
   });
 
-  // Section order management (Personal Information is always first and cannot be reordered)
-  type SectionKey = 
-    | 'professional_summary'
-    | 'professional_experience'
-    | 'academic_education'
-    | 'technical_skills'
-    | 'languages'
-    | 'certifications'
-    | 'projects'
-    | 'volunteer';
-
-  const [sectionOrder, setSectionOrder] = useState<SectionKey[]>([
+  const defaultPredefinedOrder: SectionKey[] = [
     'professional_summary',
     'professional_experience',
     'academic_education',
@@ -116,10 +106,13 @@ export default function Builder() {
     'certifications',
     'projects',
     'volunteer',
-  ]);
+  ];
+
+  const [sectionOrder, setSectionOrder] = useState<SectionKey[]>(defaultPredefinedOrder);
+  const [customSections, setCustomSections] = useState<CustomSection[]>([]);
 
   // Refs for section elements to enable auto-scroll
-  const sectionRefs = useRef<Record<SectionKey | 'personal_info', HTMLDivElement | null>>({
+  const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({
     personal_info: null,
     professional_summary: null,
     professional_experience: null,
@@ -130,6 +123,16 @@ export default function Builder() {
     projects: null,
     volunteer: null,
   });
+
+  const generateId = () => {
+    if (typeof crypto !== 'undefined' && 'randomUUID' in crypto && typeof crypto.randomUUID === 'function') {
+      return crypto.randomUUID();
+    }
+    return `id-${Math.random().toString(16).slice(2)}-${Date.now()}`;
+  };
+
+  const createCustomField = () => ({ id: generateId(), label: '', subtitle: '', value: '', bullet: true, current: false });
+  const createCustomSection = (): CustomSection => ({ id: generateId(), title: '', fields: [createCustomField()] });
 
   // Export current CV data to XML and trigger download
   const handleExportXml = () => {
@@ -145,8 +148,10 @@ export default function Builder() {
         certifications,
         projects,
         volunteers,
+        customSections,
         template: selectedTemplate,
         color: selectedColor,
+        sectionOrder,
       };
       const xml = cvDataToXml(data);
       const blob = new Blob([xml], { type: 'application/xml;charset=utf-8' });
@@ -180,8 +185,16 @@ export default function Builder() {
       setCertifications(data.certifications || []);
       setProjects(data.projects || []);
       setVolunteers(data.volunteers || []);
+      setCustomSections(data.customSections || []);
       setSelectedTemplate(data.template || 'renewed');
       setSelectedColor(data.color || 'blue');
+      const importedCustomKeys = (data.customSections || []).map((cs: CustomSection) => `custom_${cs.id}` as SectionKey);
+      if (data.sectionOrder && Array.isArray(data.sectionOrder) && data.sectionOrder.length > 0) {
+        const stored = data.sectionOrder as SectionKey[];
+        setSectionOrder([...stored, ...importedCustomKeys.filter((k: SectionKey) => !stored.includes(k))]);
+      } else {
+        setSectionOrder([...defaultPredefinedOrder, ...importedCustomKeys]);
+      }
       setDataLoaded(true);
       setDataLoadedSource('xml');
     } catch (e) {
@@ -217,12 +230,19 @@ export default function Builder() {
         setCertifications(data.certifications || []);
         setProjects(data.projects || []);
         setVolunteers(data.volunteers || []);
+        const loadedCustomSections = data.customSections || [];
+        setCustomSections(loadedCustomSections);
         setSelectedTemplate(data.template || 'renewed');
         setSelectedColor(data.color || 'blue');
         
+        const customKeys = loadedCustomSections.map((cs: CustomSection) => `custom_${cs.id}` as SectionKey);
         // Load section order if exists
         if (data.sectionOrder && Array.isArray(data.sectionOrder)) {
-          setSectionOrder(data.sectionOrder);
+          const storedOrder = data.sectionOrder as SectionKey[];
+          const mergedOrder = [...storedOrder, ...customKeys.filter((k: SectionKey) => !storedOrder.includes(k))];
+          setSectionOrder(mergedOrder);
+        } else {
+          setSectionOrder([...defaultPredefinedOrder, ...customKeys]);
         }
         
         setDataLoaded(true);
@@ -312,12 +332,13 @@ export default function Builder() {
       certifications,
       projects,
       volunteers,
+      customSections,
       template: selectedTemplate,
       color: selectedColor,
       sectionOrder,
     };
     localStorage.setItem('cv-builder-data', JSON.stringify(data));
-  }, [personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, selectedTemplate, selectedColor, sectionOrder]);
+  }, [personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, customSections, selectedTemplate, selectedColor, sectionOrder]);
 
   // Auto-save data when any field changes
   useEffect(() => {
@@ -325,7 +346,7 @@ export default function Builder() {
     if (personalInfo.name !== '' || resume !== '' || experiences.length > 0 || education.length > 0) {
       saveToLocalStorage();
     }
-  }, [saveToLocalStorage, personalInfo.name, resume, experiences.length, education.length]);
+  }, [saveToLocalStorage, personalInfo.name, resume, experiences.length, education.length, customSections.length]);
 
   /**
    * Add a new social media link
@@ -571,6 +592,66 @@ export default function Builder() {
     setVolunteers(newVolunteers);
   };
 
+  // Custom sections handlers
+  const handleAddCustomSection = () => {
+    const newSection = createCustomSection();
+    setCustomSections((prev) => [...prev, newSection]);
+    const newKey = `custom_${newSection.id}` as SectionKey;
+    setSectionOrder((prev) => [...prev, newKey]);
+
+    setTimeout(() => {
+      const sectionElement = sectionRefs.current[newKey];
+      if (sectionElement) {
+        const headerHeight = 115;
+        const elementPosition = sectionElement.offsetTop - headerHeight;
+        window.scrollTo({ top: elementPosition, behavior: 'smooth' });
+      }
+    }, 0);
+  };
+
+  const handleRemoveCustomSection = (sectionId: string) => {
+    const key = `custom_${sectionId}` as SectionKey;
+    setCustomSections((prev) => prev.filter((section) => section.id !== sectionId));
+    setSectionOrder((prev) => prev.filter((k) => k !== key));
+  };
+
+  const handleUpdateCustomSectionTitle = (sectionId: string, value: string) => {
+    setCustomSections((prev) => prev.map((section) => section.id === sectionId ? { ...section, title: value } : section));
+  };
+
+  const handleAddCustomField = (sectionId: string) => {
+    setCustomSections((prev) => prev.map((section) => section.id === sectionId ? { ...section, fields: [...section.fields, createCustomField()] } : section));
+  };
+
+  const handleUpdateCustomField = (
+    sectionId: string,
+    fieldId: string,
+    key: 'label' | 'subtitle' | 'value' | 'startMonth' | 'startYear' | 'endMonth' | 'endYear' | 'bullets' | 'current',
+    value: string | boolean,
+  ) => {
+    setCustomSections((prev) => prev.map((section) => {
+      if (section.id !== sectionId) return section;
+      return {
+        ...section,
+        fields: section.fields.map((field) => field.id === fieldId ? { ...field, [key]: value } : field),
+      };
+    }));
+  };
+
+  const handleRemoveCustomField = (sectionId: string, fieldId: string) => {
+    setCustomSections((prev) => prev.map((section) => section.id === sectionId ? { ...section, fields: section.fields.filter((field) => field.id !== fieldId) } : section));
+  };
+
+  const handleReorderCustomFields = (sectionId: string, fromIndex: number, toIndex: number) => {
+    setCustomSections((prev) => prev.map((section) => {
+      if (section.id !== sectionId) return section;
+      const newFields = [...section.fields];
+      const [movedField] = newFields.splice(fromIndex, 1);
+      newFields.splice(toIndex, 0, movedField);
+      return { ...section, fields: newFields };
+    }));
+  };
+
   /**
    * Function to update personal information fields
    * @param field - Field name to update
@@ -638,17 +719,8 @@ export default function Builder() {
    * Reset section order to default
    */
   const handleResetSectionOrder = () => {
-    const defaultOrder: SectionKey[] = [
-      'professional_summary',
-      'professional_experience',
-      'academic_education',
-      'technical_skills',
-      'languages',
-      'certifications',
-      'projects',
-      'volunteer',
-    ];
-    setSectionOrder(defaultOrder);
+    const customKeys = customSections.map((cs) => `custom_${cs.id}` as SectionKey);
+    setSectionOrder([...defaultPredefinedOrder, ...customKeys]);
   };
 
   /**
@@ -708,6 +780,7 @@ export default function Builder() {
             certifications={certifications}
             projects={projects}
             volunteers={volunteers}
+            customSections={customSections}
             lang={language}
             template={selectedTemplate}
             sectionOrder={sectionOrder}
@@ -1079,6 +1152,28 @@ export default function Builder() {
                     );
                     
                   default:
+                    if (sectionKey.startsWith('custom_')) {
+                      const sectionId = sectionKey.replace('custom_', '');
+                      const section = customSections.find((cs) => cs.id === sectionId);
+                      if (!section) return null;
+
+                      return (
+                        <CustomSectionCard
+                          section={section}
+                          onTitleChange={(value) => handleUpdateCustomSectionTitle(sectionId, value)}
+                          onAddField={() => handleAddCustomField(sectionId)}
+                          onFieldChange={(fieldId, key, value) => handleUpdateCustomField(sectionId, fieldId, key, value)}
+                          onRemoveField={(fieldId) => handleRemoveCustomField(sectionId, fieldId)}
+                          onRemoveSection={() => handleRemoveCustomSection(sectionId)}
+                          onReorderFields={(from, to) => handleReorderCustomFields(sectionId, from, to)}
+                          canReorder={true}
+                          onMoveUp={() => handleMoveSectionUp(sectionKey)}
+                          onMoveDown={() => handleMoveSectionDown(sectionKey)}
+                          canMoveUp={canMoveUp}
+                          canMoveDown={canMoveDown}
+                        />
+                      );
+                    }
                     return null;
                 }
               })();
@@ -1094,6 +1189,20 @@ export default function Builder() {
                 </div>
               );
             })}
+
+            {/* Add custom section button */}
+            <div className="flex justify-start">
+              <button
+                onClick={handleAddCustomSection}
+                className="inline-flex items-center gap-2 bg-sky-600 text-white px-4 sm:px-6 py-3 rounded-lg font-semibold hover:bg-sky-700 transition-colors duration-300 shadow-sm"
+                type="button"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                {t('custom.section.add')}
+              </button>
+            </div>
 
             {/* Example data button (hidden in production) */}
             {process.env.NODE_ENV !== 'production' && (
@@ -1138,6 +1247,7 @@ export default function Builder() {
                 certifications={certifications}
                 projects={projects}
                 volunteers={volunteers}
+                customSections={customSections}
                 lang={language}
                 template={selectedTemplate}
                 color={selectedColor}
@@ -1164,6 +1274,7 @@ export default function Builder() {
         certifications={certifications}
         projects={projects}
         volunteers={volunteers}
+        customSections={customSections}
         show={showPdfPreview}
         onClose={() => setShowPdfPreview(false)}
         lang={language}
@@ -1185,6 +1296,7 @@ export default function Builder() {
         certifications={certifications}
         projects={projects}
         volunteers={volunteers}
+        customSections={customSections}
         selectedTemplate={selectedTemplate}
         selectedColor={selectedColor}
         onTemplateChange={setSelectedTemplate}
@@ -1215,6 +1327,7 @@ export default function Builder() {
         certifications={certifications}
         projects={projects}
         volunteers={volunteers}
+        customSections={customSections}
         template={selectedTemplate}
         color={selectedColor}
         onShowPdfPreview={handleShowPdfPreview}

@@ -1,7 +1,14 @@
 // Utility functions to serialize and deserialize CvData to/from XML
 // This runs in the browser (client components) and relies on DOMParser for parsing.
 
-import type { CvData, Link, Experience, Education, Language, Certification, Project, Volunteer } from '../types/cv';
+import type { CvData, Link, Experience, Education, Language, Certification, Project, Volunteer, CustomSection, SectionKey } from '../types/cv';
+
+const generateId = () => {
+  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return `id-${Math.random().toString(16).slice(2)}-${Date.now()}`;
+};
 
 function escapeXml(s: string): string {
   return s
@@ -95,6 +102,29 @@ export function cvDataToXml(data: CvData): string {
     </volunteer>`)
     .join('');
 
+  const customSectionsXml = (data.customSections || [])
+    .map((cs: CustomSection) => `<customSection>
+      ${el('id', cs.id)}
+      ${el('title', cs.title)}
+      ${arr('fields', (cs.fields || []).map((f) => `<field>
+        ${el('id', f.id)}
+        ${el('label', f.label)}
+        ${el('subtitle', f.subtitle || '')}
+        ${el('value', f.value)}
+        ${el('bullets', f.bullets || '')}
+        ${el('startMonth', f.startMonth || '')}
+        ${el('startYear', f.startYear || '')}
+        ${el('endMonth', f.endMonth || '')}
+        ${el('endYear', f.endYear || '')}
+        ${el('current', String(!!f.current))}
+      </field>`).join(''))}
+    </customSection>`)
+    .join('');
+
+  const sectionOrderXml = (data.sectionOrder || [])
+    .map((key: SectionKey) => el('section', key))
+    .join('');
+
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <cv>
   <personalInfo>
@@ -115,6 +145,8 @@ export function cvDataToXml(data: CvData): string {
   ${arr('certifications', certificationsXml)}
   ${arr('projects', projectsXml)}
   ${arr('volunteers', volunteersXml)}
+  ${arr('customSections', customSectionsXml)}
+  ${arr('sectionOrder', sectionOrderXml)}
   ${el('template', data.template || '')}
   ${el('color', data.color || '')}
 </cv>`;
@@ -223,6 +255,33 @@ export function xmlToCvData(xml: string): CvData {
       impact: textContent(vo, 'impact'),
     }));
 
+  const customSections: CustomSection[] = Array.from(cvEl.getElementsByTagName('customSections')[0]?.getElementsByTagName('customSection') || [])
+    .map((sec) => {
+      const fieldsParent = sec.getElementsByTagName('fields')[0];
+      const fields = Array.from(fieldsParent?.getElementsByTagName('field') || []).map((fd) => ({
+        id: textContent(fd, 'id') || generateId(),
+        label: textContent(fd, 'label'),
+        subtitle: textContent(fd, 'subtitle') || undefined,
+        value: textContent(fd, 'value'),
+        bullets: textContent(fd, 'bullets') || undefined,
+        startMonth: textContent(fd, 'startMonth') || undefined,
+        startYear: textContent(fd, 'startYear') || undefined,
+        endMonth: textContent(fd, 'endMonth') || undefined,
+        endYear: textContent(fd, 'endYear') || undefined,
+        current: textContent(fd, 'current') === 'true',
+      }));
+
+      return {
+        id: textContent(sec, 'id') || generateId(),
+        title: textContent(sec, 'title'),
+        fields,
+      };
+    });
+
+  const sectionOrder = Array.from(cvEl.getElementsByTagName('sectionOrder')[0]?.getElementsByTagName('section') || [])
+    .map((node) => (node.textContent || '').trim())
+    .filter(Boolean) as SectionKey[];
+
   const resume = textContent(cvEl, 'resume');
   const skills = textContent(cvEl, 'skills');
   const template = textContent(cvEl, 'template') as CvData['template'];
@@ -239,6 +298,8 @@ export function xmlToCvData(xml: string): CvData {
     certifications,
     projects,
     volunteers,
+    customSections,
+    sectionOrder,
     template,
     color,
   };

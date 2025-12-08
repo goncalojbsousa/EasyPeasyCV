@@ -25,6 +25,7 @@ export function LivePdfPane({
   certifications,
   projects,
   volunteers,
+  customSections,
   lang = "pt",
   template = "renewed",
   color = "blue",
@@ -80,7 +81,7 @@ export function LivePdfPane({
   useEffect(() => {
     const t = setTimeout(() => setDebouncedTick((v) => v + 1), 500);
     return () => clearTimeout(t);
-  }, [personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, lang, template, color, settings, sectionOrder]);
+  }, [personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, customSections, lang, template, color, settings, sectionOrder]);
 
   const doc = useMemo(() => (
     <CvDocument
@@ -94,13 +95,14 @@ export function LivePdfPane({
       certifications={certifications}
       projects={projects}
       volunteers={volunteers}
+      customSections={customSections}
       lang={lang}
       template={template}
       color={color}
       settings={settings}
       sectionOrder={sectionOrder}
     />
-  ), [personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, lang, template, color, settings, sectionOrder]);
+  ), [personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, customSections, lang, template, color, settings, sectionOrder]);
 
   // Generate a PDF blob whenever debounced data changes
   useEffect(() => {

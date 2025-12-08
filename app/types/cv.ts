@@ -154,6 +154,27 @@ export interface Volunteer {
   impact: string;
 }
 
+/** Custom field inside a user-defined section */
+export interface CustomField {
+  id: string;
+  label: string;
+  value: string;
+  subtitle?: string;
+  startMonth?: string;
+  startYear?: string;
+  endMonth?: string;
+  endYear?: string;
+  current?: boolean;
+  bullets?: string;
+}
+
+/** Custom section created by the user */
+export interface CustomSection {
+  id: string;
+  title: string;
+  fields: CustomField[];
+}
+
 /**
  * Available CV template types
  */
@@ -164,7 +185,7 @@ export type CvColor = 'blue' | 'green' | 'purple' | 'orange' | 'red' | 'teal' | 
 /**
  * Section keys for ordering CV sections
  */
-export type SectionKey = 
+export type PredefinedSectionKey =
   | 'professional_summary'
   | 'professional_experience'
   | 'academic_education'
@@ -173,6 +194,11 @@ export type SectionKey =
   | 'certifications'
   | 'projects'
   | 'volunteer';
+
+export type CustomSectionKey = `custom_${string}`;
+
+/** Section keys for ordering CV sections, including custom ones */
+export type SectionKey = PredefinedSectionKey | CustomSectionKey;
 
 /**
  * Main interface containing all CV data
@@ -198,6 +224,8 @@ export interface CvData {
   projects: Project[];
   /** Volunteer work entries */
   volunteers: Volunteer[];
+  /** Custom sections defined by the user */
+  customSections?: CustomSection[];
   /** Selected CV template */
   template?: CvTemplate;
   /** Selected color theme */

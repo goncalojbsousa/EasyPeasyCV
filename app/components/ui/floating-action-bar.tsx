@@ -5,9 +5,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { CompactCVTypeSelector } from './compact-cv-type-selector';
 import PdfDownloadButton from '../pdf_download_button';
 import { ThankYouModal } from '../thank_you_modal';
-import { Experience, Education, Language, Certification, Project, Volunteer, CvColor, CvTemplate } from '../../types/cv';
-
-import { PersonalInfo, Link } from '../../types/cv';
+import { Experience, Education, Language, Certification, Project, Volunteer, CvColor, CvTemplate, CustomSection, PersonalInfo, Link } from '../../types/cv';
 interface FloatingActionBarProps {
   personalInfo: PersonalInfo;
   links: Link[];
@@ -19,6 +17,7 @@ interface FloatingActionBarProps {
   certifications: Certification[];
   projects: Project[];
   volunteers: Volunteer[];
+  customSections: CustomSection[];
   template?: CvTemplate;
   color?: CvColor;
   onShowPdfPreview: () => void;
@@ -57,6 +56,7 @@ export function FloatingActionBar({
   onScrollToCVTips,
   onScrollToAtsExplanation,
   volunteers,
+  customSections,
   onTemplateChange
 }: FloatingActionBarProps) {
   const { t } = useLanguage();
@@ -125,6 +125,7 @@ export function FloatingActionBar({
           certifications={certifications}
           projects={projects}
           volunteers={volunteers}
+          customSections={customSections}
           lang={lang}
           template={template}
           color={color}
