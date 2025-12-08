@@ -1,11 +1,6 @@
 import React from 'react';
 import { CvData, CvColor, CvRenderSettings, CvTemplate } from '../types/cv';
 import { Font } from '@react-pdf/renderer';
-import { ClassicTemplate } from './cv_templates/classic_template';
-import { ProfessionalTemplate } from './cv_templates/professional_template';
-import { TimelineTemplate } from './cv_templates/timeline_template';
-import { ModernTemplate } from './cv_templates/modern_template';
-import { CreativeTemplate } from './cv_templates/creative_template';
 import { RenewedTemplate } from './cv_templates/renewed_template';
 
 /**
@@ -42,7 +37,7 @@ export function CvDocument({
   lang,
   color = 'blue',
   settings,
-  template = 'classic',
+  template = 'renewed',
 }: CvDocumentProps) {
 
   const registerCustomFont = () => {
@@ -74,17 +69,5 @@ export function CvDocument({
   switch (template) {
     case 'renewed':
       return <RenewedTemplate {...commonProps} />;
-    case 'professional':
-      return <ProfessionalTemplate {...commonProps} />;
-    case 'timeline':
-      return <TimelineTemplate {...commonProps} />;
-    case 'modern':
-      return <ModernTemplate {...commonProps} />;
-    case 'minimal':
-    case 'creative':
-      return <CreativeTemplate {...commonProps} />;
-    case 'classic':
-    default:
-      return <ClassicTemplate {...commonProps} />;
   }
 }

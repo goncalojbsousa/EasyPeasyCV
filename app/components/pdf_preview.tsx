@@ -48,7 +48,7 @@ export function PdfPreview({
   show = false,
   onClose,
   lang = 'pt',
-  template = 'classic',
+  template = 'renewed',
   color = 'blue',
   settings,
 }: PdfPreviewProps) {

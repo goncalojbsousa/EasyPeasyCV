@@ -63,7 +63,7 @@ export default function Builder() {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showPdfPreview, setShowPdfPreview] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [selectedTemplate, setSelectedTemplate] = useState<CvTemplate>('classic');
+  const [selectedTemplate, setSelectedTemplate] = useState<CvTemplate>('renewed');
   const [selectedColor, setSelectedColor] = useState<CvColor>('blue');
   const [renderSettings, setRenderSettings] = useState<CvRenderSettings>({
     layout: {

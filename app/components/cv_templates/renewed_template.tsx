@@ -349,5 +349,3 @@ export function RenewedTemplate({ personalInfo, links, resume, experiences, educ
     </Document>
   );
 }
-
-export default RenewedTemplate;

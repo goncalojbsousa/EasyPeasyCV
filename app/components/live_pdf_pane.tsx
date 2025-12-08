@@ -26,7 +26,7 @@ export function LivePdfPane({
   projects,
   volunteers,
   lang = "pt",
-  template = "classic",
+  template = "renewed",
   color = "blue",
   settings,
 }: LivePdfPaneProps) {

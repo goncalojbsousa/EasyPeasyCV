@@ -180,6 +180,7 @@ export function xmlToCvData(xml: string): CvData {
       endMonth: textContent(ed, 'endMonth'),
       endYear: textContent(ed, 'endYear'),
       description: textContent(ed, 'description'),
+      achievements: '',
     }));
 
   const languages: Language[] = Array.from(cvEl.getElementsByTagName('languages')[0]?.getElementsByTagName('language') || [])
@@ -206,6 +207,7 @@ export function xmlToCvData(xml: string): CvData {
       sourceCode: textContent(pr, 'sourceCode') || undefined,
       tech: textContent(pr, 'tech'),
       year: textContent(pr, 'year'),
+      impact: textContent(pr, 'impact'),
     }));
 
   const volunteers: Volunteer[] = Array.from(cvEl.getElementsByTagName('volunteers')[0]?.getElementsByTagName('volunteer') || [])
