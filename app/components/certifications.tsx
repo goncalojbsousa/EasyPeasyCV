@@ -24,6 +24,16 @@ interface CertificationsProps {
   onRemoveCertification: (idx: number) => void;
   /** Handler for reordering certification entries */
   onReorderCertifications?: (fromIndex: number, toIndex: number) => void;
+  /** Whether this section can be reordered */
+  canReorder?: boolean;
+  /** Callback when user clicks move up button */
+  onMoveUp?: () => void;
+  /** Callback when user clicks move down button */
+  onMoveDown?: () => void;
+  /** Whether move up button should be disabled */
+  canMoveUp?: boolean;
+  /** Whether move down button should be disabled */
+  canMoveDown?: boolean;
 }
 
 /**
@@ -355,7 +365,12 @@ export function Certifications({
   onCertificationChange,
   onAddCertification,
   onRemoveCertification,
-  onReorderCertifications
+  onReorderCertifications,
+  canReorder = false,
+  onMoveUp,
+  onMoveDown,
+  canMoveUp = true,
+  canMoveDown = true,
 }: CertificationsProps) {
   const { t } = useLanguage();
   
@@ -375,6 +390,11 @@ export function Certifications({
       <FormSection 
         title={t('section.certifications')} 
         icon={Icons.certifications}
+        canReorder={canReorder}
+        onMoveUp={onMoveUp}
+        onMoveDown={onMoveDown}
+        canMoveUp={canMoveUp}
+        canMoveDown={canMoveDown}
       >
         {/* Display empty state when no certifications exist */}
         {certifications.length === 0 && (

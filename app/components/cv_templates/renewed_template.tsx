@@ -110,11 +110,215 @@ function formatDateRange(startMonth?: string, startYear?: string, endMonth?: str
   return start;
 }
 
-export function RenewedTemplate({ personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, lang, settings, color }: RenewedTemplateProps) {
+export function RenewedTemplate({ personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, lang, settings, color, sectionOrder }: RenewedTemplateProps) {
   const l = (lang === 'br' ? 'pt' : (lang || 'pt')) as 'pt' | 'en' | 'es';
   const styles = buildStyles(settings);
+  
+  // Default section order if not provided
+  const defaultOrder: import('../../types/cv').SectionKey[] = [
+    'professional_summary',
+    'professional_experience',
+    'academic_education',
+    'technical_skills',
+    'languages',
+    'certifications',
+    'projects',
+    'volunteer',
+  ];
+  
+  const order = sectionOrder || defaultOrder;
 
   const contactItems = [personalInfo?.city, personalInfo?.postalCode, personalInfo?.email, personalInfo?.countryCode && personalInfo?.phone ? `${personalInfo.countryCode.match(/\(([^)]+)\)/)?.[1] || personalInfo.countryCode} ${personalInfo.phone}` : personalInfo?.phone].filter(Boolean);
+  
+  // Function to render each section based on the section key
+  const renderSection = (sectionKey: import('../../types/cv').SectionKey) => {
+    switch (sectionKey) {
+      case 'professional_summary':
+        return resume ? (
+          <View style={styles.section} key={sectionKey}>
+            <Text style={styles.sectionTitle}>{l === 'en' ? 'SUMMARY' : l === 'es' ? 'RESUMEN' : 'RESUMO'}</Text>
+            <Text style={styles.summaryText}>{resume}</Text>
+          </View>
+        ) : null;
+        
+      case 'professional_experience':
+        return experiences.length > 0 ? (
+          <View style={styles.section} key={sectionKey}>
+            <Text style={styles.sectionTitle}>{l === 'en' ? 'EXPERIENCE' : l === 'es' ? 'EXPERIENCIA' : 'EXPERIÊNCIA'}</Text>
+            {experiences.map((exp, idx) => (
+              <View key={idx} style={styles.expItem}>
+                <View style={styles.expHeaderRow}>
+                  <View style={styles.expLeft}>
+                    {exp.role && <Text style={styles.jobRole}>{exp.role}</Text>}
+                    {exp.company && <Text style={styles.company}>{exp.company}</Text>}
+                  </View>
+                  <View style={styles.expRight}>
+                    <Text>{(() => {
+                      const dr = formatDateRange(exp.startMonth, exp.startYear, exp.endMonth, exp.endYear, exp.current, l);
+                      if (dr) return dr;
+                      const start = (exp.startMonth || exp.startYear) ? `${translateMonth(exp.startMonth || '', l)}${exp.startMonth && exp.startYear ? '/' : ''}${exp.startYear || ''}` : '';
+                      const end = exp.current ? translateCurrent(l) : (exp.endMonth || exp.endYear ? `${translateMonth(exp.endMonth || '', l)}${exp.endMonth && exp.endYear ? '/' : ''}${exp.endYear || ''}` : '');
+                      if (!start && !end) return '';
+                      return `${start}${start && end ? ' - ' : ''}${end}`;
+                    })()}</Text>
+                  </View>
+                </View>
+                {exp.activities && (
+                  <Text style={styles.activitiesText}>{exp.activities}</Text>
+                )}
+                {exp.results && (
+                  <View style={{ marginTop: 2 }}>
+                    {(exp.results || '').split(/\r\n|\r|\n/).filter(Boolean).map((line, li) => (
+                      <Text key={li} style={styles.bullets}>• {line}</Text>
+                    ))}
+                  </View>
+                )}
+                {exp.tech && <Text style={{ marginTop: 4, color: '#000000', fontSize: 10 }}>{exp.tech}</Text>}
+              </View>
+            ))}
+          </View>
+        ) : null;
+        
+      case 'academic_education':
+        return education.length > 0 ? (
+          <View style={styles.section} key={sectionKey}>
+            <Text style={styles.sectionTitle}>{l === 'en' ? 'EDUCATION' : l === 'es' ? 'EDUCACIÓN' : 'EDUCAÇÃO'}</Text>
+            {education.map((edu, idx) => (
+              <View key={idx} style={styles.eduItem}>
+                <View style={styles.expHeaderRow}>
+                  <View style={styles.expLeft}>
+                    <Text style={styles.jobRole}>{edu.course}</Text>
+                    <Text style={styles.company}>{edu.institution}</Text>
+                  </View>
+                  <View style={styles.expRight}>
+                    <Text>{(() => {
+                      const dr = formatDateRange(edu.startMonth, edu.startYear, edu.endMonth, edu.endYear, (edu as any).current, l);
+                      if (dr) return dr;
+                      const start = (edu.startMonth || edu.startYear) ? `${translateMonth(edu.startMonth || '', l)}${edu.startMonth && edu.startYear ? '/' : ''}${edu.startYear || ''}` : '';
+                      const end = (edu.endMonth || edu.endYear) ? `${translateMonth(edu.endMonth || '', l)}${edu.endMonth && edu.endYear ? '/' : ''}${edu.endYear || ''}` : '';
+                      if (!start && !end) return '';
+                      return `${start}${start && end ? ' - ' : ''}${end}`;
+                    })()}</Text>
+                  </View>
+                </View>
+                {edu.description && (
+                  <Text style={styles.activitiesText}>{edu.description}</Text>
+                )}
+                {edu.achievements && (
+                  <View style={{ marginTop: 2 }}>
+                    {(edu.achievements || '').split(/\r\n|\r|\n/).filter(Boolean).map((line, li) => (
+                      <Text key={li} style={styles.bullets}>• {line}</Text>
+                    ))}
+                  </View>
+                )}
+              </View>
+            ))}
+          </View>
+        ) : null;
+        
+      case 'technical_skills':
+        return skills ? (
+          <View style={styles.section} key={sectionKey}>
+            <Text style={styles.sectionTitle}>{l === 'en' ? 'SKILLS' : l === 'es' ? 'HABILIDADES' : 'COMPETÊNCIAS'}</Text>
+            <Text style={styles.skills}>{skills}</Text>
+          </View>
+        ) : null;
+        
+      case 'languages':
+        return languages && languages.length > 0 ? (
+          <View style={styles.section} key={sectionKey}>
+            <Text style={styles.sectionTitle}>{l === 'en' ? 'LANGUAGES' : l === 'es' ? 'IDIOMAS' : 'IDIOMAS'}</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap' }}>
+              {languages.map((langItem, li) => (
+                <Text key={li} style={{ marginHorizontal: 6, fontSize: 10 }}>
+                  {langItem.name}{langItem.level ? ` (${langItem.level})` : ''}
+                </Text>
+              ))}
+            </View>
+          </View>
+        ) : null;
+        
+      case 'certifications':
+        return certifications && certifications.length > 0 ? (
+          <View style={styles.section} key={sectionKey}>
+            <Text style={styles.sectionTitle}>{l === 'en' ? 'CERTIFICATIONS' : l === 'es' ? 'CERTIFICACIONES' : 'CERTIFICAÇÕES'}</Text>
+            {certifications.map((cert, i) => (
+              <View key={i} style={{ marginBottom: 6 }}>
+                <Text style={{ fontSize: 11, fontWeight: 'bold' }}>{cert.name} <Text style={{ fontSize: 10, fontStyle: 'italic' }}>{cert.completionDate}</Text></Text>
+                {cert.issuer && <Text style={{ fontSize: 10, color: '#000000' }}>{cert.issuer}</Text>}
+                {cert.validationLink && <Link src={cert.validationLink} style={{ fontSize: 9, color: '#2563eb' }}>{cert.validationLink}</Link>}
+                {cert.description && <Text style={styles.bullets}>• {cert.description}</Text>}
+              </View>
+            ))}
+          </View>
+        ) : null;
+        
+      case 'projects':
+        return projects && projects.length > 0 ? (
+          <View style={styles.section} key={sectionKey}>
+            <Text style={styles.sectionTitle}>{l === 'en' ? 'PROJECTS' : l === 'es' ? 'PROYECTOS' : 'PROJETOS'}</Text>
+            {projects.map((proj, i) => (
+              <View key={i} style={{ marginBottom: 6 }}>
+                <Text style={{ fontSize: 11, fontWeight: 'bold' }}>{proj.name} {proj.year ? <Text style={{ fontSize: 10, fontStyle: 'italic' }}>{proj.year}</Text> : null}</Text>
+                {proj.tech && <Text style={{ fontSize: 10, color: '#000000' }}>{proj.tech}</Text>}
+                {proj.description && (
+                  <Text style={styles.activitiesText}>{proj.description}</Text>
+                )}
+                {proj.impact && (
+                  <View style={{ marginTop: 2 }}>
+                    {(proj.impact || '').split(/\r\n|\r|\n/).filter(Boolean).map((line, li) => (
+                      <Text key={li} style={styles.bullets}>• {line}</Text>
+                    ))}
+                  </View>
+                )}
+                {proj.link && <Link src={proj.link} style={{ fontSize: 9, color: '#2563eb' }}>{proj.link}</Link>}
+                {proj.sourceCode && <Link src={proj.sourceCode} style={{ fontSize: 9, color: '#2563eb' }}>{proj.sourceCode}</Link>}
+              </View>
+            ))}
+          </View>
+        ) : null;
+        
+      case 'volunteer':
+        return volunteers && volunteers.length > 0 ? (
+          <View style={styles.section} key={sectionKey}>
+            <Text style={styles.sectionTitle}>{l === 'en' ? 'VOLUNTEER' : l === 'es' ? 'VOLUNTARIADO' : 'VOLUNTARIADO'}</Text>
+            {volunteers.map((vol, i) => (
+              <View key={i} style={{ marginBottom: 6 }}>
+                <View style={styles.expHeaderRow}>
+                  <View style={styles.expLeft}>
+                    <Text style={styles.jobRole}>{vol.role}</Text>
+                    <Text style={styles.company}>{vol.organization}</Text>
+                  </View>
+                  <View style={styles.expRight}>
+                    <Text>{(() => {
+                      const dr = formatDateRange(vol.startMonth, vol.startYear, vol.endMonth, vol.endYear, (vol as any).current, l);
+                      if (dr) return dr;
+                      const start = vol.startMonth && vol.startYear ? `${translateMonth(vol.startMonth, l)}${vol.startMonth && vol.startYear ? '/' : ''}${vol.startYear}` : '';
+                      const end = (vol as any).current ? translateCurrent(l) : (vol.endMonth && vol.endYear ? `${translateMonth(vol.endMonth, l)}${vol.endMonth && vol.endYear ? '/' : ''}${vol.endYear}` : '');
+                      if (!start && !end) return '';
+                      return `${start}${start && end ? ' - ' : ''}${end}`;
+                    })()}</Text>
+                  </View>
+                </View>
+                {vol.description && (
+                  <Text style={styles.activitiesText}>{vol.description}</Text>
+                )}
+                {vol.impact && (
+                  <View style={{ marginTop: 2 }}>
+                    {(vol.impact || '').split(/\r\n|\r|\n/).filter(Boolean).map((line, li) => (
+                      <Text key={li} style={styles.bullets}>• {line}</Text>
+                    ))}
+                  </View>
+                )}
+              </View>
+            ))}
+          </View>
+        ) : null;
+        
+      default:
+        return null;
+    }
+  };
 
   function getSocialUrl(type: string, value: string) {
     if (!value) return '';
@@ -163,187 +367,8 @@ export function RenewedTemplate({ personalInfo, links, resume, experiences, educ
           ) : null}
         </View>
 
-        {/* Summary */}
-        {resume && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{l === 'en' ? 'SUMMARY' : l === 'es' ? 'RESUMEN' : 'RESUMO'}</Text>
-            <Text style={styles.summaryText}>{resume}</Text>
-          </View>
-        )}
-
-        {/* Experience */}
-        {experiences.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{l === 'en' ? 'EXPERIENCE' : l === 'es' ? 'EXPERIENCIA' : 'EXPERIÊNCIA'}</Text>
-            {experiences.map((exp, idx) => (
-              <View key={idx} style={styles.expItem}>
-                <View style={styles.expHeaderRow}>
-                  <View style={styles.expLeft}>
-                    {exp.role && <Text style={styles.jobRole}>{exp.role}</Text>}
-                    {exp.company && <Text style={styles.company}>{exp.company}</Text>}
-                  </View>
-                  <View style={styles.expRight}>
-                    <Text>{(() => {
-                      const dr = formatDateRange(exp.startMonth, exp.startYear, exp.endMonth, exp.endYear, exp.current, l);
-                      if (dr) return dr;
-                      const start = (exp.startMonth || exp.startYear) ? `${translateMonth(exp.startMonth || '', l)}${exp.startMonth && exp.startYear ? '/' : ''}${exp.startYear || ''}` : '';
-                      const end = exp.current ? translateCurrent(l) : (exp.endMonth || exp.endYear ? `${translateMonth(exp.endMonth || '', l)}${exp.endMonth && exp.endYear ? '/' : ''}${exp.endYear || ''}` : '');
-                      if (!start && !end) return '';
-                      return `${start}${start && end ? ' - ' : ''}${end}`;
-                    })()}</Text>
-                  </View>
-                </View>
-                {exp.activities && (
-                  <Text style={styles.activitiesText}>{exp.activities}</Text>
-                )}
-                {exp.results && (
-                  <View style={{ marginTop: 2 }}>
-                    {(exp.results || '').split(/\r\n|\r|\n/).filter(Boolean).map((line, li) => (
-                      <Text key={li} style={styles.bullets}>• {line}</Text>
-                    ))}
-                  </View>
-                )}
-                {exp.tech && <Text style={{ marginTop: 4, color: '#000000', fontSize: 10 }}>{exp.tech}</Text>}
-              </View>
-            ))}
-          </View>
-        )}
-
-        {/* Education */}
-        {education.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{l === 'en' ? 'EDUCATION' : l === 'es' ? 'EDUCACIÓN' : 'EDUCAÇÃO'}</Text>
-            {education.map((edu, idx) => (
-              <View key={idx} style={styles.eduItem}>
-                <View style={styles.expHeaderRow}>
-                  <View style={styles.expLeft}>
-                    <Text style={styles.jobRole}>{edu.course}</Text>
-                    <Text style={styles.company}>{edu.institution}</Text>
-                  </View>
-                  <View style={styles.expRight}>
-                    <Text>{(() => {
-                      const dr = formatDateRange(edu.startMonth, edu.startYear, edu.endMonth, edu.endYear, (edu as any).current, l);
-                      if (dr) return dr;
-                      const start = (edu.startMonth || edu.startYear) ? `${translateMonth(edu.startMonth || '', l)}${edu.startMonth && edu.startYear ? '/' : ''}${edu.startYear || ''}` : '';
-                      const end = (edu.endMonth || edu.endYear) ? `${translateMonth(edu.endMonth || '', l)}${edu.endMonth && edu.endYear ? '/' : ''}${edu.endYear || ''}` : '';
-                      if (!start && !end) return '';
-                      return `${start}${start && end ? ' - ' : ''}${end}`;
-                    })()}</Text>
-                  </View>
-                </View>
-                {edu.description && (
-                  <Text style={styles.activitiesText}>{edu.description}</Text>
-                )}
-                {edu.achievements && (
-                  <View style={{ marginTop: 2 }}>
-                    {(edu.achievements || '').split(/\r\n|\r|\n/).filter(Boolean).map((line, li) => (
-                      <Text key={li} style={styles.bullets}>• {line}</Text>
-                    ))}
-                  </View>
-                )}
-              </View>
-            ))}
-          </View>
-        )}
-
-        {/* Skills */}
-        {skills && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{l === 'en' ? 'SKILLS' : l === 'es' ? 'HABILIDADES' : 'COMPETÊNCIAS'}</Text>
-            <Text style={styles.skills}>{skills}</Text>
-          </View>
-        )}
-
-        {/* Languages */}
-        {languages && languages.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{l === 'en' ? 'LANGUAGES' : l === 'es' ? 'IDIOMAS' : 'IDIOMAS'}</Text>
-            <View style={{ flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap' }}>
-              {languages.map((langItem, li) => (
-                <Text key={li} style={{ marginHorizontal: 6, fontSize: 10 }}>
-                  {langItem.name}{langItem.level ? ` (${langItem.level})` : ''}
-                </Text>
-              ))}
-            </View>
-          </View>
-        )}
-
-        {/* Certifications */}
-        {certifications && certifications.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{l === 'en' ? 'CERTIFICATIONS' : l === 'es' ? 'CERTIFICACIONES' : 'CERTIFICAÇÕES'}</Text>
-            {certifications.map((cert, i) => (
-              <View key={i} style={{ marginBottom: 6 }}>
-                <Text style={{ fontSize: 11, fontWeight: 'bold' }}>{cert.name} <Text style={{ fontSize: 10, fontStyle: 'italic' }}>{cert.completionDate}</Text></Text>
-                {cert.issuer && <Text style={{ fontSize: 10, color: '#000000' }}>{cert.issuer}</Text>}
-                {cert.validationLink && <Link src={cert.validationLink} style={{ fontSize: 9, color: '#2563eb' }}>{cert.validationLink}</Link>}
-                {cert.description && <Text style={styles.bullets}>• {cert.description}</Text>}
-              </View>
-            ))}
-          </View>
-        )}
-
-        {/* Volunteer Work */}
-        {volunteers && volunteers.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{l === 'en' ? 'VOLUNTEER' : l === 'es' ? 'VOLUNTARIADO' : 'VOLUNTARIADO'}</Text>
-            {volunteers.map((vol, i) => (
-              <View key={i} style={{ marginBottom: 6 }}>
-                <View style={styles.expHeaderRow}>
-                  <View style={styles.expLeft}>
-                    <Text style={styles.jobRole}>{vol.role}</Text>
-                    <Text style={styles.company}>{vol.organization}</Text>
-                  </View>
-                  <View style={styles.expRight}>
-                    <Text>{(() => {
-                      const dr = formatDateRange(vol.startMonth, vol.startYear, vol.endMonth, vol.endYear, (vol as any).current, l);
-                      if (dr) return dr;
-                      const start = vol.startMonth && vol.startYear ? `${translateMonth(vol.startMonth, l)}${vol.startMonth && vol.startYear ? '/' : ''}${vol.startYear}` : '';
-                      const end = (vol as any).current ? translateCurrent(l) : (vol.endMonth && vol.endYear ? `${translateMonth(vol.endMonth, l)}${vol.endMonth && vol.endYear ? '/' : ''}${vol.endYear}` : '');
-                      if (!start && !end) return '';
-                      return `${start}${start && end ? ' - ' : ''}${end}`;
-                    })()}</Text>
-                  </View>
-                </View>
-                {vol.description && (
-                  <Text style={styles.activitiesText}>{vol.description}</Text>
-                )}
-                {vol.impact && (
-                  <View style={{ marginTop: 2 }}>
-                    {(vol.impact || '').split(/\r\n|\r|\n/).filter(Boolean).map((line, li) => (
-                      <Text key={li} style={styles.bullets}>• {line}</Text>
-                    ))}
-                  </View>
-                )}
-              </View>
-            ))}
-          </View>
-        )}
-
-        {/* Projects */}
-        {projects && projects.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{l === 'en' ? 'PROJECTS' : l === 'es' ? 'PROYECTOS' : 'PROJETOS'}</Text>
-            {projects.map((proj, i) => (
-              <View key={i} style={{ marginBottom: 6 }}>
-                <Text style={{ fontSize: 11, fontWeight: 'bold' }}>{proj.name} {proj.year ? <Text style={{ fontSize: 10, fontStyle: 'italic' }}>{proj.year}</Text> : null}</Text>
-                {proj.tech && <Text style={{ fontSize: 10, color: '#000000' }}>{proj.tech}</Text>}
-                {proj.description && (
-                  <Text style={styles.activitiesText}>{proj.description}</Text>
-                )}
-                {proj.impact && (
-                  <View style={{ marginTop: 2 }}>
-                    {(proj.impact || '').split(/\r\n|\r|\n/).filter(Boolean).map((line, li) => (
-                      <Text key={li} style={styles.bullets}>• {line}</Text>
-                    ))}
-                  </View>
-                )}
-                {proj.link && <Link src={proj.link} style={{ fontSize: 9, color: '#2563eb' }}>{proj.link}</Link>}
-                {proj.sourceCode && <Link src={proj.sourceCode} style={{ fontSize: 9, color: '#2563eb' }}>{proj.sourceCode}</Link>}
-              </View>
-            ))}
-          </View>
-        )}
+        {/* Render sections dynamically based on sectionOrder */}
+        {order.map(sectionKey => renderSection(sectionKey))}
 
       </Page>
     </Document>

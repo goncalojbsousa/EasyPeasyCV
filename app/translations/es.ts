@@ -307,6 +307,9 @@ const esTranslations: Record<string, string> = {
   'data.loaded.local': 'Datos cargados automáticamente del navegador.',
   'data.loaded.xml': 'Datos importados desde XML.',
   'cv.generated': '¡Currículum generado con éxito! La descarga debe comenzar automáticamente.',
+  'section.order.info.title': 'Organiza las secciones de tu CV',
+  'section.order.info.description': 'Usa las flechas arriba y abajo en cada sección para reorganizarlas',
+  'section.order.reset': 'Restaurar orden predeterminado',
   'fill.example': 'Rellenar con datos de ejemplo',
   'validation.required': 'Por favor, rellena todos los campos obligatorios:',
   'validation.name': 'Nombre completo',
@@ -768,6 +771,10 @@ const esTranslations: Record<string, string> = {
   'terms.contact.title': 'Contacto',
   'terms.contact.description': 'Para preguntas sobre estos términos, contáctanos:',
   'terms.back.home': 'Volver a la Página Inicial',
+
+  // Section Reordering
+  'section.move.up': 'Mover sección arriba',
+  'section.move.down': 'Mover sección abajo',
 
   // Landing Page Benefits Section
   'landing.benefits.title': 'Ventajas de EasyPeasyCV',

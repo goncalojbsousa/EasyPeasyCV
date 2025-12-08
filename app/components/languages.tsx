@@ -17,10 +17,20 @@ interface LanguagesProps {
   languages: Language[];
   /** Handler for updating language fields */
   onLanguageChange: (idx: number, field: string, value: string) => void;
-  /** Handler for adding new language entry */
+  /** Handler for adding new language */
   onAddLanguage: () => void;
-  /** Handler for removing language entry */
+  /** Handler for removing language */
   onRemoveLanguage: (idx: number) => void;
+  /** Whether this section can be reordered */
+  canReorder?: boolean;
+  /** Callback when user clicks move up button */
+  onMoveUp?: () => void;
+  /** Callback when user clicks move down button */
+  onMoveDown?: () => void;
+  /** Whether move up button should be disabled */
+  canMoveUp?: boolean;
+  /** Whether move down button should be disabled */
+  canMoveDown?: boolean;
 }
 
 /**
@@ -55,7 +65,12 @@ export function Languages({
   languages,
   onLanguageChange,
   onAddLanguage,
-  onRemoveLanguage
+  onRemoveLanguage,
+  canReorder = false,
+  onMoveUp,
+  onMoveDown,
+  canMoveUp = true,
+  canMoveDown = true,
 }: LanguagesProps) {
   const { t } = useLanguage();
   const [openDropdowns, setOpenDropdowns] = useState<{[key: string]: boolean}>({});
@@ -90,6 +105,11 @@ export function Languages({
       <FormSection 
         title={t('section.languages')} 
         icon={Icons.languages}
+        canReorder={canReorder}
+        onMoveUp={onMoveUp}
+        onMoveDown={onMoveDown}
+        canMoveUp={canMoveUp}
+        canMoveDown={canMoveDown}
       >
         {/* Display empty state when no languages exist */}
         {languages.length === 0 && (

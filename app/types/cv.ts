@@ -162,6 +162,19 @@ export type CvTemplate = 'renewed';
 export type CvColor = 'blue' | 'green' | 'purple' | 'orange' | 'red' | 'teal' | 'indigo' | 'pink';
 
 /**
+ * Section keys for ordering CV sections
+ */
+export type SectionKey = 
+  | 'professional_summary'
+  | 'professional_experience'
+  | 'academic_education'
+  | 'technical_skills'
+  | 'languages'
+  | 'certifications'
+  | 'projects'
+  | 'volunteer';
+
+/**
  * Main interface containing all CV data
  */
 export interface CvData {
@@ -189,6 +202,8 @@ export interface CvData {
   template?: CvTemplate;
   /** Selected color theme */
   color?: CvColor;
+  /** Section order for CV sections */
+  sectionOrder?: SectionKey[];
 }
 
 export type FontFamilyOption = 'Helvetica' | 'Times-Roman' | 'Arial' | 'Custom';

@@ -38,6 +38,7 @@ export function CvDocument({
   color = 'blue',
   settings,
   template = 'renewed',
+  sectionOrder,
 }: CvDocumentProps) {
 
   const registerCustomFont = () => {
@@ -63,6 +64,7 @@ export function CvDocument({
     color,
     settings,
     lang,
+    sectionOrder,
   };
 
   // For PDF generation we must return a @react-pdf/renderer Document

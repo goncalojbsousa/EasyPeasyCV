@@ -167,6 +167,9 @@ const enTranslations: Record<string, string> = {
   'data.loaded.local': 'Data automatically loaded from browser.',
   'data.loaded.xml': 'Data imported from XML.',
   'cv.generated': 'Resume generated successfully! Download should start automatically.',
+  'section.order.info.title': 'Organize your CV sections',
+  'section.order.info.description': 'Use the up and down arrows on each section to reorder them',
+  'section.order.reset': 'Restore default order',
   'fill.example': 'Fill with example data',
   'validation.required': 'Please fill in all required fields:',
   'validation.name': 'Full name',
@@ -776,6 +779,10 @@ const enTranslations: Record<string, string> = {
   'terms.contact.title': 'Contact',
   'terms.contact.description': 'For questions about these terms, contact us:',
   'terms.back.home': 'Back to Home',
+
+  // Section Reordering
+  'section.move.up': 'Move section up',
+  'section.move.down': 'Move section down',
 
   // Footer
   'footer.privacy': 'Privacy',

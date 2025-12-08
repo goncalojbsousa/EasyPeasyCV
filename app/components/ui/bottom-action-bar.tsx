@@ -35,6 +35,8 @@ interface BottomActionBarProps {
   onImportXml: (xml: string) => void;
   settings?: CvRenderSettings;
   onSettingsChange?: (s: CvRenderSettings) => void;
+  onResetSectionOrder?: () => void;
+  sectionOrder?: import('../../types/cv').SectionKey[];
 }
 
 export function BottomActionBar({
@@ -48,6 +50,7 @@ export function BottomActionBar({
   certifications,
   projects,
   volunteers,
+  sectionOrder,
   selectedTemplate,
   selectedColor,
   onTemplateChange,
@@ -62,6 +65,7 @@ export function BottomActionBar({
   onImportXml,
   settings,
   onSettingsChange,
+  onResetSectionOrder,
 }: BottomActionBarProps) {
   const { t, cvType, setCVType } = useLanguage();
 
@@ -228,6 +232,7 @@ export function BottomActionBar({
           template={selectedTemplate}
           color={selectedColor}
           settings={settings}
+          sectionOrder={sectionOrder}
           onPdfGenerated={handlePdfGenerated}
         >
           {children}
@@ -514,6 +519,20 @@ export function BottomActionBar({
                         {t('layout.controls.reset')}
                       </button>
                     </div>
+
+                    {onResetSectionOrder && (
+                      <div className="border-t border-gray-200 dark:border-zinc-700 pt-3">
+                        <button
+                          type="button"
+                          onClick={onResetSectionOrder}
+                          className="w-full h-9 px-3 rounded-md border border-gray-300/60 dark:border-zinc-600/60 bg-white/80 dark:bg-zinc-800/80 text-[13px] text-gray-900 dark:text-gray-100 hover:bg-white dark:hover:bg-zinc-700 shadow-sm"
+                          title={t('section.order.reset')}
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 4v5h.6m15.4 2A8 8 0 004.6 9M4.6 9H9m11 11v-5h-.6m0 0a8 8 0 01-15.4-2m15.4 2H15" /></svg>
+                          <span className="font-medium">{t('section.order.reset')}</span>
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>,
                 document.body

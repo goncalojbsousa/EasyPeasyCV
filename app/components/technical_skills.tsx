@@ -13,6 +13,16 @@ interface TechnicalSkillsProps {
   skills: string;
   /** Handler for updating skills text */
   onSkillsChange: (value: string) => void;
+  /** Whether this section can be reordered */
+  canReorder?: boolean;
+  /** Callback when user clicks move up button */
+  onMoveUp?: () => void;
+  /** Callback when user clicks move down button */
+  onMoveDown?: () => void;
+  /** Whether move up button should be disabled */
+  canMoveUp?: boolean;
+  /** Whether move down button should be disabled */
+  canMoveDown?: boolean;
 }
 
 /**
@@ -24,12 +34,25 @@ interface TechnicalSkillsProps {
  */
 export function TechnicalSkills({
   skills,
-  onSkillsChange
+  onSkillsChange,
+  canReorder = false,
+  onMoveUp,
+  onMoveDown,
+  canMoveUp = true,
+  canMoveDown = true,
 }: TechnicalSkillsProps) {
   const { t } = useLanguage();
   return (
     <form className="space-y-8 flex flex-col items-center">
-      <FormSection title={t('section.technical.skills')} icon={Icons.technicalSkills}>
+      <FormSection 
+        title={t('section.technical.skills')} 
+        icon={Icons.technicalSkills}
+        canReorder={canReorder}
+        onMoveUp={onMoveUp}
+        onMoveDown={onMoveDown}
+        canMoveUp={canMoveUp}
+        canMoveDown={canMoveDown}
+      >
         <FormField label={t(`cvType.field.technical.skills`)} helperText={t('field.technical.skills.helper')}>
                     <input
             type="text"

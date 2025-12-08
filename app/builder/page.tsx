@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { PersonalInformation } from '../components/personal_information';
 import { ProfessionalSummary } from '../components/professional_summary';
 import { ProfessionalExperience } from '../components/professional_experience';
@@ -96,6 +96,41 @@ export default function Builder() {
     },
   });
 
+  // Section order management (Personal Information is always first and cannot be reordered)
+  type SectionKey = 
+    | 'professional_summary'
+    | 'professional_experience'
+    | 'academic_education'
+    | 'technical_skills'
+    | 'languages'
+    | 'certifications'
+    | 'projects'
+    | 'volunteer';
+
+  const [sectionOrder, setSectionOrder] = useState<SectionKey[]>([
+    'professional_summary',
+    'professional_experience',
+    'academic_education',
+    'technical_skills',
+    'languages',
+    'certifications',
+    'projects',
+    'volunteer',
+  ]);
+
+  // Refs for section elements to enable auto-scroll
+  const sectionRefs = useRef<Record<SectionKey | 'personal_info', HTMLDivElement | null>>({
+    personal_info: null,
+    professional_summary: null,
+    professional_experience: null,
+    academic_education: null,
+    technical_skills: null,
+    languages: null,
+    certifications: null,
+    projects: null,
+    volunteer: null,
+  });
+
   // Export current CV data to XML and trigger download
   const handleExportXml = () => {
     try {
@@ -145,7 +180,7 @@ export default function Builder() {
       setCertifications(data.certifications || []);
       setProjects(data.projects || []);
       setVolunteers(data.volunteers || []);
-      setSelectedTemplate(data.template || 'classic');
+      setSelectedTemplate(data.template || 'renewed');
       setSelectedColor(data.color || 'blue');
       setDataLoaded(true);
       setDataLoadedSource('xml');
@@ -182,8 +217,14 @@ export default function Builder() {
         setCertifications(data.certifications || []);
         setProjects(data.projects || []);
         setVolunteers(data.volunteers || []);
-        setSelectedTemplate(data.template || 'classic');
+        setSelectedTemplate(data.template || 'renewed');
         setSelectedColor(data.color || 'blue');
+        
+        // Load section order if exists
+        if (data.sectionOrder && Array.isArray(data.sectionOrder)) {
+          setSectionOrder(data.sectionOrder);
+        }
+        
         setDataLoaded(true);
         setDataLoadedSource('local');
       }
@@ -257,7 +298,7 @@ export default function Builder() {
 
   /**
    * Function to save data to localStorage
-   * Stores all form data
+   * Stores all form data including section order
    */
   const saveToLocalStorage = useCallback(() => {
     const data = {
@@ -272,10 +313,11 @@ export default function Builder() {
       projects,
       volunteers,
       template: selectedTemplate,
-      color: selectedColor
+      color: selectedColor,
+      sectionOrder,
     };
     localStorage.setItem('cv-builder-data', JSON.stringify(data));
-  }, [personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, selectedTemplate, selectedColor]);
+  }, [personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, selectedTemplate, selectedColor, sectionOrder]);
 
   // Auto-save data when any field changes
   useEffect(() => {
@@ -539,6 +581,77 @@ export default function Builder() {
   };
 
   /**
+   * Move a section up in the order
+   * @param sectionKey - The key of the section to move
+   */
+  const handleMoveSectionUp = (sectionKey: SectionKey) => {
+    const currentIndex = sectionOrder.indexOf(sectionKey);
+    if (currentIndex > 0) {
+      const newOrder = [...sectionOrder];
+      [newOrder[currentIndex - 1], newOrder[currentIndex]] = [newOrder[currentIndex], newOrder[currentIndex - 1]];
+      setSectionOrder(newOrder);
+      
+      // Scroll to the section after it moves up - use setTimeout to ensure DOM has updated
+      setTimeout(() => {
+        const sectionElement = sectionRefs.current[sectionKey];
+        if (sectionElement) {
+          const headerHeight = 115; // Approximate header height in pixels
+          const elementPosition = sectionElement.offsetTop - headerHeight;
+          
+          window.scrollTo({
+            top: elementPosition,
+            behavior: 'smooth'
+          });
+        }
+      }, 0);
+    }
+  };
+
+  /**
+   * Move a section down in the order
+   * @param sectionKey - The key of the section to move
+   */
+  const handleMoveSectionDown = (sectionKey: SectionKey) => {
+    const currentIndex = sectionOrder.indexOf(sectionKey);
+    if (currentIndex < sectionOrder.length - 1) {
+      const newOrder = [...sectionOrder];
+      [newOrder[currentIndex], newOrder[currentIndex + 1]] = [newOrder[currentIndex + 1], newOrder[currentIndex]];
+      setSectionOrder(newOrder);
+      
+      // Scroll to the section after it moves down - use setTimeout to ensure DOM has updated
+      setTimeout(() => {
+        const sectionElement = sectionRefs.current[sectionKey];
+        if (sectionElement) {
+          const headerHeight = 115; // Approximate header height in pixels
+          const elementPosition = sectionElement.offsetTop - headerHeight;
+          
+          window.scrollTo({
+            top: elementPosition,
+            behavior: 'smooth'
+          });
+        }
+      }, 0);
+    }
+  };
+
+  /**
+   * Reset section order to default
+   */
+  const handleResetSectionOrder = () => {
+    const defaultOrder: SectionKey[] = [
+      'professional_summary',
+      'professional_experience',
+      'academic_education',
+      'technical_skills',
+      'languages',
+      'certifications',
+      'projects',
+      'volunteer',
+    ];
+    setSectionOrder(defaultOrder);
+  };
+
+  /**
    * Function to validate required fields
    * @returns True if all required fields are filled, false otherwise
    */
@@ -597,6 +710,7 @@ export default function Builder() {
             volunteers={volunteers}
             lang={language}
             template={selectedTemplate}
+            sectionOrder={sectionOrder}
           />
         );
 
@@ -824,7 +938,7 @@ export default function Builder() {
               </div>
             )}
 
-            {/* Personal Information section */}
+            {/* Personal Information section - Always first and cannot be reordered */}
             <PersonalInformation
               links={links}
               personalInfo={personalInfo}
@@ -836,70 +950,150 @@ export default function Builder() {
               showValidationErrors={showValidationErrors}
             />
 
-            {/* Professional Summary section */}
-            <ProfessionalSummary
-              resume={resume}
-              onResumeChange={handleResumeChange}
-            />
-
-            {/* Professional Experience section */}
-            <ProfessionalExperience
-              experiences={experiences}
-              onExperienceChange={handleExperienceChange}
-              onAddExperience={handleAddExperience}
-              onRemoveExperience={handleRemoveExperience}
-              onReorderExperiences={handleReorderExperiences}
-            />
-
-            {/* Academic Education section */}
-            <AcademicEducation
-              education={education}
-              onEducationChange={handleEducationChange}
-              onAddEducation={handleAddEducation}
-              onRemoveEducation={handleRemoveEducation}
-              onReorderEducation={handleReorderEducation}
-            />
-
-            {/* Technical Skills section */}
-            <TechnicalSkills
-              skills={skills}
-              onSkillsChange={setSkills}
-            />
-
-            {/* Languages section */}
-            <Languages
-              languages={languages}
-              onLanguageChange={handleLanguageChange}
-              onAddLanguage={handleAddLanguage}
-              onRemoveLanguage={handleRemoveLanguage}
-            />
-
-            {/* Certifications section */}
-            <Certifications
-              certifications={certifications}
-              onCertificationChange={handleCertificationChange}
-              onAddCertification={handleAddCertification}
-              onRemoveCertification={handleRemoveCertification}
-              onReorderCertifications={handleReorderCertifications}
-            />
-
-            {/* Projects section */}
-            <Projects
-              projects={projects}
-              onProjectChange={handleProjectChange}
-              onAddProject={handleAddProject}
-              onRemoveProject={handleRemoveProject}
-              onReorderProjects={handleReorderProjects}
-            />
-
-            {/* Volunteer Work section */}
-            <VolunteerWork
-              volunteers={volunteers}
-              onVolunteerChange={handleVolunteerChange}
-              onAddVolunteer={handleAddVolunteer}
-              onRemoveVolunteer={handleRemoveVolunteer}
-              onReorderVolunteers={handleReorderVolunteers}
-            />
+            {/* Render sections dynamically based on sectionOrder */}
+            {sectionOrder.map((sectionKey, index) => {
+              const canMoveUp = index > 0;
+              const canMoveDown = index < sectionOrder.length - 1;
+              
+              const sectionElement = (() => {
+                switch (sectionKey) {
+                  case 'professional_summary':
+                    return (
+                      <ProfessionalSummary
+                        resume={resume}
+                        onResumeChange={handleResumeChange}
+                        canReorder={true}
+                        onMoveUp={() => handleMoveSectionUp(sectionKey)}
+                        onMoveDown={() => handleMoveSectionDown(sectionKey)}
+                        canMoveUp={canMoveUp}
+                        canMoveDown={canMoveDown}
+                      />
+                    );
+                    
+                  case 'professional_experience':
+                    return (
+                      <ProfessionalExperience
+                        experiences={experiences}
+                        onExperienceChange={handleExperienceChange}
+                        onAddExperience={handleAddExperience}
+                        onRemoveExperience={handleRemoveExperience}
+                        onReorderExperiences={handleReorderExperiences}
+                        canReorder={true}
+                        onMoveUp={() => handleMoveSectionUp(sectionKey)}
+                        onMoveDown={() => handleMoveSectionDown(sectionKey)}
+                        canMoveUp={canMoveUp}
+                        canMoveDown={canMoveDown}
+                      />
+                    );
+                    
+                  case 'academic_education':
+                    return (
+                      <AcademicEducation
+                        education={education}
+                        onEducationChange={handleEducationChange}
+                        onAddEducation={handleAddEducation}
+                        onRemoveEducation={handleRemoveEducation}
+                        onReorderEducation={handleReorderEducation}
+                        canReorder={true}
+                        onMoveUp={() => handleMoveSectionUp(sectionKey)}
+                        onMoveDown={() => handleMoveSectionDown(sectionKey)}
+                        canMoveUp={canMoveUp}
+                        canMoveDown={canMoveDown}
+                      />
+                    );
+                    
+                  case 'technical_skills':
+                    return (
+                      <TechnicalSkills
+                        skills={skills}
+                        onSkillsChange={setSkills}
+                        canReorder={true}
+                        onMoveUp={() => handleMoveSectionUp(sectionKey)}
+                        onMoveDown={() => handleMoveSectionDown(sectionKey)}
+                        canMoveUp={canMoveUp}
+                        canMoveDown={canMoveDown}
+                      />
+                    );
+                    
+                  case 'languages':
+                    return (
+                      <Languages
+                        languages={languages}
+                        onLanguageChange={handleLanguageChange}
+                        onAddLanguage={handleAddLanguage}
+                        onRemoveLanguage={handleRemoveLanguage}
+                        canReorder={true}
+                        onMoveUp={() => handleMoveSectionUp(sectionKey)}
+                        onMoveDown={() => handleMoveSectionDown(sectionKey)}
+                        canMoveUp={canMoveUp}
+                        canMoveDown={canMoveDown}
+                      />
+                    );
+                    
+                  case 'certifications':
+                    return (
+                      <Certifications
+                        certifications={certifications}
+                        onCertificationChange={handleCertificationChange}
+                        onAddCertification={handleAddCertification}
+                        onRemoveCertification={handleRemoveCertification}
+                        onReorderCertifications={handleReorderCertifications}
+                        canReorder={true}
+                        onMoveUp={() => handleMoveSectionUp(sectionKey)}
+                        onMoveDown={() => handleMoveSectionDown(sectionKey)}
+                        canMoveUp={canMoveUp}
+                        canMoveDown={canMoveDown}
+                      />
+                    );
+                    
+                  case 'projects':
+                    return (
+                      <Projects
+                        projects={projects}
+                        onProjectChange={handleProjectChange}
+                        onAddProject={handleAddProject}
+                        onRemoveProject={handleRemoveProject}
+                        onReorderProjects={handleReorderProjects}
+                        canReorder={true}
+                        onMoveUp={() => handleMoveSectionUp(sectionKey)}
+                        onMoveDown={() => handleMoveSectionDown(sectionKey)}
+                        canMoveUp={canMoveUp}
+                        canMoveDown={canMoveDown}
+                      />
+                    );
+                    
+                  case 'volunteer':
+                    return (
+                      <VolunteerWork
+                        volunteers={volunteers}
+                        onVolunteerChange={handleVolunteerChange}
+                        onAddVolunteer={handleAddVolunteer}
+                        onRemoveVolunteer={handleRemoveVolunteer}
+                        onReorderVolunteers={handleReorderVolunteers}
+                        canReorder={true}
+                        onMoveUp={() => handleMoveSectionUp(sectionKey)}
+                        onMoveDown={() => handleMoveSectionDown(sectionKey)}
+                        canMoveUp={canMoveUp}
+                        canMoveDown={canMoveDown}
+                      />
+                    );
+                    
+                  default:
+                    return null;
+                }
+              })();
+              
+              return (
+                <div
+                  key={sectionKey}
+                  ref={(el) => {
+                    if (el) sectionRefs.current[sectionKey] = el;
+                  }}
+                >
+                  {sectionElement}
+                </div>
+              );
+            })}
 
             {/* Example data button (hidden in production) */}
             {process.env.NODE_ENV !== 'production' && (
@@ -948,6 +1142,7 @@ export default function Builder() {
                 template={selectedTemplate}
                 color={selectedColor}
                 settings={renderSettings}
+                sectionOrder={sectionOrder}
               />
             </div>
           </div>
@@ -975,6 +1170,7 @@ export default function Builder() {
         template={selectedTemplate}
         color={selectedColor}
         settings={renderSettings}
+        sectionOrder={sectionOrder}
       />
 
       {/* Bottom Action Bar (Desktop) */}
@@ -1003,6 +1199,8 @@ export default function Builder() {
         onImportXml={handleImportXml}
         settings={renderSettings}
         onSettingsChange={setRenderSettings}
+        onResetSectionOrder={handleResetSectionOrder}
+        sectionOrder={sectionOrder}
       />
 
       {/* Floating Action Bar (Mobile/Tablet) */}
@@ -1026,6 +1224,7 @@ export default function Builder() {
         onScrollToCVTips={scrollToCVTips}
         onScrollToAtsExplanation={scrollToAtsExplanation}
         onTemplateChange={setSelectedTemplate}
+        sectionOrder={sectionOrder}
       />
     </div>
   );

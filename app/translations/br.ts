@@ -162,6 +162,9 @@ const brTranslations: Record<string, string> = {
   'data.loaded.local': 'Dados carregados automaticamente do navegador.',
   'data.loaded.xml': 'Dados importados a partir de XML.',
   'cv.generated': 'Currículo gerado com sucesso! O download deve começar automaticamente.',
+  'section.order.info.title': 'Organize as seções do seu CV',
+  'section.order.info.description': 'Use as setas para cima e para baixo em cada seção para reorganizar a ordem',
+  'section.order.reset': 'Restaurar ordem padrão',
   'fill.example': 'Preencher com dados de exemplo',
   'validation.required': 'Por favor, preencha todos os campos obrigatórios:',
   'validation.name': 'Nome completo',
@@ -777,6 +780,10 @@ const brTranslations: Record<string, string> = {
   'terms.contact.title': 'Contato',
   'terms.contact.description': 'Para dúvidas sobre estes termos, entre em contato:',
   'terms.back.home': 'Voltar à Página Inicial',
+
+  // Section Reordering
+  'section.move.up': 'Mover seção para cima',
+  'section.move.down': 'Mover seção para baixo',
 
   // Footer
   'footer.privacy': 'Privacidade',

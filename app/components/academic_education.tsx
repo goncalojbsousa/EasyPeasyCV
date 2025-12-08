@@ -25,6 +25,16 @@ interface AcademicEducationProps {
   onRemoveEducation: (idx: number) => void;
   /** Handler for reordering education entries */
   onReorderEducation?: (fromIndex: number, toIndex: number) => void;
+  /** Whether this section can be reordered */
+  canReorder?: boolean;
+  /** Callback when user clicks move up button */
+  onMoveUp?: () => void;
+  /** Callback when user clicks move down button */
+  onMoveDown?: () => void;
+  /** Whether move up button should be disabled */
+  canMoveUp?: boolean;
+  /** Whether move down button should be disabled */
+  canMoveDown?: boolean;
 }
 
 /**
@@ -63,7 +73,12 @@ export function AcademicEducation({
   onEducationChange,
   onAddEducation,
   onRemoveEducation,
-  onReorderEducation
+  onReorderEducation,
+  canReorder = false,
+  onMoveUp,
+  onMoveDown,
+  canMoveUp = true,
+  canMoveDown = true,
 }: AcademicEducationProps) {
   const { t } = useLanguage();
   const [openDropdowns, setOpenDropdowns] = useState<{[key: string]: boolean}>({});
@@ -109,6 +124,11 @@ export function AcademicEducation({
       <FormSection 
         title={t('section.academic.education')} 
         icon={Icons.academicEducation}
+        canReorder={canReorder}
+        onMoveUp={onMoveUp}
+        onMoveDown={onMoveDown}
+        canMoveUp={canMoveUp}
+        canMoveDown={canMoveDown}
       >
         {/* Display empty state when no education entries exist */}
         {education.length === 0 && (

@@ -51,6 +51,7 @@ export function PdfPreview({
   template = 'renewed',
   color = 'blue',
   settings,
+  sectionOrder,
 }: PdfPreviewProps) {
   const { t } = useLanguage();
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
@@ -76,7 +77,7 @@ export function PdfPreview({
       generatePdf();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [show, personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, lang, template, color, settings]);
+  }, [show, personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, lang, template, color, settings, sectionOrder]);
 
   // Prevent body scroll when the modal is open
   useEffect(() => {
@@ -112,6 +113,7 @@ export function PdfPreview({
           template={template}
           color={color}
           settings={settings}
+          sectionOrder={sectionOrder}
         />
       );
 

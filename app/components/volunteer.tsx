@@ -25,6 +25,16 @@ interface VolunteerProps {
   onRemoveVolunteer: (idx: number) => void;
   /** Handler for reordering volunteer entries */
   onReorderVolunteers?: (fromIndex: number, toIndex: number) => void;
+  /** Whether this section can be reordered */
+  canReorder?: boolean;
+  /** Callback when user clicks move up button */
+  onMoveUp?: () => void;
+  /** Callback when user clicks move down button */
+  onMoveDown?: () => void;
+  /** Whether move up button should be disabled */
+  canMoveUp?: boolean;
+  /** Whether move down button should be disabled */
+  canMoveDown?: boolean;
 }
 
 /**
@@ -42,7 +52,12 @@ export function VolunteerWork({
   onVolunteerChange,
   onAddVolunteer,
   onRemoveVolunteer,
-  onReorderVolunteers
+  onReorderVolunteers,
+  canReorder = false,
+  onMoveUp,
+  onMoveDown,
+  canMoveUp = true,
+  canMoveDown = true,
 }: VolunteerProps) {
   const { t } = useLanguage();
   
@@ -85,6 +100,11 @@ export function VolunteerWork({
       <FormSection 
         title={t('section.volunteer')} 
         icon={Icons.volunteer}
+        canReorder={canReorder}
+        onMoveUp={onMoveUp}
+        onMoveDown={onMoveDown}
+        canMoveUp={canMoveUp}
+        canMoveDown={canMoveDown}
       >
         {/* Display empty state when no volunteers exist */}
         {volunteers.length === 0 && (

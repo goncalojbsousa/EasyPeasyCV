@@ -23,6 +23,16 @@ interface ProjectsProps {
   onRemoveProject: (idx: number) => void;
   /** Handler for reordering project entries */
   onReorderProjects?: (fromIndex: number, toIndex: number) => void;
+  /** Whether this section can be reordered */
+  canReorder?: boolean;
+  /** Callback when user clicks move up button */
+  onMoveUp?: () => void;
+  /** Callback when user clicks move down button */
+  onMoveDown?: () => void;
+  /** Whether move up button should be disabled */
+  canMoveUp?: boolean;
+  /** Whether move down button should be disabled */
+  canMoveDown?: boolean;
 }
 
 /**
@@ -40,7 +50,12 @@ export function Projects({
   onProjectChange,
   onAddProject,
   onRemoveProject,
-  onReorderProjects
+  onReorderProjects,
+  canReorder = false,
+  onMoveUp,
+  onMoveDown,
+  canMoveUp = true,
+  canMoveDown = true,
 }: ProjectsProps) {
   const { t } = useLanguage();
   
@@ -55,6 +70,11 @@ export function Projects({
       <FormSection 
         title={t('section.projects')} 
         icon={Icons.projects}
+        canReorder={canReorder}
+        onMoveUp={onMoveUp}
+        onMoveDown={onMoveDown}
+        canMoveUp={canMoveUp}
+        canMoveDown={canMoveDown}
       >
         {/* Display empty state when no projects exist */}
         {projects.length === 0 && (

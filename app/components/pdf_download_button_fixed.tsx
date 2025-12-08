@@ -50,6 +50,7 @@ export default function PdfDownloadButton(props: PdfDownloadButtonProps) {
           template={pdfProps.template}
           color={pdfProps.color}
           settings={pdfProps.settings}
+          sectionOrder={pdfProps.sectionOrder}
         />
       );
 

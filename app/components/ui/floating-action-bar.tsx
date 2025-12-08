@@ -28,6 +28,7 @@ interface FloatingActionBarProps {
   onScrollToCVTips: () => void;
   onScrollToAtsExplanation: () => void;
   onTemplateChange?: (template: CvTemplate) => void;
+  sectionOrder?: import('../../types/cv').SectionKey[];
 }
 
 /**
@@ -48,6 +49,7 @@ export function FloatingActionBar({
   projects,
   template = 'renewed',
   color = 'blue',
+  sectionOrder,
   onShowPdfPreview,
   onGeneratePDF,
   onShowSuccessMessage,
@@ -126,6 +128,7 @@ export function FloatingActionBar({
           lang={lang}
           template={template}
           color={color}
+          sectionOrder={sectionOrder}
           onPdfGenerated={handlePdfGenerated}
         >
           {children}
