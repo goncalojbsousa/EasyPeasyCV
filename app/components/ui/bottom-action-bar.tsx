@@ -21,9 +21,9 @@ interface BottomActionBarProps {
   certifications: Certification[];
   projects: Project[];
   volunteers: Volunteer[];
-  selectedTemplate: CvTemplate;
+  selectedTemplate: 'renewed';
   selectedColor: CvColor;
-  onTemplateChange: (template: CvTemplate) => void;
+  onTemplateChange: (template: 'renewed') => void;
   onColorChange: (color: CvColor) => void;
   onShowPdfPreview: () => void;
   onGeneratePDF: () => boolean;

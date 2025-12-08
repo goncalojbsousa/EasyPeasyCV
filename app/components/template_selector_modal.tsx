@@ -11,37 +11,7 @@ interface TemplateSelectorModalProps {
   onClose: () => void;
 }
 
-const templatePreviews: Record<CvTemplate, { img: string; nameKey: string; descriptionKey: string }> = {
-  classic: {
-    img: '/classic_preview.webp',
-    nameKey: 'template.classic.name',
-    descriptionKey: 'template.classic.description',
-  },
-  professional: {
-    img: '/professional_preview.webp',
-    nameKey: 'template.professional.name',
-    descriptionKey: 'template.professional.description',
-  },
-  timeline: {
-    img: '/timeline_preview.webp',
-    nameKey: 'template.timeline.name',
-    descriptionKey: 'template.timeline.description',
-  },
-  modern: {
-    img: '/modern_preview.webp',
-    nameKey: 'template.modern.name',
-    descriptionKey: 'template.modern.description',
-  },
-  minimal: {
-    img: '/minimal_preview.webp',
-    nameKey: 'template.minimal.name',
-    descriptionKey: 'template.minimal.description',
-  },
-  creative: {
-    img: '/creative_preview.webp',
-    nameKey: 'template.creative.name',
-    descriptionKey: 'template.creative.description',
-  },
+const templatePreviews = {
   renewed: {
     img: '/renewed_preview.webp',
     nameKey: 'template.renewed.name',
@@ -78,80 +48,47 @@ export function TemplateSelectorModal({ show, selectedTemplate, onSelect, onClos
         <div className="p-4 bg-gray-50 dark:bg-zinc-800">
           {/* Grid of templates */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {Object.entries(templatePreviews).map(([key, meta]) => {
-            const k = key as CvTemplate;
-            const isSelected = selectedTemplate === k;
-            return (
-              <div
-                key={key}
-                role="button"
-                tabIndex={0}
-                onClick={() => {
-                  onSelect(k);
-                  onClose();
+          <div
+            key="renewed"
+            role="button"
+            tabIndex={0}
+            onClick={() => {
+              onSelect('renewed');
+              onClose();
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onSelect('renewed');
+                onClose();
+              }
+            }}
+            className={`group text-left rounded-xl overflow-hidden border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500 border-sky-500 ring-2 ring-sky-200 dark:ring-sky-900/30`}
+          >
+            <div className="relative h-56 bg-gray-100 dark:bg-zinc-700 overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={templatePreviews.renewed.img}
+                alt={`${t(templatePreviews.renewed.nameKey)} preview`}
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02] cursor-zoom-in"
+                loading="lazy"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setPreview('renewed');
                 }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    onSelect(k);
-                    onClose();
-                  }
-                }}
-                className={`group text-left rounded-xl overflow-hidden border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500 ${
-                  isSelected ? 'border-sky-500 ring-2 ring-sky-200 dark:ring-sky-900/30' : 'border-gray-200 dark:border-zinc-700'
-                }`}
-              >
-                <div className="relative h-56 bg-gray-100 dark:bg-zinc-700 overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={meta.img}
-                    alt={`${t(meta.nameKey)} preview`}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02] cursor-zoom-in"
-                    loading="lazy"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setPreview(k);
-                    }}
-                  />
-                  {/* Hover overlay with Preview button */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-end justify-center p-3">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setPreview(k);
-                      }}
-                      className="inline-flex items-center gap-2 bg-white/90 dark:bg-zinc-900/80 text-gray-900 dark:text-gray-100 text-xs font-medium px-3 py-1.5 rounded-md shadow-sm hover:bg-white dark:hover:bg-zinc-900 border border-gray-200 dark:border-zinc-700"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                      </svg>
-                      {t('preview.cv')}
-                    </button>
-                  </div>
-                  {isSelected && (
-                    <div className="absolute inset-0 ring-2 ring-offset-2 ring-sky-500 ring-offset-white dark:ring-offset-zinc-800 pointer-events-none" />
-                  )}
-                </div>
-                <div className="p-4 bg-white dark:bg-zinc-800">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-medium text-gray-900 dark:text-white">
-                      {t(meta.nameKey)}
-                    </h4>
-                    {k === 'classic' && (
-                      <span className="px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 rounded-full">ATS</span>
-                    )}
-                    {(k === 'minimal' || k === 'creative') && (
-                      <span className="px-2 py-0.5 text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400 rounded-full">BETA</span>
-                    )}
-                  </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                    {t(meta.descriptionKey)}
-                  </p>
-                </div>
+              />
+            </div>
+            <div className="p-4 bg-white dark:bg-zinc-800">
+              <div className="flex items-center justify-between">
+                <h4 className="font-medium text-gray-900 dark:text-white">
+                  {t(templatePreviews.renewed.nameKey)}
+                </h4>
               </div>
-            );
-          })}
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                {t(templatePreviews.renewed.descriptionKey)}
+              </p>
+            </div>
+          </div>
           </div>
         </div>
 

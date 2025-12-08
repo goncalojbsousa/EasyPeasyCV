@@ -157,7 +157,7 @@ export interface Volunteer {
 /**
  * Available CV template types
  */
-export type CvTemplate = 'classic' | 'modern' | 'creative' | 'minimal' | 'timeline' | 'professional' | 'renewed';
+export type CvTemplate = 'renewed';
 
 export type CvColor = 'blue' | 'green' | 'purple' | 'orange' | 'red' | 'teal' | 'indigo' | 'pink';
 

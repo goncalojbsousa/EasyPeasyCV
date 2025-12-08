@@ -59,7 +59,7 @@ export function DesktopActionsCard({
   certifications,
   projects,
   volunteers,
-  template = 'classic',
+  template = 'renewed',
   color = 'blue',
   selectedTemplate,
   selectedColor,
