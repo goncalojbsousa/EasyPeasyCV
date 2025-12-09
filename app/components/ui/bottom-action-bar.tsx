@@ -260,7 +260,7 @@ export function BottomActionBar({
                   <span className="font-medium">{t(`template.${selectedTemplate}.name`)}</span>
                 </button>
 
-            {selectedTemplate !== 'classic' && (
+            {selectedTemplate !== 'renewed' && (
               <div className="shrink-0 h-9 flex items-center">
                 <ColorSelector selectedColor={selectedColor} onColorChange={onColorChange} show={true} />
               </div>
@@ -591,6 +591,31 @@ export function BottomActionBar({
             <span aria-hidden="true" className="mx-1.5 h-6 w-px bg-gray-300/50 dark:bg-zinc-600/50 rounded-full" />
 
             <div className="relative shrink-0 overflow-visible" ref={dataRef}>
+              {/* Input FORA do portal */}
+              <input 
+                ref={importInputRef} 
+                type="file" 
+                accept=".xml,application/xml,text/xml" 
+                className="hidden" 
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  
+                  const reader = new FileReader();
+                  
+                  reader.onload = () => {
+                    const text = typeof reader.result === 'string' ? reader.result : '';
+                    if (text) {
+                      onImportXml(text);
+                      if (importInputRef.current) importInputRef.current.value = '';
+                      setIsDataOpen(false);
+                    }
+                  };
+                  
+                  reader.readAsText(file, 'UTF-8');
+                }} 
+              />
+              
               <button
                 ref={dataBtnRef}
                 onClick={() => setIsDataOpen((v) => { const next = !v; if (next) { setIsCVTypeOpen(false); setIsLayoutOpen(false); setIsLangOpen(false); } return next; })}
@@ -610,20 +635,19 @@ export function BottomActionBar({
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M12 16a1 1 0 0 1-.707-.293l-3-3 1.414-1.414L11 12.586V4h2v8.586l1.293-1.293 1.414 1.414-3 3A1 1 0 0 1 12 16Z"/><path d="M5 20h14a1 1 0 1 0 0-2H5a1 1 0 1 0 0 2Z"/></svg>
                     <span>{t('data.xml.export')}</span>
                   </button>
-                  <input ref={importInputRef} type="file" accept=".xml,application/xml,text/xml" className="hidden" onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (!file) return;
-                    const reader = new FileReader();
-                    reader.onload = () => {
-                      const text = typeof reader.result === 'string' ? reader.result : '';
-                      if (text) onImportXml(text);
-                      if (importInputRef.current) importInputRef.current.value = '';
-                      setIsDataOpen(false);
-                    };
-                    reader.readAsText(file);
-                  }} />
-                  <button type="button" className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 flex items-center gap-2" onClick={() => importInputRef.current?.click()}>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M12 8a1 1 0 0 1 .707.293l3 3-1.414 1.414L13 11.414V20h-2v-8.586l-1.293 1.293-1.414-1.414 3-3A1 1 0 0 1 12 8Z"/><path d="M5 4h14a1 1 0 1 1 0 2H5a1 1 0 1 1 0-2Z"/></svg>
+                  <button 
+                    type="button" 
+                    className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 flex items-center gap-2" 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      importInputRef.current?.click();
+                    }}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                      <path d="M12 8a1 1 0 0 1 .707.293l3 3-1.414 1.414L13 11.414V20h-2v-8.586l-1.293 1.293-1.414-1.414 3-3A1 1 0 0 1 12 8Z"/>
+                      <path d="M5 4h14a1 1 0 1 1 0 2H5a1 1 0 1 1 0-2Z"/>
+                    </svg>
                     <span>{t('data.xml.import')}</span>
                   </button>
                 </div>,

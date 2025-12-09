@@ -59,6 +59,7 @@ export function cvDataToXml(data: CvData): string {
       ${el('endMonth', e.endMonth)}
       ${el('endYear', e.endYear)}
       ${el('description', e.description)}
+      ${el('achievements', e.achievements || '')}
     </education>`)
     .join('');
 
@@ -85,6 +86,7 @@ export function cvDataToXml(data: CvData): string {
       ${el('sourceCode', p.sourceCode || '')}
       ${el('tech', p.tech)}
       ${el('year', p.year)}
+      ${el('impact', p.impact || '')}
     </project>`)
     .join('');
 
@@ -139,7 +141,7 @@ export function cvDataToXml(data: CvData): string {
   ${arr('links', linksXml)}
   ${el('resume', data.resume || '')}
   ${arr('experiences', experiencesXml)}
-  ${arr('education', educationXml)}
+  ${arr('educations', educationXml)}
   ${el('skills', data.skills || '')}
   ${arr('languages', languagesXml)}
   ${arr('certifications', certificationsXml)}
@@ -153,7 +155,8 @@ export function cvDataToXml(data: CvData): string {
   return xml;
 }
 
-function textContent(parent: Element, tag: string): string {
+function textContent(parent: Element | null | undefined, tag: string): string {
+  if (!parent) return '';
   const el = parent.getElementsByTagName(tag)[0];
   return el?.textContent ?? '';
 }
@@ -201,7 +204,7 @@ export function xmlToCvData(xml: string): CvData {
       results: textContent(ex, 'results'),
     }));
 
-  const education: Education[] = Array.from(cvEl.getElementsByTagName('education')[0]?.getElementsByTagName('education') || [])
+  const education: Education[] = Array.from(cvEl.getElementsByTagName('educations')[0]?.getElementsByTagName('education') || [])
     .map((ed) => ({
       type: textContent(ed, 'type'),
       status: textContent(ed, 'status'),
@@ -212,7 +215,7 @@ export function xmlToCvData(xml: string): CvData {
       endMonth: textContent(ed, 'endMonth'),
       endYear: textContent(ed, 'endYear'),
       description: textContent(ed, 'description'),
-      achievements: '',
+      achievements: textContent(ed, 'achievements') || '',
     }));
 
   const languages: Language[] = Array.from(cvEl.getElementsByTagName('languages')[0]?.getElementsByTagName('language') || [])
@@ -239,7 +242,7 @@ export function xmlToCvData(xml: string): CvData {
       sourceCode: textContent(pr, 'sourceCode') || undefined,
       tech: textContent(pr, 'tech'),
       year: textContent(pr, 'year'),
-      impact: textContent(pr, 'impact'),
+      impact: textContent(pr, 'impact') || '',
     }));
 
   const volunteers: Volunteer[] = Array.from(cvEl.getElementsByTagName('volunteers')[0]?.getElementsByTagName('volunteer') || [])
