@@ -170,64 +170,26 @@ export default function Builder() {
 
   // Import CV data from XML string and populate state
 const handleImportXml = (xml: string) => {
-  console.log('🔄 handleImportXml chamada');
-  console.log('📄 XML length:', xml.length);
-  console.log('📄 XML preview:', xml.substring(0, 300));
-  
   try {
     const data = xmlToCvData(xml);
-    console.log('✅ xmlToCvData retornou:', data);
-    console.log('📊 Dados parseados:');
-    console.log('  - personalInfo:', data.personalInfo);
-    console.log('  - links:', data.links?.length);
-    console.log('  - experiences:', data.experiences?.length);
-    console.log('  - education:', data.education?.length);
-    console.log('  - languages:', data.languages?.length);
-    console.log('  - certifications:', data.certifications?.length);
-    console.log('  - projects:', data.projects?.length);
-    console.log('  - volunteers:', data.volunteers?.length);
     
     setPersonalInfo({
       ...personalInfo,
       ...data.personalInfo
     });
-    console.log('✓ personalInfo atualizado');
     
     setLinks(data.links || []);
-    console.log('✓ links atualizado');
-    
     setResume(data.resume || '');
-    console.log('✓ resume atualizado');
-    
     setExperiences(data.experiences || []);
-    console.log('✓ experiences atualizado');
-    
     setEducation(data.education || []);
-    console.log('✓ education atualizado');
-    
     setSkills(data.skills || '');
-    console.log('✓ skills atualizado');
-    
     setLanguages(data.languages || []);
-    console.log('✓ languages atualizado');
-    
     setCertifications(data.certifications || []);
-    console.log('✓ certifications atualizado');
-    
     setProjects(data.projects || []);
-    console.log('✓ projects atualizado');
-    
     setVolunteers(data.volunteers || []);
-    console.log('✓ volunteers atualizado');
-    
     setCustomSections(data.customSections || []);
-    console.log('✓ customSections atualizado');
-    
     setSelectedTemplate(data.template || 'renewed');
-    console.log('✓ template atualizado');
-    
     setSelectedColor(data.color || 'blue');
-    console.log('✓ color atualizado');
     
     const importedCustomKeys = (data.customSections || []).map((cs: CustomSection) => `custom_${cs.id}` as SectionKey);
     if (data.sectionOrder && Array.isArray(data.sectionOrder) && data.sectionOrder.length > 0) {
@@ -236,14 +198,11 @@ const handleImportXml = (xml: string) => {
     } else {
       setSectionOrder([...defaultPredefinedOrder, ...importedCustomKeys]);
     }
-    console.log('✓ sectionOrder atualizado');
     
     setDataLoaded(true);
     setDataLoadedSource('xml');
-    console.log('✅ Import concluído com sucesso!');
   } catch (e) {
-    console.error('❌ XML import failed:', e);
-    console.error('Stack trace:', e instanceof Error ? e.stack : 'N/A');
+    console.error('XML import failed:', e);
     alert('Erro ao importar XML: ' + (e instanceof Error ? e.message : String(e)));
   }
 };
