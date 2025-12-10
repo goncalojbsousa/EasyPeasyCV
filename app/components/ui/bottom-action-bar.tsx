@@ -2,6 +2,25 @@
 
 import React, { useEffect, useMemo, useRef, useState, type JSX } from 'react';
 import { createPortal } from 'react-dom';
+import { 
+  Code,
+  BarChart3,
+  TrendingUp,
+  Users,
+  DollarSign,
+  Palette,
+  Heart,
+  BookOpen,
+  Building,
+  Package,
+  FileText,
+  ChevronDown,
+  Grid2x2,
+  RotateCcw,
+  Database,
+  Download,
+  Upload,
+} from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import PdfDownloadButton from '../pdf_download_button';
 import { ThankYouModal } from '../thank_you_modal';
@@ -150,56 +169,16 @@ export function BottomActionBar({
 
   const getCVTypeIcon = useMemo(() => (type: string) => {
     const icons: Record<string, JSX.Element> = {
-      development: (
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-        </svg>
-      ),
-      marketing: (
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-      ),
-      sales: (
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-        </svg>
-      ),
-      hr: (
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 0 1 9.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-        </svg>
-      ),
-      finance: (
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-        </svg>
-      ),
-      design: (
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z" />
-        </svg>
-      ),
-      health: (
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-        </svg>
-      ),
-      education: (
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-        </svg>
-      ),
-      admin: (
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-        </svg>
-      ),
-      other: (
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10m-10 0a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2" />
-        </svg>
-      ),
+      development: <Code className="w-4 h-4" />,
+      marketing: <BarChart3 className="w-4 h-4" />,
+      sales: <TrendingUp className="w-4 h-4" />,
+      hr: <Users className="w-4 h-4" />,
+      finance: <DollarSign className="w-4 h-4" />,
+      design: <Palette className="w-4 h-4" />,
+      health: <Heart className="w-4 h-4" />,
+      education: <BookOpen className="w-4 h-4" />,
+      admin: <Building className="w-4 h-4" />,
+      other: <Package className="w-4 h-4" />,
     };
     return (icons[type as keyof typeof icons] || icons.other);
   }, []);
@@ -256,7 +235,7 @@ export function BottomActionBar({
                   className="flex h-9 items-center gap-2 px-3 rounded-md border border-gray-300/60 dark:border-zinc-600/60 bg-white/80 dark:bg-zinc-800/80 text-[13px] text-gray-900 dark:text-gray-100 hover:bg-white dark:hover:bg-zinc-700 shrink-0 shadow-sm"
                   title={t('template.selector')}
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.5 14.25v-2.625A3.375 3.375 0 0016.125 8.25h-1.5A1.125 1.125 0 0113.5 7.125v-1.5A3.375 3.375 0 0010.125 2.25H8.25"/></svg>
+                  <FileText className="w-4 h-4" />
                   <span className="font-medium">{t(`template.${selectedTemplate}.name`)}</span>
                 </button>
 
@@ -275,7 +254,7 @@ export function BottomActionBar({
               >
                 {getCVTypeIcon(cvType)}
                 <span className="font-medium">{t(`cv.type.${cvType}`)}</span>
-                <svg className={`w-4 h-4 transition-transform ${isCVTypeOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg>
+                <ChevronDown className={`w-4 h-4 transition-transform ${isCVTypeOpen ? 'rotate-180' : ''}`} />
               </button>
               {isCVTypeOpen && cvTypePos && createPortal(
                 <div className="z-[70] w-[260px] max-h-[60vh] overflow-auto bg-white dark:bg-zinc-800 rounded-xl shadow-xl border border-gray-200 dark:border-zinc-700 py-2"
@@ -309,9 +288,9 @@ export function BottomActionBar({
                 className="flex h-9 items-center gap-2 px-3 rounded-md border border-gray-300/60 dark:border-zinc-600/60 bg-white/80 dark:bg-zinc-800/80 text-[13px] text-gray-900 dark:text-gray-100 hover:bg-white dark:hover:bg-zinc-700 shadow-sm"
                 title={t('layout.menu.title')}
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 4h7v7H3V4zm0 9h7v7H3v-7zm9-9h9v7h-9V4zm0 9h9v7h-9v-7z"/></svg>
+                <Grid2x2 className="w-4 h-4" />
                 <span className="font-medium">{t('layout.menu.title')}</span>
-                <svg className={`w-4 h-4 transition-transform ${isLayoutOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg>
+                <ChevronDown className={`w-4 h-4 transition-transform ${isLayoutOpen ? 'rotate-180' : ''}`} />
               </button>
               {isLayoutOpen && layoutPos && createPortal(
                 <div ref={layoutPortalRef} className="z-[90] w-[380px] max-w-[90vw] max-h-[70vh] overflow-y-auto overflow-x-hidden bg-white dark:bg-zinc-800 rounded-xl shadow-xl border border-gray-200 dark:border-zinc-700 py-2"
@@ -531,7 +510,7 @@ export function BottomActionBar({
                           className="w-full h-9 px-3 rounded-md border border-gray-300/60 dark:border-zinc-600/60 bg-white/80 dark:bg-zinc-800/80 text-[13px] text-gray-900 dark:text-gray-100 hover:bg-white dark:hover:bg-zinc-700 shadow-sm"
                           title={t('section.order.reset')}
                         >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 4v5h.6m15.4 2A8 8 0 004.6 9M4.6 9H9m11 11v-5h-.6m0 0a8 8 0 01-15.4-2m15.4 2H15" /></svg>
+                        <RotateCcw className="w-4 h-4" />
                           <span className="font-medium">{t('section.order.reset')}</span>
                         </button>
                       </div>
@@ -548,9 +527,9 @@ export function BottomActionBar({
                 onClick={() => setIsLangOpen((v) => { const next = !v; if (next) { setIsCVTypeOpen(false); setIsLayoutOpen(false); setIsDataOpen(false); } return next; })}
                 className="h-9 bg-sky-600 text-white px-3 rounded-md font-semibold hover:bg-sky-700 active:bg-sky-800 transition-colors duration-200 flex items-center gap-2 shadow-sm ring-1 ring-sky-500/20"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
+                <FileText className="w-5 h-5" />
                 {t('generate.ats.resume')}
-                <svg className={`w-4 h-4 transition-transform ${isLangOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg>
+                <ChevronDown className={`w-4 h-4 transition-transform ${isLangOpen ? 'rotate-180' : ''}`} />
               </button>
               {isLangOpen && langPos && createPortal(
                 <div className="z-[70] w-[280px] bg-white dark:bg-zinc-800 rounded-xl shadow-xl border border-gray-200 dark:border-zinc-700 py-2"
@@ -622,9 +601,9 @@ export function BottomActionBar({
                 className="h-9 px-3 rounded-md font-semibold transition-colors duration-200 flex items-center gap-2 shadow-sm border border-gray-300/60 dark:border-zinc-600/60 bg-white/80 dark:bg-zinc-800/80 text-[13px] text-gray-900 dark:text-gray-100 hover:bg-white dark:hover:bg-zinc-700"
                 title={t('data.xml.title')}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3H4V5Zm16 5H4v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9Z"/></svg>
+                <Database className="w-5 h-5" />
                 <span>{t('data.xml.title')}</span>
-                <svg className={`w-4 h-4 transition-transform ${isDataOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg>
+                <ChevronDown className={`w-4 h-4 transition-transform ${isDataOpen ? 'rotate-180' : ''}`} />
               </button>
               {isDataOpen && dataPos && createPortal(
                 <div className="z-[70] w-[260px] bg-white dark:bg-zinc-800 rounded-xl shadow-xl border border-gray-200 dark:border-zinc-700 py-2"
@@ -632,7 +611,7 @@ export function BottomActionBar({
                   style={{ position: 'fixed', left: dataPos.left, top: dataPos.top - 8, transform: 'translateY(-100%)' }}>
                   <div className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-zinc-700">{t('data.xml.title')}</div>
                   <button type="button" className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 flex items-center gap-2" onClick={() => { setIsDataOpen(false); onExportXml(); }}>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M12 16a1 1 0 0 1-.707-.293l-3-3 1.414-1.414L11 12.586V4h2v8.586l1.293-1.293 1.414 1.414-3 3A1 1 0 0 1 12 16Z"/><path d="M5 20h14a1 1 0 1 0 0-2H5a1 1 0 1 0 0 2Z"/></svg>
+                    <Download className="w-4 h-4" />
                     <span>{t('data.xml.export')}</span>
                   </button>
                   <button 
@@ -644,10 +623,7 @@ export function BottomActionBar({
                       importInputRef.current?.click();
                     }}
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-                      <path d="M12 8a1 1 0 0 1 .707.293l3 3-1.414 1.414L13 11.414V20h-2v-8.586l-1.293 1.293-1.414-1.414 3-3A1 1 0 0 1 12 8Z"/>
-                      <path d="M5 4h14a1 1 0 1 1 0 2H5a1 1 0 1 1 0-2Z"/>
-                    </svg>
+                    <Upload className="w-4 h-4" />
                     <span>{t('data.xml.import')}</span>
                   </button>
                 </div>,

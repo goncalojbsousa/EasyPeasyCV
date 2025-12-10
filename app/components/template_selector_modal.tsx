@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { X } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { CvTemplate } from '../types/cv';
 
@@ -38,9 +39,7 @@ export function TemplateSelectorModal({ show, selectedTemplate, onSelect, onClos
             className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-300"
             aria-label="Close"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <X className="w-6 h-6" />
           </button>
         </div>
 
@@ -102,9 +101,7 @@ export function TemplateSelectorModal({ show, selectedTemplate, onSelect, onClos
                 className="absolute top-3 right-3 z-[62] text-white/90 hover:text-white bg-black/40 hover:bg-black/60 rounded-full p-1.5"
                 aria-label="Close preview"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <X className="w-5 h-5" />
               </button>
               <div className="w-full h-full flex items-center justify-center bg-gray-50 dark:bg-zinc-800">
                 {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { ChevronDown, FileText } from 'lucide-react';
 import { CvTemplate } from '../../types/cv';
 import { useLanguage } from '../../contexts/LanguageContext';
 
@@ -23,10 +24,7 @@ const templates = {
     nameKey: 'template.renewed.name',
     descriptionKey: 'template.renewed.description',
     icon: (
-      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-        <rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="currentColor" strokeWidth="2"/>
-        <path d="M7 9h10M7 12h6M7 15h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-      </svg>
+      <FileText className="w-5 h-5" />
     ),
     color: 'bg-slate-500'
   },
@@ -82,14 +80,7 @@ export function CvTypeSelector({ selectedTemplate, onTemplateChange }: CvTypeSel
               </p>
             </div>
           </div>
-          <svg
-            className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
+          <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
         </div>
       </button>
       {/* Only one template, so no dropdown needed */}

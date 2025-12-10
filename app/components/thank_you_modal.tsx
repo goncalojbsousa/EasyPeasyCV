@@ -1,6 +1,7 @@
 'use client';
 
 import { useLanguage } from '../contexts/LanguageContext';
+import { X, CheckCircle, Heart, Plus } from 'lucide-react';
 
 /**
  * Props interface for the ThankYouModal component
@@ -41,18 +42,14 @@ export function ThankYouModal({ show, onClose }: ThankYouModalProps) {
           onClick={handleClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors duration-200"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          <X className="w-6 h-6" />
         </button>
 
   {/* Modal content */}
         <div className="text-center">
           {/* Success icon for visual feedback */}
           <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 dark:bg-green-900/20 mb-4">
-            <svg className="h-6 w-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
+            <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
           </div>
 
           {/* Thank you title */}
@@ -68,9 +65,7 @@ export function ThankYouModal({ show, onClose }: ThankYouModalProps) {
           {/* Donation section with Ko-fi link */}
           <div className="bg-sky-50 dark:bg-sky-900/20 rounded-lg p-4 mb-6">
             <div className="flex items-center justify-center mb-3">
-              <svg className="w-8 h-8 text-sky-600 dark:text-sky-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>
+              <Heart className="w-8 h-8 text-sky-600 dark:text-sky-400 mr-2" />
               <span className="text-sky-600 dark:text-sky-400 font-medium text-sm">
                 {t('donation.title')}
               </span>
@@ -82,9 +77,7 @@ export function ThankYouModal({ show, onClose }: ThankYouModalProps) {
               onClick={handleDonationClick}
               className="w-full bg-sky-600 hover:bg-sky-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm flex items-center justify-center gap-2"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
+              <Plus className="w-4 h-4" />
               {t('donation.button')}
             </button>
           </div>

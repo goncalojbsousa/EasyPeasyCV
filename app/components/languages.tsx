@@ -1,6 +1,7 @@
 'use client';
 
 import { Language } from '../types/cv';
+import { ChevronDown } from 'lucide-react';
 import { FormSection } from './ui/form-section';
 import { FormField } from './ui/form-field';
 import { IconButton } from './ui/icon-button';
@@ -150,7 +151,7 @@ export function Languages({
                     tabIndex={0}
                   >
                     <span>{lang.level ? t(lang.level) : t('select.language.level')}</span>
-                    <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`level-${idx}`] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+                    <ChevronDown className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`level-${idx}`] ? 'rotate-180' : ''}`} />
                   </button>
                   {openDropdowns[`level-${idx}`] && (
                     <div className="absolute left-0 mt-2 w-full bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-1 z-50">

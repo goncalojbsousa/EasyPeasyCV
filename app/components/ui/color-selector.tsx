@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { ChevronDown } from 'lucide-react';
 
 import { CvColor } from '../../types/cv';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -156,14 +157,7 @@ export function ColorSelector({ selectedColor, onColorChange, show = true }: Col
           />
           <span>{language === 'en' ? colors[selectedColor].nameEn : colors[selectedColor].name}</span>
         </div>
-        <svg
-          className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {isOpen && portalPos && createPortal(

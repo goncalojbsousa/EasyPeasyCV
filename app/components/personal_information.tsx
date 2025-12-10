@@ -1,6 +1,7 @@
   'use client';
 
 import { PersonalInfo, Link } from '../types/cv';
+import { ChevronDown, GripVertical, X, Plus } from 'lucide-react';
 import { FormSection } from './ui/form-section';
 import { FormField } from './ui/form-field';
 import { Icons } from './ui/icons';
@@ -501,7 +502,7 @@ export function PersonalInformation({
                     ? `${getCountryDisplayName(personalInfo.countryCode)} ${personalInfo.countryCode.match(/\(\+.*\)/)?.[0] || ''}`.trim()
                     : t('select.country')}
                 </span>
-                <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openCountryDropdown ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+                <ChevronDown className={`w-4 h-4 ml-2 transition-transform duration-200 ${openCountryDropdown ? 'rotate-180' : ''}`} />
               </button>
               {openCountryDropdown && (
                 <div className="absolute left-0 mt-2 w-full bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-2 z-50 animate-fade-in">
@@ -580,9 +581,7 @@ export function PersonalInformation({
                     >
                       {links.length > 1 && (
                         <DragHandle ariaLabel="Reordenar link" className="text-gray-400 dark:text-zinc-500 hover:text-gray-600 dark:hover:text-zinc-300 transition-colors duration-300">
-                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                          </svg>
+                          <GripVertical className="w-3 h-3" />
                         </DragHandle>
                       )}
                       <span className="font-medium text-gray-700 dark:text-gray-300">{translateLinkType(link.type, link.customName)}:</span>
@@ -593,9 +592,7 @@ export function PersonalInformation({
                         className="text-gray-400 dark:text-zinc-500 hover:text-red-500 dark:hover:text-red-400 transition-colors duration-300 ml-1"
                         aria-label="Remove link"
                       >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+                        <X className="w-4 h-4" />
                       </button>
                     </div>
                   );
@@ -629,7 +626,7 @@ export function PersonalInformation({
                 tabIndex={0}
               >
                 <span>{translateLinkType(newLinkType)}</span>
-                <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdownIdx === 0 ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+                <ChevronDown className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdownIdx === 0 ? 'rotate-180' : ''}`} />
               </button>
               {openDropdownIdx === 0 && (
                 <div className="absolute left-0 mt-2 w-full bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-1 z-50 animate-fade-in">
@@ -677,9 +674,7 @@ export function PersonalInformation({
                 className="flex items-center justify-center w-10 h-10 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 dark:disabled:bg-zinc-400 disabled:cursor-not-allowed text-white rounded-lg transition-colors duration-300 shadow-sm flex-shrink-0"
                 aria-label="Add link"
               >
-                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
+                <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
           </div>

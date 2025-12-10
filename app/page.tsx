@@ -1,6 +1,7 @@
 'use client';
 
 import { useLanguage } from './contexts/LanguageContext';
+import { Eye, CheckCircle, Zap } from 'lucide-react';
 import { Navbar } from './components/navbar';
 import { Footer } from './components/footer';
 import Link from 'next/link';
@@ -153,10 +154,7 @@ export default function Home() {
           </div>
           {previewTemplates.length === 0 ? (
             <div className="flex flex-col items-center justify-center border border-dashed border-gray-300 dark:border-zinc-700 rounded-xl p-10 bg-white dark:bg-zinc-800">
-              <svg className="w-12 h-12 text-gray-400 dark:text-gray-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-              </svg>
+              <Eye className="w-12 h-12 text-gray-400 dark:text-gray-500 mb-3" />
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">{t('template.selector')}</h3>
               <p className="text-sm text-gray-600 dark:text-gray-400 text-center max-w-md">
                 {t('landing.templates.subtitle')}
@@ -256,9 +254,7 @@ export default function Home() {
             <div className="bg-white dark:bg-zinc-800 p-6 rounded-xl border border-gray-200/80 dark:border-zinc-700/60">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-sky-100 dark:bg-sky-900 rounded-full flex items-center justify-center mr-3">
-                  <svg className="w-6 h-6 text-sky-600 dark:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
+                  <Eye className="w-6 h-6 text-sky-600 dark:text-sky-400" />
                 </div>
                 <div>
                   <div className="font-semibold text-gray-900 dark:text-white">{t('landing.benefits.privacy.title')}</div>
@@ -272,9 +268,7 @@ export default function Home() {
             <div className="bg-white dark:bg-zinc-800 p-6 rounded-xl border border-gray-200/80 dark:border-zinc-700/60">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mr-3">
-                  <svg className="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                  <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
                   <div className="font-semibold text-gray-900 dark:text-white">{t('landing.benefits.ats.title')}</div>
@@ -288,9 +282,7 @@ export default function Home() {
             <div className="bg-white dark:bg-zinc-800 p-6 rounded-xl border border-gray-200/80 dark:border-zinc-700/60">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mr-3">
-                  <svg className="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
+                  <Zap className="w-6 h-6 text-purple-600 dark:text-purple-400" />
                 </div>
                 <div>
                   <div className="font-semibold text-gray-900 dark:text-white">{t('landing.benefits.performance.title')}</div>
@@ -310,9 +302,7 @@ export default function Home() {
         <div className="w-full text-center">
           <div className="mb-8">
             <div className="inline-flex items-center gap-2 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 px-4 py-2 rounded-full text-sm font-medium">
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
+              <CheckCircle className="w-4 h-4" />
               {t('landing.opensource.title')}
             </div>
           </div>

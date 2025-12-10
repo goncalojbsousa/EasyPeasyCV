@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { Calendar, ChevronLeft, ChevronRight, GripVertical } from 'lucide-react';
 import { SortableList, DragHandle } from './dnd/sortable-list';
 import { Certification } from '../types/cv';
 import { FormSection } from './ui/form-section';
@@ -189,9 +190,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Open calendar"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
+          <Calendar className="w-5 h-5" />
         </button>
       </div>
 
@@ -205,9 +204,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
               className="w-11 h-11 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-zinc-700 rounded-lg transition-colors duration-300"
               aria-label="Previous month"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
+              <ChevronLeft className="w-4 h-4" />
             </button>
             <div className="flex items-center gap-2">
               <button
@@ -233,9 +230,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
               className="w-11 h-11 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-zinc-700 rounded-lg transition-colors duration-300"
               aria-label="Next month"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
+              <ChevronRight className="w-4 h-4" />
             </button>
           </div>
 
@@ -249,9 +244,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
                   className="w-10 h-10 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-zinc-600 rounded transition-colors duration-300"
                   aria-label="Previous years"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
+                  <ChevronLeft className="w-4 h-4" />
                 </button>
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {yearRange.start} - {yearRange.end}
@@ -262,9 +255,7 @@ function DatePicker({ value, onChange, placeholder }: { value: string; onChange:
                   className="w-10 h-10 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-zinc-600 rounded transition-colors duration-300"
                   aria-label="Next years"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
+                  <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
               <div className="grid grid-cols-5 gap-1">
@@ -421,9 +412,7 @@ export function Certifications({
                           ariaLabel="Reorder certification"
                           className="text-gray-400 dark:text-zinc-500 hover:text-gray-600 dark:hover:text-zinc-300 transition-colors duration-300"
                         >
-                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                          </svg>
+                          <GripVertical className="w-4 h-4" />
                         </DragHandle>
                       )}
                       <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">

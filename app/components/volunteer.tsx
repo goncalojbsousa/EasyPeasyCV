@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { ChevronDown, GripVertical } from 'lucide-react';
 import { SortableList, DragHandle } from './dnd/sortable-list';
 import { Volunteer } from '../types/cv';
 import { FormSection } from './ui/form-section';
@@ -131,9 +132,7 @@ export function VolunteerWork({
                           ariaLabel="Reorder volunteer"
                           className="text-gray-400 dark:text-zinc-500 hover:text-gray-600 dark:hover:text-zinc-300 transition-colors duration-300"
                         >
-                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                          </svg>
+                          <GripVertical className="w-4 h-4" />
                         </DragHandle>
                       )}
                       <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
@@ -187,7 +186,7 @@ export function VolunteerWork({
                         tabIndex={0}
                       >
                         <span>{vol.startMonth ? getTranslatedMonthWithT(t, vol.startMonth) : t('select.month')}</span>
-                        <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`startMonth-${idx}`] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+                        <ChevronDown className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`startMonth-${idx}`] ? 'rotate-180' : ''}`} />
                       </button>
                       {openDropdowns[`startMonth-${idx}`] && (
                         <div className="absolute left-0 mt-2 w-full bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-1 z-50">
@@ -229,7 +228,7 @@ export function VolunteerWork({
                             tabIndex={0}
                           >
                             <span>{vol.endMonth ? getTranslatedMonthWithT(t, vol.endMonth) : t('select.month')}</span>
-                            <svg className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`endMonth-${idx}`] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+                            <ChevronDown className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`endMonth-${idx}`] ? 'rotate-180' : ''}`} />
                           </button>
                           {openDropdowns[`endMonth-${idx}`] && (
                             <div className="absolute left-0 mt-2 w-full bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-1 z-50">
