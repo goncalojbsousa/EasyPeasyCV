@@ -8,6 +8,7 @@ import { EmptyState } from './ui/empty-state';
 import { Icons } from './ui/icons';
 import { useLanguage } from '../contexts/LanguageContext';
 import { SortableList, DragHandle } from './dnd/sortable-list';
+import { AutoResizeTextarea } from './ui/auto-resize-textarea';
 
 interface CustomSectionCardProps {
   section: CustomSection;
@@ -173,19 +174,21 @@ export function CustomSectionCard({
                       </label>
                     </div>
                     <FormField label={t('custom.field.value')}>
-                      <textarea
+                      <AutoResizeTextarea
                         className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                         placeholder={t('custom.field.placeholder.value')}
                         value={field.value}
                         onChange={(e) => onFieldChange(field.id, 'value', e.target.value)}
+                        minHeight={80}
                       />
                     </FormField>
                     <FormField label={t('custom.field.bullets')}>
-                      <textarea
+                      <AutoResizeTextarea
                         className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                         placeholder={t('custom.field.placeholder.bullets')}
                         value={field.bullets || ''}
                         onChange={(e) => onFieldChange(field.id, 'bullets', e.target.value)}
+                        minHeight={80}
                       />
                     </FormField>
                   </div>

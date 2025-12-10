@@ -9,6 +9,7 @@ import { EmptyState } from './ui/empty-state';
 import { Icons } from './ui/icons';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useState, useEffect, useRef } from 'react';
+import { AutoResizeTextarea } from './ui/auto-resize-textarea';
 
 import { SortableList, DragHandle } from './dnd/sortable-list';
 import { MONTHS_EN as MONTHS, toEN, getTranslatedMonthWithT } from '../utils/months';
@@ -66,7 +67,6 @@ export function ProfessionalExperience({
   
   // Month helpers provided by shared util
   const dropdownRefs = useRef<{[key: string]: HTMLDivElement | null}>({});
-  
 
   // Generates a display title for each experience card based on available data
   const getExperienceTitle = (exp: Experience, idx: number) => {
@@ -295,22 +295,24 @@ export function ProfessionalExperience({
                   {/* Activities and responsibilities field */}
                   <div className="mb-4">
                     <FormField label={t('field.activities')}>
-                      <textarea
+                      <AutoResizeTextarea
                         className="w-full p-2.5 border border-gray-300 dark:border-zinc-600 rounded-xl bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-500 focus:border-sky-500 transition-all text-sm text-gray-900 dark:text-gray-100"
                         placeholder={t(`cvType.placeholder.activities`)}
                         value={exp.activities}
                         onChange={e => onExperienceChange(idx, 'activities', e.target.value)}
+                        minHeight={80}
                       />
                     </FormField>
                   </div>
 
                   {/* Achievements and results field */}
                   <FormField label={t('field.achievements')} helperText={t('field.achievements.helper')}>
-                    <textarea
+                    <AutoResizeTextarea
                       className="w-full p-2.5 border border-gray-300 dark:border-zinc-600 rounded-xl bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-500 focus:border-sky-500 transition-all text-sm text-gray-900 dark:text-gray-100"
                       placeholder={t(`cvType.placeholder.achievements`)}
                       value={exp.results}
                       onChange={e => onExperienceChange(idx, 'results', e.target.value)}
+                      minHeight={80}
                     />
                   </FormField>
                 </div>

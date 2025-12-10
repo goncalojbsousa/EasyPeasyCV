@@ -4,6 +4,7 @@ import { FormSection } from './ui/form-section';
 import { FormField } from './ui/form-field';
 import { Icons } from './ui/icons';
 import { useLanguage } from '../contexts/LanguageContext';
+import { AutoResizeTextarea } from './ui/auto-resize-textarea';
 
 /**
  * Props interface for the ProfessionalSummary component
@@ -42,6 +43,7 @@ export function ProfessionalSummary({
   canMoveDown = true,
 }: ProfessionalSummaryProps) {
   const { t } = useLanguage();
+  
   return (
     <form className="space-y-8 flex flex-col items-center w-full">
       <FormSection 
@@ -54,11 +56,12 @@ export function ProfessionalSummary({
         canMoveDown={canMoveDown}
       >
         <FormField label={t('field.professional.summary')}>
-          <textarea
+          <AutoResizeTextarea
             className="w-full p-3 sm:p-4 border rounded-lg bg-white dark:bg-zinc-800 min-h-[120px] shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100 border-gray-300 dark:border-zinc-600"
             placeholder={t(`cvType.placeholder.professional.summary`)}
             value={resume}
             onChange={e => onResumeChange(e.target.value)}
+            minHeight={120}
           />
         </FormField>
       </FormSection>

@@ -10,6 +10,7 @@ import { IconButton } from './ui/icon-button';
 import { EmptyState } from './ui/empty-state';
 import { Icons } from './ui/icons';
 import { useLanguage } from '../contexts/LanguageContext';
+import { AutoResizeTextarea } from './ui/auto-resize-textarea';
 
 /**
  * Props interface for the Certifications component
@@ -365,7 +366,6 @@ export function Certifications({
 }: CertificationsProps) {
   const { t } = useLanguage();
   
-  
   // Generates a display title for each certification card based on available data
   const getCertificationTitle = (cert: Certification, idx: number) => {
     if (cert.name && cert.issuer) return `${cert.name} | ${cert.issuer}`;
@@ -486,11 +486,12 @@ export function Certifications({
                 
                 {/* Description field */}
                 <FormField label={t('field.description')}>
-                  <textarea
+                  <AutoResizeTextarea
                     className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                     placeholder={t('placeholder.certification.description')}
                     value={cert.description}
                     onChange={e => onCertificationChange(idx, 'description', e.target.value)}
+                    minHeight={80}
                   />
                 </FormField>
                 </div>

@@ -11,6 +11,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useState, useEffect, useRef } from 'react';
 import { SortableList, DragHandle } from './dnd/sortable-list';
 import { MONTHS_EN as MONTHS, toEN, getTranslatedMonthWithT } from '../utils/months';
+import { AutoResizeTextarea } from './ui/auto-resize-textarea';
 
 /**
  * Props interface for the AcademicEducation component
@@ -354,22 +355,24 @@ export function AcademicEducation({
                 {/* Description field */}
                 <div className="mb-4">
                   <FormField label={t('field.description')}>
-                    <textarea
+                    <AutoResizeTextarea
                       className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                       placeholder={t('placeholder.education.description')}
                       value={ed.description}
                       onChange={e => onEducationChange(idx, 'description', e.target.value)}
+                      minHeight={80}
                     />
                   </FormField>
                 </div>
 
                 {/* Achievements field */}
                 <FormField label={t('field.achievements')} helperText={t('field.achievements.helper')}>
-                  <textarea
+                  <AutoResizeTextarea
                     className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                     placeholder={t('placeholder.education.achievements')}
                     value={ed.achievements}
                     onChange={e => onEducationChange(idx, 'achievements', e.target.value)}
+                    minHeight={80}
                   />
                 </FormField>
                 </div>
