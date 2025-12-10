@@ -25,6 +25,8 @@ interface PersonalInformationProps {
   onPersonalInfoChange: (field: string, value: string) => void;
   /** Handler for reordering links */
   onReorderLinks?: (fromIndex: number, toIndex: number) => void;
+  /** Handler for toggling link label visibility */
+  onToggleLinkLabel?: (idx: number) => void;
   /** Validation error states for form fields */
   validationErrors?: {[key: string]: boolean};
   /** Whether to show validation errors */
@@ -194,6 +196,7 @@ export function PersonalInformation({
   onRemoveLink,
   onPersonalInfoChange,
   onReorderLinks,
+  onToggleLinkLabel,
   validationErrors = {},
   showValidationErrors = true
 }: PersonalInformationProps) {
@@ -560,7 +563,7 @@ export function PersonalInformation({
           
           {/* Display existing links as tags */}
           {links.length > 0 && (
-            <div className="mb-4 flex flex-wrap gap-2">
+            <div className="mb-4 space-y-2">
               <SortableList
                 length={links.length}
                 onReorder={(from, to) => onReorderLinks && onReorderLinks(from, to)}
@@ -577,23 +580,40 @@ export function PersonalInformation({
                   return (
                     <div 
                       key={idx}
-                      className="flex items-center gap-2 bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-600 rounded-full px-3 py-1 text-sm transition-all relative"
+                      className="flex flex-col sm:flex-row sm:items-center gap-2 bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-600 rounded-lg px-3 py-2 text-sm transition-all"
                     >
-                      {links.length > 1 && (
-                        <DragHandle ariaLabel="Reordenar link" className="text-gray-400 dark:text-zinc-500 hover:text-gray-600 dark:hover:text-zinc-300 transition-colors duration-300">
-                          <GripVertical className="w-3 h-3" />
-                        </DragHandle>
-                      )}
-                      <span className="font-medium text-gray-700 dark:text-gray-300">{translateLinkType(link.type, link.customName)}:</span>
-                      <span className="text-gray-600 dark:text-gray-400">{displayValue}</span>
-                      <button
-                        type="button"
-                        onClick={() => onRemoveLink(idx)}
-                        className="text-gray-400 dark:text-zinc-500 hover:text-red-500 dark:hover:text-red-400 transition-colors duration-300 ml-1"
-                        aria-label="Remove link"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
+                      <div className="flex items-center gap-2 flex-1 min-w-0">
+                        {links.length > 1 && (
+                          <DragHandle ariaLabel="Reordenar link" className="text-gray-400 dark:text-zinc-500 hover:text-gray-600 dark:hover:text-zinc-300 transition-colors duration-300 flex-shrink-0">
+                            <GripVertical className="w-3 h-3" />
+                          </DragHandle>
+                        )}
+                        {!link.hideLinkLabel && (
+                          <span className="font-medium text-gray-700 dark:text-gray-300 flex-shrink-0">{translateLinkType(link.type, link.customName)}:</span>
+                        )}
+                        <span className="text-gray-600 dark:text-gray-400 truncate">{displayValue}</span>
+                      </div>
+                      <div className="flex items-center gap-2 sm:flex-shrink-0 ml-auto sm:ml-0">
+                        {onToggleLinkLabel && (
+                          <label className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400 cursor-pointer hover:text-gray-800 dark:hover:text-gray-200 transition-colors">
+                            <input
+                              type="checkbox"
+                              checked={!!link.hideLinkLabel}
+                              onChange={() => onToggleLinkLabel(idx)}
+                              className="w-3 h-3 rounded border-gray-300 dark:border-zinc-600 text-blue-600 focus:ring-blue-500 focus:ring-offset-0 focus:ring-1"
+                            />
+                            <span className="whitespace-nowrap">{t('field.link.hide.label')}</span>
+                          </label>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => onRemoveLink(idx)}
+                          className="text-gray-400 dark:text-zinc-500 hover:text-red-500 dark:hover:text-red-400 transition-colors duration-300 flex-shrink-0"
+                          aria-label="Remove link"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
                   );
                 }}

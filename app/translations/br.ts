@@ -371,6 +371,7 @@ const brTranslations: Record<string, string> = {
   // Custom link name
   'field.link.custom.name': 'Nome da Plataforma',
   'placeholder.link.custom.name': 'Ex: Behance, Dribbble, Medium',
+  'field.link.hide.label': 'Ocultar nome do link',
 
   // Months
   'month.jan': 'Jan',

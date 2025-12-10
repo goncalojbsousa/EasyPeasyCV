@@ -22,7 +22,7 @@ import { LivePdfPane } from '../components/live_pdf_pane';
 import { FloatingActionBar } from '../components/ui/floating-action-bar';
 import { BottomActionBar } from '../components/ui/bottom-action-bar';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Experience, Education, Language, Certification, Project, Volunteer, CvColor, CvTemplate, CvRenderSettings, CustomSection, SectionKey } from '../types/cv';
+import { Experience, Education, Language, Certification, Project, Volunteer, CvColor, CvTemplate, CvRenderSettings, CustomSection, SectionKey, Link } from '../types/cv';
 import { cvDataToXml, xmlToCvData } from '../utils/xml';
 
 /**
@@ -43,7 +43,7 @@ export default function Builder() {
     countryCode: 'Portugal (+351)',
     phone: '',
   });
-  const [links, setLinks] = useState<{ type: string, value: string }[]>([]);
+  const [links, setLinks] = useState<Link[]>([]);
   const [resume, setResume] = useState('');
   // Tracks the source of loaded data for the top notification
   const [dataLoadedSource, setDataLoadedSource] = useState<'local' | 'xml' | null>(null);
@@ -370,6 +370,16 @@ const handleImportXml = (xml: string) => {
    */
   const handleRemoveLink = (idx: number) => {
     setLinks(links => links.filter((_, i) => i !== idx));
+  };
+
+  /**
+   * Toggle the hideLinkLabel property for a link
+   * @param idx - Index of the link to update
+   */
+  const handleToggleLinkLabel = (idx: number) => {
+    setLinks(links => links.map((link, i) => 
+      i === idx ? { ...link, hideLinkLabel: !link.hideLinkLabel } : link
+    ));
   };
 
   // Professional Experience handlers
@@ -1025,6 +1035,7 @@ const handleImportXml = (xml: string) => {
               onRemoveLink={handleRemoveLink}
               onPersonalInfoChange={handlePersonalInfoChange}
               onReorderLinks={handleReorderLinks}
+              onToggleLinkLabel={handleToggleLinkLabel}
               validationErrors={validationErrors}
               showValidationErrors={showValidationErrors}
             />

@@ -413,7 +413,7 @@ export function RenewedTemplate({ personalInfo, links, resume, experiences, educ
               <View style={{ flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap', marginTop: 2 }}>
                 {links.map((lnk, i) => (
                   <Link key={i} src={getSocialUrl(lnk.type, lnk.value)} style={{ fontSize: 9, color: '#2563eb', marginHorizontal: 6 }}>
-                    {lnk.customName || lnk.type}: {lnk.value}
+                    {lnk.hideLinkLabel ? lnk.value : `${lnk.customName || lnk.type}: ${lnk.value}`}
                   </Link>
                 ))}
               </View>

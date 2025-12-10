@@ -28,6 +28,8 @@ export interface Link {
   value: string;
   /** Custom name for the platform (when type is "Other") */
   customName?: string;
+  /** Hide the link label (e.g., "GitHub:") and show only the URL */
+  hideLinkLabel?: boolean;
 }
 
 /**

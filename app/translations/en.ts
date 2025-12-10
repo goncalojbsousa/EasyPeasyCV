@@ -372,7 +372,8 @@ const enTranslations: Record<string, string> = {
 
   // Custom link name
   'field.link.custom.name': 'Platform Name',
-  'placeholder.link.custom.name': 'e.g., Behance, Dribbble, Medium',
+  'placeholder.link.custom.name': 'E.g.: Behance, Dribbble, Medium',
+  'field.link.hide.label': 'Hide link name',
 
   // Months
   'month.jan': 'Jan',

@@ -524,7 +524,8 @@ const esTranslations: Record<string, string> = {
 
   // Custom link name
   'field.link.custom.name': 'Nombre de la Plataforma',
-  'placeholder.link.custom.name': 'Ej: Behance, Dribbble, Medium',
+  'placeholder.link.custom.name': 'Ej.: Behance, Dribbble, Medium',
+  'field.link.hide.label': 'Ocultar nombre del enlace',
 
   // Months
   'month.jan': 'Ene',
