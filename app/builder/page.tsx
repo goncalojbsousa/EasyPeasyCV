@@ -77,6 +77,9 @@ export default function Builder() {
       sectionSpacingPx: 12,
       columns: 1,
       atsSafe: false,
+      density: 'normal',
+      textAlignment: 'left',
+      singlePageMode: false,
     },
     header: {
       nameFontSize: 22,
@@ -95,6 +98,11 @@ export default function Builder() {
       aspectRatio: '1:1',
       crop: null,
       dataUrl: null,
+    },
+    sections: {
+      titleColor: '#000000',
+      titleFontSize: 12,
+      dateFormat: 'medium',
     },
   });
 

@@ -154,6 +154,23 @@ export function BottomActionBar({
     { value: '4:3', label: '4:3' },
   ]), []);
 
+  const densityOptions: SelectOption<string>[] = useMemo(() => ([
+    { value: 'compact', label: t('layout.controls.density.compact') },
+    { value: 'normal', label: t('layout.controls.density.normal') },
+    { value: 'spacious', label: t('layout.controls.density.spacious') },
+  ]), [t]);
+
+  const dateFormatOptions: SelectOption<string>[] = useMemo(() => ([
+    { value: 'short', label: t('layout.controls.dateFormat.short') },
+    { value: 'medium', label: t('layout.controls.dateFormat.medium') },
+    { value: 'long', label: t('layout.controls.dateFormat.long') },
+  ]), [t]);
+
+  const textAlignmentOptions: SelectOption<string>[] = useMemo(() => ([
+    { value: 'left', label: t('layout.controls.textAlignment.left') },
+    { value: 'justify', label: t('layout.controls.textAlignment.justify') },
+  ]), [t]);
+
   const langRef = useRef<HTMLDivElement>(null);
   const cvTypeRef = useRef<HTMLDivElement>(null);
   const dataRef = useRef<HTMLDivElement>(null);
@@ -412,94 +429,122 @@ export function BottomActionBar({
                       <label className="block text-xs font-medium mb-1">{`${t('layout.controls.sectionSpacing.label')} (${settings?.layout.sectionSpacingPx}px)`}</label>
                       <input type="range" min={10} max={30} step={2} value={settings?.layout.sectionSpacingPx || 12} onChange={(e) => onSettingsChange && settings && onSettingsChange({ ...settings, layout: { ...settings.layout, sectionSpacingPx: parseInt(e.target.value) } })} className="w-full" />
                     </div>
-                    <div>
-                      <label className="block text-xs font-medium mb-1">{t('layout.controls.columns.label')}</label>
-                      <SelectMenu
-                        className="w-full"
-                        options={columnOptions}
-                        value={settings?.layout.columns || 1}
-                        placeholder={t('layout.controls.columns.label')}
-                        onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, layout: { ...settings.layout, columns: value as any } })}
-                      />
+                    
+                    {/* Quick presets and additional controls */}
+                    <div className="border-t border-gray-200 dark:border-zinc-700 pt-3">
+                      <div className="text-[11px] font-semibold mb-2 text-gray-700 dark:text-gray-300 uppercase tracking-wide">{t('layout.controls.quickSettings')}</div>
+                      
+                      {/* Density preset */}
+                      <div className="mb-3">
+                        <label className="block text-xs font-medium mb-1">{t('layout.controls.density.label')}</label>
+                        <SelectMenu
+                          className="w-full"
+                          options={densityOptions}
+                          value={settings?.layout.density || 'normal'}
+                          placeholder={t('layout.controls.density.label')}
+                          onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, layout: { ...settings.layout, density: value as any } })}
+                        />
+                        <div className="text-[10px] text-gray-500 dark:text-gray-400 mt-1">{t('layout.controls.density.help')}</div>
+                      </div>
+                      
+                      {/* Single page mode toggle */}
+                      <div className="mb-3">
+                        <label className="flex items-center gap-2 text-xs font-medium cursor-pointer">
+                          <input 
+                            type="checkbox" 
+                            checked={settings?.layout.singlePageMode || false} 
+                            onChange={(e) => onSettingsChange && settings && onSettingsChange({ ...settings, layout: { ...settings.layout, singlePageMode: e.target.checked } })}
+                            className="rounded"
+                          />
+                          {t('layout.controls.singlePageMode')}
+                        </label>
+                        <div className="text-[10px] text-gray-500 dark:text-gray-400 mt-1 ml-5">{t('layout.controls.singlePageMode.help')}</div>
+                      </div>
+                      
+                      {/* Text alignment */}
+                      <div>
+                        <label className="block text-xs font-medium mb-1">{t('layout.controls.textAlignment.label')}</label>
+                        <SelectMenu
+                          className="w-full"
+                          options={textAlignmentOptions}
+                          value={settings?.layout.textAlignment || 'left'}
+                          placeholder={t('layout.controls.textAlignment.label')}
+                          onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, layout: { ...settings.layout, textAlignment: value as any } })}
+                        />
+                      </div>
                     </div>
                     
                     <div className="border-t border-gray-200 dark:border-zinc-700 pt-3">
-                      <div className="text-xs font-semibold mb-2">{t('layout.controls.header.title')}</div>
-                      <div className="grid grid-cols-2 gap-2">
-                        <div>
-                          <label className="block text-xs">{`${t('layout.controls.header.nameSize')} (${settings?.header.nameFontSize})`}</label>
-                          <input type="range" min={16} max={28} step={1} value={settings?.header.nameFontSize || 22} onChange={(e) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, nameFontSize: parseInt(e.target.value) } })} />
-                        </div>
-                        <div>
-                          <label className="block text-xs">{t('layout.controls.header.weight.label')}</label>
-                          <SelectMenu
-                            className="w-full"
-                            options={headerWeightOptions}
-                            value={settings?.header.nameFontWeight || 'bold'}
-                            placeholder={t('layout.controls.header.weight.label')}
-                            onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, nameFontWeight: value as any } })}
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs">{t('layout.controls.header.iconSize')}</label>
-                          <input type="range" min={16} max={24} step={2} value={settings?.header.iconSizePx || 18} onChange={(e) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, iconSizePx: parseInt(e.target.value) as any } })} />
-                        </div>
-                        <div>
-                          <label className="block text-xs">{t('layout.controls.header.color')}</label>
-                          <input type="color" value={settings?.header.nameColor || '#000000'} onChange={(e) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, nameColor: e.target.value } })} className="w-full h-8 p-0" />
-                        </div>
-                        <div>
-                          <label className="block text-xs">{t('layout.controls.header.titleStyle.label')}</label>
-                          <SelectMenu
-                            className="w-full"
-                            options={titleStyleOptions}
-                            value={settings?.header.titleStyle || 'normal'}
-                            placeholder={t('layout.controls.header.titleStyle.label')}
-                            onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, titleStyle: value as any } })}
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs">{t('layout.controls.header.titlePosition.label')}</label>
-                          <SelectMenu
-                            className="w-full"
-                            options={titlePositionOptions}
-                            value={settings?.header.titlePosition || 'below'}
-                            placeholder={t('layout.controls.header.titlePosition.label')}
-                            onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, titlePosition: value as any } })}
-                          />
-                        </div>
-                        <div className="col-span-2">
-                          <label className="block text-xs">{t('layout.controls.header.divider.title')}</label>
-                          <div className="grid grid-cols-2 gap-2">
+                      <div className="text-xs font-semibold mb-3 text-gray-700 dark:text-gray-300">{t('layout.controls.header.title')}</div>
+                      
+                      {/* Nome e Cargo */}
+                      <div className="space-y-2 mb-3">
+                        <div className="text-[11px] font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">{t('layout.controls.header.nameSection')}</div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <label className="block text-xs mb-1">{`${t('layout.controls.header.nameSize')} (${settings?.header.nameFontSize})`}</label>
+                            <input type="range" min={16} max={28} step={1} value={settings?.header.nameFontSize || 22} onChange={(e) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, nameFontSize: parseInt(e.target.value) } })} className="w-full" />
+                          </div>
+                          <div>
+                            <label className="block text-xs mb-1">{t('layout.controls.header.weight.label')}</label>
                             <SelectMenu
-                              className="w-full min-w-0"
-                              options={dividerThicknessOptions}
-                              value={settings?.header.dividerThickness || 1}
-                              placeholder={t('layout.controls.header.divider.title')}
-                              onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, dividerThickness: value as any } })}
+                              className="w-full"
+                              options={headerWeightOptions}
+                              value={settings?.header.nameFontWeight || 'bold'}
+                              placeholder={t('layout.controls.header.weight.label')}
+                              onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, nameFontWeight: value as any } })}
                             />
+                          </div>
+                          <div>
+                            <label className="block text-xs mb-1">{t('layout.controls.header.color')}</label>
+                            <input type="color" value={settings?.header.nameColor || '#000000'} onChange={(e) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, nameColor: e.target.value } })} className="w-full h-8 p-0 rounded" />
+                          </div>
+                          <div>
+                            <label className="block text-xs mb-1">{t('layout.controls.header.titleStyle.label')}</label>
                             <SelectMenu
-                              className="w-full min-w-0"
-                              options={dividerStyleOptions}
-                              value={settings?.header.dividerStyle || 'solid'}
-                              placeholder={t('layout.controls.header.divider.title')}
-                              onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, dividerStyle: value as any } })}
+                              className="w-full"
+                              options={titleStyleOptions}
+                              value={settings?.header.titleStyle || 'normal'}
+                              placeholder={t('layout.controls.header.titleStyle.label')}
+                              onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, titleStyle: value as any } })}
                             />
                           </div>
                         </div>
-                        <div>
-                          <label className="block text-xs">{t('layout.controls.header.iconSpacing')}</label>
-                          <input type="range" min={5} max={15} step={2} value={settings?.header.iconSpacingPx || 9} onChange={(e) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, iconSpacingPx: parseInt(e.target.value) as any } })} />
-                        </div>
-                        <div>
-                          <label className="block text-xs">{t('layout.controls.header.alignment')}</label>
+                      </div>
+                      
+                      {/* Divisor */}
+                      <div className="space-y-2 mb-3">
+                        <div className="text-[11px] font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">{t('layout.controls.header.divider.title')}</div>
+                        <div className="grid grid-cols-2 gap-2">
                           <SelectMenu
-                            className="w-full"
-                            options={alignmentOptions}
-                            value={settings?.header.iconAlignment || 'left'}
-                            placeholder={t('layout.controls.header.alignment')}
-                            onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, iconAlignment: value as any } })}
+                            className="w-full min-w-0"
+                            options={dividerThicknessOptions}
+                            value={settings?.header.dividerThickness || 1}
+                            placeholder={t('layout.controls.header.divider.thickness')}
+                            onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, dividerThickness: value as any } })}
                           />
+                          <SelectMenu
+                            className="w-full min-w-0"
+                            options={dividerStyleOptions}
+                            value={settings?.header.dividerStyle || 'solid'}
+                            placeholder={t('layout.controls.header.divider.style')}
+                            onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, dividerStyle: value as any } })}
+                          />
+                        </div>
+                      </div>
+                      
+                      {/* Ícones de Contato */}
+                      <div className="space-y-2">
+                        <div className="text-[11px] font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">{t('layout.controls.header.icons')}</div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <label className="block text-xs mb-1">{`${t('layout.controls.header.iconSize')} (${settings?.header.iconSizePx}px)`}</label>
+                            <input type="range" min={16} max={24} step={2} value={settings?.header.iconSizePx || 18} onChange={(e) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, iconSizePx: parseInt(e.target.value) as any } })} className="w-full" />
+                          </div>
+                          <div>
+                            <label className="block text-xs mb-1">{`${t('layout.controls.header.iconSpacing')} (${settings?.header.iconSpacingPx}px)`}</label>
+                            <input type="range" min={5} max={15} step={2} value={settings?.header.iconSpacingPx || 9} onChange={(e) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, iconSpacingPx: parseInt(e.target.value) as any } })} className="w-full" />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -532,6 +577,61 @@ export function BottomActionBar({
                         </div>
                       )}
                     </div>
+                    
+                    {/* Section styling controls */}
+                    <div className="border-t border-gray-200 dark:border-zinc-700 pt-3">
+                      <div className="text-xs font-semibold mb-3 text-gray-700 dark:text-gray-300">{t('layout.controls.sections.title')}</div>
+                      
+                      <div className="space-y-3">
+                        {/* Section title color */}
+                        <div>
+                          <label className="block text-xs font-medium mb-1">{t('layout.controls.sections.titleColor')}</label>
+                          <input 
+                            type="color" 
+                            value={settings?.sections?.titleColor || '#000000'} 
+                            onChange={(e) => onSettingsChange && settings && onSettingsChange({ 
+                              ...settings, 
+                              sections: { ...settings.sections, titleColor: e.target.value, titleFontSize: settings.sections?.titleFontSize || 12, dateFormat: settings.sections?.dateFormat || 'medium' } 
+                            })} 
+                            className="w-full h-8 p-0 rounded" 
+                          />
+                        </div>
+                        
+                        {/* Section title size */}
+                        <div>
+                          <label className="block text-xs font-medium mb-1">{`${t('layout.controls.sections.titleSize')} (${settings?.sections?.titleFontSize || 12})`}</label>
+                          <input 
+                            type="range" 
+                            min={10} 
+                            max={16} 
+                            step={1} 
+                            value={settings?.sections?.titleFontSize || 12} 
+                            onChange={(e) => onSettingsChange && settings && onSettingsChange({ 
+                              ...settings, 
+                              sections: { ...settings.sections, titleFontSize: parseInt(e.target.value), titleColor: settings.sections?.titleColor || '#000000', dateFormat: settings.sections?.dateFormat || 'medium' } 
+                            })} 
+                            className="w-full" 
+                          />
+                        </div>
+                        
+                        {/* Date format */}
+                        <div>
+                          <label className="block text-xs font-medium mb-1">{t('layout.controls.sections.dateFormat')}</label>
+                          <SelectMenu
+                            className="w-full"
+                            options={dateFormatOptions}
+                            value={settings?.sections?.dateFormat || 'medium'}
+                            placeholder={t('layout.controls.sections.dateFormat')}
+                            onSelect={(value) => onSettingsChange && settings && onSettingsChange({ 
+                              ...settings, 
+                              sections: { ...settings.sections, dateFormat: value as any, titleColor: settings.sections?.titleColor || '#000000', titleFontSize: settings.sections?.titleFontSize || 12 } 
+                            })}
+                          />
+                          <div className="text-[10px] text-gray-500 dark:text-gray-400 mt-1">{t('layout.controls.sections.dateFormat.help')}</div>
+                        </div>
+                      </div>
+                    </div>
+                    
                     <div className="border-t border-gray-200 dark:border-zinc-700 pt-3">
                       <button
                         type="button"
@@ -547,6 +647,9 @@ export function BottomActionBar({
                             sectionSpacingPx: 12,
                             columns: 1 as const,
                             atsSafe: false,
+                            density: 'normal' as const,
+                            textAlignment: 'left' as const,
+                            singlePageMode: false,
                           };
                           const headerDefaults = {
                             nameFontSize: 22,
@@ -566,7 +669,12 @@ export function BottomActionBar({
                             crop: null,
                             dataUrl: null,
                           };
-                          onSettingsChange({ ...settings, layout: layoutDefaults, header: headerDefaults, photo: photoDefaults });
+                          const sectionsDefaults = {
+                            titleColor: '#000000',
+                            titleFontSize: 12,
+                            dateFormat: 'medium' as const,
+                          };
+                          onSettingsChange({ ...settings, layout: layoutDefaults, header: headerDefaults, photo: photoDefaults, sections: sectionsDefaults });
                         }}
                       >
                         {t('layout.controls.reset')}
@@ -577,11 +685,11 @@ export function BottomActionBar({
                       <div className="border-t border-gray-200 dark:border-zinc-700 pt-3">
                         <button
                           type="button"
+                          className="w-full h-9 px-3 rounded-md border border-gray-300/60 dark:border-zinc-600/60 bg-white/80 dark:bg-zinc-800/80 text-[13px] text-gray-900 dark:text-gray-100 hover:bg-white dark:hover:bg-zinc-700 shadow-sm flex items-center justify-center gap-2"
                           onClick={onResetSectionOrder}
-                          className="w-full h-9 px-3 rounded-md border border-gray-300/60 dark:border-zinc-600/60 bg-white/80 dark:bg-zinc-800/80 text-[13px] text-gray-900 dark:text-gray-100 hover:bg-white dark:hover:bg-zinc-700 shadow-sm"
                           title={t('section.order.reset')}
                         >
-                        <RotateCcw className="w-4 h-4" />
+                          <RotateCcw className="w-4 h-4" />
                           <span className="font-medium">{t('section.order.reset')}</span>
                         </button>
                       </div>

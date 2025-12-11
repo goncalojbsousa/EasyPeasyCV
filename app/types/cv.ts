@@ -237,6 +237,9 @@ export interface CvData {
 }
 
 export type FontFamilyOption = 'Helvetica' | 'Times-Roman' | 'Arial' | 'Custom';
+export type LayoutDensity = 'compact' | 'normal' | 'spacious';
+export type DateFormat = 'short' | 'medium' | 'long';
+export type TextAlignment = 'left' | 'justify';
 
 export interface CustomFontConfig {
   name: string;
@@ -253,6 +256,9 @@ export interface CvLayoutSettings {
   sectionSpacingPx: number;
   columns: 1 | 2 | 3;
   atsSafe: boolean;
+  density?: LayoutDensity;
+  textAlignment?: TextAlignment;
+  singlePageMode?: boolean;
 }
 
 export interface HeaderOptions {
@@ -275,8 +281,15 @@ export interface PhotoOptions {
   dataUrl?: string | null;
 }
 
+export interface SectionOptions {
+  titleColor: string;
+  titleFontSize: number;
+  dateFormat: DateFormat;
+}
+
 export interface CvRenderSettings {
   layout: CvLayoutSettings;
   header: HeaderOptions;
   photo: PhotoOptions;
+  sections: SectionOptions;
 }
