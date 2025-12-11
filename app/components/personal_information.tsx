@@ -1,12 +1,13 @@
-  'use client';
+  "use client";
 
-import { PersonalInfo, Link } from '../types/cv';
-import { ChevronDown, GripVertical, X, Plus } from 'lucide-react';
+  import { PersonalInfo, Link } from '../types/cv';
+  import { GripVertical, X, Plus } from 'lucide-react';
 import { FormSection } from './ui/form-section';
 import { FormField } from './ui/form-field';
 import { Icons } from './ui/icons';
 import { useLanguage } from '../contexts/LanguageContext';
-import { useState, useEffect, useRef } from 'react';
+  import { useMemo, useState } from 'react';
+  import { SelectMenu } from './ui/select-menu';
 
 import { SortableList, DragHandle } from './dnd/sortable-list';
 /**
@@ -201,14 +202,9 @@ export function PersonalInformation({
   showValidationErrors = true
 }: PersonalInformationProps) {
   const { t, language } = useLanguage();
-  const [openDropdownIdx, setOpenDropdownIdx] = useState<number | null>(null);
   const [newLinkType, setNewLinkType] = useState('LinkedIn');
   const [newLinkValue, setNewLinkValue] = useState('');
   const [newLinkCustomName, setNewLinkCustomName] = useState('');
-  const [openCountryDropdown, setOpenCountryDropdown] = useState(false);
-  const [countrySearch, setCountrySearch] = useState('');
-  const dropdownRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const countryDropdownRef = useRef<HTMLDivElement | null>(null);
   const getSearchPlaceholder = () => {
     const s = t('search.placeholder');
     if (s && s !== 'search.placeholder') return s;
@@ -216,29 +212,27 @@ export function PersonalInformation({
     if (language === 'es') return 'Buscar...';
     return 'Search...';
   };
+  const countryOptions = useMemo(() => {
+    return COUNTRY_CODES
+      .map((country) => {
+        const dial = country.label.match(/\(\+.*\)/)?.[0] || '';
+        const name = getCountryDisplayName(country.label);
+        const label = `${name} ${dial}`.trim();
+        return {
+          value: country.value,
+          label,
+          searchText: `${name} ${dial}`.toLowerCase(),
+          sortKey: name,
+        };
+      })
+      .sort((a, b) => a.sortKey.localeCompare(b.sortKey))
+      .map(({ sortKey, ...rest }) => rest);
+  }, [getCountryDisplayName]);
+  const linkTypeOptions = useMemo(
+    () => LINK_TYPES.map((type) => ({ value: type.label, label: translateLinkType(type.label) })),
+    [translateLinkType]
+  );
   
-
-  // Closes dropdowns when clicking outside any dropdown element
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (openDropdownIdx !== null && dropdownRefs.current[openDropdownIdx]) {
-        if (!dropdownRefs.current[openDropdownIdx]?.contains(event.target as Node)) {
-          setOpenDropdownIdx(null);
-        }
-      }
-      if (openCountryDropdown && countryDropdownRef.current) {
-        if (!countryDropdownRef.current.contains(event.target as Node)) {
-          setOpenCountryDropdown(false);
-        }
-      }
-    }
-    if (openDropdownIdx !== null || openCountryDropdown) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [openDropdownIdx, openCountryDropdown]);
 
   const handleAddLink = () => {
     if (newLinkValue.trim()) {
@@ -277,7 +271,7 @@ export function PersonalInformation({
     }
   };
 
-  const translateLinkType = (type: string, customName?: string) => {
+  function translateLinkType(type: string, customName?: string) {
     // If it's "Other" type and has a custom name, return the custom name
     if (type === 'Other' && customName) {
       return customName;
@@ -297,10 +291,10 @@ export function PersonalInformation({
       default:
         return type;
     }
-  };
+  }
 
   // Endonym (native) name for each country regardless of site language
-  const getCountryDisplayName = (label: string) => {
+  function getCountryDisplayName(label: string) {
     const base = label.replace(/\s*\(\+.*\)$/, '').trim();
     const endonym: Record<string, string> = {
       // Europe (selected common endonyms)
@@ -427,7 +421,7 @@ export function PersonalInformation({
       'Nova Zelândia': 'Aotearoa New Zealand',
     };
     return endonym[base] || base;
-  };
+  }
 
   // Drag & drop handled by SortableList
 
@@ -493,58 +487,15 @@ export function PersonalInformation({
             />
           </FormField>
           <FormField label={t('field.country.code')}>
-            <div className="relative" ref={countryDropdownRef}>
-              <button
-                type="button"
-                className="w-full flex items-center justify-between p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left text-sm text-gray-900 dark:text-gray-100"
-                onClick={() => setOpenCountryDropdown(!openCountryDropdown)}
-                tabIndex={0}
-              >
-                <span>
-                  {personalInfo.countryCode
-                    ? `${getCountryDisplayName(personalInfo.countryCode)} ${personalInfo.countryCode.match(/\(\+.*\)/)?.[0] || ''}`.trim()
-                    : t('select.country')}
-                </span>
-                <ChevronDown className={`w-4 h-4 ml-2 transition-transform duration-200 ${openCountryDropdown ? 'rotate-180' : ''}`} />
-              </button>
-              {openCountryDropdown && (
-                <div className="absolute left-0 mt-2 w-full bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-2 z-50 animate-fade-in">
-                  <div className="px-3 pb-2">
-                    <input
-                      type="text"
-                      placeholder={getSearchPlaceholder()}
-                      value={countrySearch}
-                      onChange={(e) => setCountrySearch(e.target.value)}
-                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-md bg-white dark:bg-zinc-900 text-sm text-gray-900 dark:text-gray-100"
-                    />
-                  </div>
-                  <div className="max-h-64 overflow-y-auto">
-                    {COUNTRY_CODES
-                      .filter(country => {
-                        const dial = country.label.match(/\(\+.*\)/)?.[0] || '';
-                        const name = getCountryDisplayName(country.label);
-                        const hay = `${name} ${dial}`.toLowerCase();
-                        return hay.includes(countrySearch.toLowerCase());
-                      })
-                      .sort((a, b) => getCountryDisplayName(a.label).localeCompare(getCountryDisplayName(b.label)))
-                      .map(country => (
-                      <button
-                        key={country.value}
-                        type="button"
-                        className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${personalInfo.countryCode === country.value ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
-                        onClick={() => {
-                          onPersonalInfoChange('countryCode', country.value);
-                          setOpenCountryDropdown(false);
-                          setCountrySearch('');
-                        }}
-                      >
-                        {`${getCountryDisplayName(country.label)} ${country.label.match(/\(\+.*\)/)?.[0] || ''}`.trim()}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
+            <SelectMenu
+              options={countryOptions}
+              value={personalInfo.countryCode}
+              placeholder={t('select.country')}
+              onSelect={(country) => onPersonalInfoChange('countryCode', country)}
+              searchable
+              searchPlaceholder={getSearchPlaceholder()}
+              renderTriggerLabel={(option) => option?.label || t('select.country')}
+            />
           </FormField>
           <FormField label={t('field.phone')}>
             <input 
@@ -637,34 +588,15 @@ export function PersonalInformation({
               </div>
             )}
             {/* Link type selection */}
-            <div className="relative" ref={(el) => { dropdownRefs.current[0] = el; }}>
+            <div className="relative">
               <label className="block text-sm font-medium mb-1">{t('field.link.type')}</label>
-              <button
-                type="button"
-                className="w-full flex items-center justify-between p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left text-sm text-gray-900 dark:text-gray-100"
-                onClick={() => setOpenDropdownIdx(openDropdownIdx === 0 ? null : 0)}
-                tabIndex={0}
-              >
-                <span>{translateLinkType(newLinkType)}</span>
-                <ChevronDown className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdownIdx === 0 ? 'rotate-180' : ''}`} />
-              </button>
-              {openDropdownIdx === 0 && (
-                <div className="absolute left-0 mt-2 w-full bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-1 z-50 animate-fade-in">
-                  {LINK_TYPES.map(t => (
-                    <button
-                      key={t.label}
-                      type="button"
-                      className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300 ${newLinkType === t.label ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold text-blue-700 dark:text-blue-400' : ''}`}
-                      onClick={() => {
-                        setNewLinkType(t.label);
-                        setOpenDropdownIdx(null);
-                      }}
-                    >
-                      {translateLinkType(t.label)}
-                    </button>
-                  ))}
-                </div>
-              )}
+              <SelectMenu
+                options={linkTypeOptions}
+                value={newLinkType}
+                placeholder={t('field.link.type')}
+                onSelect={(type) => setNewLinkType(type)}
+                renderTriggerLabel={(option) => option?.label || t('field.link.type')}
+              />
             </div>
             
             {/* Link URL input with prefix */}

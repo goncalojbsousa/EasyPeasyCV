@@ -1,14 +1,14 @@
 'use client';
 
 import { Language } from '../types/cv';
-import { ChevronDown } from 'lucide-react';
 import { FormSection } from './ui/form-section';
 import { FormField } from './ui/form-field';
 import { IconButton } from './ui/icon-button';
 import { EmptyState } from './ui/empty-state';
 import { Icons } from './ui/icons';
 import { useLanguage } from '../contexts/LanguageContext';
-import { useState, useEffect, useRef } from 'react';
+import { useMemo } from 'react';
+import { SelectMenu } from './ui/select-menu';
 
 /**
  * Props interface for the Languages component
@@ -74,32 +74,10 @@ export function Languages({
   canMoveDown = true,
 }: LanguagesProps) {
   const { t } = useLanguage();
-  const [openDropdowns, setOpenDropdowns] = useState<{[key: string]: boolean}>({});
-  const dropdownRefs = useRef<{[key: string]: HTMLDivElement | null}>({});
-
-  // Closes all dropdowns when clicking outside any dropdown element
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      Object.keys(openDropdowns).forEach(key => {
-        if (openDropdowns[key] && dropdownRefs.current[key]) {
-          if (!dropdownRefs.current[key]?.contains(event.target as Node)) {
-            setOpenDropdowns(prev => ({ ...prev, [key]: false }));
-          }
-        }
-      });
-    }
-    
-    if (Object.values(openDropdowns).some(Boolean)) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [openDropdowns]);
-
-  const toggleDropdown = (key: string) => {
-    setOpenDropdowns(prev => ({ ...prev, [key]: !prev[key] }));
-  };
+  const levelOptions = useMemo(
+    () => LANGUAGE_LEVELS.map((level) => ({ value: level, label: t(level) })),
+    [t]
+  );
 
   return (
     <form className="space-y-8 flex flex-col items-center">
@@ -143,34 +121,13 @@ export function Languages({
                 />
               </FormField>
               <FormField label={t('field.level')}>
-                <div ref={el => { dropdownRefs.current[`level-${idx}`] = el; }} className="relative">
-                  <button
-                    type="button"
-                    className="w-full flex items-center justify-between p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-left text-gray-900 dark:text-gray-100"
-                    onClick={() => toggleDropdown(`level-${idx}`)}
-                    tabIndex={0}
-                  >
-                    <span>{lang.level ? t(lang.level) : t('select.language.level')}</span>
-                    <ChevronDown className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`level-${idx}`] ? 'rotate-180' : ''}`} />
-                  </button>
-                  {openDropdowns[`level-${idx}`] && (
-                    <div className="absolute left-0 mt-2 w-full bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-1 z-50">
-                      {LANGUAGE_LEVELS.map(level => (
-                        <button
-                          key={level}
-                          type="button"
-                          className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 ${lang.level === level ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
-                          onClick={() => {
-                            onLanguageChange(idx, 'level', level);
-                            setOpenDropdowns(prev => ({ ...prev, [`level-${idx}`]: false }));
-                          }}
-                        >
-                          {t(level)}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                <SelectMenu
+                  options={levelOptions}
+                  value={lang.level}
+                  placeholder={t('select.language.level')}
+                  onSelect={(level) => onLanguageChange(idx, 'level', level)}
+                  renderTriggerLabel={(option) => option?.label || t('select.language.level')}
+                />
               </FormField>
             </div>
           </div>

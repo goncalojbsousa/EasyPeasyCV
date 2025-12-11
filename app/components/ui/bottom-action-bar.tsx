@@ -25,6 +25,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import PdfDownloadButton from '../pdf_download_button';
 import { ThankYouModal } from '../thank_you_modal';
 import { ColorSelector } from './color-selector';
+import { SelectMenu, type SelectOption } from './select-menu';
 import { TemplateSelectorModal } from '../template_selector_modal';
 import type { PersonalInfo, Link } from '../../types/cv';
 import type { Experience, Education, Language, Certification, Project, Volunteer, CvColor, CvTemplate, CvRenderSettings, CustomSection } from '../../types/cv';
@@ -97,6 +98,61 @@ export function BottomActionBar({
   const [showTemplateModal, setShowTemplateModal] = useState(false);
   const [isFooterVisible, setIsFooterVisible] = useState(false);
   const [isLayoutOpen, setIsLayoutOpen] = useState(false);
+  const [selectedLang, setSelectedLang] = useState<string>('en');
+  const pdfButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+
+  const fontOptions: SelectOption<string>[] = useMemo(() => ([
+    { value: 'Helvetica', label: 'Helvetica' },
+    { value: 'Times-Roman', label: 'Times New Roman' },
+    { value: 'Arial', label: 'Arial' },
+    { value: 'Custom', label: t('layout.controls.font.custom') },
+  ]), [t]);
+
+  const columnOptions: SelectOption<number>[] = useMemo(() => ([
+    { value: 1, label: '1' },
+    { value: 2, label: '2' },
+    { value: 3, label: '3' },
+  ]), []);
+
+  const headerWeightOptions: SelectOption<string>[] = useMemo(() => ([
+    { value: 'normal', label: t('layout.controls.header.weight.normal') },
+    { value: 'bold', label: t('layout.controls.header.weight.bold') },
+    { value: 'heavy', label: t('layout.controls.header.weight.heavy') },
+  ]), [t]);
+
+  const titleStyleOptions: SelectOption<string>[] = useMemo(() => ([
+    { value: 'normal', label: t('layout.controls.header.titleStyle.normal') },
+    { value: 'italic', label: t('layout.controls.header.titleStyle.italic') },
+    { value: 'uppercase', label: t('layout.controls.header.titleStyle.uppercase') },
+  ]), [t]);
+
+  const titlePositionOptions: SelectOption<string>[] = useMemo(() => ([
+    { value: 'above', label: t('layout.controls.header.titlePosition.above') },
+    { value: 'below', label: t('layout.controls.header.titlePosition.below') },
+  ]), [t]);
+
+  const dividerThicknessOptions: SelectOption<number>[] = useMemo(() => ([
+    { value: 1, label: '1px' },
+    { value: 2, label: '2px' },
+    { value: 3, label: '3px' },
+  ]), []);
+
+  const dividerStyleOptions: SelectOption<string>[] = useMemo(() => ([
+    { value: 'solid', label: t('layout.controls.header.divider.style.solid') },
+    { value: 'dashed', label: t('layout.controls.header.divider.style.dashed') },
+  ]), [t]);
+
+  const alignmentOptions: SelectOption<string>[] = useMemo(() => ([
+    { value: 'left', label: t('layout.controls.header.alignment.left') },
+    { value: 'center', label: t('layout.controls.header.alignment.center') },
+    { value: 'right', label: t('layout.controls.header.alignment.right') },
+  ]), [t]);
+
+  const aspectRatioOptions: SelectOption<string>[] = useMemo(() => ([
+    { value: '1:1', label: '1:1' },
+    { value: '3:4', label: '3:4' },
+    { value: '4:3', label: '4:3' },
+  ]), []);
 
   const langRef = useRef<HTMLDivElement>(null);
   const cvTypeRef = useRef<HTMLDivElement>(null);
@@ -301,16 +357,13 @@ export function BottomActionBar({
                   <div className="px-4 py-3 space-y-3">
                     <div>
                       <label className="block text-xs font-medium mb-1">{t('layout.controls.font')}</label>
-                      <select
-                        className="w-full text-sm p-2 rounded-md border border-gray-300 dark:border-zinc-600 bg-white dark:bg-zinc-800"
+                      <SelectMenu
+                        className="w-full"
+                        options={fontOptions}
                         value={settings?.layout.fontFamily || 'Helvetica'}
-                        onChange={(e) => onSettingsChange && settings && onSettingsChange({ ...settings, layout: { ...settings.layout, fontFamily: e.target.value as any } })}
-                      >
-                        <option value="Helvetica">Helvetica</option>
-                        <option value="Times-Roman">Times New Roman</option>
-                        <option value="Arial">Arial</option>
-                        <option value="Custom">{t('layout.controls.font.custom')}</option>
-                      </select>
+                        placeholder={t('layout.controls.font')}
+                        onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, layout: { ...settings.layout, fontFamily: value as any } })}
+                      />
                       {settings?.layout.fontFamily === 'Custom' && (
                         <div className="mt-2">
                           <input type="file" accept=".ttf,.otf" onChange={(e) => {
@@ -361,11 +414,13 @@ export function BottomActionBar({
                     </div>
                     <div>
                       <label className="block text-xs font-medium mb-1">{t('layout.controls.columns.label')}</label>
-                      <select className="w-full text-sm p-2 rounded-md border border-gray-300 dark:border-zinc-600 bg-white dark:bg-zinc-800" value={settings?.layout.columns || 1} onChange={(e) => onSettingsChange && settings && onSettingsChange({ ...settings, layout: { ...settings.layout, columns: parseInt(e.target.value) as any } })}>
-                        <option value={1}>1</option>
-                        <option value={2}>2</option>
-                        <option value={3}>3</option>
-                      </select>
+                      <SelectMenu
+                        className="w-full"
+                        options={columnOptions}
+                        value={settings?.layout.columns || 1}
+                        placeholder={t('layout.controls.columns.label')}
+                        onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, layout: { ...settings.layout, columns: value as any } })}
+                      />
                     </div>
                     
                     <div className="border-t border-gray-200 dark:border-zinc-700 pt-3">
@@ -377,11 +432,13 @@ export function BottomActionBar({
                         </div>
                         <div>
                           <label className="block text-xs">{t('layout.controls.header.weight.label')}</label>
-                          <select className="w-full text-sm p-2 rounded-md border border-gray-300 dark:border-zinc-600 bg-white dark:bg-zinc-800" value={settings?.header.nameFontWeight || 'bold'} onChange={(e) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, nameFontWeight: e.target.value as any } })}>
-                            <option value="normal">{t('layout.controls.header.weight.normal')}</option>
-                            <option value="bold">{t('layout.controls.header.weight.bold')}</option>
-                            <option value="heavy">{t('layout.controls.header.weight.heavy')}</option>
-                          </select>
+                          <SelectMenu
+                            className="w-full"
+                            options={headerWeightOptions}
+                            value={settings?.header.nameFontWeight || 'bold'}
+                            placeholder={t('layout.controls.header.weight.label')}
+                            onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, nameFontWeight: value as any } })}
+                          />
                         </div>
                         <div>
                           <label className="block text-xs">{t('layout.controls.header.iconSize')}</label>
@@ -393,31 +450,41 @@ export function BottomActionBar({
                         </div>
                         <div>
                           <label className="block text-xs">{t('layout.controls.header.titleStyle.label')}</label>
-                          <select className="w-full text-sm p-2 rounded-md border border-gray-300 dark:border-zinc-600 bg-white dark:bg-zinc-800" value={settings?.header.titleStyle || 'normal'} onChange={(e) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, titleStyle: e.target.value as any } })}>
-                            <option value="normal">{t('layout.controls.header.titleStyle.normal')}</option>
-                            <option value="italic">{t('layout.controls.header.titleStyle.italic')}</option>
-                            <option value="uppercase">{t('layout.controls.header.titleStyle.uppercase')}</option>
-                          </select>
+                          <SelectMenu
+                            className="w-full"
+                            options={titleStyleOptions}
+                            value={settings?.header.titleStyle || 'normal'}
+                            placeholder={t('layout.controls.header.titleStyle.label')}
+                            onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, titleStyle: value as any } })}
+                          />
                         </div>
                         <div>
                           <label className="block text-xs">{t('layout.controls.header.titlePosition.label')}</label>
-                          <select className="w-full text-sm p-2 rounded-md border border-gray-300 dark:border-zinc-600 bg-white dark:bg-zinc-800" value={settings?.header.titlePosition || 'below'} onChange={(e) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, titlePosition: e.target.value as any } })}>
-                            <option value="above">{t('layout.controls.header.titlePosition.above')}</option>
-                            <option value="below">{t('layout.controls.header.titlePosition.below')}</option>
-                          </select>
+                          <SelectMenu
+                            className="w-full"
+                            options={titlePositionOptions}
+                            value={settings?.header.titlePosition || 'below'}
+                            placeholder={t('layout.controls.header.titlePosition.label')}
+                            onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, titlePosition: value as any } })}
+                          />
                         </div>
                         <div className="col-span-2">
                           <label className="block text-xs">{t('layout.controls.header.divider.title')}</label>
                           <div className="grid grid-cols-2 gap-2">
-                            <select className="w-full min-w-0 text-sm p-2 rounded-md border border-gray-300 dark:border-zinc-600 bg-white dark:bg-zinc-800" value={settings?.header.dividerThickness || 1} onChange={(e) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, dividerThickness: parseInt(e.target.value) as any } })}>
-                              <option value={1}>1px</option>
-                              <option value={2}>2px</option>
-                              <option value={3}>3px</option>
-                            </select>
-                            <select className="w-full min-w-0 text-sm p-2 rounded-md border border-gray-300 dark:border-zinc-600 bg-white dark:bg-zinc-800" value={settings?.header.dividerStyle || 'solid'} onChange={(e) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, dividerStyle: e.target.value as any } })}>
-                              <option value="solid">{t('layout.controls.header.divider.style.solid')}</option>
-                              <option value="dashed">{t('layout.controls.header.divider.style.dashed')}</option>
-                            </select>
+                            <SelectMenu
+                              className="w-full min-w-0"
+                              options={dividerThicknessOptions}
+                              value={settings?.header.dividerThickness || 1}
+                              placeholder={t('layout.controls.header.divider.title')}
+                              onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, dividerThickness: value as any } })}
+                            />
+                            <SelectMenu
+                              className="w-full min-w-0"
+                              options={dividerStyleOptions}
+                              value={settings?.header.dividerStyle || 'solid'}
+                              placeholder={t('layout.controls.header.divider.title')}
+                              onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, dividerStyle: value as any } })}
+                            />
                           </div>
                         </div>
                         <div>
@@ -426,11 +493,13 @@ export function BottomActionBar({
                         </div>
                         <div>
                           <label className="block text-xs">{t('layout.controls.header.alignment')}</label>
-                          <select className="w-full text-sm p-2 rounded-md border border-gray-300 dark:border-zinc-600 bg-white dark:bg-zinc-800" value={settings?.header.iconAlignment || 'left'} onChange={(e) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, iconAlignment: e.target.value as any } })}>
-                            <option value="left">{t('layout.controls.header.alignment.left')}</option>
-                            <option value="center">{t('layout.controls.header.alignment.center')}</option>
-                            <option value="right">{t('layout.controls.header.alignment.right')}</option>
-                          </select>
+                          <SelectMenu
+                            className="w-full"
+                            options={alignmentOptions}
+                            value={settings?.header.iconAlignment || 'left'}
+                            placeholder={t('layout.controls.header.alignment')}
+                            onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, iconAlignment: value as any } })}
+                          />
                         </div>
                       </div>
                     </div>
@@ -442,11 +511,13 @@ export function BottomActionBar({
                       </label>
                       {settings?.photo.enabled && (
                         <div className="mt-2 space-y-2">
-                          <select className="w-full text-sm p-2 rounded-md border border-gray-300 dark:border-zinc-600 bg-white dark:bg-zinc-800" value={settings?.photo.aspectRatio || '1:1'} onChange={(e) => onSettingsChange && settings && onSettingsChange({ ...settings, photo: { ...settings.photo, aspectRatio: e.target.value as any } })}>
-                            <option value="1:1">1:1</option>
-                            <option value="3:4">3:4</option>
-                            <option value="4:3">4:3</option>
-                          </select>
+                          <SelectMenu
+                            className="w-full"
+                            options={aspectRatioOptions}
+                            value={settings?.photo.aspectRatio || '1:1'}
+                            placeholder={t('layout.controls.photo.title')}
+                            onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, photo: { ...settings.photo, aspectRatio: value as any } })}
+                          />
                           <input type="file" accept="image/*" onChange={(e) => {
                             const file = e.target.files?.[0];
                             if (!file || !onSettingsChange || !settings) return;
@@ -525,38 +596,39 @@ export function BottomActionBar({
               <button
                 ref={langBtnRef}
                 onClick={() => setIsLangOpen((v) => { const next = !v; if (next) { setIsCVTypeOpen(false); setIsLayoutOpen(false); setIsDataOpen(false); } return next; })}
-                className="h-9 bg-sky-600 text-white px-3 rounded-md font-semibold hover:bg-sky-700 active:bg-sky-800 transition-colors duration-200 flex items-center gap-2 shadow-sm ring-1 ring-sky-500/20"
+                className="h-9 bg-sky-600 text-white px-3 rounded-md text-[15px] font-semibold hover:bg-sky-700 active:bg-sky-800 transition-colors duration-200 flex items-center gap-2 shadow-sm ring-1 ring-sky-500/20"
+                title={t('generate.ats.resume')}
               >
                 <FileText className="w-5 h-5" />
                 {t('generate.ats.resume')}
                 <ChevronDown className={`w-4 h-4 transition-transform ${isLangOpen ? 'rotate-180' : ''}`} />
               </button>
               {isLangOpen && langPos && createPortal(
-                <div className="z-[70] w-[280px] bg-white dark:bg-zinc-800 rounded-xl shadow-xl border border-gray-200 dark:border-zinc-700 py-2"
+                <div className="z-[70] w-[260px] max-h-[60vh] overflow-auto bg-white dark:bg-zinc-800 rounded-xl shadow-xl border border-gray-200 dark:border-zinc-700 py-2"
                   onMouseDown={(e) => e.stopPropagation()}
                   style={{ position: 'fixed', left: langPos.left, top: langPos.top - 8, transform: 'translateY(-100%)' }}>
-                  <div className="px-4 py-2 text-sm text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-zinc-700">{t('select.language')}</div>
+                  <div className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-zinc-700">{t('select.language')}</div>
                   <div className="py-1">
                     <PdfDownloadButtonWithValidation lang="en">
-                      <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 cursor-pointer">
+                      <div className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 cursor-pointer">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6"><rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="#071b65"></rect><path d="M5.101,4h-.101c-1.981,0-3.615,1.444-3.933,3.334L26.899,28h.101c1.981,0,3.615-1.444,3.933-3.334L5.101,4Z" fill="#fff"></path><path d="M22.25,19h-2.5l9.934,7.947c.387-.353,.704-.777,.929-1.257l-8.363-6.691Z" fill="#b92932"></path><path d="M1.387,6.309l8.363,6.691h2.5L2.316,5.053c-.387,.353-.704,.777-.929,1.257Z" fill="#b92932"></path><path d="M5,28h.101L30.933,7.334c-.318-1.891-1.952-3.334-3.933-3.334h-.101L1.067,24.666c.318,1.891,1.952,3.334,3.933,3.334Z" fill="#fff"></path><rect x="13" y="4" width="6" height="24" fill="#fff"></rect><rect x="1" y="13" width="30" height="6" fill="#fff"></rect><rect x="14" y="4" width="4" height="24" fill="#b92932"></rect><rect x="14" y="1" width="4" height="30" transform="translate(32) rotate(90)" fill="#b92932"></rect><path d="M28.222,4.21l-9.222,7.376v1.414h.75l9.943-7.94c-.419-.384-.918-.671-1.471-.85Z" fill="#b92932"></path><path d="M2.328,26.957c.414,.374,.904,.656,1.447,.832l9.225-7.38v-1.408h-.75L2.328,26.957Z" fill="#b92932"></path><path d="M27,4H5c-2.209,0-4,1.791-4,4V24c0,2.209,1.791,4,4,4H27c2.209,0,4-1.791,4-4V8c0-2.209-1.791-4-4-4Zm3,20c0,1.654-1.346,3-3,3H5c-1.654,0-3-1.346-3-3V8c0-1.654,1.346-3,3-3H27c1.654,0,3,1.346,3,3V24Z" opacity=".15"></path><path d="M27,5H5c-1.657,0-3,1.343-3,3v1c0-1.657,1.343-3,3-3H27c1.657,0,3,1.343,3,3v-1c0-1.657-1.343-3-3-3Z" fill="#fff" opacity=".2"></path></svg>
                         <span className="font-medium text-sm">{t('language.english')}</span>
                       </div>
                     </PdfDownloadButtonWithValidation>
                     <PdfDownloadButtonWithValidation lang="pt">
-                      <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 cursor-pointer">
+                      <div className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 cursor-pointer">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6"><path d="M5,4H13V28H5c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" fill="#2b6519"></path><path d="M16,4h15V28h-15c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" transform="rotate(180 21.5 16)" fill="#ea3323"></path><path d="M27,4H5c-2.209,0-4,1.791-4,4V24c0,2.209,1.791,4,4,4H27c2.209,0,4-1.791,4-4V8c0-2.209-1.791-4-4-4Zm3,20c0,1.654-1.346,3-3,3H5c-1.654,0-3-1.346-3-3V8c0-1.654,1.346-3,3-3H27c1.654,0,3,1.346,3,3V24Z" opacity=".15"></path><path d="M27,5H5c-1.657,0-3,1.343-3,3v1c0-1.657,1.343-3,3-3H27c1.657,0,3,1.343,3,3v-1c0-1.657-1.343-3-3-3Z" fill="#fff" opacity=".2"></path><circle cx="12" cy="16" r="5" fill="#ff5"></circle><path d="M14.562,13.529l-5.125-.006v3.431h0c.004,.672,.271,1.307,.753,1.787,.491,.489,1.132,.759,1.805,.759,.684,0,1.328-.267,1.813-.75,.485-.484,.753-1.126,.753-1.808v-3.413Z" fill="#ea3323"></path></svg>
                         <span className="font-medium text-sm">{t('language.portuguese')}</span>
                       </div>
                     </PdfDownloadButtonWithValidation>
                     <PdfDownloadButtonWithValidation lang="br">
-                      <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 cursor-pointer">
+                      <div className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 cursor-pointer">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6"><rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="#459a45"></rect><path d="M27,4H5c-2.209,0-4,1.791-4,4V24c0,2.209,1.791,4,4,4H27c2.209,0,4-1.791,4-4V8c0-2.209-1.791-4-4-4Zm3,20c0,1.654-1.346,3-3,3H5c-1.654,0-3-1.346-3-3V8c0-1.654,1.346-3,3-3H27c1.654,0,3,1.346,3,3V24Z" opacity=".15"></path><path d="M3.472,16l12.528,8,12.528-8-12.528-8L3.472,16Z" fill="#fedf00"></path><circle cx="16" cy="16" r="5" fill="#0a2172"></circle><path d="M14,14.5c-.997,0-1.958,.149-2.873,.409-.078,.35-.126,.71-.127,1.083,.944-.315,1.951-.493,2.999-.493,2.524,0,4.816,.996,6.519,2.608,.152-.326,.276-.666,.356-1.026-1.844-1.604-4.245-2.583-6.875-2.583Z" fill="#fff"></path><path d="M27,5H5c-1.657,0-3,1.343-3,3v1c0-1.657,1.343-3,3-3H27c1.657,0,3,1.343,3,3v-1c0-1.657-1.343-3-3-3Z" fill="#fff" opacity=".2"></path></svg>
                         <span className="font-medium text-sm">{t('language.brazilianPortuguese')}</span>
                       </div>
                     </PdfDownloadButtonWithValidation>
                     <PdfDownloadButtonWithValidation lang="es">
-                      <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 cursor-pointer">
+                      <div className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 cursor-pointer">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6"><rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="#c60b1e"></rect><rect x="1" y="10" width="30" height="12" fill="#ffc400"></rect><rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="none" stroke="#000" opacity=".1"></rect></svg>
                         <span className="font-medium text-sm">{t('language.spanish')}</span>
                       </div>
@@ -598,15 +670,15 @@ export function BottomActionBar({
               <button
                 ref={dataBtnRef}
                 onClick={() => setIsDataOpen((v) => { const next = !v; if (next) { setIsCVTypeOpen(false); setIsLayoutOpen(false); setIsLangOpen(false); } return next; })}
-                className="h-9 px-3 rounded-md font-semibold transition-colors duration-200 flex items-center gap-2 shadow-sm border border-gray-300/60 dark:border-zinc-600/60 bg-white/80 dark:bg-zinc-800/80 text-[13px] text-gray-900 dark:text-gray-100 hover:bg-white dark:hover:bg-zinc-700"
+                className="flex h-9 items-center gap-2 px-3 rounded-md border border-gray-300/60 dark:border-zinc-600/60 bg-white/80 dark:bg-zinc-800/80 text-[13px] text-gray-900 dark:text-gray-100 hover:bg-white dark:hover:bg-zinc-700 shadow-sm"
                 title={t('data.xml.title')}
               >
-                <Database className="w-5 h-5" />
-                <span>{t('data.xml.title')}</span>
+                <Database className="w-4 h-4" />
+                <span className="font-medium">{t('data.xml.title')}</span>
                 <ChevronDown className={`w-4 h-4 transition-transform ${isDataOpen ? 'rotate-180' : ''}`} />
               </button>
               {isDataOpen && dataPos && createPortal(
-                <div className="z-[70] w-[260px] bg-white dark:bg-zinc-800 rounded-xl shadow-xl border border-gray-200 dark:border-zinc-700 py-2"
+                <div className="z-[70] w-[260px] max-h-[60vh] overflow-auto bg-white dark:bg-zinc-800 rounded-xl shadow-xl border border-gray-200 dark:border-zinc-700 py-2"
                   onMouseDown={(e) => e.stopPropagation()}
                   style={{ position: 'fixed', left: dataPos.left, top: dataPos.top - 8, transform: 'translateY(-100%)' }}>
                   <div className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-zinc-700">{t('data.xml.title')}</div>

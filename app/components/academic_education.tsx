@@ -1,17 +1,18 @@
 'use client';
 
 import { Education } from '../types/cv';
-import { ChevronDown, GripVertical } from 'lucide-react';
+import { GripVertical } from 'lucide-react';
 import { FormSection } from './ui/form-section';
 import { FormField } from './ui/form-field';
 import { IconButton } from './ui/icon-button';
 import { EmptyState } from './ui/empty-state';
 import { Icons } from './ui/icons';
 import { useLanguage } from '../contexts/LanguageContext';
-import { useState, useEffect, useRef } from 'react';
+import { useMemo } from 'react';
 import { SortableList, DragHandle } from './dnd/sortable-list';
 import { MONTHS_EN as MONTHS, toEN, getTranslatedMonthWithT } from '../utils/months';
 import { AutoResizeTextarea } from './ui/auto-resize-textarea';
+import { SelectMenu } from './ui/select-menu';
 
 /**
  * Props interface for the AcademicEducation component
@@ -83,11 +84,19 @@ export function AcademicEducation({
   canMoveDown = true,
 }: AcademicEducationProps) {
   const { t } = useLanguage();
-  const [openDropdowns, setOpenDropdowns] = useState<{[key: string]: boolean}>({});
-  const dropdownRefs = useRef<{[key: string]: HTMLDivElement | null}>({});
+  const educationTypeOptions = useMemo(
+    () => EDUCATION_TYPES.map((type) => ({ value: type, label: t(type) })),
+    [t]
+  );
+  const educationStatusOptions = useMemo(
+    () => EDUCATION_STATUS.map((status) => ({ value: status, label: t(status) })),
+    [t]
+  );
+  const monthOptions = useMemo(
+    () => MONTHS.map((month) => ({ value: month, label: getTranslatedMonthWithT(t, month) })),
+    [t]
+  );
   // Drag & drop handled by SortableList
-
-  // Month helpers provided by shared util
 
   // Generates a display title for each education card based on available data
   const getEducationTitle = (ed: Education, idx: number) => {
@@ -95,30 +104,6 @@ export function AcademicEducation({
     if (ed.course) return ed.course;
     if (ed.type) return t(ed.type);
     return `${t('education.title')} ${idx + 1}`;
-  };
-
-  // Closes all dropdowns when clicking outside any dropdown element
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      Object.keys(openDropdowns).forEach(key => {
-        if (openDropdowns[key] && dropdownRefs.current[key]) {
-          if (!dropdownRefs.current[key]?.contains(event.target as Node)) {
-            setOpenDropdowns(prev => ({ ...prev, [key]: false }));
-          }
-        }
-      });
-    }
-    
-    if (Object.values(openDropdowns).some(Boolean)) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [openDropdowns]);
-
-  const toggleDropdown = (key: string) => {
-    setOpenDropdowns(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
   return (
@@ -181,64 +166,22 @@ export function AcademicEducation({
                 {/* Education type and status fields */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
                   <FormField label={t('field.education.type')}>
-                    <div ref={el => { dropdownRefs.current[`type-${idx}`] = el; }} className="relative">
-                      <button
-                        type="button"
-                        className="w-full flex items-center justify-between p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-left text-gray-900 dark:text-gray-100"
-                        onClick={() => toggleDropdown(`type-${idx}`)}
-                        tabIndex={0}
-                      >
-                        <span>{ed.type ? t(ed.type) : t('select.education.type')}</span>
-                        <ChevronDown className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`type-${idx}`] ? 'rotate-180' : ''}`} />
-                      </button>
-                      {openDropdowns[`type-${idx}`] && (
-                        <div className="absolute left-0 mt-2 w-full bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-1 z-50">
-                          {EDUCATION_TYPES.map(type => (
-                            <button
-                              key={type}
-                              type="button"
-                              className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 ${ed.type === type ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
-                              onClick={() => {
-                                onEducationChange(idx, 'type', type);
-                                setOpenDropdowns(prev => ({ ...prev, [`type-${idx}`]: false }));
-                              }}
-                            >
-                              {t(type)}
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
+                    <SelectMenu
+                      options={educationTypeOptions}
+                      value={ed.type}
+                      placeholder={t('select.education.type')}
+                      onSelect={(type) => onEducationChange(idx, 'type', type)}
+                      renderTriggerLabel={(option) => option?.label || t('select.education.type')}
+                    />
                   </FormField>
                   <FormField label={t('field.education.status')}>
-                    <div ref={el => { dropdownRefs.current[`status-${idx}`] = el; }} className="relative">
-                      <button
-                        type="button"
-                        className="w-full flex items-center justify-between p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-left text-gray-900 dark:text-gray-100"
-                        onClick={() => toggleDropdown(`status-${idx}`)}
-                        tabIndex={0}
-                      >
-                        <span>{ed.status ? t(ed.status) : t('select.education.status')}</span>
-                        <ChevronDown className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`status-${idx}`] ? 'rotate-180' : ''}`} />
-                      </button>
-                      {openDropdowns[`status-${idx}`] && (
-                        <div className="absolute left-0 mt-2 w-full bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-1 z-50">
-                          {EDUCATION_STATUS.map(status => (
-                            <button
-                              key={status}
-                              type="button"
-                              className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 ${ed.status === status ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
-                              onClick={() => {
-                                onEducationChange(idx, 'status', status);
-                                setOpenDropdowns(prev => ({ ...prev, [`status-${idx}`]: false }));
-                              }}
-                            >
-                              {t(status)}
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
+                    <SelectMenu
+                      options={educationStatusOptions}
+                      value={ed.status}
+                      placeholder={t('select.education.status')}
+                      onSelect={(status) => onEducationChange(idx, 'status', status)}
+                      renderTriggerLabel={(option) => option?.label || t('select.education.status')}
+                    />
                   </FormField>
                 </div>
                 
@@ -267,34 +210,13 @@ export function AcademicEducation({
                 {/* Date fields - Start and End dates in parallel */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-4">
                   <FormField label={t('field.start.month')}>
-                    <div ref={el => { dropdownRefs.current[`startMonth-${idx}`] = el; }} className="relative">
-                      <button
-                        type="button"
-                        className="w-full flex items-center justify-between p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-left text-sm text-gray-900 dark:text-gray-100"
-                        onClick={() => toggleDropdown(`startMonth-${idx}`)}
-                        tabIndex={0}
-                      >
-                        <span>{ed.startMonth ? getTranslatedMonthWithT(t, ed.startMonth) : t('select.month')}</span>
-                        <ChevronDown className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`startMonth-${idx}`] ? 'rotate-180' : ''}`} />
-                      </button>
-                      {openDropdowns[`startMonth-${idx}`] && (
-                        <div className="absolute left-0 mt-2 w-full bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-1 z-50">
-                          {MONTHS.map(month => (
-                            <button
-                              key={month}
-                              type="button"
-                              className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 ${toEN(ed.startMonth) === month ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
-                              onClick={() => {
-                                onEducationChange(idx, 'startMonth', month);
-                                setOpenDropdowns(prev => ({ ...prev, [`startMonth-${idx}`]: false }));
-                              }}
-                            >
-                              {getTranslatedMonthWithT(t, month)}
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
+                    <SelectMenu
+                      options={monthOptions}
+                      value={toEN(ed.startMonth) as string | undefined}
+                      placeholder={t('select.month')}
+                      onSelect={(month) => onEducationChange(idx, 'startMonth', month)}
+                      renderTriggerLabel={(option) => option?.label || t('select.month')}
+                    />
                   </FormField>
                   <FormField label={t('field.start.year')}>
                     <input
@@ -310,34 +232,13 @@ export function AcademicEducation({
                   {(ed.status === 'education.status.completed') && (
                     <>
                       <FormField label={t('field.end.month')}>
-                        <div ref={el => { dropdownRefs.current[`endMonth-${idx}`] = el; }} className="relative">
-                          <button
-                            type="button"
-                            className="w-full flex items-center justify-between p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-left text-sm text-gray-900 dark:text-gray-100"
-                            onClick={() => toggleDropdown(`endMonth-${idx}`)}
-                            tabIndex={0}
-                          >
-                            <span>{ed.endMonth ? getTranslatedMonthWithT(t, ed.endMonth) : t('select.month')}</span>
-                            <ChevronDown className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`endMonth-${idx}`] ? 'rotate-180' : ''}`} />
-                          </button>
-                          {openDropdowns[`endMonth-${idx}`] && (
-                            <div className="absolute left-0 mt-2 w-full bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-1 z-50">
-                              {MONTHS.map(month => (
-                                <button
-                                  key={month}
-                                  type="button"
-                                  className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 ${toEN(ed.endMonth) === month ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
-                                  onClick={() => {
-                                    onEducationChange(idx, 'endMonth', month);
-                                    setOpenDropdowns(prev => ({ ...prev, [`endMonth-${idx}`]: false }));
-                                  }}
-                                >
-                                  {getTranslatedMonthWithT(t, month)}
-                                </button>
-                              ))}
-                            </div>
-                          )}
-                        </div>
+                        <SelectMenu
+                          options={monthOptions}
+                          value={toEN(ed.endMonth) as string | undefined}
+                          placeholder={t('select.month')}
+                          onSelect={(month) => onEducationChange(idx, 'endMonth', month)}
+                          renderTriggerLabel={(option) => option?.label || t('select.month')}
+                        />
                       </FormField>
                       <FormField label={t('field.end.year')}>
                         <input

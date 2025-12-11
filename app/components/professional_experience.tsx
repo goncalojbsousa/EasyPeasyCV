@@ -1,18 +1,19 @@
 'use client';
 
 import { Experience } from '../types/cv';
-import { ChevronDown, GripVertical } from 'lucide-react';
+import { GripVertical } from 'lucide-react';
 import { FormSection } from './ui/form-section';
 import { FormField } from './ui/form-field';
 import { IconButton } from './ui/icon-button';
 import { EmptyState } from './ui/empty-state';
 import { Icons } from './ui/icons';
 import { useLanguage } from '../contexts/LanguageContext';
-import { useState, useEffect, useRef } from 'react';
+import { useMemo } from 'react';
 import { AutoResizeTextarea } from './ui/auto-resize-textarea';
 
 import { SortableList, DragHandle } from './dnd/sortable-list';
 import { MONTHS_EN as MONTHS, toEN, getTranslatedMonthWithT } from '../utils/months';
+import { SelectMenu } from './ui/select-menu';
 
 /**
  * Props interface for the ProfessionalExperience component
@@ -63,10 +64,10 @@ export function ProfessionalExperience({
   canMoveDown = true,
 }: ProfessionalExperienceProps) {
   const { t } = useLanguage();
-  const [openDropdowns, setOpenDropdowns] = useState<{[key: string]: boolean}>({});
-  
-  // Month helpers provided by shared util
-  const dropdownRefs = useRef<{[key: string]: HTMLDivElement | null}>({});
+  const monthOptions = useMemo(
+    () => MONTHS.map((month) => ({ value: month, label: getTranslatedMonthWithT(t, month) })),
+    [t]
+  );
 
   // Generates a display title for each experience card based on available data
   const getExperienceTitle = (exp: Experience, idx: number) => {
@@ -74,30 +75,6 @@ export function ProfessionalExperience({
     if (exp.role) return exp.role;
     if (exp.company) return exp.company;
     return `${t('experience.title')} ${idx + 1}`;
-  };
-
-  // Closes all dropdowns when clicking outside any dropdown element
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      Object.keys(openDropdowns).forEach(key => {
-        if (openDropdowns[key] && dropdownRefs.current[key]) {
-          if (!dropdownRefs.current[key]?.contains(event.target as Node)) {
-            setOpenDropdowns(prev => ({ ...prev, [key]: false }));
-          }
-        }
-      });
-    }
-    
-    if (Object.values(openDropdowns).some(Boolean)) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [openDropdowns]);
-
-  const toggleDropdown = (key: string) => {
-    setOpenDropdowns(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
   // Drag & drop handled by SortableList
@@ -183,34 +160,13 @@ export function ProfessionalExperience({
                   {/* Date range fields */}
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-4">
                     <FormField label={t('field.start.month')}>
-                      <div ref={el => { dropdownRefs.current[`startMonth-${idx}`] = el; }} className="relative">
-                        <button
-                          type="button"
-                          className="w-full flex items-center justify-between p-2.5 border border-gray-300 dark:border-zinc-600 rounded-xl bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-500 focus:border-sky-500 transition-all text-left text-gray-900 dark:text-gray-100"
-                          onClick={() => toggleDropdown(`startMonth-${idx}`)}
-                          tabIndex={0}
-                        >
-                          <span>{exp.startMonth ? getTranslatedMonthWithT(t, exp.startMonth) : t('select.month')}</span>
-                        <ChevronDown className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`startMonth-${idx}`] ? 'rotate-180' : ''}`} />
-                        </button>
-                        {openDropdowns[`startMonth-${idx}`] && (
-                          <div className="absolute left-0 mt-2 w-full bg-white dark:bg-zinc-800 rounded-xl shadow-xl border border-gray-200/80 dark:border-zinc-700/60 py-1 z-50">
-                            {MONTHS.map(month => (
-                              <button
-                                key={month}
-                                type="button"
-                                className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 ${toEN(exp.startMonth) === month ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
-                                onClick={() => {
-                                  onExperienceChange(idx, 'startMonth', month);
-                                  setOpenDropdowns(prev => ({ ...prev, [`startMonth-${idx}`]: false }));
-                                }}
-                              >
-                                {getTranslatedMonthWithT(t, month)}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </div>
+                        <SelectMenu
+                          options={monthOptions}
+                          value={toEN(exp.startMonth) as string | undefined}
+                          placeholder={t('select.month')}
+                          onSelect={(month) => onExperienceChange(idx, 'startMonth', month)}
+                          renderTriggerLabel={(option) => option?.label || t('select.month')}
+                        />
                     </FormField>
                     <FormField label={t('field.start.year')}>
                       <input
@@ -225,34 +181,13 @@ export function ProfessionalExperience({
                     {!exp.current && (
                       <>
                         <FormField label={t('field.end.month')}>
-                          <div ref={el => { dropdownRefs.current[`endMonth-${idx}`] = el; }} className="relative">
-                            <button
-                              type="button"
-                              className="w-full flex items-center justify-between p-2.5 border border-gray-300 dark:border-zinc-600 rounded-xl bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-500 focus:border-sky-500 transition-all text-left text-sm text-gray-900 dark:text-gray-100"
-                              onClick={() => toggleDropdown(`endMonth-${idx}`)}
-                              tabIndex={0}
-                            >
-                              <span>{exp.endMonth ? getTranslatedMonthWithT(t, exp.endMonth) : t('select.month')}</span>
-                              <ChevronDown className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`endMonth-${idx}`] ? 'rotate-180' : ''}`} />
-                            </button>
-                            {openDropdowns[`endMonth-${idx}`] && (
-                              <div className="absolute left-0 mt-2 w-full bg-white dark:bg-zinc-800 rounded-xl shadow-xl border border-gray-200/80 dark:border-zinc-700/60 py-1 z-50">
-                                {MONTHS.map(month => (
-                                  <button
-                                    key={month}
-                                    type="button"
-                                    className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 ${toEN(exp.endMonth) === month ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
-                                    onClick={() => {
-                                      onExperienceChange(idx, 'endMonth', month);
-                                      setOpenDropdowns(prev => ({ ...prev, [`endMonth-${idx}`]: false }));
-                                    }}
-                                  >
-                                    {getTranslatedMonthWithT(t, month)}
-                                  </button>
-                                ))}
-                              </div>
-                            )}
-                          </div>
+                          <SelectMenu
+                            options={monthOptions}
+                            value={toEN(exp.endMonth) as string | undefined}
+                            placeholder={t('select.month')}
+                            onSelect={(month) => onExperienceChange(idx, 'endMonth', month)}
+                            renderTriggerLabel={(option) => option?.label || t('select.month')}
+                          />
                         </FormField>
                         <FormField label={t('field.end.year')}>
                           <input

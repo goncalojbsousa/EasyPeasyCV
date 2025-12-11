@@ -357,7 +357,7 @@ export function DesktopActionsCard({
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="w-full bg-sky-600 text-white px-4 py-3 rounded-xl font-semibold hover:bg-sky-700 active:bg-sky-800 transition-colors duration-200 flex items-center justify-center gap-2 shadow-sm"
+                  className="w-full bg-sky-600 text-white px-4 py-3 rounded-xl text-[15px] font-semibold hover:bg-sky-700 active:bg-sky-800 transition-colors duration-200 flex items-center justify-center gap-2 shadow-sm"
                 >
                   <FileText className="w-5 h-5" />
                   {t('generate.ats.resume')}
@@ -369,19 +369,19 @@ export function DesktopActionsCard({
                   (
                     <div
                       ref={languagePortalRef}
-                      className="fixed bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-2 z-[1000]"
+                      className="fixed bg-white dark:bg-zinc-800 rounded-xl shadow-xl border border-gray-200 dark:border-zinc-700 py-2 z-[1000] max-h-[60vh] overflow-auto"
                       style={{
                         top: languageDropdownRect.bottom + 8,
                         left: languageDropdownRect.left,
                         width: languageDropdownRect.width,
                       }}
                     >
-                      <div className="px-4 py-2 text-sm text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-zinc-700">
+                      <div className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-zinc-700">
                         {t('select.language')}
                       </div>
                       <div className="py-1">
                         <PdfDownloadButtonWithValidation lang="en">
-                          <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 cursor-pointer">
+                          <div className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 cursor-pointer">
                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6">
                             <rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="#071b65"></rect>
                             <path d="M5.101,4h-.101c-1.981,0-3.615,1.444-3.933,3.334L26.899,28h.101c1.981,0,3.615-1.444,3.933-3.334L5.101,4Z" fill="#fff"></path>
@@ -401,7 +401,7 @@ export function DesktopActionsCard({
                           </div>
                         </PdfDownloadButtonWithValidation>
                         <PdfDownloadButtonWithValidation lang="pt">
-                          <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 cursor-pointer">
+                          <div className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 cursor-pointer">
                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6">
                             <path d="M5,4H13V28H5c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" fill="#2b6519"></path>
                             <path d="M16,4h15V28h-15c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" transform="rotate(180 21.5 16)" fill="#ea3323"></path>
@@ -414,7 +414,7 @@ export function DesktopActionsCard({
                           </div>
                         </PdfDownloadButtonWithValidation>
                         <PdfDownloadButtonWithValidation lang="br">
-                          <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 cursor-pointer">
+                          <div className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 cursor-pointer">
                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6">
                             <rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="#459a45"></rect>
                             <path d="M27,4H5c-2.209,0-4,1.791-4,4V24c0,2.209,1.791,4,4,4H27c2.209,0,4-1.791,4-4V8c0-2.209-1.791-4-4-4Zm3,20c0,1.654-1.346,3-3,3H5c-1.654,0-3-1.346-3-3V8c0-1.654,1.346-3,3-3H27c1.654,0,3,1.346,3,3V24Z" opacity=".15"></path>
@@ -427,7 +427,7 @@ export function DesktopActionsCard({
                           </div>
                         </PdfDownloadButtonWithValidation>
                         <PdfDownloadButtonWithValidation lang="es">
-                          <div className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 cursor-pointer">
+                          <div className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 cursor-pointer">
                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="w-6 h-6">
                             <rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="#c60b1e"></rect>
                             <rect x="1" y="10" width="30" height="12" fill="#ffc400"></rect>

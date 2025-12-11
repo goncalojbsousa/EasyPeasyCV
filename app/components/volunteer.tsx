@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import { ChevronDown, GripVertical } from 'lucide-react';
+import { useMemo } from 'react';
+import { GripVertical } from 'lucide-react';
 import { SortableList, DragHandle } from './dnd/sortable-list';
 import { Volunteer } from '../types/cv';
 import { FormSection } from './ui/form-section';
@@ -12,6 +12,7 @@ import { Icons } from './ui/icons';
 import { useLanguage } from '../contexts/LanguageContext';
 import { MONTHS_EN as MONTHS, toEN, getTranslatedMonthWithT } from '../utils/months';
 import { AutoResizeTextarea } from './ui/auto-resize-textarea';
+import { SelectMenu } from './ui/select-menu';
 
 /**
  * Props interface for the Volunteer component
@@ -62,30 +63,10 @@ export function VolunteerWork({
   canMoveDown = true,
 }: VolunteerProps) {
   const { t } = useLanguage();
-  
-  const [openDropdowns, setOpenDropdowns] = useState<{ [key: string]: boolean }>({});
-  const dropdownRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
-
-  // Month helpers provided by shared util
-
-  // Closes all dropdowns when clicking outside any dropdown element
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      const target = event.target as Node;
-      const isDropdown = Object.values(dropdownRefs.current).some(ref => ref?.contains(target));
-      if (!isDropdown) {
-        setOpenDropdowns({});
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  // Toggles the open/close state of a dropdown by key
-  const toggleDropdown = (key: string) => {
-    setOpenDropdowns(prev => ({ ...prev, [key]: !prev[key] }));
-  };
+  const monthOptions = useMemo(
+    () => MONTHS.map((month) => ({ value: month, label: getTranslatedMonthWithT(t, month) })),
+    [t]
+  );
   
   // Generates a display title for each volunteer card based on available data
   const getVolunteerTitle = (vol: Volunteer, idx: number) => {
@@ -179,34 +160,13 @@ export function VolunteerWork({
                 {/* Date range fields */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-4">
                   <FormField label={t('field.start.month')}>
-                    <div ref={el => { dropdownRefs.current[`startMonth-${idx}`] = el; }} className="relative">
-                      <button
-                        type="button"
-                        className="w-full flex items-center justify-between p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-left text-sm text-gray-900 dark:text-gray-100"
-                        onClick={() => toggleDropdown(`startMonth-${idx}`)}
-                        tabIndex={0}
-                      >
-                        <span>{vol.startMonth ? getTranslatedMonthWithT(t, vol.startMonth) : t('select.month')}</span>
-                        <ChevronDown className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`startMonth-${idx}`] ? 'rotate-180' : ''}`} />
-                      </button>
-                      {openDropdowns[`startMonth-${idx}`] && (
-                        <div className="absolute left-0 mt-2 w-full bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-1 z-50">
-                          {MONTHS.map(month => (
-                            <button
-                              key={month}
-                              type="button"
-                              className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 ${toEN(vol.startMonth) === month ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
-                              onClick={() => {
-                                onVolunteerChange(idx, 'startMonth', month);
-                                setOpenDropdowns(prev => ({ ...prev, [`startMonth-${idx}`]: false }));
-                              }}
-                            >
-                              {getTranslatedMonthWithT(t, month)}
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
+                    <SelectMenu
+                      options={monthOptions}
+                      value={toEN(vol.startMonth) as string | undefined}
+                      placeholder={t('select.month')}
+                      onSelect={(month) => onVolunteerChange(idx, 'startMonth', month)}
+                      renderTriggerLabel={(option) => option?.label || t('select.month')}
+                    />
                   </FormField>
                   <FormField label={t('field.start.year')}>
                     <input
@@ -221,34 +181,13 @@ export function VolunteerWork({
                   {!vol.current && (
                     <>
                       <FormField label={t('field.end.month')}>
-                        <div ref={el => { dropdownRefs.current[`endMonth-${idx}`] = el; }} className="relative">
-                          <button
-                            type="button"
-                            className="w-full flex items-center justify-between p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-left text-sm text-gray-900 dark:text-gray-100"
-                            onClick={() => toggleDropdown(`endMonth-${idx}`)}
-                            tabIndex={0}
-                          >
-                            <span>{vol.endMonth ? getTranslatedMonthWithT(t, vol.endMonth) : t('select.month')}</span>
-                            <ChevronDown className={`w-4 h-4 ml-2 transition-transform duration-200 ${openDropdowns[`endMonth-${idx}`] ? 'rotate-180' : ''}`} />
-                          </button>
-                          {openDropdowns[`endMonth-${idx}`] && (
-                            <div className="absolute left-0 mt-2 w-full bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-1 z-50">
-                              {MONTHS.map(month => (
-                                <button
-                                  key={month}
-                                  type="button"
-                                  className={`w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-300 ${toEN(vol.endMonth) === month ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
-                                  onClick={() => {
-                                    onVolunteerChange(idx, 'endMonth', month);
-                                    setOpenDropdowns(prev => ({ ...prev, [`endMonth-${idx}`]: false }));
-                                  }}
-                                >
-                                  {getTranslatedMonthWithT(t, month)}
-                                </button>
-                              ))}
-                            </div>
-                          )}
-                        </div>
+                        <SelectMenu
+                          options={monthOptions}
+                          value={toEN(vol.endMonth) as string | undefined}
+                          placeholder={t('select.month')}
+                          onSelect={(month) => onVolunteerChange(idx, 'endMonth', month)}
+                          renderTriggerLabel={(option) => option?.label || t('select.month')}
+                        />
                       </FormField>
                       <FormField label={t('field.end.year')}>
                         <input
