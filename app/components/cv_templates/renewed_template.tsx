@@ -48,11 +48,21 @@ const buildStyles = (settings?: CvRenderSettings) => {
   // Text alignment
   const textAlign = s?.layout.textAlignment || 'left';
 
+  // Photo sizing based on selected aspect ratio
+  const ar = s?.photo?.aspectRatio || '1:1';
+  let photoW = 90;
+  let photoH = 110;
+  if (ar === '1:1') { photoW = 90; photoH = 90; }
+  if (ar === '3:4') { photoW = 90; photoH = 120; }
+  if (ar === '4:3') { photoW = 120; photoH = 90; }
+
   return StyleSheet.create({
     // Page container: overall padding, base font size and family for the document
     page: { paddingTop: cmToPt(margins.top), paddingRight: cmToPt(margins.right), paddingBottom: cmToPt(margins.bottom), paddingLeft: cmToPt(margins.left), fontSize: 11 * finalScale, fontFamily, lineHeight: lineSpacing },
-    // Header row: contains name, title and optionally the photo
-    header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 * singlePageMult },
+    // Header: stack header row and divider so divider spans full width
+    header: { flexDirection: 'column', marginBottom: 8 * singlePageMult },
+    // HeaderRow: contains name/title/contacts and optionally the photo
+    headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
     // Name: main full name text displayed prominently in header
     name: { fontSize: (s?.header.nameFontSize ?? 24) * finalScale, fontWeight: s?.header.nameFontWeight === 'heavy' ? 800 : s?.header.nameFontWeight === 'bold' ? 700 : 500, color: s?.header.nameColor || '#000000', marginBottom: 8 * singlePageMult },
     // Title: desired role / professional title shown under the name
@@ -63,7 +73,7 @@ const buildStyles = (settings?: CvRenderSettings) => {
     contactItem: { marginHorizontal: 6 },
     // HeaderLeft: left column inside header (name + contacts)
     headerLeft: { flex: 1, alignItems: 'center' },
-    // Divider: horizontal line below the header
+    // Divider: horizontal line below the header (full width, under photo too)
     divider: { width: '100%', borderBottomWidth: s?.header.dividerThickness ?? 1, borderBottomColor: '#e5e7eb', marginVertical: 6 * singlePageMult },
     // Section: general spacing for each main section (experience, education, etc.)
     section: { marginBottom: sectionSpacing },
@@ -91,8 +101,10 @@ const buildStyles = (settings?: CvRenderSettings) => {
     eduItem: { marginBottom: 8 * singlePageMult },
     // Skills: central block styling for skills text
     skills: { textAlign: 'center', color: '#000000', fontSize: 10 * finalScale },
-    // Photo: profile photo size and corner rounding
-    photo: { width: 90, height: 110, borderRadius: 4, marginLeft: 10 }
+    // Photo container: fixed box that defines crop area
+    photo: { width: photoW, height: photoH, borderRadius: 4, marginLeft: 10 },
+    // Photo image: fills container and crops using cover
+    photoImage: { width: photoW, height: photoH, objectFit: 'cover', borderRadius: 4 }
   });
 };
 
@@ -470,32 +482,36 @@ export function RenewedTemplate({ personalInfo, links, resume, experiences, educ
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
-          <View style={styles.headerLeft}>
-            <Text style={styles.name}>{personalInfo?.name || 'YOUR NAME'}</Text>
-            {personalInfo?.desiredRole && <Text style={styles.title}>{personalInfo.desiredRole}</Text>}
-            <View style={styles.contactRow}>
-              {contactItems.map((c, i) => (
-                <React.Fragment key={i}>
-                  <Text style={styles.contactItem}>{c}</Text>
-                  {i < contactItems.length - 1 && <Text style={{ color: '#e5e7eb' }}> | </Text>}
-                </React.Fragment>
-              ))}
-            </View>
-            {/* Social Links */}
-            {links && links.length > 0 && (
-              <View style={{ flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap', marginTop: 2 }}>
-                {links.map((lnk, i) => (
-                  <Link key={i} src={getSocialUrl(lnk.type, lnk.value)} style={{ fontSize: 9, color: '#2563eb', marginHorizontal: 6 }}>
-                    {lnk.hideLinkLabel ? lnk.value : `${lnk.customName || lnk.type}: ${lnk.value}`}
-                  </Link>
+          <View style={styles.headerRow}>
+            <View style={styles.headerLeft}>
+              <Text style={styles.name}>{personalInfo?.name || 'YOUR NAME'}</Text>
+              {personalInfo?.desiredRole && <Text style={styles.title}>{personalInfo.desiredRole}</Text>}
+              <View style={styles.contactRow}>
+                {contactItems.map((c, i) => (
+                  <React.Fragment key={i}>
+                    <Text style={styles.contactItem}>{c}</Text>
+                    {i < contactItems.length - 1 && <Text style={{ color: '#e5e7eb' }}> | </Text>}
+                  </React.Fragment>
                 ))}
               </View>
-            )}
-            <View style={styles.divider} />
+              {/* Social Links */}
+              {links && links.length > 0 && (
+                <View style={{ flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap', marginTop: 2 }}>
+                  {links.map((lnk, i) => (
+                    <Link key={i} src={getSocialUrl(lnk.type, lnk.value)} style={{ fontSize: 9, color: '#2563eb', marginHorizontal: 6 }}>
+                      {lnk.hideLinkLabel ? lnk.value : `${lnk.customName || lnk.type}: ${lnk.value}`}
+                    </Link>
+                  ))}
+                </View>
+              )}
+            </View>
+            {settings?.photo?.enabled && settings?.photo?.dataUrl ? (
+              <View style={styles.photo}>
+                <Image src={settings.photo.dataUrl as string} style={styles.photoImage} />
+              </View>
+            ) : null}
           </View>
-          {settings?.photo?.enabled && settings?.photo?.dataUrl ? (
-            <Image src={settings.photo.dataUrl as string} style={styles.photo} />
-          ) : null}
+          <View style={styles.divider} />
         </View>
 
         {/* Render sections dynamically based on sectionOrder */}

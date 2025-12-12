@@ -299,6 +299,8 @@ const esTranslations: Record<string, string> = {
   'layout.controls.photo.enable': 'Activar foto',
   'layout.controls.photo.aspectRatio': 'Proporción',
   'layout.controls.photo.help': 'La foto se limita al 20% del área del encabezado.',
+  'layout.controls.photo.choose': 'Elegir foto',
+  'layout.controls.photo.atsWarning': 'Aviso: no se recomienda usar foto. Los sistemas ATS ignoran imágenes y, en la etapa humana, la foto puede generar sesgos en tu contra.',
   'layout.controls.quickSettings': 'Configuración Rápida',
   'layout.controls.density.label': 'Densidad del Diseño',
   'layout.controls.density.compact': 'Compacto',

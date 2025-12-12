@@ -161,6 +161,7 @@ export default function Builder() {
         template: selectedTemplate,
         color: selectedColor,
         sectionOrder,
+        settings: renderSettings,
       };
       const xml = cvDataToXml(data);
       const blob = new Blob([xml], { type: 'application/xml;charset=utf-8' });
@@ -199,6 +200,7 @@ const handleImportXml = (xml: string) => {
     setCustomSections(data.customSections || []);
     setSelectedTemplate(data.template || 'renewed');
     setSelectedColor(data.color || 'blue');
+    if ((data as any).settings) setRenderSettings((data as any).settings);
     
     const importedCustomKeys = (data.customSections || []).map((cs: CustomSection) => `custom_${cs.id}` as SectionKey);
     if (data.sectionOrder && Array.isArray(data.sectionOrder) && data.sectionOrder.length > 0) {
@@ -248,6 +250,7 @@ const handleImportXml = (xml: string) => {
         setCustomSections(loadedCustomSections);
         setSelectedTemplate(data.template || 'renewed');
         setSelectedColor(data.color || 'blue');
+        if ((data as any).settings) setRenderSettings((data as any).settings);
         
         const customKeys = loadedCustomSections.map((cs: CustomSection) => `custom_${cs.id}` as SectionKey);
         // Load section order if exists
@@ -350,9 +353,10 @@ const handleImportXml = (xml: string) => {
       template: selectedTemplate,
       color: selectedColor,
       sectionOrder,
+      settings: renderSettings,
     };
     localStorage.setItem('cv-builder-data', JSON.stringify(data));
-  }, [personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, customSections, selectedTemplate, selectedColor, sectionOrder]);
+  }, [personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, customSections, selectedTemplate, selectedColor, sectionOrder, renderSettings]);
 
   // Auto-save data when any field changes
   useEffect(() => {

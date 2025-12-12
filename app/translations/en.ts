@@ -159,6 +159,8 @@ const enTranslations: Record<string, string> = {
   'layout.controls.photo.enable': 'Enable photo',
   'layout.controls.photo.aspectRatio': 'Aspect ratio',
   'layout.controls.photo.help': 'Photo is limited to 20% of header area.',  'layout.controls.quickSettings': 'Quick Settings',
+  'layout.controls.photo.choose': 'Choose photo',
+  'layout.controls.photo.atsWarning': 'Heads up: using a photo is not recommended. ATS systems ignore images, and at the human stage a photo can introduce bias against you.',
   'layout.controls.density.label': 'Layout Density',
   'layout.controls.density.compact': 'Compact',
   'layout.controls.density.normal': 'Normal',

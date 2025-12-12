@@ -152,6 +152,8 @@ const ptTranslations: Record<string, string> = {
   'layout.controls.photo.enable': 'Ativar foto',
   'layout.controls.photo.aspectRatio': 'Proporção',
   'layout.controls.photo.help': 'A foto será limitada a 20% da área do cabeçalho.',
+  'layout.controls.photo.choose': 'Escolher foto',
+  'layout.controls.photo.atsWarning': 'A inclusão de foto não é recomendada. Sistemas ATS não a utilizam e, na triagem humana, pode introduzir vieses desnecessários.',
   'layout.controls.quickSettings': 'Configurações Rápidas',
   'layout.controls.density.label': 'Densidade do Layout',
   'layout.controls.density.compact': 'Compacto',

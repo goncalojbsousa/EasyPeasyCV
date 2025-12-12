@@ -563,17 +563,36 @@ export function BottomActionBar({
                             placeholder={t('layout.controls.photo.title')}
                             onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, photo: { ...settings.photo, aspectRatio: value as any } })}
                           />
-                          <input type="file" accept="image/*" onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (!file || !onSettingsChange || !settings) return;
-                            const reader = new FileReader();
-                            reader.onload = () => {
-                              const dataUrl = typeof reader.result === 'string' ? reader.result : '';
-                              onSettingsChange({ ...settings, photo: { ...settings.photo, dataUrl } });
-                            };
-                            reader.readAsDataURL(file);
-                          }} className="w-full text-sm" />
+                          <div className="flex items-center gap-2">
+                            <input
+                              id="photo-upload-desktop"
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (!file || !onSettingsChange || !settings) return;
+                                const reader = new FileReader();
+                                reader.onload = () => {
+                                  const dataUrl = typeof reader.result === 'string' ? reader.result : '';
+                                  onSettingsChange({ ...settings, photo: { ...settings.photo, dataUrl } });
+                                };
+                                reader.readAsDataURL(file);
+                              }}
+                              className="hidden"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => document.getElementById('photo-upload-desktop')?.click()}
+                              className="inline-flex items-center gap-2 h-9 px-3 rounded-md border border-gray-300/60 dark:border-zinc-600/60 bg-white/80 dark:bg-zinc-800/80 text-[13px] text-gray-900 dark:text-gray-100 hover:bg-white dark:hover:bg-zinc-700 shadow-sm"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-4 h-4"><path d="M4 17v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1"/><path d="M7 9l5-5 5 5"/><path d="M12 4v12"/></svg>
+                              <span>{t('layout.controls.photo.choose')}</span>
+                            </button>
+                          </div>
                           <div className="text-[11px] text-gray-500 dark:text-gray-400">{t('layout.controls.photo.help')}</div>
+                          <div className="text-[11px] text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-md p-2">
+                            {t('layout.controls.photo.atsWarning')}
+                          </div>
                         </div>
                       )}
                     </div>
