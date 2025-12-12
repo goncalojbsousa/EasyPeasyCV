@@ -16,7 +16,7 @@ interface CustomSectionCardProps {
   onAddField: () => void;
   onFieldChange: (
     fieldId: string,
-    key: 'label' | 'subtitle' | 'value' | 'startMonth' | 'startYear' | 'endMonth' | 'endYear' | 'bullets' | 'current',
+    key: 'label' | 'subtitle' | 'value' | 'startMonth' | 'startYear' | 'endMonth' | 'endYear' | 'bullets' | 'current' | 'centerValue',
     value: string | boolean,
   ) => void;
   onRemoveField: (fieldId: string) => void;
@@ -171,6 +171,15 @@ export function CustomSectionCard({
                           onChange={(e) => onFieldChange(field.id, 'current', e.target.checked)}
                         />
                         {t('custom.field.current')}
+                      </label>
+                      <label className="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-200">
+                        <input
+                          type="checkbox"
+                          className="rounded border-gray-300 text-sky-600 focus:ring-sky-500"
+                          checked={!!field.centerValue}
+                          onChange={(e) => onFieldChange(field.id, 'centerValue', e.target.checked)}
+                        />
+                        {t('custom.field.center')}
                       </label>
                     </div>
                     <FormField label={t('custom.field.value')}>

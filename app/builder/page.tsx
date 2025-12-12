@@ -650,7 +650,7 @@ const handleImportXml = (xml: string) => {
   const handleUpdateCustomField = (
     sectionId: string,
     fieldId: string,
-    key: 'label' | 'subtitle' | 'value' | 'startMonth' | 'startYear' | 'endMonth' | 'endYear' | 'bullets' | 'current',
+    key: 'label' | 'subtitle' | 'value' | 'startMonth' | 'startYear' | 'endMonth' | 'endYear' | 'bullets' | 'current' | 'centerValue',
     value: string | boolean,
   ) => {
     setCustomSections((prev) => prev.map((section) => {

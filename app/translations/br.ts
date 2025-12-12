@@ -231,6 +231,7 @@ const brTranslations: Record<string, string> = {
   'custom.field.placeholder.month': 'Mês',
   'custom.field.placeholder.year': 'Ano',
   'custom.field.current': 'Atual',
+  'custom.field.center': 'Centralizar conteúdo',
   'custom.field.add': 'Adicionar campo',
   'custom.field.remove': 'Remover campo',
   'custom.field.default': 'Campo',

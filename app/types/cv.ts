@@ -168,6 +168,8 @@ export interface CustomField {
   endYear?: string;
   current?: boolean;
   bullets?: string;
+  /** Center the content text like skills section */
+  centerValue?: boolean;
 }
 
 /** Custom section created by the user */

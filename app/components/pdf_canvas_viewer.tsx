@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface PdfCanvasViewerProps {
   blob: Blob | null;
@@ -9,15 +9,18 @@ interface PdfCanvasViewerProps {
 
 export function PdfCanvasViewer({ blob, scale = 1 }: PdfCanvasViewerProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const newContainerRef = useRef<HTMLDivElement | null>(null);
+  const [isRendering, setIsRendering] = useState(false);
 
   useEffect(() => {
     let canceled = false;
 
     async function render() {
-      if (!blob || !containerRef.current) return;
+      if (!blob || !containerRef.current || !newContainerRef.current) return;
 
-      const container = containerRef.current;
-      container.innerHTML = "";
+      setIsRendering(true);
+      const newContainer = newContainerRef.current;
+      newContainer.innerHTML = "";
 
       const pdfjsLib: any = await import("pdfjs-dist/build/pdf.mjs");
 
@@ -42,11 +45,13 @@ export function PdfCanvasViewer({ blob, scale = 1 }: PdfCanvasViewerProps) {
       const loadingTask = pdfjsLib.getDocument({ data });
       const pdf = await loadingTask.promise;
 
+      const container = containerRef.current;
+      const width = newContainer.clientWidth || 800;
+
       for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
         if (canceled) return;
         const page = await pdf.getPage(pageNum);
         const baseViewport = page.getViewport({ scale: 1 });
-        const width = container.clientWidth || baseViewport.width;
         const fitScale = width / baseViewport.width;
         const viewport = page.getViewport({ scale: Math.max(0.1, scale * fitScale) });
 
@@ -65,7 +70,23 @@ export function PdfCanvasViewer({ blob, scale = 1 }: PdfCanvasViewerProps) {
         await renderTask.promise;
         if (canceled) return;
 
-        container.appendChild(canvas);
+        newContainer.appendChild(canvas);
+      }
+
+      // Swap containers smoothly
+      if (!canceled && container) {
+        // Preserve scroll position
+        const scrollTop = container.scrollTop;
+        const scrollLeft = container.scrollLeft;
+        
+        container.innerHTML = "";
+        container.append(...Array.from(newContainer.children));
+        
+        // Restore scroll position
+        container.scrollTop = scrollTop;
+        container.scrollLeft = scrollLeft;
+        
+        setIsRendering(false);
       }
     }
 
@@ -73,15 +94,24 @@ export function PdfCanvasViewer({ blob, scale = 1 }: PdfCanvasViewerProps) {
 
     return () => {
       canceled = true;
-      if (containerRef.current) containerRef.current.innerHTML = "";
     };
   }, [blob, scale]);
 
   return (
-    <div
-      ref={containerRef}
-      className="w-full h-full overflow-auto bg-gray-50 dark:bg-zinc-900 p-2"
-      style={{ contain: "content" }}
-    />
+    <div className="relative w-full h-full">
+      {/* Hidden container for rendering new PDF */}
+      <div
+        ref={newContainerRef}
+        className="absolute invisible"
+        style={{ pointerEvents: "none" }}
+      />
+      
+      {/* Visible container */}
+      <div
+        ref={containerRef}
+        className="w-full h-full overflow-auto bg-gray-50 dark:bg-zinc-900 p-2"
+        style={{ contain: "content" }}
+      />
+    </div>
   );
 }

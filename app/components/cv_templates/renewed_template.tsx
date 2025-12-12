@@ -125,7 +125,6 @@ function getFullMonthName(month?: string, lang?: string): string {
     'Ago': { pt: 'Agosto', en: 'August', es: 'Agosto' },
     'Set': { pt: 'Setembro', en: 'September', es: 'Septiembre' },
     'Out': { pt: 'Outubro', en: 'October', es: 'Octubre' },
-    'Nov': { pt: 'Novembro', en: 'November', es: 'Noviembre' },
     'Dez': { pt: 'Dezembro', en: 'December', es: 'Diciembre' },
     'Ene': { pt: 'Janeiro', en: 'January', es: 'Enero' },
   };

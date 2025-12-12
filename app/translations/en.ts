@@ -236,6 +236,7 @@ const enTranslations: Record<string, string> = {
   'custom.field.placeholder.month': 'Mon',
   'custom.field.placeholder.year': 'Year',
   'custom.field.current': 'Current',
+  'custom.field.center': 'Center content',
   'custom.field.add': 'Add field',
   'custom.field.remove': 'Remove field',
   'custom.field.default': 'Field',
