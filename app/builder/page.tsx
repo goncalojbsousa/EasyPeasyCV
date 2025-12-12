@@ -1356,11 +1356,11 @@ const handleImportXml = (xml: string) => {
         onShowPdfPreview={handleShowPdfPreview}
         onGeneratePDF={handleGeneratePDF}
         onShowSuccessMessage={() => setShowSuccessMessage(true)}
-        onScrollToJobAnalysis={scrollToJobAnalysis}
-        onScrollToCVTips={scrollToCVTips}
-        onScrollToAtsExplanation={scrollToAtsExplanation}
         onTemplateChange={setSelectedTemplate}
         sectionOrder={sectionOrder}
+        settings={renderSettings}
+        onSettingsChange={setRenderSettings}
+        onResetSectionOrder={handleResetSectionOrder}
       />
     </div>
   );

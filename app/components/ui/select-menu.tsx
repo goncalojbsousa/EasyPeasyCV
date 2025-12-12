@@ -24,6 +24,7 @@ interface SelectMenuProps<T = string> {
   isOptionEqual?: (optionValue: T, value?: T) => boolean;
   renderTriggerLabel?: (option?: SelectOption<T>) => React.ReactNode;
   renderOption?: (option: SelectOption<T>, selected: boolean) => React.ReactNode;
+  showChevron?: boolean;
 }
 
 export function SelectMenu<T = string>({
@@ -41,6 +42,7 @@ export function SelectMenu<T = string>({
   isOptionEqual,
   renderTriggerLabel,
   renderOption,
+  showChevron = true,
 }: SelectMenuProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -101,7 +103,7 @@ export function SelectMenu<T = string>({
         aria-expanded={isOpen}
       >
         <span>{renderTriggerLabel ? renderTriggerLabel(selectedOption) : selectedOption?.label || placeholder}</span>
-        <ChevronDown className={`w-4 h-4 ml-2 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
+        {showChevron && <ChevronDown className={`w-4 h-4 ml-2 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />}
       </button>
 
       {isOpen && (

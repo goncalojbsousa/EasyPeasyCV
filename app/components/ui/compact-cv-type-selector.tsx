@@ -1,9 +1,10 @@
-
 'use client';
 import type { CVType } from '../../contexts/LanguageContext';
+import type { JSX } from 'react';
 
 import { useLanguage } from '../../contexts/LanguageContext';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
+import { Code, BarChart3, TrendingUp, Users, DollarSign, Palette, Heart, BookOpen, Building, Package } from 'lucide-react';
 
 /**
  * Compact CV Type Selector component
@@ -31,6 +32,57 @@ export function CompactCVTypeSelector() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isOpen]);
-  // Não exibe mais nada relacionado a template
-  return null;
-} 
+
+  const getCVTypeIcon = useMemo(() => (type: string) => {
+    const icons: Record<string, JSX.Element> = {
+      development: <Code className="w-4 h-4" />,
+      marketing: <BarChart3 className="w-4 h-4" />,
+      sales: <TrendingUp className="w-4 h-4" />,
+      hr: <Users className="w-4 h-4" />,
+      finance: <DollarSign className="w-4 h-4" />,
+      design: <Palette className="w-4 h-4" />,
+      health: <Heart className="w-4 h-4" />,
+      education: <BookOpen className="w-4 h-4" />,
+      admin: <Building className="w-4 h-4" />,
+      other: <Package className="w-4 h-4" />,
+    };
+    return (icons[type as keyof typeof icons] || icons.other);
+  }, []);
+
+  const cvTypes: CVType[] = ['development', 'marketing', 'sales', 'hr', 'finance', 'design', 'health', 'education', 'admin', 'other'];
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center gap-2 px-2 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors"
+        title={t('cv.type.selector')}
+        aria-expanded={isOpen}
+      >
+        {getCVTypeIcon(cvType)}
+      </button>
+
+      {isOpen && (
+        <div className="absolute bottom-full mb-2 right-0 w-56 bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-1 z-50">
+          {cvTypes.map((type) => (
+            <button
+              key={type}
+              onClick={() => {
+                setCVType(type);
+                setIsOpen(false);
+              }}
+              className={`w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors ${
+                cvType === type
+                  ? 'bg-sky-50 dark:bg-sky-900/20 text-sky-700 dark:text-sky-400 font-semibold'
+                  : 'text-gray-700 dark:text-gray-300'
+              }`}
+            >
+              <span className="flex-shrink-0">{getCVTypeIcon(type)}</span>
+              <span className="whitespace-nowrap">{t(`cv.type.${type}`)}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
