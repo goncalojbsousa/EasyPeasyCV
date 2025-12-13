@@ -590,7 +590,7 @@ export function FloatingActionBar({
               <div className="border-t border-gray-200 dark:border-zinc-700 pt-3">
                 <button
                   type="button"
-                  className="w-full h-9 px-3 rounded-md border border-gray-300/60 dark:border-zinc-600/60 bg-white/80 dark:bg-zinc-800/80 text-[13px] text-gray-900 dark:text-gray-100 hover:bg-white dark:hover:bg-zinc-700 shadow-sm"
+                  className="w-full h-9 px-3 rounded-md border border-gray-300/60 dark:border-zinc-600/60 bg-white/80 dark:bg-zinc-800/80 text-[13px] text-gray-900 dark:text-gray-100 hover:bg-white dark:hover:bg-zinc-700 shadow-sm flex items-center justify-center gap-2"
                   onClick={() => {
                     const layoutDefaults = {
                       fontFamily: 'Helvetica' as const,
@@ -631,7 +631,8 @@ export function FloatingActionBar({
                     onSettingsChange({ ...settings, layout: layoutDefaults, header: headerDefaults, photo: photoDefaults, sections: sectionsDefaults });
                   }}
                 >
-                  {t('layout.controls.reset')}
+                  <RotateCcw className="w-4 h-4" />
+                  <span className="font-medium">{t('layout.controls.reset')}</span>
                 </button>
               </div>
 
