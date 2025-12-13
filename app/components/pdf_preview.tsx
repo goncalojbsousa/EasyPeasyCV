@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Eye, X, FileText, Download, ExternalLink, Loader } from 'lucide-react';
+import { Eye, X, FileText, Download, ExternalLink } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { pdf } from '@react-pdf/renderer';
 import { CvDocument } from './cv_document';

@@ -34,47 +34,18 @@ export function LivePdfPane({
 }: LivePdfPaneProps) {
   const { t } = useLanguage();
   const [isMobile, setIsMobile] = useState(false);
-  const [isFirefox, setIsFirefox] = useState(false);
-  const [isChrome, setIsChrome] = useState(false);
   const [debouncedTick, setDebouncedTick] = useState(0);
   const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
-  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1024);
-    const ua = typeof navigator !== 'undefined' ? navigator.userAgent.toLowerCase() : '';
-    setIsFirefox(ua.includes('firefox'));
-    setIsChrome(ua.includes('chrome') && !ua.includes('edge') && !ua.includes('firefox'));
-    
-    // Detectar o tema atual
-    const checkTheme = () => {
-      const isDark = document.documentElement.classList.contains('dark');
-      setIsDarkMode(isDark);
-    };
-    
-    // Verificar o tema inicial
-    checkTheme();
-    
-    // Observar mudanças no tema
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === 'class') {
-          checkTheme();
-        }
-      });
-    });
-    
-    observer.observe(document.documentElement, { attributes: true });
     
     check();
     window.addEventListener("resize", check);
     return () => {
       window.removeEventListener("resize", check);
-      observer.disconnect();
     };
   }, []);
 
@@ -116,8 +87,6 @@ export function LivePdfPane({
         if (canceled) return;
         setPdfBlob(blob);
       } catch (e) {
-        // log full error for debugging and surface message to user
-        // eslint-disable-next-line no-console
         console.error('PDF preview generation error:', e);
         if (!canceled) {
           const msg = e instanceof Error ? e.message : JSON.stringify(e);
@@ -133,21 +102,6 @@ export function LivePdfPane({
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedTick]);
-
-  // Build/rebuild ObjectURL when blob changes
-  useEffect(() => {
-    if (!pdfBlob) return;
-    const url = URL.createObjectURL(pdfBlob);
-    setPdfUrl((prev) => {
-      if (prev) URL.revokeObjectURL(prev);
-      return url;
-    });
-    return () => {
-      URL.revokeObjectURL(url);
-    };
-  }, [pdfBlob]);
-
-  const toolbarOffset = isFirefox ? 48 : isChrome ? 64 : 44; // pixels to crop toolbar visually
 
   if (isMobile) {
     return (

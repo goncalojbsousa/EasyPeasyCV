@@ -47,7 +47,10 @@ export function SelectMenu<T = string>({
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
-  const equality = isOptionEqual || ((optValue: T, current?: T) => optValue === current);
+  const equality = useMemo(
+    () => isOptionEqual || ((optValue: T, current?: T) => optValue === current),
+    [isOptionEqual]
+  );
 
   const selectedOption = useMemo(
     () => options.find((opt) => equality(opt.value, value)),

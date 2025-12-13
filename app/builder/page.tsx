@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { Plus } from 'lucide-react';
 import { PersonalInformation } from '../components/personal_information';
 import { ProfessionalSummary } from '../components/professional_summary';
@@ -22,8 +22,10 @@ import { LivePdfPane } from '../components/live_pdf_pane';
 import { FloatingActionBar } from '../components/ui/floating-action-bar';
 import { BottomActionBar } from '../components/ui/bottom-action-bar';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Experience, Education, Language, Certification, Project, Volunteer, CvColor, CvTemplate, CvRenderSettings, CustomSection, SectionKey, Link } from '../types/cv';
+import { CvData, Experience, Education, Language, Certification, Project, Volunteer, CvColor, CvTemplate, CvRenderSettings, CustomSection, SectionKey, Link } from '../types/cv';
 import { cvDataToXml, xmlToCvData } from '../utils/xml';
+
+type CvDataWithSettings = CvData & { settings?: CvRenderSettings };
 
 /**
  * CV Builder page component
@@ -106,7 +108,7 @@ export default function Builder() {
     },
   });
 
-  const defaultPredefinedOrder: SectionKey[] = [
+  const defaultPredefinedOrder = useMemo(() => [
     'professional_summary',
     'professional_experience',
     'academic_education',
@@ -115,7 +117,7 @@ export default function Builder() {
     'certifications',
     'projects',
     'volunteer',
-  ];
+  ] as SectionKey[], []);
 
   const [sectionOrder, setSectionOrder] = useState<SectionKey[]>(defaultPredefinedOrder);
   const [customSections, setCustomSections] = useState<CustomSection[]>([]);
@@ -181,7 +183,7 @@ export default function Builder() {
   // Import CV data from XML string and populate state
 const handleImportXml = (xml: string) => {
   try {
-    const data = xmlToCvData(xml);
+    const data = xmlToCvData(xml) as CvDataWithSettings;
     
     setPersonalInfo({
       ...personalInfo,
@@ -200,7 +202,7 @@ const handleImportXml = (xml: string) => {
     setCustomSections(data.customSections || []);
     setSelectedTemplate(data.template || 'renewed');
     setSelectedColor(data.color || 'blue');
-    if ((data as any).settings) setRenderSettings((data as any).settings);
+    if (data.settings) setRenderSettings(data.settings);
     
     const importedCustomKeys = (data.customSections || []).map((cs: CustomSection) => `custom_${cs.id}` as SectionKey);
     if (data.sectionOrder && Array.isArray(data.sectionOrder) && data.sectionOrder.length > 0) {
@@ -222,21 +224,24 @@ const handleImportXml = (xml: string) => {
    * Function to load data from localStorage
    * Retrieves saved data and checks if it's fresh (less than 7 days old)
    */
-  const loadFromLocalStorage = () => {
+  const loadFromLocalStorage = useCallback(() => {
     try {
       const saved = localStorage.getItem('cv-builder-data');
       if (saved) {
-        const data = JSON.parse(saved);
+        const data: Partial<CvDataWithSettings> = JSON.parse(saved);
 
-        setPersonalInfo(data.personalInfo || {
-          name: '',
-          desiredRole: '',
-          city: '',
-          postalCode: '',
-          email: '',
-          countryCode: 'Portugal (+351)',
-          phone: '',
-        });
+        setPersonalInfo((prev) => ({
+          ...prev,
+          ...(data.personalInfo || {
+            name: '',
+            desiredRole: '',
+            city: '',
+            postalCode: '',
+            email: '',
+            countryCode: 'Portugal (+351)',
+            phone: '',
+          }),
+        }));
         setLinks(data.links || []);
         setResume(data.resume || '');
         setExperiences(data.experiences || []);
@@ -250,7 +255,7 @@ const handleImportXml = (xml: string) => {
         setCustomSections(loadedCustomSections);
         setSelectedTemplate(data.template || 'renewed');
         setSelectedColor(data.color || 'blue');
-        if ((data as any).settings) setRenderSettings((data as any).settings);
+        if (data.settings) setRenderSettings(data.settings);
         
         const customKeys = loadedCustomSections.map((cs: CustomSection) => `custom_${cs.id}` as SectionKey);
         // Load section order if exists
@@ -268,12 +273,12 @@ const handleImportXml = (xml: string) => {
     } catch {
       // Silently handle error loading saved data
     }
-  };
+  }, [defaultPredefinedOrder]);
 
   // Load saved data when page loads
   useEffect(() => {
     loadFromLocalStorage();
-  }, []);
+  }, [loadFromLocalStorage]);
 
   // Detect mobile device
   useEffect(() => {
@@ -847,54 +852,6 @@ const handleImportXml = (xml: string) => {
   };
 
   /**
-   * Scrolls smoothly to the job analysis section
-   */
-  const scrollToJobAnalysis = () => {
-    const element = document.getElementById('job-analysis-section');
-    if (element) {
-      const headerHeight = 115; // Approximate header height in pixels
-      const elementPosition = element.offsetTop - headerHeight;
-      
-      window.scrollTo({
-        top: elementPosition,
-        behavior: 'smooth'
-      });
-    }
-  };
-
-  /**
-   * Scrolls smoothly to the CV tips section
-   */
-  const scrollToCVTips = () => {
-    const element = document.getElementById('cv-tips-section');
-    if (element) {
-      const headerHeight = 115; // Approximate header height in pixels
-      const elementPosition = element.offsetTop - headerHeight;
-      
-      window.scrollTo({
-        top: elementPosition,
-        behavior: 'smooth'
-      });
-    }
-  };
-
-  /**
-   * Scrolls smoothly to the ATS explanation section
-   */
-  const scrollToAtsExplanation = () => {
-    const element = document.getElementById('ats-explanation-section');
-    if (element) {
-      const headerHeight = 115; // Approximate header height in pixels
-      const elementPosition = element.offsetTop - headerHeight;
-      
-      window.scrollTo({
-        top: elementPosition,
-        behavior: 'smooth'
-      });
-    }
-  };
-
-  /**
    * Fill form with example data for demonstration purposes
    */
   const fillWithExampleData = () => {
@@ -1341,12 +1298,8 @@ const handleImportXml = (xml: string) => {
         selectedColor={selectedColor}
         onTemplateChange={setSelectedTemplate}
         onColorChange={setSelectedColor}
-        onShowPdfPreview={handleShowPdfPreview}
         onGeneratePDF={handleGeneratePDF}
         onShowSuccessMessage={() => setShowSuccessMessage(true)}
-        onScrollToJobAnalysis={scrollToJobAnalysis}
-        onScrollToCVTips={scrollToCVTips}
-        onScrollToAtsExplanation={scrollToAtsExplanation}
         onExportXml={handleExportXml}
         onImportXml={handleImportXml}
         settings={renderSettings}

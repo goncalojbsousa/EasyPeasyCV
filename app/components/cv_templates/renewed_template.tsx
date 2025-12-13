@@ -6,6 +6,7 @@ import ptTranslations from '../../translations/pt';
 import enTranslations from '../../translations/en';
 import esTranslations from '../../translations/es';
 import brTranslations from '../../translations/br';
+import { getColorTheme } from '../../utils/color-themes';
 
 interface RenewedTemplateProps extends CvData {
   lang?: string;
@@ -14,8 +15,9 @@ interface RenewedTemplateProps extends CvData {
 }
 
 const cmToPt = (cm: number) => cm * 28.3465;
+type PdfTextAlign = 'left' | 'right' | 'center' | 'justify';
 
-const buildStyles = (settings?: CvRenderSettings) => {
+const buildStyles = (settings?: CvRenderSettings, color: CvColor = 'blue') => {
   const s = settings;
   const scale = s?.layout.textScale || 1;
   const familyRaw = s?.layout.fontFamily || 'Helvetica';
@@ -46,11 +48,11 @@ const buildStyles = (settings?: CvRenderSettings) => {
   const finalScale = scale * densityMult.fontSize * singlePageMult;
   
   // Section styling
-  const sectionTitleColor = s?.sections?.titleColor || '#000000';
+  const sectionTitleColor = s?.sections?.titleColor || getColorTheme(color).primary;
   const sectionTitleSize = (s?.sections?.titleFontSize ?? 12) * finalScale;
   
   // Text alignment
-  const textAlign = s?.layout.textAlignment || 'left';
+  const textAlign: PdfTextAlign = (s?.layout.textAlignment as PdfTextAlign) || 'left';
 
   // Photo sizing based on selected aspect ratio
   const ar = s?.photo?.aspectRatio || '1:1';
@@ -84,7 +86,7 @@ const buildStyles = (settings?: CvRenderSettings) => {
     // SectionTitle: centered, uppercase headings for each section
     sectionTitle: { textAlign: 'center', fontSize: sectionTitleSize, fontWeight: 'bold', letterSpacing: 1.2, marginBottom: 6 * singlePageMult, textTransform: 'uppercase', color: sectionTitleColor },
     // SummaryText: styling for the resume / summary paragraph
-    summaryText: { textAlign: textAlign as any, marginBottom: 4 * singlePageMult, fontSize: 10 * finalScale, color: '#000000' },
+    summaryText: { textAlign, marginBottom: 4 * singlePageMult, fontSize: 10 * finalScale, color: '#000000' },
     // ExpItem: container for each experience entry
     expItem: { marginBottom: 8 * singlePageMult },
     // ExpHeaderRow: row inside an experience containing left (role/company) and right (dates)
@@ -98,9 +100,9 @@ const buildStyles = (settings?: CvRenderSettings) => {
     // Company: company or institution name styling
     company: { fontSize: 10 * finalScale, color: '#000000', marginBottom: 4 * singlePageMult },
     // Bullets: bullet item text styling used for results/descriptions
-    bullets: { marginLeft: 8, color: '#000000', fontSize: 10 * finalScale, textAlign: textAlign as any },
+    bullets: { marginLeft: 8, color: '#000000', fontSize: 10 * finalScale, textAlign },
     // Activities: continuous activities text should not have left margin
-    activitiesText: { marginLeft: 0, color: '#000000', fontSize: 10 * finalScale, textAlign: textAlign as any },
+    activitiesText: { marginLeft: 0, color: '#000000', fontSize: 10 * finalScale, textAlign },
     // EduItem: container for each education entry
     eduItem: { marginBottom: 8 * singlePageMult },
     // Education meta: type/status inline with institution
@@ -230,7 +232,7 @@ function formatDateRange(startMonth?: string, startYear?: string, endMonth?: str
 
 export function RenewedTemplate({ personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, customSections, lang, settings, color, sectionOrder }: RenewedTemplateProps) {
   const l = (lang === 'br' ? 'pt' : (lang || 'pt')) as 'pt' | 'en' | 'es';
-  const styles = buildStyles(settings);
+  const styles = buildStyles(settings, color || 'blue');
   
   // Default section order if not provided
   const defaultOrder: import('../../types/cv').PredefinedSectionKey[] = [
@@ -328,7 +330,7 @@ export function RenewedTemplate({ personalInfo, links, resume, experiences, educ
                   </View>
                   <View style={styles.expRight}>
                     <Text>{(() => {
-                      const dr = formatDateRange(edu.startMonth, edu.startYear, edu.endMonth, edu.endYear, (edu as any).current, l, settings?.sections?.dateFormat);
+                      const dr = formatDateRange(edu.startMonth, edu.startYear, edu.endMonth, edu.endYear, edu.current, l, settings?.sections?.dateFormat);
                       if (dr) return dr;
                       const start = (edu.startMonth || edu.startYear) ? `${translateMonth(edu.startMonth || '', l)}${edu.startMonth && edu.startYear ? '/' : ''}${edu.startYear || ''}` : '';
                       const end = (edu.endMonth || edu.endYear) ? `${translateMonth(edu.endMonth || '', l)}${edu.endMonth && edu.endYear ? '/' : ''}${edu.endYear || ''}` : '';
@@ -430,10 +432,10 @@ export function RenewedTemplate({ personalInfo, links, resume, experiences, educ
                   </View>
                   <View style={styles.expRight}>
                     <Text>{(() => {
-                      const dr = formatDateRange(vol.startMonth, vol.startYear, vol.endMonth, vol.endYear, (vol as any).current, l, settings?.sections?.dateFormat);
+                      const dr = formatDateRange(vol.startMonth, vol.startYear, vol.endMonth, vol.endYear, vol.current, l, settings?.sections?.dateFormat);
                       if (dr) return dr;
                       const start = vol.startMonth && vol.startYear ? `${translateMonth(vol.startMonth, l)}${vol.startMonth && vol.startYear ? '/' : ''}${vol.startYear}` : '';
-                      const end = (vol as any).current ? translateCurrent(l) : (vol.endMonth && vol.endYear ? `${translateMonth(vol.endMonth, l)}${vol.endMonth && vol.endYear ? '/' : ''}${vol.endYear}` : '');
+                      const end = vol.current ? translateCurrent(l) : (vol.endMonth && vol.endYear ? `${translateMonth(vol.endMonth, l)}${vol.endMonth && vol.endYear ? '/' : ''}${vol.endYear}` : '');
                       if (!start && !end) return '';
                       return `${start}${start && end ? ' - ' : ''}${end}`;
                     })()}</Text>
@@ -553,7 +555,8 @@ export function RenewedTemplate({ personalInfo, links, resume, experiences, educ
             </View>
             {settings?.photo?.enabled && settings?.photo?.dataUrl ? (
               <View style={styles.photo}>
-                <Image src={settings.photo.dataUrl as string} style={styles.photoImage} />
+                {/* eslint-disable-next-line jsx-a11y/alt-text */}
+                <Image src={settings.photo.dataUrl} style={styles.photoImage} />
               </View>
             ) : null}
           </View>

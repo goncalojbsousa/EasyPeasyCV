@@ -27,8 +27,8 @@ import { ThankYouModal } from '../thank_you_modal';
 import { ColorSelector } from './color-selector';
 import { SelectMenu, type SelectOption } from './select-menu';
 import { TemplateSelectorModal } from '../template_selector_modal';
-import type { PersonalInfo, Link } from '../../types/cv';
-import type { Experience, Education, Language, Certification, Project, Volunteer, CvColor, CvTemplate, CvRenderSettings, CustomSection } from '../../types/cv';
+import type { PersonalInfo, Link, CvRenderSettings, CvColor, Experience, Education, Language, Certification, Project, Volunteer, CustomSection, FontFamilyOption, LayoutDensity, TextAlignment, HeaderOptions, PhotoOptions, DateFormat } from '../../types/cv';
+import type { CVType } from '../../contexts/LanguageContext';
 
 interface BottomActionBarProps {
   personalInfo: PersonalInfo;
@@ -46,12 +46,8 @@ interface BottomActionBarProps {
   selectedColor: CvColor;
   onTemplateChange: (template: 'renewed') => void;
   onColorChange: (color: CvColor) => void;
-  onShowPdfPreview: () => void;
   onGeneratePDF: () => boolean;
   onShowSuccessMessage: () => void;
-  onScrollToJobAnalysis: () => void;
-  onScrollToCVTips: () => void;
-  onScrollToAtsExplanation: () => void;
   onExportXml: () => void;
   onImportXml: (xml: string) => void;
   settings?: CvRenderSettings;
@@ -77,12 +73,8 @@ export function BottomActionBar({
   selectedColor,
   onTemplateChange,
   onColorChange,
-  onShowPdfPreview,
   onGeneratePDF,
   onShowSuccessMessage,
-  onScrollToJobAnalysis,
-  onScrollToCVTips,
-  onScrollToAtsExplanation,
   onExportXml,
   onImportXml,
   settings,
@@ -98,75 +90,56 @@ export function BottomActionBar({
   const [showTemplateModal, setShowTemplateModal] = useState(false);
   const [isFooterVisible, setIsFooterVisible] = useState(false);
   const [isLayoutOpen, setIsLayoutOpen] = useState(false);
-  const [selectedLang, setSelectedLang] = useState<string>('en');
-  const pdfButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
-  const fontOptions: SelectOption<string>[] = useMemo(() => ([
+  const fontOptions: SelectOption<FontFamilyOption>[] = useMemo(() => ([
     { value: 'Helvetica', label: 'Helvetica' },
     { value: 'Times-Roman', label: 'Times New Roman' },
     { value: 'Arial', label: 'Arial' },
     { value: 'Custom', label: t('layout.controls.font.custom') },
   ]), [t]);
 
-  const columnOptions: SelectOption<number>[] = useMemo(() => ([
-    { value: 1, label: '1' },
-    { value: 2, label: '2' },
-    { value: 3, label: '3' },
-  ]), []);
-
-  const headerWeightOptions: SelectOption<string>[] = useMemo(() => ([
+  const headerWeightOptions: SelectOption<HeaderOptions['nameFontWeight']>[] = useMemo(() => ([
     { value: 'normal', label: t('layout.controls.header.weight.normal') },
     { value: 'bold', label: t('layout.controls.header.weight.bold') },
     { value: 'heavy', label: t('layout.controls.header.weight.heavy') },
   ]), [t]);
 
-  const titleStyleOptions: SelectOption<string>[] = useMemo(() => ([
+  const titleStyleOptions: SelectOption<HeaderOptions['titleStyle']>[] = useMemo(() => ([
     { value: 'normal', label: t('layout.controls.header.titleStyle.normal') },
     { value: 'italic', label: t('layout.controls.header.titleStyle.italic') },
     { value: 'uppercase', label: t('layout.controls.header.titleStyle.uppercase') },
   ]), [t]);
 
-  const titlePositionOptions: SelectOption<string>[] = useMemo(() => ([
-    { value: 'above', label: t('layout.controls.header.titlePosition.above') },
-    { value: 'below', label: t('layout.controls.header.titlePosition.below') },
-  ]), [t]);
-
-  const dividerThicknessOptions: SelectOption<number>[] = useMemo(() => ([
+  const dividerThicknessOptions: SelectOption<HeaderOptions['dividerThickness']>[] = useMemo(() => ([
     { value: 1, label: '1px' },
     { value: 2, label: '2px' },
     { value: 3, label: '3px' },
   ]), []);
 
-  const dividerStyleOptions: SelectOption<string>[] = useMemo(() => ([
+  const dividerStyleOptions: SelectOption<HeaderOptions['dividerStyle']>[] = useMemo(() => ([
     { value: 'solid', label: t('layout.controls.header.divider.style.solid') },
     { value: 'dashed', label: t('layout.controls.header.divider.style.dashed') },
   ]), [t]);
 
-  const alignmentOptions: SelectOption<string>[] = useMemo(() => ([
-    { value: 'left', label: t('layout.controls.header.alignment.left') },
-    { value: 'center', label: t('layout.controls.header.alignment.center') },
-    { value: 'right', label: t('layout.controls.header.alignment.right') },
-  ]), [t]);
-
-  const aspectRatioOptions: SelectOption<string>[] = useMemo(() => ([
+  const aspectRatioOptions: SelectOption<PhotoOptions['aspectRatio']>[] = useMemo(() => ([
     { value: '1:1', label: '1:1' },
     { value: '3:4', label: '3:4' },
     { value: '4:3', label: '4:3' },
   ]), []);
 
-  const densityOptions: SelectOption<string>[] = useMemo(() => ([
+  const densityOptions: SelectOption<LayoutDensity>[] = useMemo(() => ([
     { value: 'compact', label: t('layout.controls.density.compact') },
     { value: 'normal', label: t('layout.controls.density.normal') },
     { value: 'spacious', label: t('layout.controls.density.spacious') },
   ]), [t]);
 
-  const dateFormatOptions: SelectOption<string>[] = useMemo(() => ([
+  const dateFormatOptions: SelectOption<DateFormat>[] = useMemo(() => ([
     { value: 'short', label: t('layout.controls.dateFormat.short') },
     { value: 'medium', label: t('layout.controls.dateFormat.medium') },
     { value: 'long', label: t('layout.controls.dateFormat.long') },
   ]), [t]);
 
-  const textAlignmentOptions: SelectOption<string>[] = useMemo(() => ([
+  const textAlignmentOptions: SelectOption<TextAlignment>[] = useMemo(() => ([
     { value: 'left', label: t('layout.controls.textAlignment.left') },
     { value: 'justify', label: t('layout.controls.textAlignment.justify') },
   ]), [t]);
@@ -180,6 +153,7 @@ export function BottomActionBar({
   const importInputRef = useRef<HTMLInputElement>(null);
   const layoutBtnRef = useRef<HTMLButtonElement>(null);
   const layoutPortalRef = useRef<HTMLDivElement>(null);
+  const cvTypes: CVType[] = ['development','marketing','sales','hr','finance','design','health','education','admin','other'];
 
   useEffect(() => {
     const onDocClick = (e: MouseEvent) => {
@@ -335,10 +309,10 @@ export function BottomActionBar({
                   style={{ position: 'fixed', left: cvTypePos.left, top: cvTypePos.top - 8, transform: 'translateY(-100%)' }}>
                   <div className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-zinc-700">{t('cv.type.selector')}</div>
                   <div className="py-1">
-                    {['development','marketing','sales','hr','finance','design','health','education','admin','other'].map((type) => (
+                    {cvTypes.map((type) => (
                       <button
                         key={type}
-                        onClick={() => { setCVType(type as any); setIsCVTypeOpen(false); }}
+                        onClick={() => { setCVType(type); setIsCVTypeOpen(false); }}
                         className={`w-full flex items-center gap-2 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 ${cvType === type ? 'bg-sky-50 dark:bg-sky-900/20 font-semibold text-sky-700 dark:text-sky-400' : ''}`}
                       >
                         {getCVTypeIcon(type)}
@@ -379,7 +353,7 @@ export function BottomActionBar({
                         options={fontOptions}
                         value={settings?.layout.fontFamily || 'Helvetica'}
                         placeholder={t('layout.controls.font')}
-                        onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, layout: { ...settings.layout, fontFamily: value as any } })}
+                        onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, layout: { ...settings.layout, fontFamily: value } })}
                       />
                       {settings?.layout.fontFamily === 'Custom' && (
                         <div className="mt-2">
@@ -442,7 +416,7 @@ export function BottomActionBar({
                           options={densityOptions}
                           value={settings?.layout.density || 'normal'}
                           placeholder={t('layout.controls.density.label')}
-                          onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, layout: { ...settings.layout, density: value as any } })}
+                          onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, layout: { ...settings.layout, density: value } })}
                         />
                         <div className="text-[10px] text-gray-500 dark:text-gray-400 mt-1">{t('layout.controls.density.help')}</div>
                       </div>
@@ -469,7 +443,7 @@ export function BottomActionBar({
                           options={textAlignmentOptions}
                           value={settings?.layout.textAlignment || 'left'}
                           placeholder={t('layout.controls.textAlignment.label')}
-                          onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, layout: { ...settings.layout, textAlignment: value as any } })}
+                          onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, layout: { ...settings.layout, textAlignment: value } })}
                         />
                       </div>
                     </div>
@@ -492,7 +466,7 @@ export function BottomActionBar({
                               options={headerWeightOptions}
                               value={settings?.header.nameFontWeight || 'bold'}
                               placeholder={t('layout.controls.header.weight.label')}
-                              onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, nameFontWeight: value as any } })}
+                              onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, nameFontWeight: value } })}
                             />
                           </div>
                           <div>
@@ -506,7 +480,7 @@ export function BottomActionBar({
                               options={titleStyleOptions}
                               value={settings?.header.titleStyle || 'normal'}
                               placeholder={t('layout.controls.header.titleStyle.label')}
-                              onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, titleStyle: value as any } })}
+                              onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, titleStyle: value } })}
                             />
                           </div>
                         </div>
@@ -521,30 +495,15 @@ export function BottomActionBar({
                             options={dividerThicknessOptions}
                             value={settings?.header.dividerThickness || 1}
                             placeholder={t('layout.controls.header.divider.thickness')}
-                            onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, dividerThickness: value as any } })}
+                            onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, dividerThickness: value } })}
                           />
                           <SelectMenu
                             className="w-full min-w-0"
                             options={dividerStyleOptions}
                             value={settings?.header.dividerStyle || 'solid'}
                             placeholder={t('layout.controls.header.divider.style')}
-                            onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, dividerStyle: value as any } })}
+                            onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, dividerStyle: value } })}
                           />
-                        </div>
-                      </div>
-                      
-                      {/* Ícones de Contato */}
-                      <div className="space-y-2">
-                        <div className="text-[11px] font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">{t('layout.controls.header.icons')}</div>
-                        <div className="grid grid-cols-2 gap-2">
-                          <div>
-                            <label className="block text-xs mb-1">{`${t('layout.controls.header.iconSize')} (${settings?.header.iconSizePx}px)`}</label>
-                            <input type="range" min={16} max={24} step={2} value={settings?.header.iconSizePx || 18} onChange={(e) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, iconSizePx: parseInt(e.target.value) as any } })} className="w-full" />
-                          </div>
-                          <div>
-                            <label className="block text-xs mb-1">{`${t('layout.controls.header.iconSpacing')} (${settings?.header.iconSpacingPx}px)`}</label>
-                            <input type="range" min={5} max={15} step={2} value={settings?.header.iconSpacingPx || 9} onChange={(e) => onSettingsChange && settings && onSettingsChange({ ...settings, header: { ...settings.header, iconSpacingPx: parseInt(e.target.value) as any } })} className="w-full" />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -561,7 +520,7 @@ export function BottomActionBar({
                             options={aspectRatioOptions}
                             value={settings?.photo.aspectRatio || '1:1'}
                             placeholder={t('layout.controls.photo.title')}
-                            onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, photo: { ...settings.photo, aspectRatio: value as any } })}
+                            onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, photo: { ...settings.photo, aspectRatio: value } })}
                           />
                           <div className="flex items-center gap-2">
                             <input
@@ -589,7 +548,6 @@ export function BottomActionBar({
                               <span>{t('layout.controls.photo.choose')}</span>
                             </button>
                           </div>
-                          <div className="text-[11px] text-gray-500 dark:text-gray-400">{t('layout.controls.photo.help')}</div>
                           <div className="text-[11px] text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-md p-2">
                             {t('layout.controls.photo.atsWarning')}
                           </div>
@@ -643,7 +601,7 @@ export function BottomActionBar({
                             placeholder={t('layout.controls.sections.dateFormat')}
                             onSelect={(value) => onSettingsChange && settings && onSettingsChange({ 
                               ...settings, 
-                              sections: { ...settings.sections, dateFormat: value as any, titleColor: settings.sections?.titleColor || '#000000', titleFontSize: settings.sections?.titleFontSize || 12 } 
+                              sections: { ...settings.sections, dateFormat: value, titleColor: settings.sections?.titleColor || '#000000', titleFontSize: settings.sections?.titleFontSize || 12 } 
                             })}
                           />
                           <div className="text-[10px] text-gray-500 dark:text-gray-400 mt-1">{t('layout.controls.sections.dateFormat.help')}</div>

@@ -1,7 +1,5 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
 import { ChevronDown, FileText } from 'lucide-react';
 import { CvTemplate } from '../../types/cv';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -36,34 +34,12 @@ const templates = {
  */
 export function CvTypeSelector({ selectedTemplate, onTemplateChange }: CvTypeSelectorProps) {
   const { t } = useLanguage();
-  const [isOpen, setIsOpen] = useState(false);
-  const triggerRef = useRef<HTMLDivElement>(null);
-  const [menuRect, setMenuRect] = useState<DOMRect | null>(null);
-
-  // Sync portal position with trigger rect
-  useEffect(() => {
-    const updateRect = () => {
-      if (isOpen && triggerRef.current) {
-        setMenuRect(triggerRef.current.getBoundingClientRect());
-      }
-    };
-    updateRect();
-    if (isOpen) {
-      window.addEventListener('scroll', updateRect, true);
-      window.addEventListener('resize', updateRect);
-    }
-    return () => {
-      window.removeEventListener('scroll', updateRect, true);
-      window.removeEventListener('resize', updateRect);
-    };
-  }, [isOpen]);
-
-  const selectedTemplateConfig = templates.renewed;
+  const selectedTemplateConfig = templates[selectedTemplate];
 
   return (
-    <div className="relative" ref={triggerRef}>
+    <div className="relative">
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => onTemplateChange(selectedTemplate)}
         className="w-full p-4 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
       >
         <div className="flex items-center justify-between">
@@ -80,7 +56,7 @@ export function CvTypeSelector({ selectedTemplate, onTemplateChange }: CvTypeSel
               </p>
             </div>
           </div>
-          <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+          <ChevronDown className="w-5 h-5 text-gray-400" />
         </div>
       </button>
       {/* Only one template, so no dropdown needed */}

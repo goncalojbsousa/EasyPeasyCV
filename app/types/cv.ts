@@ -78,6 +78,8 @@ export interface Education {
   endMonth: string;
   /** End year */
   endYear: string;
+  /** Whether this education is still in progress */
+  current?: boolean;
   /** Description of education and activities */
   description: string;
   /** Achievements and notable accomplishments */

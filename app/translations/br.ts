@@ -1,5 +1,3 @@
-import { defaultInternalContext } from "@dnd-kit/core/dist/store";
-
 // Brazilian Portuguese
 const brTranslations: Record<string, string> = {
   // Header
@@ -161,8 +159,8 @@ const brTranslations: Record<string, string> = {
   'layout.controls.density.normal': 'Normal',
   'layout.controls.density.spacious': 'Espaçoso',
   'layout.controls.density.help': 'Ajusta automaticamente margens, espaçamentos e tamanho de texto',
-  'layout.controls.singlePageMode': 'Modo Página Única',
-  'layout.controls.singlePageMode.help': 'Otimiza o layout para caber em uma única página',
+  'layout.controls.singlePageMode': 'Muito Compacto',
+  'layout.controls.singlePageMode.help': 'Cabe o máximo de informação possível por página',
   'layout.controls.textAlignment.label': 'Alinhamento do Texto',
   'layout.controls.textAlignment.left': 'Esquerda',
   'layout.controls.textAlignment.justify': 'Justificado',

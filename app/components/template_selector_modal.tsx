@@ -23,6 +23,7 @@ const templatePreviews = {
 export function TemplateSelectorModal({ show, selectedTemplate, onSelect, onClose }: TemplateSelectorModalProps) {
   const { t } = useLanguage();
   const [preview, setPreview] = useState<CvTemplate | null>(null);
+  const isRenewedSelected = selectedTemplate === 'renewed';
 
   if (!show) return null;
 
@@ -62,7 +63,8 @@ export function TemplateSelectorModal({ show, selectedTemplate, onSelect, onClos
                 onClose();
               }
             }}
-            className={`group text-left rounded-xl overflow-hidden border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500 border-sky-500 ring-2 ring-sky-200 dark:ring-sky-900/30`}
+            className={`group text-left rounded-xl overflow-hidden border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500 ${isRenewedSelected ? 'border-sky-500 ring-2 ring-sky-200 dark:ring-sky-900/30' : 'border-gray-200 dark:border-zinc-700'}`}
+            aria-pressed={isRenewedSelected}
           >
             <div className="relative h-56 bg-gray-100 dark:bg-zinc-700 overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element */}

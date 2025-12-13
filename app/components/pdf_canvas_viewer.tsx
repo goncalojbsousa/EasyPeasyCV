@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 
 interface PdfCanvasViewerProps {
   blob: Blob | null;
@@ -10,19 +10,16 @@ interface PdfCanvasViewerProps {
 export function PdfCanvasViewer({ blob, scale = 1 }: PdfCanvasViewerProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const newContainerRef = useRef<HTMLDivElement | null>(null);
-  const [isRendering, setIsRendering] = useState(false);
 
   useEffect(() => {
     let canceled = false;
 
     async function render() {
       if (!blob || !containerRef.current || !newContainerRef.current) return;
-
-      setIsRendering(true);
       const newContainer = newContainerRef.current;
       newContainer.innerHTML = "";
 
-      const pdfjsLib: any = await import("pdfjs-dist/build/pdf.mjs");
+      const pdfjsLib = (await import("pdfjs-dist/build/pdf.mjs")) as typeof import("pdfjs-dist");
 
       if (typeof window !== "undefined") {
         if (!pdfjsLib.GlobalWorkerOptions.workerPort) {
@@ -85,8 +82,6 @@ export function PdfCanvasViewer({ blob, scale = 1 }: PdfCanvasViewerProps) {
         // Restore scroll position
         container.scrollTop = scrollTop;
         container.scrollLeft = scrollLeft;
-        
-        setIsRendering(false);
       }
     }
 

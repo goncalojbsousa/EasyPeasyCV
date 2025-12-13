@@ -6,7 +6,7 @@ import { FormSection } from './ui/form-section';
 import { FormField } from './ui/form-field';
 import { Icons } from './ui/icons';
 import { useLanguage } from '../contexts/LanguageContext';
-  import { useMemo, useState } from 'react';
+  import { useCallback, useMemo, useState } from 'react';
   import { SelectMenu } from './ui/select-menu';
 
 import { SortableList, DragHandle } from './dnd/sortable-list';
@@ -212,27 +212,7 @@ export function PersonalInformation({
     if (language === 'es') return 'Buscar...';
     return 'Search...';
   };
-  const countryOptions = useMemo(() => {
-    return COUNTRY_CODES
-      .map((country) => {
-        const dial = country.label.match(/\(\+.*\)/)?.[0] || '';
-        const name = getCountryDisplayName(country.label);
-        const label = `${name} ${dial}`.trim();
-        return {
-          value: country.value,
-          label,
-          searchText: `${name} ${dial}`.toLowerCase(),
-          sortKey: name,
-        };
-      })
-      .sort((a, b) => a.sortKey.localeCompare(b.sortKey))
-      .map(({ sortKey, ...rest }) => rest);
-  }, [getCountryDisplayName]);
-  const linkTypeOptions = useMemo(
-    () => LINK_TYPES.map((type) => ({ value: type.label, label: translateLinkType(type.label) })),
-    [translateLinkType]
-  );
-  
+
 
   const handleAddLink = () => {
     if (newLinkValue.trim()) {
@@ -271,7 +251,7 @@ export function PersonalInformation({
     }
   };
 
-  function translateLinkType(type: string, customName?: string) {
+  const translateLinkType = useCallback((type: string, customName?: string) => {
     // If it's "Other" type and has a custom name, return the custom name
     if (type === 'Other' && customName) {
       return customName;
@@ -291,10 +271,10 @@ export function PersonalInformation({
       default:
         return type;
     }
-  }
+  }, [t]);
 
   // Endonym (native) name for each country regardless of site language
-  function getCountryDisplayName(label: string) {
+  const getCountryDisplayName = useCallback((label: string) => {
     const base = label.replace(/\s*\(\+.*\)$/, '').trim();
     const endonym: Record<string, string> = {
       // Europe (selected common endonyms)
@@ -421,9 +401,33 @@ export function PersonalInformation({
       'Nova Zelândia': 'Aotearoa New Zealand',
     };
     return endonym[base] || base;
-  }
+  }, []);
 
   // Drag & drop handled by SortableList
+
+  const countryOptions = useMemo(() => {
+    return COUNTRY_CODES
+      .map((country) => {
+        const dial = country.label.match(/\(\+.*\)/)?.[0] || '';
+        const name = getCountryDisplayName(country.label);
+        const label = `${name} ${dial}`.trim();
+        return {
+          value: country.value,
+          label,
+          searchText: `${name} ${dial}`.toLowerCase(),
+          sortKey: name,
+        };
+      })
+      .sort((a, b) => a.sortKey.localeCompare(b.sortKey))
+      .map(item => ({ value: item.value, label: item.label, searchText: item.searchText }));
+  }, [getCountryDisplayName]);
+
+  const linkTypeOptions = useMemo(() => {
+    return LINK_TYPES.map((linkType) => ({
+      value: linkType.label,
+      label: translateLinkType(linkType.label),
+    }));
+  }, [translateLinkType]);
 
   return (
     <form className="space-y-8">
@@ -570,6 +574,7 @@ export function PersonalInformation({
                 }}
               />
             </div>
+
           )}
           
           {/* Fixed input section for adding new links */}
