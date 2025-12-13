@@ -405,6 +405,7 @@ const esTranslations: Record<string, string> = {
   'field.education.status': 'Estado',
   'add.education': 'Añadir Formación',
   'education.title': 'Educación',
+  'education.option.none': 'No mostrar',
 
   // Education types
   'education.type.secondary': 'Educación Secundaria',

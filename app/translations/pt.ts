@@ -290,6 +290,7 @@ const ptTranslations: Record<string, string> = {
   'education.status.completed': 'Completo',
   'education.status.in.progress': 'Em andamento',
   'education.status.interrupted': 'Interrompido',
+  'education.option.none': 'Não mostrar',
 
   // Technical Skills
   'skills.placeholder': 'Ex: JavaScript, React, Node.js, SQL',

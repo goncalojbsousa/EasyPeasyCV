@@ -104,10 +104,10 @@ export function ProfessionalExperience({
             return (
               <div
                 key={idx}
-                className="bg-white dark:bg-zinc-800 border border-gray-200/80 dark:border-zinc-700/60 rounded-xl shadow-sm relative mb-6 transition-all duration-300"
+                className="bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg shadow-sm relative mb-6 transition-all duration-300"
               >
                 {/* Card header with title */}
-                <div className="bg-gray-50 dark:bg-zinc-900 px-6 py-4 border-b border-gray-200/80 dark:border-zinc-700/60 rounded-t-xl transition-colors duration-300">
+                <div className="bg-gray-50 dark:bg-zinc-900 px-4 py-3 border-b border-gray-200 dark:border-zinc-700 rounded-t-lg transition-colors duration-300">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
                       {experiences.length > 1 && (
@@ -118,7 +118,7 @@ export function ProfessionalExperience({
                           <GripVertical className="w-4 h-4" />
                         </DragHandle>
                       )}
-                      <h3 className="text-base font-semibold text-gray-700 dark:text-gray-300">
+                      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                         {getExperienceTitle(exp, idx)}
                       </h3>
                     </div>
@@ -134,13 +134,13 @@ export function ProfessionalExperience({
                 </div>
 
                 {/* Card content */}
-                <div className="p-6">
+                <div className="p-4">
                   {/* Job title and company fields */}
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
                     <FormField label={t('field.role')}>
                       <input
                         type="text"
-                        className="w-full p-2.5 border border-gray-300 dark:border-zinc-600 rounded-xl bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-500 focus:border-sky-500 transition-all text-sm text-gray-900 dark:text-gray-100"
+                        className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                         placeholder={t(`cvType.placeholder.role`)}
                         value={exp.role}
                         onChange={e => onExperienceChange(idx, 'role', e.target.value)}
@@ -149,7 +149,7 @@ export function ProfessionalExperience({
                     <FormField label={t('field.company')}>
                       <input
                         type="text"
-                        className="w-full p-2.5 border border-gray-300 dark:border-zinc-600 rounded-xl bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-500 focus:border-sky-500 transition-all text-sm text-gray-900 dark:text-gray-100"
+                        className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                         placeholder={t('placeholder.company')}
                         value={exp.company}
                         onChange={e => onExperienceChange(idx, 'company', e.target.value)}
@@ -171,7 +171,7 @@ export function ProfessionalExperience({
                     <FormField label={t('field.start.year')}>
                       <input
                         type="text"
-                        className="w-full p-2.5 border border-gray-300 dark:border-zinc-600 rounded-xl bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-500 focus:border-sky-500 transition-all text-sm text-gray-900 dark:text-gray-100"
+                        className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                         placeholder={t('placeholder.year')}
                         value={exp.startYear}
                         onChange={e => onExperienceChange(idx, 'startYear', e.target.value)}
@@ -192,7 +192,7 @@ export function ProfessionalExperience({
                         <FormField label={t('field.end.year')}>
                           <input
                             type="text"
-                            className="w-full p-2.5 border border-gray-300 dark:border-zinc-600 rounded-xl bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-500 focus:border-sky-500 transition-all text-sm text-gray-900 dark:text-gray-100"
+                            className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                             placeholder={t('placeholder.year')}
                             value={exp.endYear}
                             onChange={e => onExperienceChange(idx, 'endYear', e.target.value)}
@@ -219,7 +219,7 @@ export function ProfessionalExperience({
                     <FormField label={t(`cvType.field.technologies`)}>
                       <input
                         type="text"
-                        className="w-full p-2.5 border border-gray-300 dark:border-zinc-600 rounded-xl bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-500 focus:border-sky-500 transition-all text-sm text-gray-900 dark:text-gray-100"
+                        className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                         placeholder={t(`cvType.placeholder.technologies`)}
                         value={exp.tech}
                         onChange={e => onExperienceChange(idx, 'tech', e.target.value)}
@@ -231,7 +231,7 @@ export function ProfessionalExperience({
                   <div className="mb-4">
                     <FormField label={t('field.activities')}>
                       <AutoResizeTextarea
-                        className="w-full p-2.5 border border-gray-300 dark:border-zinc-600 rounded-xl bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-500 focus:border-sky-500 transition-all text-sm text-gray-900 dark:text-gray-100"
+                        className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                         placeholder={t(`cvType.placeholder.activities`)}
                         value={exp.activities}
                         onChange={e => onExperienceChange(idx, 'activities', e.target.value)}
@@ -243,7 +243,7 @@ export function ProfessionalExperience({
                   {/* Achievements and results field */}
                   <FormField label={t('field.achievements')} helperText={t('field.achievements.helper')}>
                     <AutoResizeTextarea
-                      className="w-full p-2.5 border border-gray-300 dark:border-zinc-600 rounded-xl bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-500 focus:border-sky-500 transition-all text-sm text-gray-900 dark:text-gray-100"
+                      className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
                       placeholder={t(`cvType.placeholder.achievements`)}
                       value={exp.results}
                       onChange={e => onExperienceChange(idx, 'results', e.target.value)}

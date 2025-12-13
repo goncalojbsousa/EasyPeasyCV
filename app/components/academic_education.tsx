@@ -85,11 +85,17 @@ export function AcademicEducation({
 }: AcademicEducationProps) {
   const { t } = useLanguage();
   const educationTypeOptions = useMemo(
-    () => EDUCATION_TYPES.map((type) => ({ value: type, label: t(type) })),
+    () => [
+      { value: '', label: t('education.option.none') },
+      ...EDUCATION_TYPES.map((type) => ({ value: type, label: t(type) })),
+    ],
     [t]
   );
   const educationStatusOptions = useMemo(
-    () => EDUCATION_STATUS.map((status) => ({ value: status, label: t(status) })),
+    () => [
+      { value: '', label: t('education.option.none') },
+      ...EDUCATION_STATUS.map((status) => ({ value: status, label: t(status) })),
+    ],
     [t]
   );
   const monthOptions = useMemo(

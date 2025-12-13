@@ -296,6 +296,7 @@ const enTranslations: Record<string, string> = {
   'education.status.completed': 'Completed',
   'education.status.in.progress': 'In Progress',
   'education.status.interrupted': 'Interrupted',
+  'education.option.none': 'Do not show',
 
   // Technical Skills
   'skills.placeholder': 'e.g., JavaScript, React, Node.js, SQL',

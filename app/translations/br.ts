@@ -293,6 +293,7 @@ const brTranslations: Record<string, string> = {
   'education.status.completed': 'Concluído',
   'education.status.in.progress': 'Em andamento',
   'education.status.interrupted': 'Interrompido',
+  'education.option.none': 'Não exibir',
 
   // Technical Skills
   'skills.placeholder': 'Ex: JavaScript, React, Node.js, SQL',

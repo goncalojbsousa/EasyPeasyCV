@@ -530,6 +530,18 @@ const handleImportXml = (xml: string) => {
     setLanguages(languages.map((lang, i) => i === idx ? { ...lang, [field]: value } : lang));
   };
 
+  /**
+   * Reorder language entries
+   * @param fromIndex - Index of the language to move
+   * @param toIndex - Index where to move the language
+   */
+  const handleReorderLanguages = (fromIndex: number, toIndex: number) => {
+    const newLanguages = [...languages];
+    const [movedLanguage] = newLanguages.splice(fromIndex, 1);
+    newLanguages.splice(toIndex, 0, movedLanguage);
+    setLanguages(newLanguages);
+  };
+
   // Certifications/Courses handlers
   /**
    * Add a new certification entry
@@ -1124,6 +1136,7 @@ const handleImportXml = (xml: string) => {
                         onLanguageChange={handleLanguageChange}
                         onAddLanguage={handleAddLanguage}
                         onRemoveLanguage={handleRemoveLanguage}
+                        onReorderLanguages={handleReorderLanguages}
                         canReorder={true}
                         onMoveUp={() => handleMoveSectionUp(sectionKey)}
                         onMoveDown={() => handleMoveSectionDown(sectionKey)}

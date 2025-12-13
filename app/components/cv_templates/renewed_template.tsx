@@ -2,6 +2,10 @@ import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Link, Image } from '@react-pdf/renderer';
 import { CvData, CvRenderSettings, CvColor } from '../../types/cv';
 import { translateMonthForLang } from '../../utils/months';
+import ptTranslations from '../../translations/pt';
+import enTranslations from '../../translations/en';
+import esTranslations from '../../translations/es';
+import brTranslations from '../../translations/br';
 
 interface RenewedTemplateProps extends CvData {
   lang?: string;
@@ -99,6 +103,8 @@ const buildStyles = (settings?: CvRenderSettings) => {
     activitiesText: { marginLeft: 0, color: '#000000', fontSize: 10 * finalScale, textAlign: textAlign as any },
     // EduItem: container for each education entry
     eduItem: { marginBottom: 8 * singlePageMult },
+    // Education meta: type/status inline with institution
+    educationMeta: { fontSize: 9 * finalScale, color: '#000000', marginTop: 2 },
     // Skills: central block styling for skills text
     skills: { textAlign: 'center', color: '#000000', fontSize: 10 * finalScale },
     // Photo container: fixed box that defines crop area
@@ -107,6 +113,20 @@ const buildStyles = (settings?: CvRenderSettings) => {
     photoImage: { width: photoW, height: photoH, objectFit: 'cover', borderRadius: 4 }
   });
 };
+
+const translationMaps: Record<'pt' | 'en' | 'es' | 'br', Record<string, string>> = {
+  pt: ptTranslations,
+  en: enTranslations,
+  es: esTranslations,
+  br: brTranslations,
+};
+
+function translateLabel(key?: string, lang?: string) {
+  if (!key) return '';
+  const target = (lang || 'pt') as 'pt' | 'en' | 'es' | 'br';
+  const map = translationMaps[target] || translationMaps.pt;
+  return map[key] || '';
+}
 
 function translateMonth(month: string, lang: string) {
   const target = (lang === 'br' ? 'pt' : (lang || 'pt')) as 'pt' | 'en' | 'es';
@@ -149,6 +169,13 @@ function translateCurrent(lang: string) {
   if (target === 'en') return 'Current';
   if (target === 'es') return 'Actual';
   return 'Atual';
+}
+
+function translateLanguageLevel(level?: string, lang?: string) {
+  if (!level) return '';
+  const translated = translateLabel(level, lang);
+  if (translated) return translated;
+  return level;
 }
 
 function formatMonthYear(month?: string, year?: string, lang?: string, dateFormat?: 'short' | 'medium' | 'long') {
@@ -278,10 +305,26 @@ export function RenewedTemplate({ personalInfo, links, resume, experiences, educ
             <Text style={styles.sectionTitle}>{l === 'en' ? 'EDUCATION' : l === 'es' ? 'EDUCACIÓN' : 'EDUCAÇÃO'}</Text>
             {education.map((edu, idx) => (
               <View key={idx} style={styles.eduItem}>
-                <View style={styles.expHeaderRow}>
+                <View style={{ ...styles.expHeaderRow, alignItems: 'center' }}>
                   <View style={styles.expLeft}>
                     <Text style={styles.jobRole}>{edu.course}</Text>
-                    <Text style={styles.company}>{edu.institution}</Text>
+                    {(() => {
+                      const typeLabel = translateLabel(edu.type, lang);
+                      const statusLabel = translateLabel(edu.status, lang);
+                      const meta = [typeLabel, statusLabel].filter(Boolean).join(' • ');
+                      if (!edu.institution && !meta) return null;
+
+                      return (
+                        <Text style={{ ...styles.company, marginBottom: 0 }}>
+                          {edu.institution}
+                          {meta ? (
+                            <Text style={{ ...styles.educationMeta, marginTop: 0 }}>
+                              {'  |  '}{meta}
+                            </Text>
+                          ) : null}
+                        </Text>
+                      );
+                    })()}
                   </View>
                   <View style={styles.expRight}>
                     <Text>{(() => {
@@ -322,11 +365,14 @@ export function RenewedTemplate({ personalInfo, links, resume, experiences, educ
           <View style={styles.section} key={sectionKey}>
             <Text style={styles.sectionTitle}>{l === 'en' ? 'LANGUAGES' : l === 'es' ? 'IDIOMAS' : 'IDIOMAS'}</Text>
             <View style={{ flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap' }}>
-              {languages.map((langItem, li) => (
-                <Text key={li} style={{ marginHorizontal: 6, fontSize: 10 }}>
-                  {langItem.name}{langItem.level ? ` (${langItem.level})` : ''}
-                </Text>
-              ))}
+              {languages.map((langItem, li) => {
+                const levelLabel = translateLanguageLevel(langItem.level, lang);
+                return (
+                  <Text key={li} style={{ marginHorizontal: 6, fontSize: 10 }}>
+                    {langItem.name}{levelLabel ? ` (${levelLabel})` : ''}
+                  </Text>
+                );
+              })}
             </View>
           </View>
         ) : null;
