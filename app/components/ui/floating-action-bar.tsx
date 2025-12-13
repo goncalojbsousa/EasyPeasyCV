@@ -85,7 +85,6 @@ export function FloatingActionBar({
     { value: 'Helvetica', label: 'Helvetica' },
     { value: 'Times-Roman', label: 'Times New Roman' },
     { value: 'Arial', label: 'Arial' },
-    { value: 'Custom', label: t('layout.controls.font.custom') },
   ]), [t]);
 
   const headerWeightOptions: SelectOption<HeaderOptions['nameFontWeight']>[] = useMemo(() => ([
@@ -357,20 +356,6 @@ export function FloatingActionBar({
                   placeholder={t('layout.controls.font')}
                   onSelect={(value) => onSettingsChange({ ...settings, layout: { ...settings.layout, fontFamily: value } })}
                 />
-                {settings.layout.fontFamily === 'Custom' && (
-                  <div className="mt-2">
-                    <input type="file" accept=".ttf,.otf" onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (!file) return;
-                      const reader = new FileReader();
-                      reader.onload = () => {
-                        const dataUrl = typeof reader.result === 'string' ? reader.result : '';
-                        onSettingsChange({ ...settings, layout: { ...settings.layout, customFont: { name: 'CustomFont', dataUrl, style: 'normal' } } });
-                      };
-                      reader.readAsDataURL(file);
-                    }} className="w-full text-sm" />
-                  </div>
-                )}
               </div>
               <div>
                 <label className="block text-xs font-medium mb-1">{`${t('layout.controls.textScale.label')} (${Math.round((settings.layout.textScale*100))}%)`}</label>

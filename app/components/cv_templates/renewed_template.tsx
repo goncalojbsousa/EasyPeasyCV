@@ -46,6 +46,7 @@ const buildStyles = (settings?: CvRenderSettings, color: CvColor = 'blue') => {
   const sectionSpacing = (s?.layout.sectionSpacingPx ?? 12) * densityMult.spacing * singlePageMult;
   const lineSpacing = (s?.layout.lineSpacing ?? 1.4) * densityMult.lineHeight;
   const finalScale = scale * densityMult.fontSize * singlePageMult;
+  const singlePageMultValue = singlePageMult;
   
   // Section styling
   const sectionTitleColor = s?.sections?.titleColor || getColorTheme(color).primary;
@@ -112,8 +113,11 @@ const buildStyles = (settings?: CvRenderSettings, color: CvColor = 'blue') => {
     // Photo container: fixed box that defines crop area
     photo: { width: photoW, height: photoH, borderRadius: 4, marginLeft: 10 },
     // Photo image: fills container and crops using cover
-    photoImage: { width: photoW, height: photoH, objectFit: 'cover', borderRadius: 4 }
-  });
+    photoImage: { width: photoW, height: photoH, objectFit: 'cover', borderRadius: 4 },
+    // Export finalScale for use in inline styles
+    _finalScale: finalScale,
+    _singlePageMult: singlePageMult
+  } as any);
 };
 
 const translationMaps: Record<'pt' | 'en' | 'es' | 'br', Record<string, string>> = {
@@ -295,7 +299,7 @@ export function RenewedTemplate({ personalInfo, links, resume, experiences, educ
                     ))}
                   </View>
                 )}
-                {exp.tech && <Text style={{ marginTop: 4, color: '#000000', fontSize: 10 }}>{exp.tech}</Text>}
+                {exp.tech && <Text style={{ marginTop: 4, color: '#000000', fontSize: 10 * styles._finalScale }}>{exp.tech}</Text>}
               </View>
             ))}
           </View>
@@ -370,7 +374,7 @@ export function RenewedTemplate({ personalInfo, links, resume, experiences, educ
               {languages.map((langItem, li) => {
                 const levelLabel = translateLanguageLevel(langItem.level, lang);
                 return (
-                  <Text key={li} style={{ marginHorizontal: 6, fontSize: 10 }}>
+                  <Text key={li} style={{ marginHorizontal: 6, fontSize: 10 * styles._finalScale }}>
                     {langItem.name}{levelLabel ? ` (${levelLabel})` : ''}
                   </Text>
                 );
@@ -385,9 +389,9 @@ export function RenewedTemplate({ personalInfo, links, resume, experiences, educ
             <Text style={styles.sectionTitle}>{l === 'en' ? 'CERTIFICATIONS' : l === 'es' ? 'CERTIFICACIONES' : 'CERTIFICAÇÕES'}</Text>
             {certifications.map((cert, i) => (
               <View key={i} style={{ marginBottom: 6 }}>
-                <Text style={{ fontSize: 11, fontWeight: 'bold' }}>{cert.name} <Text style={{ fontSize: 10, fontStyle: 'italic' }}>{cert.completionDate}</Text></Text>
-                {cert.issuer && <Text style={{ fontSize: 10, color: '#000000' }}>{cert.issuer}</Text>}
-                {cert.validationLink && <Link src={cert.validationLink} style={{ fontSize: 9, color: '#2563eb' }}>{cert.validationLink}</Link>}
+                <Text style={{ fontSize: 11 * styles._finalScale, fontWeight: 'bold' }}>{cert.name} <Text style={{ fontSize: 10 * styles._finalScale, fontStyle: 'italic' }}>{cert.completionDate}</Text></Text>
+                {cert.issuer && <Text style={{ fontSize: 10 * styles._finalScale, color: '#000000' }}>{cert.issuer}</Text>}
+                {cert.validationLink && <Link src={cert.validationLink} style={{ fontSize: 9 * styles._finalScale, color: '#2563eb' }}>{cert.validationLink}</Link>}
                 {cert.description && <Text style={styles.bullets}>• {cert.description}</Text>}
               </View>
             ))}
@@ -400,8 +404,8 @@ export function RenewedTemplate({ personalInfo, links, resume, experiences, educ
             <Text style={styles.sectionTitle}>{l === 'en' ? 'PROJECTS' : l === 'es' ? 'PROYECTOS' : 'PROJETOS'}</Text>
             {projects.map((proj, i) => (
               <View key={i} style={{ marginBottom: 6 }}>
-                <Text style={{ fontSize: 11, fontWeight: 'bold' }}>{proj.name} {proj.year ? <Text style={{ fontSize: 10, fontStyle: 'italic' }}>{proj.year}</Text> : null}</Text>
-                {proj.tech && <Text style={{ fontSize: 10, color: '#000000' }}>{proj.tech}</Text>}
+                <Text style={{ fontSize: 11 * styles._finalScale, fontWeight: 'bold' }}>{proj.name} {proj.year ? <Text style={{ fontSize: 10 * styles._finalScale, fontStyle: 'italic' }}>{proj.year}</Text> : null}</Text>
+                {proj.tech && <Text style={{ fontSize: 10 * styles._finalScale, color: '#000000' }}>{proj.tech}</Text>}
                 {proj.description && (
                   <Text style={styles.activitiesText}>{proj.description}</Text>
                 )}
@@ -412,8 +416,8 @@ export function RenewedTemplate({ personalInfo, links, resume, experiences, educ
                     ))}
                   </View>
                 )}
-                {proj.link && <Link src={proj.link} style={{ fontSize: 9, color: '#2563eb' }}>{proj.link}</Link>}
-                {proj.sourceCode && <Link src={proj.sourceCode} style={{ fontSize: 9, color: '#2563eb' }}>{proj.sourceCode}</Link>}
+                {proj.link && <Link src={proj.link} style={{ fontSize: 9 * styles._finalScale, color: '#2563eb' }}>{proj.link}</Link>}
+                {proj.sourceCode && <Link src={proj.sourceCode} style={{ fontSize: 9 * styles._finalScale, color: '#2563eb' }}>{proj.sourceCode}</Link>}
               </View>
             ))}
           </View>
