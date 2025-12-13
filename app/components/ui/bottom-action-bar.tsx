@@ -27,7 +27,7 @@ import { ThankYouModal } from '../thank_you_modal';
 import { ColorSelector } from './color-selector';
 import { SelectMenu, type SelectOption } from './select-menu';
 import { TemplateSelectorModal } from '../template_selector_modal';
-import type { PersonalInfo, Link, CvRenderSettings, CvColor, Experience, Education, Language, Certification, Project, Volunteer, CustomSection, FontFamilyOption, LayoutDensity, TextAlignment, HeaderOptions, PhotoOptions, DateFormat } from '../../types/cv';
+import type { PersonalInfo, Link, CvRenderSettings, CvColor, Experience, Education, Language, Certification, Project, Volunteer, CustomSection, FontFamilyOption, LayoutDensity, TextAlignment, HeaderOptions, PhotoOptions, DateFormat, CvTemplate } from '../../types/cv';
 import type { CVType } from '../../contexts/LanguageContext';
 
 interface BottomActionBarProps {
@@ -42,9 +42,9 @@ interface BottomActionBarProps {
   projects: Project[];
   volunteers: Volunteer[];
   customSections: CustomSection[];
-  selectedTemplate: 'renewed';
+  selectedTemplate: CvTemplate;
   selectedColor: CvColor;
-  onTemplateChange: (template: 'renewed') => void;
+  onTemplateChange: (template: CvTemplate) => void;
   onColorChange: (color: CvColor) => void;
   onGeneratePDF: () => boolean;
   onShowSuccessMessage: () => void;

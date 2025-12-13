@@ -12,18 +12,22 @@ interface TemplateSelectorModalProps {
   onClose: () => void;
 }
 
-const templatePreviews = {
+const templatePreviews: Record<CvTemplate, { img: string; nameKey: string; descriptionKey: string }> = {
   renewed: {
     img: '/renewed_preview.webp',
     nameKey: 'template.renewed.name',
     descriptionKey: 'template.renewed.description',
+  },
+  classic: {
+    img: '/classic_preview.webp',
+    nameKey: 'template.classic.name',
+    descriptionKey: 'template.classic.description',
   },
 };
 
 export function TemplateSelectorModal({ show, selectedTemplate, onSelect, onClose }: TemplateSelectorModalProps) {
   const { t } = useLanguage();
   const [preview, setPreview] = useState<CvTemplate | null>(null);
-  const isRenewedSelected = selectedTemplate === 'renewed';
 
   if (!show) return null;
 
@@ -48,48 +52,54 @@ export function TemplateSelectorModal({ show, selectedTemplate, onSelect, onClos
         <div className="p-4 bg-gray-50 dark:bg-zinc-800">
           {/* Grid of templates */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div
-            key="renewed"
-            role="button"
-            tabIndex={0}
-            onClick={() => {
-              onSelect('renewed');
-              onClose();
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                onSelect('renewed');
-                onClose();
-              }
-            }}
-            className={`group text-left rounded-xl overflow-hidden border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500 ${isRenewedSelected ? 'border-sky-500 ring-2 ring-sky-200 dark:ring-sky-900/30' : 'border-gray-200 dark:border-zinc-700'}`}
-            aria-pressed={isRenewedSelected}
-          >
-            <div className="relative h-56 bg-gray-100 dark:bg-zinc-700 overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={templatePreviews.renewed.img}
-                alt={`${t(templatePreviews.renewed.nameKey)} preview`}
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02] cursor-zoom-in"
-                loading="lazy"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setPreview('renewed');
-                }}
-              />
-            </div>
-            <div className="p-4 bg-white dark:bg-zinc-800">
-              <div className="flex items-center justify-between">
-                <h4 className="font-medium text-gray-900 dark:text-white">
-                  {t(templatePreviews.renewed.nameKey)}
-                </h4>
-              </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                {t(templatePreviews.renewed.descriptionKey)}
-              </p>
-            </div>
-          </div>
+            {Object.entries(templatePreviews).map(([key, data]) => {
+              const templateKey = key as CvTemplate;
+              const isSelected = selectedTemplate === templateKey;
+              return (
+                <div
+                  key={templateKey}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => {
+                    onSelect(templateKey);
+                    onClose();
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      onSelect(templateKey);
+                      onClose();
+                    }
+                  }}
+                  className={`group text-left rounded-xl overflow-hidden border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500 ${isSelected ? 'border-sky-500 ring-2 ring-sky-200 dark:ring-sky-900/30' : 'border-gray-200 dark:border-zinc-700'}`}
+                  aria-pressed={isSelected}
+                >
+                  <div className="relative h-56 bg-gray-100 dark:bg-zinc-700 overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={data.img}
+                      alt={`${t(data.nameKey)} preview`}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02] cursor-zoom-in"
+                      loading="lazy"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setPreview(templateKey);
+                      }}
+                    />
+                  </div>
+                  <div className="p-4 bg-white dark:bg-zinc-800">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium text-gray-900 dark:text-white">
+                        {t(data.nameKey)}
+                      </h4>
+                    </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                      {t(data.descriptionKey)}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 

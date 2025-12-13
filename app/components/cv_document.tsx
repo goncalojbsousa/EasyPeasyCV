@@ -2,6 +2,7 @@ import React from 'react';
 import { CvData, CvColor, CvRenderSettings, CvTemplate } from '../types/cv';
 import { Font } from '@react-pdf/renderer';
 import { RenewedTemplate } from './cv_templates/renewed_template';
+import { ClassicTemplate } from './cv_templates/classic_template';
 
 /**
  * Props interface for the CvDocument component
@@ -71,7 +72,10 @@ export function CvDocument({
 
   // For PDF generation we must return a @react-pdf/renderer Document
   switch (template) {
+    case 'classic':
+      return <ClassicTemplate {...commonProps} />;
     case 'renewed':
+    default:
       return <RenewedTemplate {...commonProps} />;
   }
 }

@@ -80,7 +80,7 @@ const buildStyles = (settings?: CvRenderSettings, color: CvColor = 'blue') => {
     // HeaderLeft: left column inside header (name + contacts)
     headerLeft: { flex: 1, alignItems: 'center' },
     // Divider: horizontal line below the header (full width, under photo too)
-    divider: { width: '100%', borderBottomWidth: s?.header.dividerThickness ?? 1, borderBottomColor: '#e5e7eb', marginVertical: 6 * singlePageMult },
+    divider: { width: '100%', borderBottomWidth: (s?.header.dividerThickness ?? 1) as number, borderBottomColor: '#e5e7eb', marginVertical: 6 * singlePageMult },
     // Section: general spacing for each main section (experience, education, etc.)
     section: { marginBottom: sectionSpacing },
     // SectionTitle: centered, uppercase headings for each section

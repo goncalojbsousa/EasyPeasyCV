@@ -451,6 +451,8 @@ const brTranslations: Record<string, string> = {
 
   // Template selector
   'template.selector': 'Selecionar Modelo',
+  'template.renewed.name': 'Renovado',
+  'template.renewed.description': 'Cabeçalho centralizado com espaçamento equilibrado',
   'template.classic.name': 'Clássico',
   'template.classic.description': 'Layout tradicional e profissional',
   'template.professional.name': 'Profissional',

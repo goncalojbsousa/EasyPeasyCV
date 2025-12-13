@@ -455,6 +455,8 @@ const enTranslations: Record<string, string> = {
 
   // Template selector
   'template.selector': 'Select Template',
+  'template.renewed.name': 'Renewed',
+  'template.renewed.description': 'Centered header with balanced spacing',
   'template.classic.name': 'Classic',
   'template.classic.description': 'Traditional and professional layout',
   'template.professional.name': 'Professional',

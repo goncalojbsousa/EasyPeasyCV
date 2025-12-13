@@ -184,7 +184,7 @@ export interface CustomSection {
 /**
  * Available CV template types
  */
-export type CvTemplate = 'renewed';
+export type CvTemplate = 'renewed' | 'classic';
 
 export type CvColor = 'blue' | 'green' | 'purple' | 'orange' | 'red' | 'teal' | 'indigo' | 'pink';
 

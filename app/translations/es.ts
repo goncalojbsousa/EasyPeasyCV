@@ -608,6 +608,8 @@ const esTranslations: Record<string, string> = {
 
   // Template selector
   'template.selector': 'Seleccionar Plantilla',
+  'template.renewed.name': 'Renovado',
+  'template.renewed.description': 'Encabezado centrado con espaciado equilibrado',
   'template.classic.name': 'Clásica',
   'template.classic.description': 'Diseño tradicional y profesional',
   'template.professional.name': 'Profesional',

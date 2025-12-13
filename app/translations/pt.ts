@@ -449,6 +449,8 @@ const ptTranslations: Record<string, string> = {
 
   // Template selector
   'template.selector': 'Selecionar Template',
+  'template.renewed.name': 'Renovado',
+  'template.renewed.description': 'Cabeçalho centrado com espaçamento equilibrado',
   'template.classic.name': 'Clássico',
   'template.classic.description': 'Layout tradicional e profissional',
   'template.professional.name': 'Profissional',
