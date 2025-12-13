@@ -95,7 +95,7 @@ export function BottomActionBar({
     { value: 'Helvetica', label: 'Helvetica' },
     { value: 'Times-Roman', label: 'Times New Roman' },
     { value: 'Arial', label: 'Arial' },
-  ]), [t]);
+  ]), []);
 
   const headerWeightOptions: SelectOption<HeaderOptions['nameFontWeight']>[] = useMemo(() => ([
     { value: 'normal', label: t('layout.controls.header.weight.normal') },

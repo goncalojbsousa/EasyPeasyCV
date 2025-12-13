@@ -46,7 +46,6 @@ const buildStyles = (settings?: CvRenderSettings, color: CvColor = 'blue') => {
   const sectionSpacing = (s?.layout.sectionSpacingPx ?? 12) * densityMult.spacing * singlePageMult;
   const lineSpacing = (s?.layout.lineSpacing ?? 1.4) * densityMult.lineHeight;
   const finalScale = scale * densityMult.fontSize * singlePageMult;
-  const singlePageMultValue = singlePageMult;
   
   // Section styling
   const sectionTitleColor = s?.sections?.titleColor || getColorTheme(color).primary;
@@ -63,7 +62,7 @@ const buildStyles = (settings?: CvRenderSettings, color: CvColor = 'blue') => {
   if (ar === '3:4') { photoW = 90; photoH = 120; }
   if (ar === '4:3') { photoW = 120; photoH = 90; }
 
-  return StyleSheet.create({
+  const createdStyles = StyleSheet.create({
     // Page container: overall padding, base font size and family for the document
     page: { paddingTop: cmToPt(margins.top), paddingRight: cmToPt(margins.right), paddingBottom: cmToPt(margins.bottom), paddingLeft: cmToPt(margins.left), fontSize: 11 * finalScale, fontFamily, lineHeight: lineSpacing },
     // Header: stack header row and divider so divider spans full width
@@ -114,10 +113,13 @@ const buildStyles = (settings?: CvRenderSettings, color: CvColor = 'blue') => {
     photo: { width: photoW, height: photoH, borderRadius: 4, marginLeft: 10 },
     // Photo image: fills container and crops using cover
     photoImage: { width: photoW, height: photoH, objectFit: 'cover', borderRadius: 4 },
-    // Export finalScale for use in inline styles
+  });
+
+  return {
+    ...createdStyles,
     _finalScale: finalScale,
-    _singlePageMult: singlePageMult
-  } as any);
+    _singlePageMult: singlePageMult,
+  };
 };
 
 const translationMaps: Record<'pt' | 'en' | 'es' | 'br', Record<string, string>> = {
