@@ -1,8 +1,8 @@
 'use client';
 
 import { useLanguage } from './contexts/LanguageContext';
-import { Navbar } from './components/navbar';
-import { Footer } from './components/footer';
+import { Navbar } from './components/layout/navbar';
+import { Footer } from './components/layout/footer';
 import Link from 'next/link';
 
 /**
@@ -58,4 +58,4 @@ export default function NotFound() {
       <Footer />
     </div>
   );
-} 
+}

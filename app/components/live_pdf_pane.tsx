@@ -5,7 +5,7 @@ import { useLanguage } from "../contexts/LanguageContext";
 import { pdf } from "@react-pdf/renderer";
 import { CvDocument } from "./cv_document";
 import { CvColor, CvTemplate, CvData, CvRenderSettings } from "../types/cv";
-import { PdfCanvasViewer } from "./pdf_canvas_viewer";
+import { PdfCanvasViewer } from "./pdf/pdf_canvas_viewer";
 
 interface LivePdfPaneProps extends CvData {
   lang?: string;

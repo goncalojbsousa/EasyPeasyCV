@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
-import { useLanguage } from '../contexts/LanguageContext';
-import { CvTemplate } from '../types/cv';
+import { useLanguage } from '../../../contexts/LanguageContext';
+import { CvTemplate } from '../../../types/cv';
 
 interface TemplateSelectorModalProps {
   show: boolean;

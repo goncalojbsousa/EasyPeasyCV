@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Sparkles, Loader, Info } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { AutoResizeTextarea } from './ui/auto-resize-textarea';
+import { AutoResizeTextarea } from './ui/auto_resize_textarea';
 
 /**
  * Job Analysis component

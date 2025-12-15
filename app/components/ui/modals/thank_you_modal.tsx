@@ -1,6 +1,6 @@
 'use client';
 
-import { useLanguage } from '../contexts/LanguageContext';
+import { useLanguage } from '../../../contexts/LanguageContext';
 import { X, CheckCircle, Heart, Plus } from 'lucide-react';
 
 /**

@@ -2,17 +2,17 @@
 
 import { useMemo } from 'react';
 import { GripVertical } from 'lucide-react';
-import { SortableList, DragHandle } from './dnd/sortable-list';
-import { Volunteer } from '../types/cv';
-import { FormSection } from './ui/form-section';
-import { FormField } from './ui/form-field';
-import { IconButton } from './ui/icon-button';
-import { EmptyState } from './ui/empty-state';
-import { Icons } from './ui/icons';
-import { useLanguage } from '../contexts/LanguageContext';
-import { MONTHS_EN as MONTHS, toEN, getTranslatedMonthWithT } from '../utils/months';
-import { AutoResizeTextarea } from './ui/auto-resize-textarea';
-import { SelectMenu } from './ui/select-menu';
+import { SortableList, DragHandle } from '../dnd/sortable_list';
+import { Volunteer } from '../../types/cv';
+import { FormSection } from '../ui/form_section';
+import { FormField } from '../ui/form_field';
+import { IconButton } from '../ui/icon_button';
+import { EmptyState } from '../ui/empty_state';
+import { Icons } from '../ui/icons';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { MONTHS_EN as MONTHS, toEN, getTranslatedMonthWithT } from '../../utils/months';
+import { AutoResizeTextarea } from '../ui/auto_resize_textarea';
+import { SelectMenu } from '../ui/select_menu';
 
 /**
  * Props interface for the Volunteer component

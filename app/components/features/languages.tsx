@@ -1,15 +1,15 @@
 'use client';
 
-import { Language } from '../types/cv';
-import { FormSection } from './ui/form-section';
-import { FormField } from './ui/form-field';
-import { IconButton } from './ui/icon-button';
-import { EmptyState } from './ui/empty-state';
-import { Icons } from './ui/icons';
-import { useLanguage } from '../contexts/LanguageContext';
+import { Language } from '../../types/cv';
+import { FormSection } from '../ui/form_section';
+import { FormField } from '../ui/form_field';
+import { IconButton } from '../ui/icon_button';
+import { EmptyState } from '../ui/empty_state';
+import { Icons } from '../ui/icons';
+import { useLanguage } from '../../contexts/LanguageContext';
 import { useMemo } from 'react';
-import { SelectMenu } from './ui/select-menu';
-import { SortableList, DragHandle } from './dnd/sortable-list';
+import { SelectMenu } from '../ui/select_menu';
+import { SortableList, DragHandle } from '../dnd/sortable_list';
 import { GripVertical } from 'lucide-react';
 
 /**

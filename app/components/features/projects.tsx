@@ -1,15 +1,15 @@
 'use client';
 
-import { Project } from '../types/cv';
+import { Project } from '../../types/cv';
 import { GripVertical } from 'lucide-react';
-import { FormSection } from './ui/form-section';
-import { FormField } from './ui/form-field';
-import { IconButton } from './ui/icon-button';
-import { EmptyState } from './ui/empty-state';
-import { Icons } from './ui/icons';
-import { useLanguage } from '../contexts/LanguageContext';
-import { SortableList, DragHandle } from './dnd/sortable-list';
-import { AutoResizeTextarea } from './ui/auto-resize-textarea';
+import { FormSection } from '../ui/form_section';
+import { FormField } from '../ui/form_field';
+import { IconButton } from '../ui/icon_button';
+import { EmptyState } from '../ui/empty_state';
+import { Icons } from '../ui/icons';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { SortableList, DragHandle } from '../dnd/sortable_list';
+import { AutoResizeTextarea } from '../ui/auto_resize_textarea';
 
 /**
  * Props interface for the Projects component

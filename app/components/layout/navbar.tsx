@@ -1,8 +1,8 @@
 'use client';
 
-import { useLanguage } from '../contexts/LanguageContext';
-import { LanguageSelector } from './ui/language-selector';
-import { ThemeToggle } from './theme-toggle';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { LanguageSelector } from '../ui/language_selector';
+import { ThemeToggle } from '../theme-toggle';
 import Link from 'next/link';
 import Image from 'next/image';
 

@@ -1,8 +1,7 @@
-
 import type { Metadata } from 'next';
 import './globals.css';
 import { LanguageProvider, Language } from './contexts/LanguageContext';
-import { LanguageHtmlAttribute } from './components/language-html-attribute';
+import { LanguageHtmlAttribute } from './components/language_html_attribute';
 import { ThemeProvider } from 'next-themes';
 import { ReactNode } from 'react';
 import { Inter } from 'next/font/google';

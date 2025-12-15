@@ -1,9 +1,9 @@
 'use client';
 
-import { FormSection } from './ui/form-section';
-import { FormField } from './ui/form-field';
-import { Icons } from './ui/icons';
-import { useLanguage } from '../contexts/LanguageContext';
+import { FormSection } from '../ui/form_section';
+import { FormField } from '../ui/form_field';
+import { Icons } from '../ui/icons';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 /**
  * Props interface for the TechnicalSkills component

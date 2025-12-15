@@ -1,15 +1,15 @@
   "use client";
 
-  import { PersonalInfo, Link } from '../types/cv';
+  import { PersonalInfo, Link } from '../../types/cv';
   import { GripVertical, X, Plus } from 'lucide-react';
-import { FormSection } from './ui/form-section';
-import { FormField } from './ui/form-field';
-import { Icons } from './ui/icons';
-import { useLanguage } from '../contexts/LanguageContext';
+import { FormSection } from '../ui/form_section';
+import { FormField } from '../ui/form_field';
+import { Icons } from '../ui/icons';
+import { useLanguage } from '../../contexts/LanguageContext';
   import { useCallback, useMemo, useState } from 'react';
-  import { SelectMenu } from './ui/select-menu';
+  import { SelectMenu } from '../ui/select_menu';
 
-import { SortableList, DragHandle } from './dnd/sortable-list';
+import { SortableList, DragHandle } from '../dnd/sortable_list';
 /**
  * Props interface for the PersonalInformation component
  */

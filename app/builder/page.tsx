@@ -2,25 +2,25 @@
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { Plus } from 'lucide-react';
-import { PersonalInformation } from '../components/personal_information';
-import { ProfessionalSummary } from '../components/professional_summary';
-import { ProfessionalExperience } from '../components/professional_experience';
-import { AcademicEducation } from '../components/academic_education';
-import { TechnicalSkills } from '../components/technical_skills';
-import { Languages } from '../components/languages';
-import { Certifications } from '../components/certifications';
-import { Projects } from '../components/projects';
-import { VolunteerWork } from '../components/volunteer';
+import { PersonalInformation } from '../components/features/personal_information';
+import { ProfessionalSummary } from '../components/features/professional_summary';
+import { ProfessionalExperience } from '../components/features/professional_experience';
+import { AcademicEducation } from '../components/features/academic_education';
+import { TechnicalSkills } from '../components/features/technical_skills';
+import { Languages } from '../components/features/languages';
+import { Certifications } from '../components/features/certifications';
+import { Projects } from '../components/features/projects';
+import { VolunteerWork } from '../components/features/volunteer';
 import { CVTips } from '../components/cv_tips';
 import { JobAnalysis } from '../components/job_analysis';
 import { AtsExplanation } from '../components/ats_explanation';
-import { CustomSectionCard } from '../components/custom_sections';
-import { Navbar } from '../components/navbar';
-import { Footer } from '../components/footer';
-import { PdfPreview } from '../components/pdf_preview';
+import { CustomSectionCard } from '../components/features/custom_sections';
+import { Navbar } from '../components/layout/navbar';
+import { Footer } from '../components/layout/footer';
+import { PdfPreview } from '../components/pdf/pdf_preview';
 import { LivePdfPane } from '../components/live_pdf_pane';
-import { FloatingActionBar } from '../components/ui/floating-action-bar';
-import { BottomActionBar } from '../components/ui/bottom-action-bar';
+import { FloatingActionBar } from '../components/ui/floating_action_bar';
+import { BottomActionBar } from '../components/ui/bottom_action_bar';
 import { useLanguage } from '../contexts/LanguageContext';
 import { CvData, Experience, Education, Language, Certification, Project, Volunteer, CvColor, CvTemplate, CvRenderSettings, CustomSection, SectionKey, Link } from '../types/cv';
 import { cvDataToXml, xmlToCvData } from '../utils/xml';
@@ -314,7 +314,7 @@ const handleImportXml = (xml: string) => {
   useEffect(() => {
     const preloadPDF = async () => {
       try {
-        await import('../components/pdf_download_button');
+        await import('../components/pdf/pdf_download_button');
       } catch {
         // Silently handle PDF component preload failure
       }

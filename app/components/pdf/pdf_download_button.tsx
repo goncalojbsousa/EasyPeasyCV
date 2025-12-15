@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { pdf } from '@react-pdf/renderer';
-import { CvDocument } from './cv_document';
-import { CvData, CvColor, CvTemplate, CvRenderSettings } from '../types/cv';
+import { CvDocument } from '../cv_document';
+import { CvData, CvColor, CvTemplate, CvRenderSettings } from '../../types/cv';
 
 /**
  * Props interface for the PdfDownloadButton component

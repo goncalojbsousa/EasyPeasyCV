@@ -2,8 +2,8 @@
 
 import { useLanguage } from './contexts/LanguageContext';
 import { Eye, CheckCircle, Zap } from 'lucide-react';
-import { Navbar } from './components/navbar';
-import { Footer } from './components/footer';
+import { Navbar } from './components/layout/navbar';
+import { Footer } from './components/layout/footer';
 import Link from 'next/link';
 
 /**

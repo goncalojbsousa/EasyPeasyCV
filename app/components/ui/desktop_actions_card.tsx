@@ -6,13 +6,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Code, TrendingUp, BarChart2, Users, DollarSign, Palette, Heart, BookOpen, Building, Briefcase, ChevronDown, ChevronRight, Eye, FileText, Sparkles, Database, Download, Upload } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { FormSection } from './form-section';
+import { FormSection } from './form_section';
 import { Icons } from './icons';
-import PdfDownloadButton from '../pdf_download_button';
-import { ThankYouModal } from '../thank_you_modal';
+import PdfDownloadButton from '../pdf/pdf_download_button';
+import { ThankYouModal } from './modals/thank_you_modal';
 import { Experience, Education, Language, Certification, Project, Volunteer, CvColor, CvTemplate, CvRenderSettings } from '../../types/cv';
-import { ColorSelector } from './color-selector';
-import { TemplateSelectorModal } from '../template_selector_modal';
+import { ColorSelector } from './color_selector';
+import { TemplateSelectorModal } from './modals/template_selector_modal';
 
 import { PersonalInfo, Link } from '../../types/cv';
 interface DesktopActionsCardProps {

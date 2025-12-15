@@ -22,14 +22,14 @@ import {
   Upload,
 } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import PdfDownloadButton from '../pdf_download_button';
-import { ThankYouModal } from '../thank_you_modal';
-import { ColorSelector } from './color-selector';
-import { TemplateSelectorModal } from '../template_selector_modal';
+import PdfDownloadButton from '../pdf/pdf_download_button';
+import { ThankYouModal } from './modals/thank_you_modal';
+import { ColorSelector } from './color_selector';
+import { TemplateSelectorModal } from './modals/template_selector_modal';
 import type { PersonalInfo, Link, CvRenderSettings, CvColor, Experience, Education, Language, Certification, Project, Volunteer, CustomSection, CvTemplate } from '../../types/cv';
 import type { CVType } from '../../contexts/LanguageContext';
 import { useAnchorPosition } from '../../utils/useAnchorPosition';
-import { LayoutControls } from './layout-controls';
+import { LayoutControls } from './layout_controls';
 
 interface BottomActionBarProps {
   personalInfo: PersonalInfo;

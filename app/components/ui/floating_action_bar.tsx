@@ -3,11 +3,11 @@
 import { useState, useRef, useEffect, useMemo, type JSX } from 'react';
 import { Eye, Download, Grid2x2, Menu, X, FileText, RotateCcw } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { CompactCVTypeSelector } from './compact-cv-type-selector';
-import PdfDownloadButton from '../pdf_download_button';
-import { ThankYouModal } from '../thank_you_modal';
-import { SelectMenu, type SelectOption } from './select-menu';
-import { TemplateSelectorModal } from '../template_selector_modal';
+import { CompactCVTypeSelector } from './compact_cv_type_selector';
+import PdfDownloadButton from '../pdf/pdf_download_button';
+import { ThankYouModal } from './modals/thank_you_modal';
+import { SelectMenu, type SelectOption } from './select_menu';
+import { TemplateSelectorModal } from './modals/template_selector_modal';
 import { Experience, Education, Language, Certification, Project, Volunteer, CvColor, CvTemplate, CustomSection, PersonalInfo, Link, CvRenderSettings, SectionKey, FontFamilyOption, LayoutDensity, TextAlignment, HeaderOptions, PhotoOptions, DateFormat } from '../../types/cv';
 interface FloatingActionBarProps {
   personalInfo: PersonalInfo;

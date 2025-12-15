@@ -1,14 +1,14 @@
 'use client';
 
-import { CustomSection } from '../types/cv';
-import { FormSection } from './ui/form-section';
-import { FormField } from './ui/form-field';
-import { IconButton } from './ui/icon-button';
-import { EmptyState } from './ui/empty-state';
-import { Icons } from './ui/icons';
-import { useLanguage } from '../contexts/LanguageContext';
-import { SortableList, DragHandle } from './dnd/sortable-list';
-import { AutoResizeTextarea } from './ui/auto-resize-textarea';
+import { CustomSection } from '../../types/cv';
+import { FormSection } from '../ui/form_section';
+import { FormField } from '../ui/form_field';
+import { IconButton } from '../ui/icon_button';
+import { EmptyState } from '../ui/empty_state';
+import { Icons } from '../ui/icons';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { SortableList, DragHandle } from '../dnd/sortable_list';
+import { AutoResizeTextarea } from '../ui/auto_resize_textarea';
 
 interface CustomSectionCardProps {
   section: CustomSection;
