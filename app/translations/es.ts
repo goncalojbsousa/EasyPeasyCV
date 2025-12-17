@@ -8,6 +8,107 @@ const esTranslations: Record<string, string> = {
   'app.title': 'EasyPeasyCV',
   'app.subtitle': 'Crea un currículum profesional en minutos',
 
+  // Landing Page - Hero Section
+  'landing.hero.badge': 'Gratis y 100% Privado',
+  'landing.hero.title': 'Crea Tu CV Profesional en Minutos',
+  'landing.hero.subtitle': 'La forma más simple y privada de crear un currículum profesional. Sin registros, sin costos, 100% en tu navegador.',
+  'landing.hero.noaccount': 'Sin Registro',
+  'landing.hero.free': '100% Gratis',
+  'landing.hero.privacy': 'Datos Privados',
+  'landing.hero.cta.primary': 'Comenzar Ahora',
+  'landing.hero.cta.secondary': 'Ver en GitHub',
+  'landing.hero.trust': 'Ningún dato personal se envía a servidores. Todo funciona en tu navegador.',
+  'landing.hero.atsready': 'Optimizado para ATS',
+
+  // Problem/Solution Section
+  'landing.problem.title': '¿Cansado de Herramientas Complicadas?',
+  'landing.problem.subtitle': 'Sabemos lo que es buscar la herramienta perfecta para crear un currículum. ¿Tienes las mismas frustraciones?',
+  'landing.problem.item1.title': 'Herramientas Complejas',
+  'landing.problem.item1.description': 'Interfaces confusas, demasiadas opciones, difícil de usar. Solo quieres crear un CV, no un doctorado.',
+  'landing.problem.item2.title': 'Preocupaciones de Privacidad',
+  'landing.problem.item2.description': '¿Enviar datos personales a servidores desconocidos? No, gracias.',
+  'landing.problem.item3.title': 'Costos Ocultos',
+  'landing.problem.item3.description': 'Comienzas gratis pero luego tienes que pagar para descargar tu propio CV.',
+  'landing.solution.title': 'Presentamos EasyPeasyCV',
+  'landing.solution.description': 'Simple, privado y completamente gratuito. Crea currículums profesionales sin complicaciones, sin registros y sin costos.',
+  'landing.solution.cta': 'Probar Ahora',
+
+  // Features Section
+  'landing.features.title': 'Todo lo Que Necesitas en Un Solo Lugar',
+  'landing.features.subtitle': 'Herramientas profesionales para crear el CV perfecto, de forma simple e intuitiva.',
+  
+  'landing.features.privacy.title': 'Privacidad Total',
+  'landing.features.privacy.description': 'Todos tus datos se guardan localmente en el navegador. Cero envíos a servidores externos. Control total de tus datos personales.',
+  'landing.features.privacy.badge': '100% Privado',
+  
+  'landing.features.instant.title': 'Inicio Instantáneo',
+  'landing.features.instant.description': 'Sin registros, sin emails, sin contraseñas. Abre y comienza a crear tu CV inmediatamente.',
+  'landing.features.instant.badge': 'Sin Registro',
+  
+  'landing.features.templates.title': 'Plantillas Profesionales',
+  'landing.features.templates.description': '6 plantillas modernas y elegantes, todas optimizadas para sistemas ATS. Elige la que mejor represente tu perfil.',
+  'landing.features.templates.badge': '6 Plantillas',
+  
+  'landing.features.ats.title': 'Optimizado para ATS',
+  'landing.features.ats.description': 'Todas las plantillas son compatibles con sistemas de seguimiento de candidatos utilizados por las empresas.',
+  'landing.features.ats.badge': 'ATS-Friendly',
+  
+  'landing.features.pdf.title': 'Exportación PDF',
+  'landing.features.pdf.description': 'Genera PDFs de alta calidad en segundos. Formato perfecto, listo para enviar.',
+  'landing.features.pdf.badge': 'PDF Profesional',
+  
+  'landing.features.multilang.title': 'Multi-idioma',
+  'landing.features.multilang.description': 'Interfaz disponible en Portugués (PT/BR), Inglés y Español. Crea CVs en el idioma que necesites.',
+  'landing.features.multilang.badge': '4 Idiomas',
+
+  // Templates Section
+  'landing.templates.title': 'Plantillas Profesionales',
+  'landing.templates.subtitle': 'Elige entre 6 diseños modernos, todos optimizados para sistemas ATS y listos para impresionar.',
+  'landing.templates.cta': 'Probar Todas las Plantillas',
+
+  // How it Works Section
+  'landing.how.title': 'Simple en 3 Pasos',
+  'landing.how.subtitle': 'De cero a CV profesional en minutos. Simple, rápido y eficaz.',
+  'landing.how.step1.title': 'Elige la Plantilla',
+  'landing.how.step1.description': 'Selecciona una de las 6 plantillas profesionales que mejor se adapte a tu perfil',
+  'landing.how.step2.title': 'Completa los Datos',
+  'landing.how.step2.description': 'Agrega tu información con formularios intuitivos y vista previa en tiempo real',
+  'landing.how.step3.title': 'Descarga en PDF',
+  'landing.how.step3.description': 'Exporta tu currículum en PDF de alta calidad, listo para enviar',
+  'landing.how.cta': 'Comenzar Ahora Gratis',
+
+  // Trust Section
+  'landing.trust.title': 'Confianza y Transparencia',
+  'landing.trust.subtitle': 'Números que hablan por sí mismos. Una herramienta hecha para ti, no para lucrar contigo.',
+  'landing.trust.stat1.title': 'Gratis',
+  'landing.trust.stat1.description': 'Sin costos ocultos',
+  'landing.trust.stat2.title': 'CVs Ilimitados',
+  'landing.trust.stat2.description': 'Crea cuantos necesites',
+  'landing.trust.stat3.title': 'Datos Vendidos',
+  'landing.trust.stat3.description': 'Privacidad garantizada',
+
+  // Open Source Section
+  'landing.opensource.badge': 'Código Abierto',
+  'landing.opensource.title': 'Código Abierto y Transparente',
+  'landing.opensource.subtitle': 'EasyPeasyCV es de código abierto. El código es público, auditable y construido por la comunidad. Sin sorpresas, sin trucos.',
+  'landing.opensource.contribute.button': 'Ver en GitHub',
+  'landing.opensource.support.button': 'Apoyar el Proyecto',
+
+  // CTA Section
+  'landing.cta.title': '¿Listo para Crear Tu CV Profesional?',
+  'landing.cta.subtitle': 'Únete a miles de personas que ya han creado su currículum con EasyPeasyCV. Gratis, privado y sin complicaciones.',
+  'landing.cta.button': 'Crear Mi CV Ahora',
+  'landing.cta.note': '✓ Sin registro  ✓ 100% gratis  ✓ Datos privados',
+
+  // Legacy translations
+  'landing.open.source.badge': 'Proyecto de Código Abierto',
+  'landing.create.cv.button': 'Crear CV Ahora',
+  'landing.view.github.button': 'Ver en GitHub',
+  'landing.stats.templates': 'Plantillas',
+  'landing.stats.free': 'Gratis',
+  'landing.stats.unlimited': 'CVs Ilimitados',
+  'landing.stats.languages': 'Idiomas',
+
   // Development specific placeholders
   'development.placeholder.desired.role': 'Ej: Desarrollador Full Stack',
   'development.placeholder.professional.summary': 'Ej: Desarrollador Full Stack con 5 años de experiencia en desarrollo web, especializado en React, Node.js y bases de datos. Apasionado por crear soluciones escalables y eficientes.',
@@ -155,36 +256,18 @@ const esTranslations: Record<string, string> = {
   // Rule for personal information
   'rule.personal.info': 'La información personal es opcional, pero recomendamos incluir al menos nombre, correo electrónico y teléfono para facilitar el contacto.',
 
-  // Landing Page
-  'landing.open.source.badge': 'Proyecto Open Source',
-  'landing.hero.title': 'Crea tu CV profesional en minutos',
-  'landing.hero.subtitle': 'EasyPeasyCV es una herramienta gratuita y de código abierto para crear CVs profesionales. Sin registros, sin costos, sin complicaciones.',
-  'landing.create.cv.button': 'Crear CV Ahora',
-  'landing.view.github.button': 'Ver en GitHub',
-  'landing.stats.templates': 'Plantillas',
-  'landing.stats.free': 'Gratuito',
-  'landing.stats.unlimited': 'CVs Ilimitados',
-  'landing.stats.languages': 'Idiomas',
+  // Landing Page (deduplicated entries removed)
 
   // Features Section
-  'landing.features.title': '¿Por qué elegir EasyPeasyCV?',
-  'landing.features.subtitle': 'Todo lo que necesitas para crear un CV profesional, sin complicaciones.',
-  'landing.features.templates.title': 'Plantillas Profesionales',
-  'landing.features.templates.description': '6 plantillas elegantes y profesionales: Clásica, Profesional, Cronología, Moderna, Creativa y Minimal',
   'landing.features.customization.title': 'Personalización Total',
   'landing.features.customization.description': 'Elige colores, reorganiza secciones y personaliza cada detalle',
   'landing.features.responsive.title': 'Responsivo',
   'landing.features.responsive.description': 'Funciona perfectamente en escritorio, tablet y móvil',
   'landing.features.autosave.title': 'Auto-Guardado',
   'landing.features.autosave.description': 'Tus datos se guardan automáticamente en el navegador',
-  'landing.features.multilang.title': 'Multi-idioma',
-  'landing.features.multilang.description': 'Disponible en Portugués, Inglés y Español',
-  'landing.features.privacy.title': 'Privacidad',
-  'landing.features.privacy.description': 'Todo se queda en tu navegador, sin servidores externos',
+  
 
   // Templates Section
-  'landing.templates.title': 'Plantillas Disponibles',
-  'landing.templates.subtitle': 'Elige la plantilla que mejor se adapte a tu perfil profesional.',
   'landing.templates.classic.name': 'Clásica',
   'landing.templates.classic.description': 'Elegante y tradicional',
   'landing.templates.classic.features': 'Diseño limpio,Fuente profesional,Colores neutros',
@@ -205,15 +288,7 @@ const esTranslations: Record<string, string> = {
   'landing.templates.minimal.features': 'Barra lateral limpia,Secciones simples,Enfoque en el contenido',
   'landing.templates.use.button': 'Usar Plantilla',
 
-  // How it works Section
-  'landing.how.title': 'Cómo Funciona',
-  'landing.how.subtitle': 'Crear tu CV nunca ha sido tan simple. Sigue estos 3 pasos:',
-  'landing.how.step1.title': 'Rellena tus Datos',
-  'landing.how.step1.description': 'Añade tu información personal, experiencia profesional y educación',
-  'landing.how.step2.title': 'Personaliza',
-  'landing.how.step2.description': 'Elige plantilla, colores y reorganiza secciones',
-  'landing.how.step3.title': 'Descarga',
-  'landing.how.step3.description': 'Genera y descarga tu CV en PDF',
+  // How it works Section (deduplicated entries removed)
 
   // Testimonials Section
   'landing.testimonials.title': 'Lo que dicen los usuarios',
@@ -227,16 +302,9 @@ const esTranslations: Record<string, string> = {
   'landing.testimonials.ana.role': 'Diseñadora UX/UI',
   'landing.testimonials.ana.quote': '"¡Me encantó la plantilla creativa. Me destaqué de la competencia!"',
 
-  // Open Source Section
-  'landing.opensource.title': 'Proyecto Open Source',
-  'landing.opensource.subtitle': 'EasyPeasyCV es un proyecto de código abierto. ¡Las contribuciones son bienvenidas! Juntos podemos hacer esta herramienta aún mejor.',
-  'landing.opensource.contribute.button': 'Contribuir en GitHub',
-  'landing.opensource.support.button': 'Apoyar el Proyecto',
+  // Open Source Section (deduplicated entries removed)
 
-  // CTA Section
-  'landing.cta.title': '¿Listo para crear tu CV?',
-  'landing.cta.subtitle': 'Empieza ahora y crea un CV profesional en minutos',
-  'landing.cta.button': 'Crear CV Gratuitamente',
+  // CTA Section (deduplicated entries removed)
   'generate.cv': 'Generar CV',
   'generate.resume': 'Generar Currículum',
   'generate.ats.resume': 'Generar CV',

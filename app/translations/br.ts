@@ -4,10 +4,20 @@ const brTranslations: Record<string, string> = {
   'app.title': 'EasyPeasyCV',
   'app.subtitle': 'Crie um currículo profissional em minutos',
 
-  // Landing Page
+  // Landing Page - Hero Section
+  'landing.hero.badge': 'Grátis e 100% Privado',
+  'landing.hero.title': 'Crie Seu Currículo Profissional em Minutos',
+  'landing.hero.subtitle': 'A forma mais simples e privada de criar um currículo profissional. Sem cadastros, sem custos, 100% no seu navegador.',
+  'landing.hero.noaccount': 'Sem Cadastro',
+  'landing.hero.free': '100% Gratuito',
+  'landing.hero.privacy': 'Dados Privados',
+  'landing.hero.cta.primary': 'Começar Agora',
+  'landing.hero.cta.secondary': 'Ver no GitHub',
+  'landing.hero.trust': 'Nenhum dado pessoal é enviado para servidores. Tudo funciona no seu navegador.',
+  'landing.hero.atsready': 'Otimizado para ATS',
+
+  // Landing Page - Legacy
   'landing.open.source.badge': 'Projeto Open Source',
-  'landing.hero.title': 'Crie seu CV profissional em minutos',
-  'landing.hero.subtitle': 'EasyPeasyCV é uma ferramenta gratuita e open source para criar currículos profissionais. Sem cadastros, sem custos, sem complicações.',
   'landing.create.cv.button': 'Criar CV Agora',
   'landing.view.github.button': 'Ver no GitHub',
   'landing.stats.templates': 'Modelos',
@@ -15,25 +25,59 @@ const brTranslations: Record<string, string> = {
   'landing.stats.unlimited': 'CVs Ilimitados',
   'landing.stats.languages': 'Idiomas',
 
+  // Problem/Solution Section
+  'landing.problem.title': 'Cansado de Ferramentas Complicadas?',
+  'landing.problem.subtitle': 'Sabemos o que é procurar a ferramenta perfeita para criar um currículo. Você tem as mesmas frustrações?',
+  'landing.problem.item1.title': 'Ferramentas Complexas',
+  'landing.problem.item1.description': 'Interfaces confusas, opções demais, difícil de usar. Você só quer criar um CV, não um doutorado.',
+  'landing.problem.item2.title': 'Preocupações com Privacidade',
+  'landing.problem.item2.description': 'Enviar dados pessoais para servidores desconhecidos? Não, obrigado.',
+  'landing.problem.item3.title': 'Custos Escondidos',
+  'landing.problem.item3.description': 'Começa grátis mas depois tem que pagar para baixar o seu próprio CV.',
+  'landing.solution.title': 'Apresentamos o EasyPeasyCV',
+  'landing.solution.description': 'Simples, privado e completamente gratuito. Crie currículos profissionais sem complicações, sem cadastros e sem custos.',
+  'landing.solution.cta': 'Experimentar Agora',
+
   // Features Section
-  'landing.features.title': 'Por que escolher EasyPeasyCV?',
-  'landing.features.subtitle': 'Tudo o que você precisa para criar um currículo profissional, sem complicações.',
+  'landing.features.title': 'Tudo o Que Você Precisa em Um Só Lugar',
+  'landing.features.subtitle': 'Ferramentas profissionais para criar o currículo perfeito, de forma simples e intuitiva.',
+  
+  'landing.features.privacy.title': 'Privacidade Total',
+  'landing.features.privacy.description': 'Todos os seus dados ficam salvos localmente no navegador. Zero envios para servidores externos. Controle total dos seus dados pessoais.',
+  'landing.features.privacy.badge': '100% Privado',
+  
+  'landing.features.instant.title': 'Começo Instantâneo',
+  'landing.features.instant.description': 'Sem cadastros, sem emails, sem senhas. Abra e comece a criar seu CV imediatamente.',
+  'landing.features.instant.badge': 'Sem Cadastro',
+  
   'landing.features.templates.title': 'Modelos Profissionais',
-  'landing.features.templates.description': '6 modelos elegantes e profissionais: Clássico, Profissional, Timeline, Moderno, Criativo e Minimal',
+  'landing.features.templates.description': '6 modelos modernos e elegantes, todos otimizados para sistemas ATS. Escolha o que melhor representa seu perfil.',
+  'landing.features.templates.badge': '6 Modelos',
+  
+  'landing.features.ats.title': 'Otimizado para ATS',
+  'landing.features.ats.description': 'Todos os modelos são compatíveis com sistemas de rastreamento de candidatos usados pelas empresas.',
+  'landing.features.ats.badge': 'ATS-Friendly',
+  
+  'landing.features.pdf.title': 'Exportação PDF',
+  'landing.features.pdf.description': 'Gere PDFs de alta qualidade em segundos. Formatação perfeita, pronto para enviar.',
+  'landing.features.pdf.badge': 'PDF Profissional',
+  
+  'landing.features.multilang.title': 'Multi-idioma',
+  'landing.features.multilang.description': 'Interface disponível em Português (PT/BR), Inglês e Espanhol. Crie CVs no idioma que precisar.',
+  'landing.features.multilang.badge': '4 Idiomas',
+  
+  // Legacy features
   'landing.features.customization.title': 'Personalização Total',
   'landing.features.customization.description': 'Escolha cores, reorganize seções e personalize cada detalhe',
   'landing.features.responsive.title': 'Responsivo',
   'landing.features.responsive.description': 'Funciona perfeitamente em desktop, tablet e celular',
   'landing.features.autosave.title': 'Auto-Save',
   'landing.features.autosave.description': 'Seus dados são salvos automaticamente no navegador',
-  'landing.features.multilang.title': 'Multi-idioma',
-  'landing.features.multilang.description': 'Disponível em Português, Inglês e Espanhol',
-  'landing.features.privacy.title': 'Privacidade',
-  'landing.features.privacy.description': 'Tudo fica no seu navegador, sem servidores externos',
 
   // Templates Section
-  'landing.templates.title': 'Modelos Disponíveis',
-  'landing.templates.subtitle': 'Escolha o modelo que melhor se adapta ao seu perfil profissional.',
+  'landing.templates.title': 'Modelos Profissionais',
+  'landing.templates.subtitle': 'Escolha entre 6 designs modernos, todos otimizados para sistemas ATS e prontos para impressionar.',
+  'landing.templates.cta': 'Experimentar Todos os Modelos',
   'landing.templates.classic.name': 'Clássico',
   'landing.templates.classic.description': 'Elegante e tradicional',
   'landing.templates.classic.features': 'Layout limpo,Fonte profissional,Cores neutras',
@@ -55,41 +99,51 @@ const brTranslations: Record<string, string> = {
   'landing.templates.use.button': 'Usar Modelo',
 
   // How it works Section
-  'landing.how.title': 'Como Funciona',
-  'landing.how.subtitle': 'Criar seu CV nunca foi tão simples. Siga estes 3 passos:',
-  'landing.how.step1.title': 'Preencha os Dados',
-  'landing.how.step1.description': 'Adicione suas informações pessoais, experiência profissional e educação',
-  'landing.how.step2.title': 'Personalize',
-  'landing.how.step2.description': 'Escolha o modelo, cores e reorganize as seções',
-  'landing.how.step3.title': 'Baixe',
-  'landing.how.step3.description': 'Gere e baixe seu CV em PDF',
+  'landing.how.title': 'Simples em 3 Passos',
+  'landing.how.subtitle': 'Do zero ao CV profissional em minutos. Simples, rápido e eficaz.',
+  'landing.how.step1.title': 'Escolha o Modelo',
+  'landing.how.step1.description': 'Selecione um dos 6 modelos profissionais que melhor se adequa ao seu perfil',
+  'landing.how.step2.title': 'Preencha os Dados',
+  'landing.how.step2.description': 'Adicione sua informação com formulários intuitivos e pré-visualização em tempo real',
+  'landing.how.step3.title': 'Baixe em PDF',
+  'landing.how.step3.description': 'Exporte seu currículo em PDF de alta qualidade, pronto para enviar',
+  'landing.how.cta': 'Começar Agora Gratuitamente',
 
-  // Testimonials Section
+  // Trust/Social Proof Section
+  'landing.trust.title': 'Confiança e Transparência',
+  'landing.trust.subtitle': 'Números que falam por si. Uma ferramenta feita para você, não para lucrar com você.',
+  'landing.trust.stat1.title': 'Gratuito',
+  'landing.trust.stat1.description': 'Sem custos escondidos',
+  'landing.trust.stat2.title': 'CVs Ilimitados',
+  'landing.trust.stat2.description': 'Crie quantos precisar',
+  'landing.trust.stat3.title': 'Dados Vendidos',
+  'landing.trust.stat3.description': 'Privacidade garantida',
+  
+  // Legacy Testimonials Section
   'landing.benefits.title': 'Vantagens do EasyPeasyCV',
   'landing.benefits.subtitle': 'Descubra por que o EasyPeasyCV é a escolha certa para o seu currículo profissional',
-
   'landing.benefits.privacy.title': 'Privacidade Total',
   'landing.benefits.privacy.subtitle': 'Seus dados ficam sempre seguros',
   'landing.benefits.privacy.description': 'Todos os dados são salvos localmente no seu navegador. Nenhuma informação é enviada para servidores externos.',
-
   'landing.benefits.ats.title': 'Otimizado para ATS',
   'landing.benefits.ats.subtitle': 'Compatível com sistemas de recrutamento',
   'landing.benefits.ats.description': 'Nossos modelos estão otimizados para passar nos sistemas de rastreamento de candidatos (ATS) das empresas.',
-
   'landing.benefits.performance.title': 'Rápido e Eficiente',
   'landing.benefits.performance.subtitle': 'Geração instantânea de PDF',
   'landing.benefits.performance.description': 'Gere seu CV em PDF de alta qualidade em segundos, sem esperas nem complicações.',
 
   // Open Source Section
-  'landing.opensource.title': 'Projeto Open Source',
-  'landing.opensource.subtitle': 'EasyPeasyCV é um projeto open source. Contribuições são bem-vindas! Juntos podemos tornar esta ferramenta ainda melhor.',
-  'landing.opensource.contribute.button': 'Contribuir no GitHub',
+  'landing.opensource.badge': 'Open Source',
+  'landing.opensource.title': 'Código Aberto e Transparente',
+  'landing.opensource.subtitle': 'EasyPeasyCV é open source. O código é público, auditável e construído pela comunidade. Sem surpresas, sem truques.',
+  'landing.opensource.contribute.button': 'Ver no GitHub',
   'landing.opensource.support.button': 'Apoiar o Projeto',
 
   // CTA Section
-  'landing.cta.title': 'Pronto para criar seu CV?',
-  'landing.cta.subtitle': 'Comece agora mesmo e crie um currículo profissional em minutos',
-  'landing.cta.button': 'Criar CV Gratuitamente',
+  'landing.cta.title': 'Pronto para Criar Seu Currículo Profissional?',
+  'landing.cta.subtitle': 'Junte-se a milhares de pessoas que já criaram seu currículo com EasyPeasyCV. Gratuito, privado e sem complicações.',
+  'landing.cta.button': 'Criar Meu CV Agora',
+  'landing.cta.note': '✓ Sem cadastro  ✓ 100% gratuito  ✓ Dados privados',
   'generate.cv': 'Gerar CV',
   'generate.resume': 'Gerar Currículo',
   'generate.ats.resume': 'Gerar CV',
