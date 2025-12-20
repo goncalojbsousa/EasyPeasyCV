@@ -21,7 +21,7 @@ export function Navbar() {
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-3">
             <Image
-              src="/logo.webp"
+              src="/logo.svg"
               alt="EasyPeasyCV Logo"
               width={40}
               height={40}
