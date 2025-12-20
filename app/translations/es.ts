@@ -15,7 +15,7 @@ const esTranslations: Record<string, string> = {
   'landing.hero.noaccount': 'Sin Registro',
   'landing.hero.free': '100% Gratis',
   'landing.hero.privacy': 'Datos Privados',
-  'landing.hero.cta.primary': 'Comenzar Ahora',
+  'landing.hero.cta.primary': 'Crear CV Ahora',
   'landing.hero.cta.secondary': 'Ver en GitHub',
   'landing.hero.trust': 'Ningún dato personal se envía a servidores. Todo funciona en tu navegador.',
   'landing.hero.atsready': 'Optimizado para ATS',
@@ -46,8 +46,8 @@ const esTranslations: Record<string, string> = {
   'landing.features.instant.badge': 'Sin Registro',
   
   'landing.features.templates.title': 'Plantillas Profesionales',
-  'landing.features.templates.description': '6 plantillas modernas y elegantes, todas optimizadas para sistemas ATS. Elige la que mejor represente tu perfil.',
-  'landing.features.templates.badge': '6 Plantillas',
+  'landing.features.templates.description': '3 plantillas modernas y elegantes, todas optimizadas para sistemas ATS. Elige la que mejor represente tu perfil.',
+  'landing.features.templates.badge': '3 Plantillas',
   
   'landing.features.ats.title': 'Optimizado para ATS',
   'landing.features.ats.description': 'Todas las plantillas son compatibles con sistemas de seguimiento de candidatos utilizados por las empresas.',
@@ -63,18 +63,20 @@ const esTranslations: Record<string, string> = {
 
   // Templates Section
   'landing.templates.title': 'Plantillas Profesionales',
-  'landing.templates.subtitle': 'Elige entre 6 diseños modernos, todos optimizados para sistemas ATS y listos para impresionar.',
+  'landing.templates.subtitle': 'Elige entre 3 diseños modernos, todos optimizados para sistemas ATS y listos para impresionar.',
   'landing.templates.cta': 'Probar Todas las Plantillas',
 
   // How it Works Section
   'landing.how.title': 'Simple en 3 Pasos',
   'landing.how.subtitle': 'De cero a CV profesional en minutos. Simple, rápido y eficaz.',
   'landing.how.step1.title': 'Elige la Plantilla',
-  'landing.how.step1.description': 'Selecciona una de las 6 plantillas profesionales que mejor se adapte a tu perfil',
+  'landing.how.step1.description': 'Selecciona una de las 3 plantillas profesionales que mejor se adapte a tu perfil',
   'landing.how.step2.title': 'Completa los Datos',
   'landing.how.step2.description': 'Agrega tu información con formularios intuitivos y vista previa en tiempo real',
   'landing.how.step3.title': 'Descarga en PDF',
   'landing.how.step3.description': 'Exporta tu currículum en PDF de alta calidad, listo para enviar',
+  'landing.how.time.label': 'Tiempo medio:',
+  'landing.how.time.value': '5-10 minutos',
   'landing.how.cta': 'Comenzar Ahora Gratis',
 
   // Trust Section

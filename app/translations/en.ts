@@ -33,7 +33,7 @@ const enTranslations: Record<string, string> = {
   'landing.hero.noaccount': 'No Sign-Up',
   'landing.hero.free': '100% Free',
   'landing.hero.privacy': 'Private Data',
-  'landing.hero.cta.primary': 'Get Started Now',
+  'landing.hero.cta.primary': 'Create CV Now',
   'landing.hero.cta.secondary': 'View on GitHub',
   'landing.hero.trust': 'No personal data is sent to servers. Everything works in your browser.',
   'landing.hero.atsready': 'ATS Optimized',
@@ -73,8 +73,8 @@ const enTranslations: Record<string, string> = {
   'landing.features.instant.badge': 'No Sign-Up',
   
   'landing.features.templates.title': 'Professional Templates',
-  'landing.features.templates.description': '6 modern and elegant templates, all optimized for ATS systems. Choose the one that best represents your profile.',
-  'landing.features.templates.badge': '6 Templates',
+  'landing.features.templates.description': '3 modern and elegant templates, all optimized for ATS systems. Choose the one that best represents your profile.',
+  'landing.features.templates.badge': '3 Templates',
   
   'landing.features.ats.title': 'ATS Optimized',
   'landing.features.ats.description': 'All templates are compatible with applicant tracking systems used by companies.',
@@ -98,7 +98,7 @@ const enTranslations: Record<string, string> = {
 
   // Templates Section
   'landing.templates.title': 'Professional Templates',
-  'landing.templates.subtitle': 'Choose from 6 modern designs, all optimized for ATS systems and ready to impress.',
+  'landing.templates.subtitle': 'Choose from 3 modern designs, all optimized for ATS systems and ready to impress.',
   'landing.templates.cta': 'Try All Templates',
   'landing.templates.classic.name': 'Classic',
   'landing.templates.classic.description': 'Elegant and traditional',
@@ -124,11 +124,13 @@ const enTranslations: Record<string, string> = {
   'landing.how.title': 'Simple in 3 Steps',
   'landing.how.subtitle': 'From zero to professional CV in minutes. Simple, fast, and effective.',
   'landing.how.step1.title': 'Choose Template',
-  'landing.how.step1.description': 'Select one of the 6 professional templates that best suits your profile',
+  'landing.how.step1.description': 'Select one of the 3 professional templates that best suits your profile',
   'landing.how.step2.title': 'Fill in Your Data',
   'landing.how.step2.description': 'Add your information with intuitive forms and real-time preview',
   'landing.how.step3.title': 'Download as PDF',
   'landing.how.step3.description': 'Export your resume in high-quality PDF, ready to send',
+  'landing.how.time.label': 'Average time:',
+  'landing.how.time.value': '5-10 minutes',
   'landing.how.cta': 'Start Now for Free',
 
   // Testimonials Section

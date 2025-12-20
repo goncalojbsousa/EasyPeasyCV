@@ -481,7 +481,8 @@ export default function Home() {
           <div className="flex items-center justify-center gap-2 mb-8">
             <Clock className="w-5 h-5 text-sky-600 dark:text-sky-400" />
             <span className="text-gray-600 dark:text-gray-300 font-medium">
-              Tempo médio: <span className="text-sky-600 dark:text-sky-400 font-bold">5-10 minutos</span>
+              {t('landing.how.time.label')}{' '}
+              <span className="text-sky-600 dark:text-sky-400 font-bold">{t('landing.how.time.value')}</span>
             </span>
           </div>
 

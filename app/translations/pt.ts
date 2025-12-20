@@ -11,7 +11,7 @@ const ptTranslations: Record<string, string> = {
   'landing.hero.noaccount': 'Sem Cadastro',
   'landing.hero.free': '100% Gratuito',
   'landing.hero.privacy': 'Dados Privados',
-  'landing.hero.cta.primary': 'Começar Agora',
+  'landing.hero.cta.primary': 'Criar CV Agora',
   'landing.hero.cta.secondary': 'Ver no GitHub',
   'landing.hero.trust': 'Nenhum dado pessoal é enviado para servidores. Tudo funciona no teu navegador.',
   'landing.hero.atsready': 'Otimizado para ATS',
@@ -51,8 +51,8 @@ const ptTranslations: Record<string, string> = {
   'landing.features.instant.badge': 'Sem Cadastro',
   
   'landing.features.templates.title': 'Templates Profissionais',
-  'landing.features.templates.description': '6 templates modernos e elegantes, todos otimizados para sistemas ATS. Escolhe o que melhor representa o teu perfil.',
-  'landing.features.templates.badge': '6 Templates',
+  'landing.features.templates.description': '3 templates modernos e elegantes, todos otimizados para sistemas ATS. Escolhe o que melhor representa o teu perfil.',
+  'landing.features.templates.badge': '3 Templates',
   
   'landing.features.ats.title': 'Otimizado para ATS',
   'landing.features.ats.description': 'Todos os templates são compatíveis com sistemas de rastreamento de candidatos usados pelas empresas.',
@@ -76,7 +76,7 @@ const ptTranslations: Record<string, string> = {
 
   // Templates Section
   'landing.templates.title': 'Templates Profissionais',
-  'landing.templates.subtitle': 'Escolhe entre 6 designs modernos, todos otimizados para sistemas ATS e prontos para impressionar.',
+  'landing.templates.subtitle': 'Escolhe entre 3 designs modernos, todos otimizados para sistemas ATS e prontos para impressionar.',
   'landing.templates.cta': 'Experimentar Todos os Templates',
   'landing.templates.classic.name': 'Clássico',
   'landing.templates.classic.description': 'Elegante e tradicional',
@@ -102,11 +102,13 @@ const ptTranslations: Record<string, string> = {
   'landing.how.title': 'Simples em 3 Passos',
   'landing.how.subtitle': 'Do zero ao CV profissional em minutos. Simples, rápido e eficaz.',
   'landing.how.step1.title': 'Escolhe o Template',
-  'landing.how.step1.description': 'Seleciona um dos 6 templates profissionais que melhor se adequa ao teu perfil',
+  'landing.how.step1.description': 'Seleciona um dos 3 templates profissionais que melhor se adequa ao teu perfil',
   'landing.how.step2.title': 'Preenche os Dados',
   'landing.how.step2.description': 'Adiciona a tua informação com formulários intuitivos e pré-visualização em tempo real',
   'landing.how.step3.title': 'Descarrega em PDF',
   'landing.how.step3.description': 'Exporta o teu currículo em PDF de alta qualidade, pronto para enviar',
+  'landing.how.time.label': 'Tempo médio:',
+  'landing.how.time.value': '5-10 minutos',
   'landing.how.cta': 'Começar Agora Gratuitamente',
 
   // Trust/Social Proof Section

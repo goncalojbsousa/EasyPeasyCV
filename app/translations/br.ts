@@ -11,7 +11,7 @@ const brTranslations: Record<string, string> = {
   'landing.hero.noaccount': 'Sem Cadastro',
   'landing.hero.free': '100% Gratuito',
   'landing.hero.privacy': 'Dados Privados',
-  'landing.hero.cta.primary': 'Começar Agora',
+  'landing.hero.cta.primary': 'Criar CV Agora',
   'landing.hero.cta.secondary': 'Ver no GitHub',
   'landing.hero.trust': 'Nenhum dado pessoal é enviado para servidores. Tudo funciona no seu navegador.',
   'landing.hero.atsready': 'Otimizado para ATS',
@@ -51,8 +51,8 @@ const brTranslations: Record<string, string> = {
   'landing.features.instant.badge': 'Sem Cadastro',
   
   'landing.features.templates.title': 'Modelos Profissionais',
-  'landing.features.templates.description': '6 modelos modernos e elegantes, todos otimizados para sistemas ATS. Escolha o que melhor representa seu perfil.',
-  'landing.features.templates.badge': '6 Modelos',
+  'landing.features.templates.description': '3 modelos modernos e elegantes, todos otimizados para sistemas ATS. Escolha o que melhor representa seu perfil.',
+  'landing.features.templates.badge': '3 Modelos',
   
   'landing.features.ats.title': 'Otimizado para ATS',
   'landing.features.ats.description': 'Todos os modelos são compatíveis com sistemas de rastreamento de candidatos usados pelas empresas.',
@@ -76,7 +76,7 @@ const brTranslations: Record<string, string> = {
 
   // Templates Section
   'landing.templates.title': 'Modelos Profissionais',
-  'landing.templates.subtitle': 'Escolha entre 6 designs modernos, todos otimizados para sistemas ATS e prontos para impressionar.',
+  'landing.templates.subtitle': 'Escolha entre 3 designs modernos, todos otimizados para sistemas ATS e prontos para impressionar.',
   'landing.templates.cta': 'Experimentar Todos os Modelos',
   'landing.templates.classic.name': 'Clássico',
   'landing.templates.classic.description': 'Elegante e tradicional',
@@ -102,11 +102,13 @@ const brTranslations: Record<string, string> = {
   'landing.how.title': 'Simples em 3 Passos',
   'landing.how.subtitle': 'Do zero ao CV profissional em minutos. Simples, rápido e eficaz.',
   'landing.how.step1.title': 'Escolha o Modelo',
-  'landing.how.step1.description': 'Selecione um dos 6 modelos profissionais que melhor se adequa ao seu perfil',
+  'landing.how.step1.description': 'Selecione um dos 3 modelos profissionais que melhor se adequa ao seu perfil',
   'landing.how.step2.title': 'Preencha os Dados',
   'landing.how.step2.description': 'Adicione sua informação com formulários intuitivos e pré-visualização em tempo real',
   'landing.how.step3.title': 'Baixe em PDF',
   'landing.how.step3.description': 'Exporte seu currículo em PDF de alta qualidade, pronto para enviar',
+  'landing.how.time.label': 'Tempo médio:',
+  'landing.how.time.value': '5-10 minutos',
   'landing.how.cta': 'Começar Agora Gratuitamente',
 
   // Trust/Social Proof Section
