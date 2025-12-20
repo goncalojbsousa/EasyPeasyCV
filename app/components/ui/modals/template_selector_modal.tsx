@@ -37,8 +37,8 @@ export function TemplateSelectorModal({ show, selectedTemplate, onSelect, onClos
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-2xl w-full max-w-5xl relative overflow-hidden flex flex-col">
+    <div className="fixed inset-0 bg-black/50 flex items-start md:items-center justify-center z-50 p-4 overflow-y-auto">
+      <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-2xl w-full max-w-5xl relative overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-zinc-700">
           <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
@@ -54,7 +54,7 @@ export function TemplateSelectorModal({ show, selectedTemplate, onSelect, onClos
         </div>
 
         {/* Content */}
-        <div className="p-4 bg-gray-50 dark:bg-zinc-800">
+        <div className="p-4 bg-gray-50 dark:bg-zinc-800 flex-1 overflow-y-auto">
           {/* Grid of templates */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {Object.entries(templatePreviews).map(([key, data]) => {
