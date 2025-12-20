@@ -27,6 +27,7 @@ const buildStyles = (settings?: CvRenderSettings, color: CvColor = 'blue') => {
   const commonStyles = buildCommonStyles(metrics, settings);
   const photoSize = getPhotoSize(settings?.photo?.aspectRatio);
   const photoBorderRadius = settings?.photo?.borderRadius ?? 1;
+  const linkColor = metrics.linkColor;
   
   const specificStyles = StyleSheet.create({
     header: { flexDirection: 'column', marginBottom: 8 * metrics.singlePageMult },
@@ -49,12 +50,14 @@ const buildStyles = (settings?: CvRenderSettings, color: CvColor = 'blue') => {
     ...specificStyles,
     _finalScale: metrics.finalScale,
     _singlePageMult: metrics.singlePageMult,
+    linkColor,
   };
 };
 
 export function ProfessionalTemplate({ personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, customSections, lang, settings, color, sectionOrder }: ProfessionalTemplateProps) {
   const l = (lang === 'br' ? 'pt' : (lang || 'pt')) as 'pt' | 'en' | 'es';
   const styles = buildStyles(settings, color || 'blue');
+  const linkColor = styles.linkColor || '#2563eb';
   const order = getSectionOrder(sectionOrder, customSections);
   const contactItems = [
     personalInfo?.phone && { label: 'Tel', value: personalInfo.countryCode && personalInfo.phone ? `${personalInfo.countryCode.match(/\(([^)]+)\)/)?.[1] || personalInfo.countryCode} ${personalInfo.phone}` : personalInfo.phone },
@@ -120,7 +123,7 @@ export function ProfessionalTemplate({ personalInfo, links, resume, experiences,
               {links && links.length > 0 && (
                 <View style={{ flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap', marginTop: 2 }}>
                   {links.map((lnk, i) => (
-                    <Link key={i} src={getSocialUrl(lnk.type, lnk.value)} style={{ fontSize: 9, color: '#2563eb', marginHorizontal: 6 }}>
+                    <Link key={i} src={getSocialUrl(lnk.type, lnk.value)} style={{ fontSize: 9, color: linkColor, marginHorizontal: 6 }}>
                       {lnk.hideLinkLabel ? lnk.value : `${lnk.customName || lnk.type}: ${lnk.value}`}
                     </Link>
                   ))}

@@ -3,8 +3,10 @@
 import React, { useMemo } from 'react';
 import { RotateCcw } from 'lucide-react';
 import { SelectMenu, type SelectOption } from './select_menu';
+import { ColorSelector } from './color_selector';
 import type {
   CvRenderSettings,
+  CvColor,
   FontFamilyOption,
   LayoutDensity,
   TextAlignment,
@@ -18,11 +20,13 @@ type TFunc = (key: string) => string;
 interface LayoutControlsProps {
   t: TFunc;
   settings?: CvRenderSettings;
+  selectedColor: CvColor;
+  onColorChange: (c: CvColor) => void;
   onSettingsChange?: (s: CvRenderSettings) => void;
   onResetSectionOrder?: () => void;
 }
 
-export function LayoutControls({ t, settings, onSettingsChange, onResetSectionOrder }: LayoutControlsProps) {
+export function LayoutControls({ t, settings, selectedColor, onColorChange, onSettingsChange, onResetSectionOrder }: LayoutControlsProps) {
   const fontOptions: SelectOption<FontFamilyOption>[] = useMemo(() => ([
     { value: 'Helvetica', label: 'Helvetica' },
     { value: 'Times-Roman', label: 'Times New Roman' },
@@ -222,6 +226,28 @@ export function LayoutControls({ t, settings, onSettingsChange, onResetSectionOr
       </div>
 
       <div className="border-t border-gray-200 dark:border-zinc-700 pt-3">
+        <div className="text-xs font-semibold mb-2 text-gray-700 dark:text-gray-300">{t('color.selector')}</div>
+        <div className="h-9">
+          <ColorSelector selectedColor={selectedColor} onColorChange={onColorChange} show={true} />
+        </div>
+        <label className="mt-3 flex items-center gap-2 text-xs font-medium cursor-pointer text-gray-800 dark:text-gray-200">
+          <input
+            type="checkbox"
+            checked={!!settings?.sections?.useThemeColorForLinks}
+            onChange={(e) => onSettingsChange && settings && onSettingsChange({
+              ...settings,
+              sections: { ...settings.sections, useThemeColorForLinks: e.target.checked },
+            })}
+            className="rounded"
+          />
+          <span>{t('layout.controls.links.useThemeColor')}</span>
+        </label>
+        <div className="text-[10px] text-gray-500 dark:text-gray-400 mt-1">
+          {t('layout.controls.links.useThemeColor.help')}
+        </div>
+      </div>
+
+      <div className="border-t border-gray-200 dark:border-zinc-700 pt-3">
         <div className="text-xs font-semibold mb-2">{t('layout.controls.photo.title')}</div>
         <label className="flex items-center gap-2 text-xs font-medium">
           <input type="checkbox" checked={settings?.photo.enabled || false} onChange={(e) => onSettingsChange && settings && onSettingsChange({ ...settings, photo: { ...settings.photo, enabled: e.target.checked } })} />
@@ -373,6 +399,7 @@ export function LayoutControls({ t, settings, onSettingsChange, onResetSectionOr
               titleColor: '#000000',
               titleFontSize: 12,
               dateFormat: 'medium' as const,
+              useThemeColorForLinks: false,
             };
             onSettingsChange({ ...settings, layout: layoutDefaults, header: headerDefaults, photo: photoDefaults, sections: sectionsDefaults });
           }}

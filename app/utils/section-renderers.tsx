@@ -263,7 +263,7 @@ export function renderCertificationsSection(
             {cert.name} <Text style={{ fontSize: 10, fontStyle: 'italic' }}>{cert.completionDate}</Text>
           </Text>
           {cert.issuer && <Text style={{ fontSize: 10, color: '#000000' }}>{cert.issuer}</Text>}
-          {cert.validationLink && <Link src={cert.validationLink} style={{ fontSize: 9, color: '#2563eb' }}>{cert.validationLink}</Link>}
+          {cert.validationLink && <Link src={cert.validationLink} style={{ fontSize: 9, color: styles.linkColor || '#2563eb' }}>{cert.validationLink}</Link>}
           {cert.description && <Text style={styles.bullets}>• {cert.description}</Text>}
         </View>
       ))}
@@ -297,8 +297,8 @@ export function renderProjectsSection(
               ))}
             </View>
           )}
-          {proj.link && <Link src={proj.link} style={{ fontSize: 9, color: '#2563eb' }}>{proj.link}</Link>}
-          {proj.sourceCode && <Link src={proj.sourceCode} style={{ fontSize: 9, color: '#2563eb' }}>{proj.sourceCode}</Link>}
+          {proj.link && <Link src={proj.link} style={{ fontSize: 9, color: styles.linkColor || '#2563eb' }}>{proj.link}</Link>}
+          {proj.sourceCode && <Link src={proj.sourceCode} style={{ fontSize: 9, color: styles.linkColor || '#2563eb' }}>{proj.sourceCode}</Link>}
         </View>
       ))}
     </View>

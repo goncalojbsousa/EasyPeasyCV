@@ -290,6 +290,8 @@ export interface SectionOptions {
   titleColor: string;
   titleFontSize: number;
   dateFormat: DateFormat;
+  /** When true, links use the selected theme color instead of the default hyperlink blue */
+  useThemeColorForLinks?: boolean;
 }
 
 export interface CvRenderSettings {

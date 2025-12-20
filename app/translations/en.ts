@@ -222,6 +222,8 @@ const enTranslations: Record<string, string> = {
   'layout.controls.photo.help': 'Photo is limited to 20% of header area.',
   'layout.controls.photo.choose': 'Choose photo',
   'layout.controls.photo.atsWarning': 'Heads up: using a photo is not recommended. ATS systems ignore images, and at the human stage a photo can introduce bias against you.',
+  'layout.controls.links.useThemeColor': 'Use theme color on links',
+  'layout.controls.links.useThemeColor.help': 'Turn off to keep the standard hyperlink blue.',
   'layout.controls.quickSettings': 'Quick Settings',
   'layout.controls.density.label': 'Layout Density',
   'layout.controls.density.compact': 'Compact',

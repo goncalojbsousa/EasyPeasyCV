@@ -111,8 +111,9 @@ export function ColorSelector({ selectedColor, onColorChange, show = true }: Col
     function updatePosition() {
       if (!buttonRef.current) return;
       const rect = buttonRef.current.getBoundingClientRect();
-      // Position above the button (open upwards)
-      setPortalPos({ left: rect.left, top: rect.top - 8, width: rect.width });
+      // Position above the button (open upwards) and give enough width for long labels
+      const portalWidth = Math.max(rect.width, 200);
+      setPortalPos({ left: rect.left, top: rect.top - 8, width: portalWidth });
     }
 
     if (isOpen) {
@@ -162,8 +163,9 @@ export function ColorSelector({ selectedColor, onColorChange, show = true }: Col
 
       {isOpen && portalPos && createPortal(
         <div
+          data-color-selector-portal="true"
           onMouseDown={(e) => e.stopPropagation()}
-          className="z-[70] bg-white dark:bg-zinc-800 rounded-xl shadow-xl border border-gray-200 dark:border-zinc-700 max-h-[60vh] overflow-auto"
+          className="z-[130] bg-white dark:bg-zinc-800 rounded-xl shadow-xl border border-gray-200 dark:border-zinc-700 max-h-[60vh] overflow-auto"
           style={{ position: 'fixed', left: portalPos.left, top: portalPos.top, width: portalPos.width, transform: 'translateY(-100%)' }}
         >
           <div className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-zinc-700">

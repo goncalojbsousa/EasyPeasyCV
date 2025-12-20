@@ -24,6 +24,7 @@ export interface ComputedMetrics {
   sectionTitleColor: string;
   sectionTitleSize: number;
   accent: string;
+  linkColor: string;
 }
 
 export const DENSITY_PRESETS: Record<'compact' | 'normal' | 'spacious', DensityMultipliers> = {
@@ -34,6 +35,7 @@ export const DENSITY_PRESETS: Record<'compact' | 'normal' | 'spacious', DensityM
 
 export function computeMetrics(settings?: CvRenderSettings, color: CvColor = 'blue'): ComputedMetrics {
   const s = settings;
+  const hyperlinkBlue = '#2563eb';
   const scale = s?.layout.textScale || 1;
   const familyRaw = s?.layout.fontFamily || 'Helvetica';
   const fontFamily = s?.layout.fontFamily === 'Custom' 
@@ -60,6 +62,7 @@ export function computeMetrics(settings?: CvRenderSettings, color: CvColor = 'bl
   const sectionTitleColor = s?.sections?.titleColor || getColorTheme(color).primary;
   const sectionTitleSize = (s?.sections?.titleFontSize ?? 12) * finalScale;
   const accent = getColorTheme(color).primary;
+  const linkColor = s?.sections?.useThemeColorForLinks ? accent : hyperlinkBlue;
   
   return {
     margins,
@@ -73,6 +76,7 @@ export function computeMetrics(settings?: CvRenderSettings, color: CvColor = 'bl
     sectionTitleColor,
     sectionTitleSize,
     accent,
+    linkColor,
   };
 }
 

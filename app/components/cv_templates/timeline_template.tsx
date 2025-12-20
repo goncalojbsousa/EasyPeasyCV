@@ -29,6 +29,7 @@ const buildStyles = (settings?: CvRenderSettings, color: CvColor = 'blue') => {
   const lineColor = '#e5e7eb';
   const photoDimensions = getPhotoSize(settings?.photo?.aspectRatio);
   const photoBorderRadius = settings?.photo?.borderRadius ?? 1;
+  const linkColor = metrics.linkColor;
   
   const specificStyles = StyleSheet.create({
     page: { ...commonStyles.page, color: '#111827' },
@@ -62,10 +63,10 @@ const buildStyles = (settings?: CvRenderSettings, color: CvColor = 'blue') => {
     langDivider: { flex: 1, height: settings?.header.dividerThickness || 1, backgroundColor: lineColor, marginHorizontal: 6 },
     langLevel: { fontSize: 9 * metrics.finalScale, color: '#6b7280', textTransform: 'uppercase' },
     centerText: { textAlign: 'center' as PdfTextAlign },
-    link: { fontSize: 9 * metrics.finalScale, color: metrics.accent, marginRight: 8 },
+    link: { fontSize: 9 * metrics.finalScale, color: linkColor, marginRight: 8 },
   });
 
-  return { ...commonStyles, ...specificStyles, _finalScale: metrics.finalScale, _singlePageMult: metrics.singlePageMult, _accent: metrics.accent };
+  return { ...commonStyles, ...specificStyles, _finalScale: metrics.finalScale, _singlePageMult: metrics.singlePageMult, _accent: metrics.accent, linkColor };
 };
 
 export function TimelineTemplate({ personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, customSections, lang, settings, color, sectionOrder }: TimelineTemplateProps) {

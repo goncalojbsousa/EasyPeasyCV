@@ -105,6 +105,7 @@ export default function Builder() {
       titleColor: '#000000',
       titleFontSize: 12,
       dateFormat: 'medium',
+      useThemeColorForLinks: false,
     },
   });
 
@@ -1373,6 +1374,8 @@ const handleImportXml = (xml: string) => {
         onSettingsChange={setRenderSettings}
         onResetSectionOrder={handleResetSectionOrder}
         hasAnyContent={hasAnyContent}
+        selectedColor={selectedColor}
+        onColorChange={setSelectedColor}
       />
     </div>
   );

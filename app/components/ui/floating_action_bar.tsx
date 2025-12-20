@@ -8,6 +8,7 @@ import PdfDownloadButton from '../pdf/pdf_download_button';
 import { ThankYouModal } from './modals/thank_you_modal';
 import { SelectMenu, type SelectOption } from './select_menu';
 import { TemplateSelectorModal } from './modals/template_selector_modal';
+import { ColorSelector } from './color_selector';
 import { Experience, Education, Language, Certification, Project, Volunteer, CvColor, CvTemplate, CustomSection, PersonalInfo, Link, CvRenderSettings, SectionKey, FontFamilyOption, LayoutDensity, TextAlignment, HeaderOptions, PhotoOptions, DateFormat } from '../../types/cv';
 interface FloatingActionBarProps {
   personalInfo: PersonalInfo;
@@ -23,6 +24,8 @@ interface FloatingActionBarProps {
   customSections: CustomSection[];
   template?: CvTemplate;
   color?: CvColor;
+  selectedColor?: CvColor;
+  onColorChange?: (color: CvColor) => void;
   onShowPdfPreview: () => void;
   onGeneratePDF: () => boolean;
   onShowSuccessMessage: () => void;
@@ -52,6 +55,8 @@ export function FloatingActionBar({
   projects,
   template = 'professional',
   color = 'blue',
+  selectedColor = 'blue',
+  onColorChange,
   sectionOrder,
   onShowPdfPreview,
   onGeneratePDF,
@@ -493,6 +498,34 @@ export function FloatingActionBar({
               </div>
               
               <div className="border-t border-gray-200 dark:border-zinc-700 pt-3">
+                <label className="block text-xs font-semibold mb-2 text-gray-700 dark:text-gray-300">{t('color.selector')}</label>
+                {onColorChange && (
+                  <div className="mb-3">
+                    <ColorSelector selectedColor={selectedColor} onColorChange={onColorChange} show={true} />
+                  </div>
+                )}
+                {onColorChange && (
+                  <>
+                    <label className="mt-3 flex items-center gap-2 text-xs font-medium cursor-pointer text-gray-800 dark:text-gray-200">
+                      <input
+                        type="checkbox"
+                        checked={!!settings?.sections?.useThemeColorForLinks}
+                        onChange={(e) => onSettingsChange({
+                          ...settings,
+                          sections: { ...settings.sections, useThemeColorForLinks: e.target.checked },
+                        })}
+                        className="rounded"
+                      />
+                      <span>{t('layout.controls.links.useThemeColor')}</span>
+                    </label>
+                    <div className="text-[10px] text-gray-500 dark:text-gray-400 mt-1 mb-3">
+                      {t('layout.controls.links.useThemeColor.help')}
+                    </div>
+                  </>
+                )}
+              </div>
+              
+              <div className="border-t border-gray-200 dark:border-zinc-700 pt-3">
                 <div className="text-xs font-semibold mb-2">{t('layout.controls.photo.title')}</div>
                 <label className="flex items-center gap-2 text-xs font-medium">
                   <input type="checkbox" checked={settings.photo.enabled} onChange={(e) => onSettingsChange({ ...settings, photo: { ...settings.photo, enabled: e.target.checked } })} />
@@ -642,6 +675,7 @@ export function FloatingActionBar({
                       titleColor: '#000000',
                       titleFontSize: 12,
                       dateFormat: 'medium' as const,
+                      useThemeColorForLinks: false,
                     };
                     onSettingsChange({ ...settings, layout: layoutDefaults, header: headerDefaults, photo: photoDefaults, sections: sectionsDefaults });
                   }}

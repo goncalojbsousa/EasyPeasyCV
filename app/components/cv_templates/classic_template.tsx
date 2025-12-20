@@ -28,6 +28,7 @@ const buildStyles = (settings?: CvRenderSettings, color: CvColor = 'blue') => {
   const commonStyles = buildCommonStyles(metrics, settings);
   const photoDimensions = getPhotoSize(settings?.photo?.aspectRatio);
   const photoBorderRadius = settings?.photo?.borderRadius ?? 1;
+  const linkColor = metrics.linkColor;
 
   const specificStyles = StyleSheet.create({
     page: { ...commonStyles.page, color: '#1a1a1a' },
@@ -94,7 +95,7 @@ const buildStyles = (settings?: CvRenderSettings, color: CvColor = 'blue') => {
     },
     linkItem: { 
       fontSize: 9 * metrics.finalScale, 
-      color: metrics.accent,
+      color: linkColor,
       textDecoration: 'underline'
     },
     // Sections
@@ -223,7 +224,7 @@ const buildStyles = (settings?: CvRenderSettings, color: CvColor = 'blue') => {
     },
   });
 
-  return { ...commonStyles, ...specificStyles, _finalScale: metrics.finalScale, _singlePageMult: metrics.singlePageMult, _accent: metrics.accent };
+  return { ...commonStyles, ...specificStyles, _finalScale: metrics.finalScale, _singlePageMult: metrics.singlePageMult, _accent: metrics.accent, linkColor };
 };
 
 export function ClassicTemplate({ personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, customSections, lang, settings, color, sectionOrder }: ClassicTemplateProps) {

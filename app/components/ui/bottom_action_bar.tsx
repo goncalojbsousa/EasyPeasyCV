@@ -24,7 +24,6 @@ import {
 import { useLanguage } from '../../contexts/LanguageContext';
 import PdfDownloadButton from '../pdf/pdf_download_button';
 import { ThankYouModal } from './modals/thank_you_modal';
-import { ColorSelector } from './color_selector';
 import { TemplateSelectorModal } from './modals/template_selector_modal';
 import type { PersonalInfo, Link, CvRenderSettings, CvColor, Experience, Education, Language, Certification, Project, Volunteer, CustomSection, CvTemplate } from '../../types/cv';
 import type { CVType } from '../../contexts/LanguageContext';
@@ -111,11 +110,13 @@ export function BottomActionBar({
     const onDocClick = (e: MouseEvent) => {
       if (!openMenu) return;
       const target = e.target as Node;
+      const targetEl = target instanceof Element ? target : null;
       const inCvType = !!(cvTypeBtnRef.current?.contains(target) || cvTypePortalRef.current?.contains(target));
       const inLang = !!(langBtnRef.current?.contains(target) || langPortalRef.current?.contains(target));
       const inData = !!(dataBtnRef.current?.contains(target) || dataPortalRef.current?.contains(target));
       const inLayout = !!(layoutBtnRef.current?.contains(target) || layoutPortalRef.current?.contains(target));
-      const insideAny = inCvType || inLang || inData || inLayout;
+      const inColorSelector = !!(targetEl && targetEl.closest('[data-color-selector-portal="true"]'));
+      const insideAny = inCvType || inLang || inData || inLayout || inColorSelector;
       if (!insideAny) setOpenMenu(null);
     };
     document.addEventListener('click', onDocClick);
@@ -246,12 +247,6 @@ export function BottomActionBar({
                   <span className="font-medium">{t(`template.${selectedTemplate}.name`)}</span>
                 </button>
 
-            {selectedTemplate !== 'professional' && (
-              <div className="shrink-0 h-9 flex items-center">
-                <ColorSelector selectedColor={selectedColor} onColorChange={onColorChange} show={true} />
-              </div>
-            )}
-
             <div className="relative shrink-0 overflow-visible" ref={cvTypeRef}>
               <button
                 ref={cvTypeBtnRef}
@@ -305,7 +300,14 @@ export function BottomActionBar({
                   onClick={(e) => e.stopPropagation()}
                   style={{ position: 'fixed', left: layoutPos.left, top: layoutPos.top - 8, transform: 'translateY(-100%)' }}>
                   <div className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-zinc-700">{t('layout.menu.controls')}</div>
-                  <LayoutControls t={t} settings={settings} onSettingsChange={onSettingsChange} onResetSectionOrder={onResetSectionOrder} />
+                  <LayoutControls
+                    t={t}
+                    settings={settings}
+                    selectedColor={selectedColor}
+                    onColorChange={onColorChange}
+                    onSettingsChange={onSettingsChange}
+                    onResetSectionOrder={onResetSectionOrder}
+                  />
                 </div>,
                 document.body
               )}
