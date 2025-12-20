@@ -13,10 +13,15 @@ interface TemplateSelectorModalProps {
 }
 
 const templatePreviews: Record<CvTemplate, { img: string; nameKey: string; descriptionKey: string }> = {
-  renewed: {
-    img: '/renewed_preview.webp',
-    nameKey: 'template.renewed.name',
-    descriptionKey: 'template.renewed.description',
+  professional: {
+    img: '/professional_preview.webp',
+    nameKey: 'template.professional.name',
+    descriptionKey: 'template.professional.description',
+  },
+  timeline: {
+    img: '/timeline_preview.webp',
+    nameKey: 'template.timeline.name',
+    descriptionKey: 'template.timeline.description',
   },
   classic: {
     img: '/classic_preview.webp',

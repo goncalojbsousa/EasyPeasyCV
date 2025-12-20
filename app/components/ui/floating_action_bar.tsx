@@ -31,6 +31,7 @@ interface FloatingActionBarProps {
   settings?: CvRenderSettings;
   onSettingsChange?: (s: CvRenderSettings) => void;
   onResetSectionOrder?: () => void;
+  hasAnyContent?: boolean;
 }
 
 /**
@@ -49,7 +50,7 @@ export function FloatingActionBar({
   languages,
   certifications,
   projects,
-  template = 'renewed',
+  template = 'professional',
   color = 'blue',
   sectionOrder,
   onShowPdfPreview,
@@ -61,6 +62,7 @@ export function FloatingActionBar({
   settings,
   onSettingsChange,
   onResetSectionOrder,
+  hasAnyContent = false,
 }: FloatingActionBarProps) {
   const { t } = useLanguage();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -273,7 +275,8 @@ export function FloatingActionBar({
             {/* Preview */}
             <button
               onClick={onShowPdfPreview}
-              className="bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-700 border border-gray-200 dark:border-zinc-700 shadow-lg p-3 rounded-full h-12 w-12 flex items-center justify-center transition-all hover:shadow-xl"
+              disabled={!hasAnyContent}
+              className="bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed border border-gray-200 dark:border-zinc-700 shadow-lg p-3 rounded-full h-12 w-12 flex items-center justify-center transition-all hover:shadow-xl"
               title={t('preview.cv')}
             >
               <Eye className="w-5 h-5" />
@@ -504,6 +507,18 @@ export function FloatingActionBar({
                       placeholder={t('layout.controls.photo.title')}
                       onSelect={(value) => onSettingsChange({ ...settings, photo: { ...settings.photo, aspectRatio: value } })}
                     />
+                    <div>
+                      <label className="block text-xs font-medium mb-1">{`${t('layout.controls.photo.borderRadius.label')} (${settings.photo.borderRadius ?? 1}px)`}</label>
+                      <input
+                        type="range"
+                        min={1}
+                        max={50}
+                        step={1}
+                        value={settings.photo.borderRadius ?? 1}
+                        onChange={(e) => onSettingsChange({ ...settings, photo: { ...settings.photo, borderRadius: parseInt(e.target.value) } })}
+                        className="w-full"
+                      />
+                    </div>
                     <div className="flex items-center gap-2">
                       <input
                         id="photo-upload-mobile"
@@ -661,6 +676,9 @@ export function FloatingActionBar({
       <ThankYouModal
         show={showThankYouModal}
         onClose={() => setShowThankYouModal(false)}
+        personalInfo={personalInfo}
+        experiences={experiences}
+        education={education}
       />
     </>
   );

@@ -101,7 +101,18 @@ export function renderExperienceSection(
                 ))}
               </View>
             )}
-            {exp.tech && <Text style={{ marginTop: 4, color: '#000000', fontSize: styles.jobRole.fontSize }}>{exp.tech}</Text>}
+            {exp.tech && (
+              <Text
+                style={{
+                  marginTop: 4,
+                  color: '#000000',
+                  fontSize: styles.activitiesText?.fontSize || 10,
+                  textAlign: styles.activitiesText?.textAlign || undefined,
+                }}
+              >
+                {exp.tech}
+              </Text>
+            )}
           </View>
         );
         

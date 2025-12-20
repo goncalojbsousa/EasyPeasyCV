@@ -184,7 +184,7 @@ export interface CustomSection {
 /**
  * Available CV template types
  */
-export type CvTemplate = 'renewed' | 'classic';
+export type CvTemplate = 'professional' | 'timeline' | 'classic';
 
 export type CvColor = 'blue' | 'green' | 'purple' | 'orange' | 'red' | 'teal' | 'indigo' | 'pink';
 
@@ -281,6 +281,7 @@ export interface HeaderOptions {
 export interface PhotoOptions {
   enabled: boolean;
   aspectRatio: '1:1' | '3:4' | '4:3';
+  borderRadius?: number;
   crop?: { x: number; y: number; width: number; height: number } | null;
   dataUrl?: string | null;
 }

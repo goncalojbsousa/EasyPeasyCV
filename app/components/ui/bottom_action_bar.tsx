@@ -55,6 +55,7 @@ interface BottomActionBarProps {
   onSettingsChange?: (s: CvRenderSettings) => void;
   onResetSectionOrder?: () => void;
   sectionOrder?: import('../../types/cv').SectionKey[];
+  hasAnyContent?: boolean;
 }
 
 export function BottomActionBar({
@@ -81,6 +82,7 @@ export function BottomActionBar({
   settings,
   onSettingsChange,
   onResetSectionOrder,
+  hasAnyContent = false,
 }: BottomActionBarProps) {
   const { t, cvType, setCVType } = useLanguage();
 
@@ -244,7 +246,7 @@ export function BottomActionBar({
                   <span className="font-medium">{t(`template.${selectedTemplate}.name`)}</span>
                 </button>
 
-            {selectedTemplate !== 'renewed' && (
+            {selectedTemplate !== 'professional' && (
               <div className="shrink-0 h-9 flex items-center">
                 <ColorSelector selectedColor={selectedColor} onColorChange={onColorChange} show={true} />
               </div>
@@ -313,7 +315,8 @@ export function BottomActionBar({
               <button
                 ref={langBtnRef}
                 onClick={() => setOpenMenu((prev) => (prev === 'lang' ? null : 'lang'))}
-                className="h-9 bg-sky-600 text-white px-3 rounded-md text-[15px] font-semibold hover:bg-sky-700 active:bg-sky-800 transition-colors duration-200 flex items-center gap-2 shadow-sm ring-1 ring-sky-500/20"
+                disabled={!hasAnyContent}
+                className="h-9 bg-sky-600 text-white px-3 rounded-md text-[15px] font-semibold hover:bg-sky-700 active:bg-sky-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 flex items-center gap-2 shadow-sm ring-1 ring-sky-500/20"
                 title={t('generate.ats.resume')}
               >
                 <FileText className="w-5 h-5" />
@@ -419,7 +422,7 @@ export function BottomActionBar({
         onClose={() => setShowTemplateModal(false)}
       />
 
-      <ThankYouModal show={showThankYouModal} onClose={() => setShowThankYouModal(false)} />
+      <ThankYouModal show={showThankYouModal} onClose={() => setShowThankYouModal(false)} personalInfo={personalInfo} experiences={experiences} education={education} />
     </>
   );
 }

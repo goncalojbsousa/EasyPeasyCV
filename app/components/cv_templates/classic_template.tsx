@@ -2,7 +2,7 @@ import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Link, Image } from '@react-pdf/renderer';
 import { CvData, CvRenderSettings, CvColor, Language } from '../../types/cv';
 import { getSocialUrl, translateLanguageLevel } from '../../utils/template-helpers';
-import { computeMetrics, buildCommonStyles, PdfTextAlign } from '../../utils/template-styles';
+import { computeMetrics, buildCommonStyles, PdfTextAlign, getPhotoSize } from '../../utils/template-styles';
 import {
   getSectionOrder,
   renderSummarySection,
@@ -26,42 +26,201 @@ interface ClassicTemplateProps extends CvData {
 const buildStyles = (settings?: CvRenderSettings, color: CvColor = 'blue') => {
   const metrics = computeMetrics(settings, color);
   const commonStyles = buildCommonStyles(metrics, settings);
-  const lineColor = '#d1d5db';
-  const photoSize = 78;
-  
+  const photoDimensions = getPhotoSize(settings?.photo?.aspectRatio);
+  const photoBorderRadius = settings?.photo?.borderRadius ?? 1;
+
   const specificStyles = StyleSheet.create({
-    page: { ...commonStyles.page, color: '#111827' },
-    header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 * metrics.singlePageMult },
-    headerLeft: { flex: 1 },
-    name: { ...commonStyles.name, color: settings?.header.nameColor || '#0f172a', marginBottom: 4 * metrics.singlePageMult },
-    title: { ...commonStyles.title, color: '#1f2937', marginBottom: 8 * metrics.singlePageMult },
-    contactRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' },
-    contactItem: { flexDirection: 'row', alignItems: 'center', marginRight: 10, marginBottom: 4, fontSize: 9 * metrics.finalScale, color: '#374151' },
-    contactLabel: { fontWeight: 'bold', marginRight: 4 },
-    contactSeparator: { marginRight: 8, color: '#9ca3af' },
-    photoFrame: { width: photoSize, height: photoSize, borderRadius: photoSize / 2, alignItems: 'center', justifyContent: 'center', backgroundColor: '#f8fafc', overflow: 'hidden' },
-    photoImage: { width: photoSize, height: photoSize, objectFit: 'cover' },
-    initials: { fontSize: 20 * metrics.finalScale, fontWeight: 'bold', color: '#0f172a' },
-    divider: { ...commonStyles.divider, marginTop: 10 * metrics.singlePageMult, marginBottom: 12 * metrics.singlePageMult, borderStyle: settings?.header.dividerStyle || 'solid' },
-    sectionTitleWrap: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 * metrics.singlePageMult },
-    sectionLine: { height: 1, backgroundColor: lineColor, flex: 1, marginLeft: 8 },
-    paragraph: { fontSize: 10 * metrics.finalScale, color: '#111827', textAlign: metrics.textAlign },
-    subText: { fontSize: 9 * metrics.finalScale, color: '#374151', textAlign: metrics.textAlign },
-    timelineWrap: { paddingLeft: 14, borderLeftWidth: 1, borderLeftColor: lineColor },
-    timelineItem: { position: 'relative', paddingLeft: 10, marginBottom: 12 * metrics.singlePageMult },
-    timelineBullet: { position: 'absolute', width: 10, height: 10, borderRadius: 5, borderWidth: 2, borderColor: metrics.accent, backgroundColor: '#ffffff', left: -19.5, top: 0 },
+    page: { ...commonStyles.page, color: '#1a1a1a' },
+    // Header section
+    header: { marginBottom: 10 * metrics.singlePageMult, paddingBottom: 0 },
+    headerTop: { flexDirection: 'column', marginBottom: 6 * metrics.singlePageMult },
+    headerTopRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 12 },
+    headerContent: { flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start' },
+    name: { 
+      ...commonStyles.name,
+      fontSize: (settings?.header.nameFontSize || 24) * metrics.finalScale, 
+      fontWeight: settings?.header.nameFontWeight === 'heavy' ? 800 : settings?.header.nameFontWeight === 'bold' ? 700 : 500, 
+      color: settings?.header.nameColor || '#000000', 
+      marginBottom: 8 * metrics.singlePageMult,
+      textAlign: 'left' as PdfTextAlign
+    },
+    title: { 
+      ...commonStyles.title,
+      fontSize: 12 * metrics.finalScale, 
+      color: '#333333', 
+      fontWeight: '400', 
+      marginBottom: 8 * metrics.singlePageMult,
+      textTransform: settings?.header.titleStyle === 'uppercase' ? 'uppercase' : 'none',
+      fontStyle: settings?.header.titleStyle === 'italic' ? 'italic' : 'normal',
+      letterSpacing: settings?.header.titleStyle === 'uppercase' ? 0.5 : 0,
+      textAlign: 'left' as PdfTextAlign
+    },
+    photoFrame: { 
+      width: photoDimensions.width, 
+      height: photoDimensions.height, 
+      borderRadius: photoBorderRadius, 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      backgroundColor: '#f5f5f5', 
+      overflow: 'hidden',
+      marginLeft: 8
+    },
+    photoImage: { width: photoDimensions.width, height: photoDimensions.height, objectFit: 'cover' },
+    initials: { fontSize: 20 * metrics.finalScale, fontWeight: 'bold', color: metrics.accent },
+    // Contact information
+    contactSection: { marginBottom: 8 * metrics.singlePageMult },
+    contactRow: { 
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'flex-start',
+      fontSize: 9 * metrics.finalScale, 
+      color: '#333333',
+      lineHeight: 1.4,
+      marginTop: 4 * metrics.singlePageMult
+    },
+    contactItem: { 
+      marginRight: 12,
+      flexDirection: 'row',
+      marginBottom: 4
+    },
+    contactLabel: { fontWeight: '600', marginRight: 4, color: '#000000' },
+    contactSeparator: { marginHorizontal: 8, color: '#cccccc' },
+    linksRow: { 
+      flexDirection: 'row', 
+      flexWrap: 'wrap', 
+      justifyContent: 'flex-start',
+      marginTop: 4 * metrics.singlePageMult,
+      gap: 8
+    },
+    linkItem: { 
+      fontSize: 9 * metrics.finalScale, 
+      color: metrics.accent,
+      textDecoration: 'underline'
+    },
+    // Sections
+    section: { marginBottom: metrics.sectionSpacing },
+    sectionTitle: {
+      ...commonStyles.sectionTitle,
+      fontSize: (settings?.sections?.titleFontSize || 12) * metrics.finalScale,
+      fontWeight: 'bold',
+      color: settings?.sections?.titleColor || metrics.accent,
+      marginBottom: 8 * metrics.singlePageMult,
+      textTransform: 'uppercase',
+      letterSpacing: 0.5,
+      paddingBottom: 4 * metrics.singlePageMult,
+      borderBottomWidth: (settings?.header.dividerThickness || 1) as number,
+      borderBottomColor: '#e5e7eb',
+      borderStyle: 'solid'
+    },
+    headerDivider: {
+      ...commonStyles.divider,
+      marginTop: 10 * metrics.singlePageMult,
+      marginBottom: 12 * metrics.singlePageMult
+    },
+    // Timeline/List items
+    entryContainer: { marginBottom: 10 * metrics.singlePageMult, pageBreakInside: 'avoid' },
     entryHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 2 },
-    role: { fontSize: 11 * metrics.finalScale, fontWeight: 'bold', color: '#0f172a' },
-    company: { fontSize: 10 * metrics.finalScale, color: '#1f2937', marginBottom: 2 },
-    date: { fontSize: 10 * metrics.finalScale, color: '#374151', textAlign: 'right', marginLeft: 8 },
-    bulletText: { marginLeft: 8, fontSize: 10 * metrics.finalScale, color: '#0f172a', textAlign: metrics.textAlign },
-    metaText: { fontSize: 9 * metrics.finalScale, color: '#4b5563' },
-    langRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 4 },
-    langName: { fontSize: 10 * metrics.finalScale, fontWeight: 'bold', color: '#0f172a' },
-    langDivider: { flex: 1, height: 1, backgroundColor: lineColor, marginHorizontal: 6 },
-    langLevel: { fontSize: 9 * metrics.finalScale, color: '#6b7280', textTransform: 'uppercase' },
-    centerText: { textAlign: 'center' as PdfTextAlign },
-    link: { fontSize: 9 * metrics.finalScale, color: metrics.accent, marginRight: 8 },
+    entryTitle: { 
+      fontSize: 11 * metrics.finalScale, 
+      fontWeight: 'bold', 
+      color: '#000000',
+      flex: 1
+    },
+    entrySubtitle: { 
+      fontSize: 10 * metrics.finalScale, 
+      color: '#333333', 
+      marginBottom: 2 * metrics.singlePageMult,
+      fontWeight: '500'
+    },
+    entryDate: { 
+      fontSize: 9 * metrics.finalScale, 
+      color: '#666666',
+      textAlign: 'right' as PdfTextAlign,
+      marginLeft: 8,
+      fontWeight: '500'
+    },
+    entryMeta: { 
+      fontSize: 9 * metrics.finalScale, 
+      color: '#666666', 
+      marginBottom: 4 * metrics.singlePageMult,
+      fontStyle: 'italic'
+    },
+    bulletPoint: {
+      flexDirection: 'row',
+      marginBottom: 4 * metrics.singlePageMult,
+      marginLeft: 0
+    },
+    bulletDot: { 
+      width: 4, 
+      height: 4, 
+      borderRadius: 2, 
+      backgroundColor: metrics.accent, 
+      marginRight: 8,
+      marginTop: 5,
+      flexShrink: 0
+    },
+    bulletText: { 
+      fontSize: 10 * metrics.finalScale, 
+      color: '#333333',
+      flex: 1,
+      textAlign: metrics.textAlign,
+      lineHeight: 1.4
+    },
+    // Skills
+    skillRow: { 
+      flexDirection: 'row', 
+      marginBottom: 6 * metrics.singlePageMult,
+      alignItems: 'flex-start'
+    },
+    skillLabel: { 
+      fontSize: 10 * metrics.finalScale, 
+      fontWeight: '600', 
+      color: '#000000',
+      minWidth: 80,
+      marginRight: 12
+    },
+    skillValues: { 
+      fontSize: 10 * metrics.finalScale, 
+      color: '#333333',
+      flex: 1,
+      textAlign: metrics.textAlign,
+      lineHeight: 1.4
+    },
+    // Languages
+    languageRow: { 
+      flexDirection: 'row', 
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 6 * metrics.singlePageMult,
+      paddingBottom: 4 * metrics.singlePageMult,
+      borderBottomWidth: 0.5,
+      borderBottomColor: '#e5e7eb'
+    },
+    languageName: { 
+      fontSize: 10 * metrics.finalScale, 
+      fontWeight: '600', 
+      color: '#000000' 
+    },
+    languageLevel: { 
+      fontSize: 9 * metrics.finalScale, 
+      color: '#666666',
+      fontWeight: '500',
+      textTransform: 'uppercase'
+    },
+    // Descriptions
+    descriptionText: { 
+      fontSize: 10 * metrics.finalScale, 
+      color: '#333333',
+      textAlign: metrics.textAlign,
+      lineHeight: 1.5,
+      marginBottom: 4 * metrics.singlePageMult
+    },
+    paragraph: { 
+      fontSize: 10 * metrics.finalScale, 
+      color: '#333333', 
+      textAlign: metrics.textAlign,
+      lineHeight: metrics.lineSpacing
+    },
   });
 
   return { ...commonStyles, ...specificStyles, _finalScale: metrics.finalScale, _singlePageMult: metrics.singlePageMult, _accent: metrics.accent };
@@ -81,70 +240,53 @@ export function ClassicTemplate({ personalInfo, links, resume, experiences, educ
   const photoSrc = settings?.photo?.enabled ? settings.photo?.dataUrl || null : null;
 
   const SectionTitle = ({ label }: { label: string }) => (
-    <View style={styles.sectionTitleWrap}>
-      <Text style={styles.sectionTitle}>{label}</Text>
-      <View style={styles.sectionLine} />
-    </View>
+    <Text style={styles.sectionTitle}>{label}</Text>
   );
-  
+
   const TimelineItem = ({ children }: { children: React.ReactNode }) => (
-    <View style={styles.timelineItem}>
-      <View style={styles.timelineBullet} />
+    <View style={styles.entryContainer}>
       {children}
     </View>
   );
-  
+
   const TimelineWrapper = ({ children, sectionKey, label }: SectionWrapperProps) => (
     <View style={styles.section}>
-      <View style={styles.sectionTitleWrap}>
-        <Text style={styles.sectionTitle}>{label}</Text>
-        <View style={styles.sectionLine} />
-      </View>
-      <View style={styles.timelineWrap}>
-        {children}
-      </View>
+      <SectionTitle label={label} />
+      {children}
     </View>
   );
-  
+
   const renderProps = { styles, lang: l, settings };
 
   const LanguagesCustomRender = (languages: Language[], styles: any, lang: 'pt' | 'en' | 'es') => (
     <>
       {languages.map((langItem, li) => (
-        <View key={li} style={styles.langRow}>
-          <Text style={styles.langName}>{langItem.name}</Text>
-          <View style={styles.langDivider} />
-          <Text style={styles.langLevel}>{translateLanguageLevel(langItem.level, lang === 'pt' ? 'pt' : lang === 'es' ? 'es' : 'en')}</Text>
+        <View key={li} style={styles.languageRow}>
+          <Text style={styles.languageName}>{langItem.name}</Text>
+          <Text style={styles.languageLevel}>{translateLanguageLevel(langItem.level, lang === 'pt' ? 'pt' : lang === 'es' ? 'es' : 'en')}</Text>
         </View>
       ))}
     </>
   );
-  
+
   const renderSection = (sectionKey: import('../../types/cv').SectionKey) => {
     switch (sectionKey) {
       case 'professional_summary':
         return renderSummarySection(resume, renderProps, SectionTitle);
       case 'professional_experience':
         return renderExperienceSection(experiences, renderProps, SectionTitle, TimelineItem, TimelineWrapper);
-
       case 'academic_education':
         return renderEducationSection(education, renderProps, SectionTitle, TimelineItem, TimelineWrapper);
-
       case 'technical_skills':
         return renderSkillsSection(skills, renderProps, SectionTitle);
-
       case 'languages':
         return renderLanguagesSection(languages, renderProps, SectionTitle, LanguagesCustomRender);
-
       case 'certifications':
         return renderCertificationsSection(certifications, renderProps, SectionTitle);
-
       case 'projects':
         return renderProjectsSection(projects, renderProps, SectionTitle);
-
       case 'volunteer':
         return renderVolunteerSection(volunteers, renderProps, SectionTitle, TimelineItem, TimelineWrapper);
-
       default:
         if (sectionKey.startsWith('custom_')) {
           const customId = sectionKey.replace('custom_', '');
@@ -160,40 +302,47 @@ export function ClassicTemplate({ personalInfo, links, resume, experiences, educ
   return (
     <Document>
       <Page size="A4" style={styles.page}>
+        {/* Header */}
         <View style={styles.header}>
-          <View style={styles.headerLeft}>
-            <Text style={styles.name}>{personalInfo?.name || 'YOUR NAME'}</Text>
-            {personalInfo?.desiredRole ? <Text style={styles.title}>{personalInfo.desiredRole}</Text> : null}
-            {contactItems.length > 0 ? (
-              <View style={styles.contactRow}>
-                {contactItems.map((item, idx) => (
-                  <React.Fragment key={idx}>
-                    <Text style={styles.contactItem}>
-                      <Text style={styles.contactLabel}>{item.label}:</Text> {item.value}
-                    </Text>
-                    {idx < contactItems.length - 1 ? <Text style={styles.contactSeparator}>|</Text> : null}
-                  </React.Fragment>
-                ))}
+          <View style={styles.headerTop}>
+            <View style={styles.headerTopRow}>
+              <View style={styles.headerContent}>
+                <Text style={styles.name}>{personalInfo?.name}</Text>
+                {personalInfo?.desiredRole && <Text style={styles.title}>{personalInfo.desiredRole}</Text>}
+
+                {/* Contact Information */}
+                <View style={styles.contactRow}>
+                  {contactItems.map((item, idx) => (
+                    <View key={idx} style={styles.contactItem}>
+                      <Text style={styles.contactLabel}>{item.label}:</Text>
+                      <Text>{item.value}</Text>
+                    </View>
+                  ))}
+                </View>
+
+                {/* Social Links */}
+                {links && links.length > 0 && (
+                  <View style={styles.linksRow}>
+                    {links.map((lnk, i) => (
+                      <Link key={i} src={getSocialUrl(lnk.type, lnk.value)} style={styles.linkItem}>
+                        {lnk.hideLinkLabel ? lnk.value : `${lnk.customName || lnk.type}: ${lnk.value}`}
+                      </Link>
+                    ))}
+                  </View>
+                )}
               </View>
-            ) : null}
-            {links && links.length > 0 ? (
-              <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 4 }}>
-                {links.map((lnk, i) => (
-                  <Link key={i} src={getSocialUrl(lnk.type, lnk.value)} style={styles.link}>
-                    {lnk.hideLinkLabel ? lnk.value : `${lnk.customName || lnk.type}: ${lnk.value}`}
-                  </Link>
-                ))}
-              </View>
-            ) : null}
-          </View>
-          {photoSrc ? (
-            <View style={styles.photoFrame}>
-              {/* eslint-disable-next-line jsx-a11y/alt-text */}
-              <Image src={photoSrc} style={styles.photoImage} />
+
+              {photoSrc && (
+                <View style={styles.photoFrame}>
+                  {/* eslint-disable-next-line jsx-a11y/alt-text */}
+                  <Image src={photoSrc} style={styles.photoImage} />
+                </View>
+              )}
             </View>
-          ) : null}
+          </View>
         </View>
 
+        {/* Render sections dynamically */}
         {order.map((sectionKey) => (
           <React.Fragment key={sectionKey}>
             {renderSection(sectionKey)}

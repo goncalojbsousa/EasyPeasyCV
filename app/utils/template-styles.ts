@@ -124,6 +124,7 @@ export function buildCommonStyles(metrics: ComputedMetrics, settings?: CvRenderS
       width: '100%',
       borderBottomWidth: (settings?.header.dividerThickness ?? 1) as number,
       borderBottomColor: '#e5e7eb',
+      borderStyle: 'solid',
       marginVertical: 6 * singlePageMult,
     },
     summaryText: {

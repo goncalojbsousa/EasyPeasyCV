@@ -49,7 +49,8 @@ export default function Home() {
   // Mirror template previews used in the selector
   const previewTemplates: { key: string; img: string; nameKey: string; descriptionKey: string }[] = [
     { key: 'classic', img: '/classic_preview.webp', nameKey: 'template.classic.name', descriptionKey: 'template.classic.description' },
-    { key: 'timeline', img: '/renewed_preview.webp', nameKey: 'template.timeline.name', descriptionKey: 'template.timeline.description' },
+    { key: 'timeline', img: '/timeline_preview.webp', nameKey: 'template.timeline.name', descriptionKey: 'template.timeline.description' },
+    { key: 'professional', img: '/professional_preview.webp', nameKey: 'template.professional.name', descriptionKey: 'template.professional.description' },
   ];
 
   useEffect(() => {

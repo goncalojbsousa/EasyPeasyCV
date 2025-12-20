@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Eye, X, FileText, Download, ExternalLink } from 'lucide-react';
+import { Eye, X, FileText, Download, ExternalLink, RefreshCw } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { pdf } from '@react-pdf/renderer';
 import { CvDocument } from '../cv_document';
@@ -50,7 +50,7 @@ export function PdfPreview({
   show = false,
   onClose,
   lang = 'pt',
-  template = 'renewed',
+  template = 'professional',
   color = 'blue',
   settings,
   sectionOrder,
@@ -157,12 +157,22 @@ export function PdfPreview({
             </span>
             {t('pdf.preview.title')}
           </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-300"
-          >
-            <X className="w-6 h-6" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={generatePdf}
+              disabled={loading}
+              className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              title={t('pdf.preview.refresh') || 'Atualizar preview'}
+            >
+              <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
+            </button>
+            <button
+              onClick={onClose}
+              className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-300"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          </div>
         </div>
 
         {/* PDF Content */}

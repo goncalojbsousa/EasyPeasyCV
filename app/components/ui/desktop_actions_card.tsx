@@ -60,7 +60,7 @@ export function DesktopActionsCard({
   certifications,
   projects,
   volunteers,
-  template = 'renewed',
+  template = 'professional',
   color = 'blue',
   selectedTemplate,
   selectedColor,
@@ -558,6 +558,9 @@ export function DesktopActionsCard({
       <ThankYouModal
         show={showThankYouModal}
         onClose={() => setShowThankYouModal(false)}
+        personalInfo={personalInfo}
+        experiences={experiences}
+        education={education}
       />
     </div>
   );

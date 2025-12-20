@@ -27,6 +27,8 @@ import { cvDataToXml, xmlToCvData } from '../utils/xml';
 
 type CvDataWithSettings = CvData & { settings?: CvRenderSettings };
 
+const DEFAULT_COUNTRY_CODE = 'Portugal (+351)';
+
 /**
  * CV Builder page component
  * Contains the complete CV creation interface
@@ -42,7 +44,7 @@ export default function Builder() {
     city: '',
     postalCode: '',
     email: '',
-    countryCode: 'Portugal (+351)',
+    countryCode: DEFAULT_COUNTRY_CODE,
     phone: '',
   });
   const [links, setLinks] = useState<Link[]>([]);
@@ -61,13 +63,11 @@ export default function Builder() {
   const [certifications, setCertifications] = useState<Certification[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [volunteers, setVolunteers] = useState<Volunteer[]>([]);
-  const [validationErrors, setValidationErrors] = useState<{ [key: string]: boolean }>({});
-  const [showValidationErrors, setShowValidationErrors] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showPdfPreview, setShowPdfPreview] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [selectedTemplate, setSelectedTemplate] = useState<CvTemplate>('renewed');
+  const [selectedTemplate, setSelectedTemplate] = useState<CvTemplate>('professional');
   const [selectedColor, setSelectedColor] = useState<CvColor>('blue');
   const [renderSettings, setRenderSettings] = useState<CvRenderSettings>({
     layout: {
@@ -121,6 +121,42 @@ export default function Builder() {
 
   const [sectionOrder, setSectionOrder] = useState<SectionKey[]>(defaultPredefinedOrder);
   const [customSections, setCustomSections] = useState<CustomSection[]>([]);
+
+  // Determine if the user has added any content anywhere in the CV
+  const hasAnyContent = useMemo(() => {
+    const personalInfoHasContent = (
+      personalInfo.name.trim() !== '' ||
+      personalInfo.desiredRole.trim() !== '' ||
+      personalInfo.city.trim() !== '' ||
+      personalInfo.postalCode.trim() !== '' ||
+      personalInfo.email.trim() !== '' ||
+      personalInfo.phone.trim() !== '' ||
+      (personalInfo.countryCode && personalInfo.countryCode !== DEFAULT_COUNTRY_CODE)
+    );
+
+    const customSectionsHaveContent = customSections.some((section) => {
+      if (section.title.trim()) return true;
+      return section.fields.some((field) =>
+        field.label.trim() !== '' ||
+        (field.subtitle && field.subtitle.trim() !== '') ||
+        field.value.trim() !== ''
+      );
+    });
+
+    return (
+      personalInfoHasContent ||
+      resume.trim() !== '' ||
+      links.length > 0 ||
+      experiences.length > 0 ||
+      education.length > 0 ||
+      skills.trim() !== '' ||
+      languages.length > 0 ||
+      certifications.length > 0 ||
+      projects.length > 0 ||
+      volunteers.length > 0 ||
+      customSectionsHaveContent
+    );
+  }, [personalInfo, resume, links.length, experiences.length, education.length, skills, languages.length, certifications.length, projects.length, volunteers.length, customSections]);
 
   // Refs for section elements to enable auto-scroll
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({
@@ -200,7 +236,7 @@ const handleImportXml = (xml: string) => {
     setProjects(data.projects || []);
     setVolunteers(data.volunteers || []);
     setCustomSections(data.customSections || []);
-    setSelectedTemplate(data.template || 'renewed');
+    setSelectedTemplate(data.template || 'professional');
     setSelectedColor(data.color || 'blue');
     if (data.settings) setRenderSettings(data.settings);
     
@@ -238,7 +274,7 @@ const handleImportXml = (xml: string) => {
             city: '',
             postalCode: '',
             email: '',
-            countryCode: 'Portugal (+351)',
+            countryCode: DEFAULT_COUNTRY_CODE,
             phone: '',
           }),
         }));
@@ -253,7 +289,7 @@ const handleImportXml = (xml: string) => {
         setVolunteers(data.volunteers || []);
         const loadedCustomSections = data.customSections || [];
         setCustomSections(loadedCustomSections);
-        setSelectedTemplate(data.template || 'renewed');
+        setSelectedTemplate(data.template || 'professional');
         setSelectedColor(data.color || 'blue');
         if (data.settings) setRenderSettings(data.settings);
         
@@ -322,21 +358,6 @@ const handleImportXml = (xml: string) => {
     preloadPDF();
   }, []);
 
-  // Continuously validate required fields (without showing errors)
-  useEffect(() => {
-    const errors: { [key: string]: boolean } = {};
-
-    if (!personalInfo.name.trim()) errors.name = true;
-    if (!personalInfo.email.trim()) errors.email = true;
-    // Removed desiredRole validation - field is now optional
-
-    setValidationErrors(errors);
-
-    // Hide errors if all fields are filled
-    if (Object.keys(errors).length === 0) {
-      setShowValidationErrors(false);
-    }
-  }, [personalInfo.name, personalInfo.email]);
 
   /**
    * Function to save data to localStorage
@@ -769,11 +790,10 @@ const handleImportXml = (xml: string) => {
   };
 
   /**
-   * Function to validate required fields
-   * @returns True if all required fields are filled, false otherwise
+   * Allow PDF/preview only when the user has added at least some content
    */
   const validateForm = () => {
-    return Object.keys(validationErrors).length === 0;
+    return hasAnyContent;
   };
 
   /**
@@ -783,13 +803,12 @@ const handleImportXml = (xml: string) => {
    */
   const handleGeneratePDF = () => {
     if (!validateForm()) {
-      // Show validation errors
-      setShowValidationErrors(true);
-      // Scroll to top of page to show validation errors
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
+      const message = language === 'pt'
+        ? 'Adicione algum conteúdo antes de gerar o PDF.'
+        : language === 'es'
+        ? 'Agrega algún contenido antes de generar el PDF.'
+        : 'Add some content before generating the PDF.';
+      alert(message);
       return false; // Return false to prevent PDF generation
     }
 
@@ -798,12 +817,12 @@ const handleImportXml = (xml: string) => {
 
   const handleShowPdfPreview = async () => {
     if (!validateForm()) {
-      setShowValidationErrors(true);
-      // Scroll to top of page to show validation errors
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
+      const message = language === 'pt'
+        ? 'Adicione algum conteúdo antes de visualizar o PDF.'
+        : language === 'es'
+        ? 'Agrega algún contenido antes de previsualizar el PDF.'
+        : 'Add some content before previewing the PDF.';
+      alert(message);
       return;
     }
 
@@ -828,6 +847,8 @@ const handleImportXml = (xml: string) => {
             customSections={customSections}
             lang={language}
             template={selectedTemplate}
+            color={selectedColor}
+            settings={renderSettings}
             sectionOrder={sectionOrder}
           />
         );
@@ -857,7 +878,7 @@ const handleImportXml = (xml: string) => {
   const fillWithExampleData = () => {
     setPersonalInfo({
       name: 'John Doe',
-      desiredRole: 'Software Engineer',
+      desiredRole: 'Senior Full Stack Developer',
       city: 'Lisbon',
       postalCode: '1000-001',
       email: 'john.doe@example.com',
@@ -865,107 +886,140 @@ const handleImportXml = (xml: string) => {
       phone: '912345678',
     });
     setLinks([
-      { type: 'LinkedIn', value: 'linkedin.com/in/johndoe' },
-      { type: 'GitHub', value: 'github.com/johndoe' },
-      { type: 'GitLab', value: 'gitlab.com/johndoe' },
-      { type: 'Portfolio', value: 'johndoe.dev' },
+      { type: 'LinkedIn', value: 'linkedin.com/in/johndoe', hideLinkLabel: false },
+      { type: 'GitHub', value: 'github.com/johndoe', hideLinkLabel: false },
+      { type: 'Portfolio', value: 'johndoe.example.com', hideLinkLabel: false },
+      { type: 'Other', value: 'dev.to/johndoe', customName: 'Blog', hideLinkLabel: false },
     ]);
-    setResume('Experienced software engineer with a passion for building scalable and maintainable applications. Proficient in React, Node.js, and modern web technologies. Strong problem-solving skills and a commitment to delivering high-quality code.');
+    setResume('Accomplished Full Stack Developer with 8+ years of experience building scalable web applications and leading cross-functional teams. Expertise in modern JavaScript frameworks, cloud architecture, and agile methodologies. Proven track record of delivering high-impact solutions that drive business growth and enhance user experience. Passionate about clean code, performance optimization, and mentoring junior developers.');
     setExperiences([
       {
-        role: 'Senior Software Engineer',
-        company: 'Tech Solutions Inc.',
-        startMonth: 'Jan',
-        startYear: '2020',
-        endMonth: 'Jun',
-        endYear: '2023',
-        current: false,
-        tech: 'React, Node.js, TypeScript, MongoDB',
-        activities: 'Led a team of 5 developers, managed project timelines, and delivered multiple high-traffic features.',
-        results: 'Achieved 98% uptime for critical applications, reduced page load time by 40% for key pages.',
+        role: 'Senior Full Stack Developer',
+        company: 'Red Hat',
+        startMonth: 'Mar',
+        startYear: '2021',
+        endMonth: '',
+        endYear: '',
+        current: true,
+        tech: 'React, Next.js, TypeScript, Node.js, PostgreSQL, AWS, Docker, Kubernetes',
+        activities: 'Lead development of enterprise SaaS platform serving 10,000+ users. Architect microservices infrastructure and mentor team of 6 developers. Conduct code reviews and establish best practices. Collaborate with product managers to define technical requirements and roadmap.',
+        results: 'Reduced application load time by 60% through optimization. Increased system reliability to 99.9% uptime. Successfully migrated monolithic application to microservices architecture, improving deployment frequency by 400%.',
       },
       {
-        role: 'Software Engineer',
-        company: 'Innovative Corp.',
-        startMonth: 'Jul',
+        role: 'Full Stack Developer',
+        company: 'Canonical',
+        startMonth: 'Jun',
         startYear: '2018',
-        endMonth: 'Dez',
-        endYear: '2019',
+        endMonth: 'Feb',
+        endYear: '2021',
         current: false,
-        tech: 'React, Redux, PostgreSQL',
-        activities: 'Developed user authentication and authorization system, optimized database queries.',
-        results: 'Successfully launched new user registration flow, reduced login time by 50%.',
+        tech: 'React, Redux, Node.js, Express, MongoDB, GraphQL, Jest',
+        activities: 'Developed and maintained multiple client-facing web applications. Implemented RESTful and GraphQL APIs. Integrated third-party services and payment gateways. Participated in agile sprint planning and daily standups.',
+        results: 'Delivered 15+ features that increased user engagement by 35%. Reduced API response time by 45% through database optimization. Achieved 90%+ test coverage across all projects.',
+      },
+      {
+        role: 'Frontend Developer',
+        company: 'Mozilla',
+        startMonth: 'Jan',
+        startYear: '2016',
+        endMonth: 'May',
+        endYear: '2018',
+        current: false,
+        tech: 'React, JavaScript, HTML5, CSS3, Webpack, Git',
+        activities: 'Built responsive user interfaces for mobile and web applications. Collaborated with UX designers to implement pixel-perfect designs. Integrated frontend with backend APIs. Maintained component library and documentation.',
+        results: 'Improved mobile conversion rate by 28% through responsive design improvements. Reduced bundle size by 40% using code splitting and lazy loading.',
       },
     ]);
     setEducation([
       {
-        type: 'Licenciatura',
-        status: 'Completo',
+        type: 'education.type.bachelor',
+        status: 'education.status.completed',
         course: 'Computer Science',
-        institution: 'University of Lisbon',
-        startMonth: 'Set',
-        startYear: '2014',
+        institution: 'University of California, Berkeley',
+        startMonth: 'Sep',
+        startYear: '2012',
         endMonth: 'Jun',
-        endYear: '2018',
-        description: 'Relevant coursework: Data Structures, Algorithms, Operating Systems, Computer Networks.',
-        achievements: 'Graduated with honors, top 10% of class. Published research paper on distributed systems.',
+        endYear: '2016',
+        current: false,
+        description: 'Relevant coursework: Data Structures & Algorithms, Software Engineering, Database Systems, Web Development, Computer Networks, Operating Systems, Artificial Intelligence.',
+        achievements: 'Graduated Magna Cum Laude with 3.8 GPA. Dean\'s List all semesters. Led university programming club with 50+ members. Completed senior capstone project on machine learning recommendation systems.',
       },
     ]);
-    setSkills('React, Node.js, TypeScript, MongoDB, PostgreSQL, Redux, Git, Docker, AWS, Linux');
+    setSkills('React, Next.js, TypeScript, Node.js, Express, PostgreSQL, MongoDB, GraphQL, REST APIs, Docker, Kubernetes, AWS, CI/CD, Git, Jest, React Testing Library, Agile/Scrum, System Design');
     setLanguages([
-      { name: 'English', level: 'Avançado' },
-      { name: 'Portuguese', level: 'Nativo' },
+      { name: 'English', level: 'language.level.native' },
+      { name: 'Spanish', level: 'language.level.c1' },
+      { name: 'French', level: 'language.level.b2' },
     ]);
     setCertifications([
       {
-        name: 'AWS Certified Solutions Architect - Associate',
+        name: 'AWS Certified Solutions Architect - Professional',
         issuer: 'Amazon Web Services',
-        completionDate: '2023-01-15',
-        hours: '20',
-        validationLink: 'https://www.aws.com/certification/solutions-architect-associate',
-        description: 'Foco em sistemas escaláveis e tolerantes a falhas.',
+        completionDate: '2023-08-15',
+        hours: '40',
+        validationLink: 'https://aws.amazon.com/certification/certified-solutions-architect-professional/',
+        description: 'Advanced certification covering design of distributed systems, migration planning, cost optimization, and security best practices on AWS platform.',
+      },
+      {
+        name: 'Professional Scrum Master I (PSM I)',
+        issuer: 'Scrum.org',
+        completionDate: '2022-03-20',
+        hours: '16',
+        validationLink: 'https://www.scrum.org/professional-scrum-master-i-certification',
+        description: 'Demonstrates fundamental understanding of Scrum framework, including roles, events, and artifacts. Focus on servant leadership and team facilitation.',
       },
     ]);
     setProjects([
       {
-        name: 'E-commerce Platform',
-        description: 'Full-stack e-commerce application built with React, Node.js, and PostgreSQL.',
-        tech: 'React, Node.js, PostgreSQL, Redux, Stripe, JWT',
-        link: 'github.com/johndoe/ecommerce-platform',
-        year: '2022',
-        impact: 'Successfully processed over 1000 orders in the first month, generated $50K in revenue.',
+        name: 'Real-Time Collaboration Platform',
+        description: 'Built a real-time collaboration tool similar to Notion with live editing, comments, and team workspaces. Features WebSocket connections for instant updates and rich text editing capabilities.',
+        tech: 'Next.js, TypeScript, Socket.io, PostgreSQL, Redis, Tailwind CSS',
+        link: 'demo-collab-platform.example.com',
+        sourceCode: 'github.com/johndoe/collab-platform-demo',
+        year: '2023',
+        impact: 'Gained 2,500+ active users within 3 months of launch. Achieved 99.5% uptime with average response time under 200ms. Featured on Product Hunt with 400+ upvotes.',
       },
       {
-        name: 'Task Management App',
-        description: 'Simple React application for managing daily tasks and deadlines.',
-        tech: 'React, Redux, LocalStorage',
-        link: 'github.com/johndoe/task-manager',
-        year: '2023',
-        impact: 'Used by 500+ users daily, improved productivity by 40% according to user feedback.',
+        name: 'E-Commerce Analytics Dashboard',
+        description: 'Comprehensive analytics dashboard for e-commerce businesses with real-time sales tracking, customer insights, and inventory management. Includes data visualization and export capabilities.',
+        tech: 'React, D3.js, Node.js, Express, MongoDB, Chart.js',
+        link: 'analytics-demo.example.com',
+        sourceCode: 'github.com/johndoe/ecommerce-analytics',
+        year: '2022',
+        impact: 'Helped businesses increase revenue by 25% through actionable insights. Processes over 100,000 transactions daily. Used by 150+ small to medium businesses.',
+      },
+      {
+        name: 'Open Source Component Library',
+        description: 'Accessible React component library with 50+ components following WAI-ARIA guidelines. Full TypeScript support, comprehensive documentation, and extensive test coverage.',
+        tech: 'React, TypeScript, Storybook, Jest, Rollup',
+        link: 'npm.com/package/example-ui-components',
+        sourceCode: 'github.com/johndoe/example-ui-components',
+        year: '2024',
+        impact: 'Downloaded 10,000+ times monthly on NPM. Adopted by 200+ projects. 500+ GitHub stars and active community contributions.',
       },
     ]);
     setVolunteers([
       {
-        organization: 'Cruz Vermelha Portuguesa',
-        role: 'Voluntário de Apoio Social',
+        organization: 'Code.org',
+        role: 'Technical Mentor',
         startMonth: 'Jan',
         startYear: '2022',
-        endMonth: 'Dez',
-        endYear: '2023',
-        current: false,
-        description: 'Prestação de apoio social a famílias carenciadas, distribuição de alimentos e roupas.',
-        impact: 'Ajudou mais de 50 famílias durante a pandemia, organizou campanhas de recolha de donativos.',
-      },
-      {
-        organization: 'Associação de Proteção Animal',
-        role: 'Coordenador de Adoções',
-        startMonth: 'Mar',
-        startYear: '2023',
         endMonth: '',
         endYear: '',
         current: true,
-        description: 'Coordenação do processo de adoção de animais, gestão de voluntários e eventos.',
-        impact: 'Facilitou a adoção de mais de 100 animais, aumentou a taxa de adoção em 30%.',
+        description: 'Mentor aspiring developers from underrepresented backgrounds in web development fundamentals. Conduct weekly coding sessions, code reviews, and career guidance workshops. Help students build portfolio projects and prepare for technical interviews.',
+        impact: 'Mentored 30+ students with 80% securing their first tech role within 6 months. Organized 5 hackathons with 200+ participants. Contributed to curriculum development used by 500+ students.',
+      },
+      {
+        organization: 'freeCodeCamp',
+        role: 'Workshop Instructor',
+        startMonth: 'Sep',
+        startYear: '2020',
+        endMonth: 'Dec',
+        endYear: '2021',
+        current: false,
+        description: 'Taught free programming workshops to high school students focusing on HTML, CSS, JavaScript, and web development basics. Created hands-on projects and learning materials. Coordinated with schools to expand program reach.',
+        impact: 'Taught 200+ students across 15 workshops. 60% of participants continued pursuing computer science education. Program expanded to 8 additional schools in the district.',
       },
     ]);
   };
@@ -996,18 +1050,6 @@ const handleImportXml = (xml: string) => {
               </div>
             )}
 
-            {/* Validation errors notification */}
-            {showValidationErrors && Object.keys(validationErrors).length > 0 && (
-              <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg shadow-sm transition-colors duration-300">
-                <p className="text-red-700 dark:text-red-400 text-sm font-medium">{t('validation.required')}</p>
-                <ul className="text-red-600 dark:text-red-400 text-xs mt-1 list-disc list-inside">
-                  {validationErrors.name && <li>{t('validation.name')}</li>}
-                  {validationErrors.email && <li>{t('validation.email')}</li>}
-                  {validationErrors.resume && <li>{t('validation.resume')}</li>}
-                </ul>
-              </div>
-            )}
-
             {/* Personal Information section - Always first and cannot be reordered */}
             <PersonalInformation
               links={links}
@@ -1017,8 +1059,6 @@ const handleImportXml = (xml: string) => {
               onPersonalInfoChange={handlePersonalInfoChange}
               onReorderLinks={handleReorderLinks}
               onToggleLinkLabel={handleToggleLinkLabel}
-              validationErrors={validationErrors}
-              showValidationErrors={showValidationErrors}
             />
 
             {/* Render sections dynamically based on sectionOrder */}
@@ -1306,6 +1346,7 @@ const handleImportXml = (xml: string) => {
         onSettingsChange={setRenderSettings}
         onResetSectionOrder={handleResetSectionOrder}
         sectionOrder={sectionOrder}
+        hasAnyContent={hasAnyContent}
       />
 
       {/* Floating Action Bar (Mobile/Tablet) */}
@@ -1331,6 +1372,7 @@ const handleImportXml = (xml: string) => {
         settings={renderSettings}
         onSettingsChange={setRenderSettings}
         onResetSectionOrder={handleResetSectionOrder}
+        hasAnyContent={hasAnyContent}
       />
     </div>
   );

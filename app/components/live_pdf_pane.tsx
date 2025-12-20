@@ -27,7 +27,7 @@ export function LivePdfPane({
   volunteers,
   customSections,
   lang = "pt",
-  template = "renewed",
+  template = "professional",
   color = "blue",
   settings,
   sectionOrder,

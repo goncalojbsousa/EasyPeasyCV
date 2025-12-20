@@ -58,6 +58,8 @@ export function LayoutControls({ t, settings, onSettingsChange, onResetSectionOr
     { value: '4:3', label: '4:3' },
   ]), []);
 
+
+
   const densityOptions: SelectOption<LayoutDensity>[] = useMemo(() => ([
     { value: 'compact', label: t('layout.controls.density.compact') },
     { value: 'normal', label: t('layout.controls.density.normal') },
@@ -234,6 +236,18 @@ export function LayoutControls({ t, settings, onSettingsChange, onResetSectionOr
               placeholder={t('layout.controls.photo.title')}
               onSelect={(value) => onSettingsChange && settings && onSettingsChange({ ...settings, photo: { ...settings.photo, aspectRatio: value } })}
             />
+            <div>
+              <label className="block text-xs font-medium mb-1">{`${t('layout.controls.photo.borderRadius.label')} (${settings?.photo.borderRadius ?? 1}px)`}</label>
+              <input
+                type="range"
+                min={1}
+                max={50}
+                step={1}
+                value={settings?.photo.borderRadius ?? 1}
+                onChange={(e) => onSettingsChange && settings && onSettingsChange({ ...settings, photo: { ...settings.photo, borderRadius: parseInt(e.target.value) } })}
+                className="w-full"
+              />
+            </div>
             <div className="flex items-center gap-2">
               <input
                 id="photo-upload-desktop"
@@ -351,6 +365,7 @@ export function LayoutControls({ t, settings, onSettingsChange, onResetSectionOr
             const photoDefaults = {
               enabled: false,
               aspectRatio: '1:1' as const,
+              borderRadius: 1,
               crop: null,
               dataUrl: null,
             };

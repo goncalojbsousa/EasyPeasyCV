@@ -199,7 +199,7 @@ export function PersonalInformation({
   onReorderLinks,
   onToggleLinkLabel,
   validationErrors = {},
-  showValidationErrors = true
+  showValidationErrors = false
 }: PersonalInformationProps) {
   const { t, language } = useLanguage();
   const [newLinkType, setNewLinkType] = useState('LinkedIn');
@@ -434,7 +434,7 @@ export function PersonalInformation({
       <FormSection title={t('section.personal.info')} icon={Icons.personalInfo}>
         {/* Name and desired role fields */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
-          <FormField label={t('field.full.name')} required>
+          <FormField label={t('field.full.name')}>
             <input 
               type="text" 
               placeholder={t('placeholder.full.name')} 
@@ -444,7 +444,7 @@ export function PersonalInformation({
               data-error={showValidationErrors && validationErrors.name ? "true" : "false"}
             />
           </FormField>
-          <FormField label={t(`cvType.field.desired.role`)} required>
+          <FormField label={t(`cvType.field.desired.role`)}>
             <input 
               type="text" 
               placeholder={t(`cvType.placeholder.desired.role`)} 
@@ -480,7 +480,7 @@ export function PersonalInformation({
         
         {/* Email, country code, and phone fields */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-6">
-          <FormField label={t('field.email')} required>
+          <FormField label={t('field.email')}>
             <input 
               type="email" 
               placeholder={t('placeholder.email')} 

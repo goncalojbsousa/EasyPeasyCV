@@ -1,7 +1,8 @@
 import React from 'react';
 import { CvData, CvColor, CvRenderSettings, CvTemplate } from '../types/cv';
 import { Font } from '@react-pdf/renderer';
-import { RenewedTemplate } from './cv_templates/renewed_template';
+import { ProfessionalTemplate } from './cv_templates/professional_template';
+import { TimelineTemplate } from './cv_templates/timeline_template';
 import { ClassicTemplate } from './cv_templates/classic_template';
 
 /**
@@ -39,7 +40,7 @@ export function CvDocument({
   lang,
   color = 'blue',
   settings,
-  template = 'renewed',
+  template = 'professional',
   sectionOrder,
 }: CvDocumentProps) {
 
@@ -72,10 +73,12 @@ export function CvDocument({
 
   // For PDF generation we must return a @react-pdf/renderer Document
   switch (template) {
+    case 'timeline':
+      return <TimelineTemplate {...commonProps} />;
     case 'classic':
       return <ClassicTemplate {...commonProps} />;
-    case 'renewed':
+    case 'professional':
     default:
-      return <RenewedTemplate {...commonProps} />;
+      return <ProfessionalTemplate {...commonProps} />;
   }
 }

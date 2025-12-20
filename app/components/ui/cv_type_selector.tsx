@@ -18,9 +18,9 @@ interface CvTypeSelectorProps {
  * Template configuration with metadata for each template type.
  */
 const templates = {
-  renewed: {
-    nameKey: 'template.renewed.name',
-    descriptionKey: 'template.renewed.description',
+  professional: {
+    nameKey: 'template.professional.name',
+    descriptionKey: 'template.professional.description',
     icon: (
       <FileText className="w-5 h-5" />
     ),

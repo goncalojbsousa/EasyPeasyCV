@@ -16,7 +16,7 @@ import {
   renderCustomSection,
 } from '../../utils/section-renderers';
 
-interface RenewedTemplateProps extends CvData {
+interface ProfessionalTemplateProps extends CvData {
   lang?: string;
   settings?: CvRenderSettings;
   color?: CvColor;
@@ -52,7 +52,7 @@ const buildStyles = (settings?: CvRenderSettings, color: CvColor = 'blue') => {
   };
 };
 
-export function RenewedTemplate({ personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, customSections, lang, settings, color, sectionOrder }: RenewedTemplateProps) {
+export function ProfessionalTemplate({ personalInfo, links, resume, experiences, education, skills, languages, certifications, projects, volunteers, customSections, lang, settings, color, sectionOrder }: ProfessionalTemplateProps) {
   const l = (lang === 'br' ? 'pt' : (lang || 'pt')) as 'pt' | 'en' | 'es';
   const styles = buildStyles(settings, color || 'blue');
   const order = getSectionOrder(sectionOrder, customSections);
