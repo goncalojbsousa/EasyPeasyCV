@@ -70,10 +70,11 @@ export function SelectMenu<T = string>({
   }, [options, search, searchable, filterOption]);
 
   useEffect(() => {
-    if (!isOpen) return undefined;
+    if (!isOpen) return;
 
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      if (containerRef.current && !containerRef.current.contains(target)) {
         setIsOpen(false);
         setSearch("");
       }
@@ -86,11 +87,12 @@ export function SelectMenu<T = string>({
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    // Use capture phase to ensure we catch the event before other handlers
+    document.addEventListener("mousedown", handleClickOutside, true);
     document.addEventListener("keydown", handleEscape);
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside, true);
       document.removeEventListener("keydown", handleEscape);
     };
   }, [isOpen]);

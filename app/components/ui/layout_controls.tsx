@@ -402,6 +402,7 @@ export function LayoutControls({ t, settings, selectedColor, onColorChange, onSe
               useThemeColorForLinks: false,
             };
             onSettingsChange({ ...settings, layout: layoutDefaults, header: headerDefaults, photo: photoDefaults, sections: sectionsDefaults });
+            onColorChange('blue');
           }}
         >
           <RotateCcw className="w-4 h-4" />

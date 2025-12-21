@@ -124,11 +124,11 @@ export function DesktopActionsCard({
     }
 
     if (isDropdownOpen || isCVTypeDropdownOpen || isDataDropdownOpen) {
-      document.addEventListener('click', handleClickOutside);
+      document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isDropdownOpen, isCVTypeDropdownOpen, isDataDropdownOpen]);
 
