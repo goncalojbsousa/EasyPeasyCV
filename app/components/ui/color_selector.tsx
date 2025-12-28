@@ -7,6 +7,7 @@ import type { CvColor } from "../../types/cv";
  * Props for the ColorSelector component.
  */
 interface ColorSelectorProps {
+	id?: string;
 	selectedColor: CvColor;
 	onColorChange: (color: CvColor) => void;
 	show?: boolean; // Controls visibility of the selector
@@ -90,6 +91,7 @@ const colors: Record<
  * Closes dropdown when clicking outside.
  */
 export function ColorSelector({
+	id,
 	selectedColor,
 	onColorChange,
 	show = true,
@@ -128,7 +130,7 @@ export function ColorSelector({
 	}
 
 	return (
-		<div className="relative w-full" ref={containerRef}>
+		<div id={id} className="relative w-full" ref={containerRef}>
 			<button
 				type="button"
 				onClick={() => setIsOpen(!isOpen)}

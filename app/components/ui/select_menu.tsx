@@ -11,6 +11,7 @@ export interface SelectOption<T = string> {
 }
 
 interface SelectMenuProps<T = string> {
+	id?: string;
 	options: SelectOption<T>[];
 	value?: T;
 	placeholder: ReactNode;
@@ -32,6 +33,7 @@ interface SelectMenuProps<T = string> {
 }
 
 export function SelectMenu<T = string>({
+	id,
 	options,
 	value,
 	placeholder,
@@ -106,6 +108,7 @@ export function SelectMenu<T = string>({
 	return (
 		<div className={`relative ${className}`} ref={containerRef}>
 			<button
+				id={id}
 				type="button"
 				className={`w-full flex items-center justify-between px-3 py-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-500 focus:border-sky-500 transition-all text-left text-sm text-gray-900 dark:text-gray-100 ${buttonClassName}`}
 				onClick={() => setIsOpen((open) => !open)}
