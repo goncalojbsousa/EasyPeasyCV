@@ -7,8 +7,13 @@ import {
 	Text,
 	View,
 } from "@react-pdf/renderer";
-import React from "react";
-import type { CvColor, CvData, CvRenderSettings } from "../../types/cv";
+import { Fragment } from "react";
+import type {
+	CvColor,
+	CvData,
+	CvRenderSettings,
+	SectionKey,
+} from "../../types/cv";
 import {
 	getSectionOrder,
 	renderCertificationsSection,
@@ -28,7 +33,7 @@ import {
 	getPhotoSize,
 } from "../../utils/template-styles";
 
-interface ProfessionalTemplateProps extends CvData {
+interface RenewedTemplateProps extends CvData {
 	lang?: string;
 	settings?: CvRenderSettings;
 	color?: CvColor;
@@ -39,7 +44,6 @@ const buildStyles = (settings?: CvRenderSettings, color: CvColor = "blue") => {
 	const commonStyles = buildCommonStyles(metrics, settings);
 	const photoSize = getPhotoSize(settings?.photo?.aspectRatio);
 	const photoBorderRadius = settings?.photo?.borderRadius ?? 1;
-	const linkColor = metrics.linkColor;
 
 	const specificStyles = StyleSheet.create({
 		header: {
@@ -102,11 +106,10 @@ const buildStyles = (settings?: CvRenderSettings, color: CvColor = "blue") => {
 		...specificStyles,
 		_finalScale: metrics.finalScale,
 		_singlePageMult: metrics.singlePageMult,
-		linkColor,
 	};
 };
 
-export function ProfessionalTemplate({
+export function RenewedTemplate({
 	personalInfo,
 	links,
 	resume,
@@ -122,10 +125,9 @@ export function ProfessionalTemplate({
 	settings,
 	color,
 	sectionOrder,
-}: ProfessionalTemplateProps) {
+}: RenewedTemplateProps) {
 	const l = (lang === "br" ? "pt" : lang || "pt") as "pt" | "en" | "es";
 	const styles = buildStyles(settings, color || "blue");
-	const linkColor = styles.linkColor || "#2563eb";
 	const order = getSectionOrder(sectionOrder, customSections);
 	const contactItems = [
 		personalInfo?.phone && {
@@ -150,7 +152,7 @@ export function ProfessionalTemplate({
 
 	const renderProps = { styles, lang: l, settings };
 
-	const renderSection = (sectionKey: import("../../types/cv").SectionKey) => {
+	const renderSection = (sectionKey: SectionKey) => {
 		switch (sectionKey) {
 			case "professional_summary":
 				return renderSummarySection(resume, renderProps, SectionTitle);
@@ -202,17 +204,17 @@ export function ProfessionalTemplate({
 							)}
 							{contactItems.length > 0 && (
 								<View style={styles.contactRow}>
-									{contactItems.map((item) => {
-										const key = `${item.label}-${item.value}`;
-										return (
-											<React.Fragment key={key}>
-												<Text style={styles.contactItem}>
-													<Text style={styles.contactLabel}>{item.label}:</Text>{" "}
-													{item.value}
-												</Text>
-											</React.Fragment>
-										);
-									})}
+									{contactItems.map((item, i) => (
+										<Fragment key={`${item.label}-${item.value}`}>
+											<Text style={styles.contactItem}>
+												<Text style={styles.contactLabel}>{item.label}:</Text>{" "}
+												{item.value}
+											</Text>
+											{i < contactItems.length - 1 ? (
+												<Text style={styles.contactSeparator}>|</Text>
+											) : null}
+										</Fragment>
+									))}
 								</View>
 							)}
 							{/* Social Links */}
@@ -225,24 +227,21 @@ export function ProfessionalTemplate({
 										marginTop: 2,
 									}}
 								>
-									{links.map((lnk) => {
-										const linkKey = `${lnk.type}-${lnk.value}`;
-										return (
-											<Link
-												key={linkKey}
-												src={getSocialUrl(lnk.type, lnk.value)}
-												style={{
-													fontSize: 9,
-													color: linkColor,
-													marginHorizontal: 6,
-												}}
-											>
-												{lnk.hideLinkLabel
-													? lnk.value
-													: `${lnk.customName || lnk.type}: ${lnk.value}`}
-											</Link>
-										);
-									})}
+									{links.map((lnk) => (
+										<Link
+											key={`${lnk.type}-${lnk.value}`}
+											src={getSocialUrl(lnk.type, lnk.value)}
+											style={{
+												fontSize: 9,
+												color: "#2563eb",
+												marginHorizontal: 6,
+											}}
+										>
+											{lnk.hideLinkLabel
+												? lnk.value
+												: `${lnk.customName || lnk.type}: ${lnk.value}`}
+										</Link>
+									))}
 								</View>
 							)}
 						</View>

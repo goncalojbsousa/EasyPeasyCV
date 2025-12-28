@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useRef } from "react";
 
 /**
  * Hook personalizado para auto-redimensionar textareas conforme o conteúdo
@@ -7,30 +7,30 @@ import { useEffect, useRef, useCallback } from 'react';
  * @returns objeto com ref e função de resize
  */
 export function useAutoResize(minHeight = 120, maxHeight?: number) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+	const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const adjustHeight = useCallback(() => {
-    const textarea = textareaRef.current;
-    if (!textarea) return;
+	const adjustHeight = useCallback(() => {
+		const textarea = textareaRef.current;
+		if (!textarea) return;
 
-    // Reset height to auto to get the correct scrollHeight
-    textarea.style.height = 'auto';
-    
-    // Calculate new height
-    let newHeight = Math.max(textarea.scrollHeight, minHeight);
-    
-    // Apply max height if specified
-    if (maxHeight) {
-      newHeight = Math.min(newHeight, maxHeight);
-    }
-    
-    // Set the new height
-    textarea.style.height = `${newHeight}px`;
-  }, [minHeight, maxHeight]);
+		// Reset height to auto to get the correct scrollHeight
+		textarea.style.height = "auto";
 
-  useEffect(() => {
-    adjustHeight();
-  }, [adjustHeight]);
+		// Calculate new height
+		let newHeight = Math.max(textarea.scrollHeight, minHeight);
 
-  return { textareaRef, adjustHeight };
+		// Apply max height if specified
+		if (maxHeight) {
+			newHeight = Math.min(newHeight, maxHeight);
+		}
+
+		// Set the new height
+		textarea.style.height = `${newHeight}px`;
+	}, [minHeight, maxHeight]);
+
+	useEffect(() => {
+		adjustHeight();
+	}, [adjustHeight]);
+
+	return { textareaRef, adjustHeight };
 }

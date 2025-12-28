@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { LayoutControls } from './layout_controls';
+import { LayoutControls } from "./layout_controls";
 
 export { LayoutControls };
 export default LayoutControls;

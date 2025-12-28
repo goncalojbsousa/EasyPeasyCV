@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { useLanguage } from '../contexts/LanguageContext';
+import { useEffect } from "react";
+import { useLanguage } from "../contexts/LanguageContext";
 
 /**
  * Component that dynamically sets the HTML lang attribute based on the selected language
@@ -12,14 +12,14 @@ import { useLanguage } from '../contexts/LanguageContext';
  * @returns JSX element that sets the document language attribute
  */
 export function LanguageHtmlAttribute() {
-  const { language } = useLanguage();
+	const { language } = useLanguage();
 
-  useEffect(() => {
-    // Dynamically set the HTML lang attribute based on the current language selection
-    if (typeof document !== 'undefined') {
-      document.documentElement.lang = language;
-    }
-  }, [language]);
+	useEffect(() => {
+		// Dynamically set the HTML lang attribute based on the current language selection
+		if (typeof document !== "undefined") {
+			document.documentElement.lang = language;
+		}
+	}, [language]);
 
-  return null; // This component doesn't render anything
-} 
+	return null; // This component doesn't render anything
+}

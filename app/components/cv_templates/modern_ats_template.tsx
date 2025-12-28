@@ -7,12 +7,14 @@ import {
 	Text,
 	View,
 } from "@react-pdf/renderer";
-import React from "react";
+import type { ReactNode } from "react";
+import { Fragment } from "react";
 import type {
 	CvColor,
 	CvData,
 	CvRenderSettings,
 	Language,
+	SectionKey,
 } from "../../types/cv";
 import {
 	getSectionOrder,
@@ -31,14 +33,14 @@ import {
 	getSocialUrl,
 	translateLanguageLevel,
 } from "../../utils/template-helpers";
+import type { PdfTextAlign } from "../../utils/template-styles";
 import {
 	buildCommonStyles,
 	computeMetrics,
 	getPhotoSize,
-	type PdfTextAlign,
 } from "../../utils/template-styles";
 
-interface ClassicTemplateProps extends CvData {
+interface ModernAtsTemplateProps extends CvData {
 	lang?: string;
 	settings?: CvRenderSettings;
 	color?: CvColor;
@@ -49,7 +51,6 @@ const buildStyles = (settings?: CvRenderSettings, color: CvColor = "blue") => {
 	const commonStyles = buildCommonStyles(metrics, settings);
 	const photoDimensions = getPhotoSize(settings?.photo?.aspectRatio);
 	const photoBorderRadius = settings?.photo?.borderRadius ?? 1;
-	const linkColor = metrics.linkColor;
 
 	const specificStyles = StyleSheet.create({
 		page: { ...commonStyles.page, color: "#1a1a1a" },
@@ -142,7 +143,7 @@ const buildStyles = (settings?: CvRenderSettings, color: CvColor = "blue") => {
 		},
 		linkItem: {
 			fontSize: 9 * metrics.finalScale,
-			color: linkColor,
+			color: metrics.accent,
 			textDecoration: "underline",
 		},
 		// Sections
@@ -285,11 +286,10 @@ const buildStyles = (settings?: CvRenderSettings, color: CvColor = "blue") => {
 		_finalScale: metrics.finalScale,
 		_singlePageMult: metrics.singlePageMult,
 		_accent: metrics.accent,
-		linkColor,
 	};
 };
 
-export function ClassicTemplate({
+export function ModernAtsTemplate({
 	personalInfo,
 	links,
 	resume,
@@ -305,7 +305,7 @@ export function ClassicTemplate({
 	settings,
 	color,
 	sectionOrder,
-}: ClassicTemplateProps) {
+}: ModernAtsTemplateProps) {
 	const l = (lang === "br" ? "pt" : lang || "pt") as "pt" | "en" | "es";
 	const styles = buildStyles(settings, color || "blue");
 	const order = getSectionOrder(sectionOrder, customSections);
@@ -335,7 +335,7 @@ export function ClassicTemplate({
 		<Text style={styles.sectionTitle}>{label}</Text>
 	);
 
-	const TimelineItem = ({ children }: { children: React.ReactNode }) => (
+	const TimelineItem = ({ children }: { children: ReactNode }) => (
 		<View style={styles.entryContainer}>{children}</View>
 	);
 
@@ -349,26 +349,29 @@ export function ClassicTemplate({
 	const renderProps = { styles, lang: l, settings };
 
 	const LanguagesCustomRender = (
-		langs: Language[],
-		currentStyles: ReturnType<typeof buildStyles>,
-		currentLang: "pt" | "en" | "es",
+		languages: Language[],
+		styles: import("../../utils/section-renderers").PdfStyles,
+		lang: "pt" | "en" | "es",
 	) => (
 		<>
-			{langs.map((langItem) => {
-				const key = `${langItem.name}-${langItem.level}`;
-				return (
-					<View key={key} style={currentStyles.languageRow}>
-						<Text style={currentStyles.languageName}>{langItem.name}</Text>
-						<Text style={currentStyles.languageLevel}>
-							{translateLanguageLevel(langItem.level, currentLang)}
-						</Text>
-					</View>
-				);
-			})}
+			{languages.map((langItem) => (
+				<View
+					key={`${langItem.name}-${langItem.level}`}
+					style={styles.languageRow}
+				>
+					<Text style={styles.languageName}>{langItem.name}</Text>
+					<Text style={styles.languageLevel}>
+						{translateLanguageLevel(
+							langItem.level,
+							lang === "pt" ? "pt" : lang === "es" ? "es" : "en",
+						)}
+					</Text>
+				</View>
+			))}
 		</>
 	);
 
-	const renderSection = (sectionKey: import("../../types/cv").SectionKey) => {
+	const renderSection = (sectionKey: SectionKey) => {
 		switch (sectionKey) {
 			case "professional_summary":
 				return renderSummarySection(resume, renderProps, SectionTitle);
@@ -462,20 +465,17 @@ export function ClassicTemplate({
 								{/* Social Links */}
 								{links && links.length > 0 && (
 									<View style={styles.linksRow}>
-										{links.map((lnk) => {
-											const linkKey = `${lnk.type}-${lnk.value}`;
-											return (
-												<Link
-													key={linkKey}
-													src={getSocialUrl(lnk.type, lnk.value)}
-													style={styles.linkItem}
-												>
-													{lnk.hideLinkLabel
-														? lnk.value
-														: `${lnk.customName || lnk.type}: ${lnk.value}`}
-												</Link>
-											);
-										})}
+										{links.map((lnk) => (
+											<Link
+												key={`${lnk.type}-${lnk.value}`}
+												src={getSocialUrl(lnk.type, lnk.value)}
+												style={styles.linkItem}
+											>
+												{lnk.hideLinkLabel
+													? lnk.value
+													: `${lnk.customName || lnk.type}: ${lnk.value}`}
+											</Link>
+										))}
 									</View>
 								)}
 							</View>
@@ -492,9 +492,7 @@ export function ClassicTemplate({
 
 				{/* Render sections dynamically */}
 				{order.map((sectionKey) => (
-					<React.Fragment key={sectionKey}>
-						{renderSection(sectionKey)}
-					</React.Fragment>
+					<Fragment key={sectionKey}>{renderSection(sectionKey)}</Fragment>
 				))}
 			</Page>
 		</Document>

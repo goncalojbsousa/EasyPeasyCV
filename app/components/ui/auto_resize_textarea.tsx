@@ -1,40 +1,41 @@
-'use client';
+"use client";
 
-import { useAutoResize } from '@/app/utils/useAutoResize';
-import { TextareaHTMLAttributes } from 'react';
+import type { TextareaHTMLAttributes } from "react";
+import { useAutoResize } from "@/app/utils/useAutoResize";
 
-interface AutoResizeTextareaProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'onChange'> {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  minHeight?: number;
-  maxHeight?: number;
+interface AutoResizeTextareaProps
+	extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "onChange"> {
+	value: string;
+	onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+	minHeight?: number;
+	maxHeight?: number;
 }
 
 /**
  * Textarea component that automatically resizes based on content
  */
-export function AutoResizeTextarea({ 
-  value, 
-  onChange, 
-  minHeight = 80, 
-  maxHeight,
-  className = '',
-  ...props 
+export function AutoResizeTextarea({
+	value,
+	onChange,
+	minHeight = 80,
+	maxHeight,
+	className = "",
+	...props
 }: AutoResizeTextareaProps) {
-  const { textareaRef, adjustHeight } = useAutoResize(minHeight, maxHeight);
+	const { textareaRef, adjustHeight } = useAutoResize(minHeight, maxHeight);
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onChange(e);
-    adjustHeight();
-  };
+	const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+		onChange(e);
+		adjustHeight();
+	};
 
-  return (
-    <textarea
-      ref={textareaRef}
-      value={value}
-      onChange={handleChange}
-      className={`${className} resize-none overflow-hidden`}
-      {...props}
-    />
-  );
+	return (
+		<textarea
+			ref={textareaRef}
+			value={value}
+			onChange={handleChange}
+			className={`${className} resize-none overflow-hidden`}
+			{...props}
+		/>
+	);
 }

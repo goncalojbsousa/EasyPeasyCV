@@ -1,57 +1,58 @@
 {
-  "name": "easypeasycv",
-  "description": "A modern EasyPeasyCV application with real-time preview and PDF generation",
-  "version": "0.1.0",
-  "private": true,
-  "license": "MIT",
-  "author": "EasyPeasyCV",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/goncalojbsousa/EasyPeasyCV.git"
-  },
-  "keywords": [
-    "EasyPeasyCV",
-    "Easy Peasy CV",
-    "easy peasy cv",
-    "cv builder",
-    "resume builder",
-    "curriculo",
-    "curriculum vitae",
-    "nextjs",
-    "react",
-    "typescript",
-    "pdf-generation",
-    "open-source"
-  ],
-  "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@dnd-kit/core": "^6.3.1",
-    "@dnd-kit/sortable": "^10.0.0",
-    "@dnd-kit/utilities": "^3.2.2",
-    "@react-pdf/renderer": "^4.3.1",
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^25",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "lucide-react": "^0.561.0",
-    "next": "^16.0.10",
-    "next-intl": "^4.6.0",
-    "next-themes": "^0.4.6",
-    "pdf-lib": "^1.17.1",
-    "pdfjs-dist": "^5.4.449",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
-    "tailwindcss": "^4",
-    "typescript": "^5"
-  },
-  "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "eslint": "^9",
-    "eslint-config-next": "16.0.10"
-  }
+	"name": "easypeasycv",
+	"description": "A modern EasyPeasyCV application with real-time preview and PDF generation",
+	"version": "0.1.0",
+	"private": true,
+	"license": "MIT",
+	"author": "EasyPeasyCV",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/goncalojbsousa/EasyPeasyCV.git"
+	},
+	"keywords": [
+		"EasyPeasyCV",
+		"Easy Peasy CV",
+		"easy peasy cv",
+		"cv builder",
+		"resume builder",
+		"curriculo",
+		"curriculum vitae",
+		"nextjs",
+		"react",
+		"typescript",
+		"pdf-generation",
+		"open-source"
+	],
+	"scripts": {
+		"dev": "next dev --turbopack",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint"
+	},
+	"dependencies": {
+		"@dnd-kit/core": "^6.3.1",
+		"@dnd-kit/sortable": "^10.0.0",
+		"@dnd-kit/utilities": "^3.2.2",
+		"@react-pdf/renderer": "^4.3.1",
+		"@tailwindcss/postcss": "^4",
+		"@types/node": "^25",
+		"@types/react": "^19",
+		"@types/react-dom": "^19",
+		"lucide-react": "^0.561.0",
+		"next": "^16.0.10",
+		"next-intl": "^4.6.0",
+		"next-themes": "^0.4.6",
+		"pdf-lib": "^1.17.1",
+		"pdfjs-dist": "^5.4.449",
+		"react": "^19.2.3",
+		"react-dom": "^19.2.3",
+		"tailwindcss": "^4",
+		"typescript": "^5"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.3.10",
+		"@eslint/eslintrc": "^3",
+		"eslint": "^9",
+		"eslint-config-next": "16.0.10"
+	}
 }
