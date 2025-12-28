@@ -310,6 +310,16 @@ const brTranslations: Record<string, string> = {
 	"donation.button": "Fazer Doação",
 
 	// Form Sections
+	"pdf.section.summary": "RESUMO",
+	"pdf.section.experience": "EXPERIÊNCIA",
+	"pdf.section.education": "EDUCAÇÃO",
+	"pdf.section.skills": "COMPETÊNCIAS",
+	"pdf.section.languages": "IDIOMAS",
+	"pdf.section.certifications": "CERTIFICAÇÕES",
+	"pdf.section.projects": "PROJETOS",
+	"pdf.section.volunteer": "VOLUNTARIADO",
+	"pdf.section.custom": "SEÇÃO PERSONALIZADA",
+
 	"section.personal.info": "Informações Pessoais",
 	"section.professional.summary": "Resumo Profissional",
 	"section.professional.experience": "Experiência Profissional",

@@ -309,6 +309,17 @@ const ptTranslations: Record<string, string> = {
 		"As suas doações ajudam a manter o EasyPeasyCV gratuito e a melhorar continuamente a ferramenta.",
 	"donation.button": "Fazer Doação",
 
+	// PDF Export
+	"pdf.section.summary": "RESUMO",
+	"pdf.section.experience": "EXPERIÊNCIA",
+	"pdf.section.education": "EDUCAÇÃO",
+	"pdf.section.skills": "COMPETÊNCIAS",
+	"pdf.section.languages": "IDIOMAS",
+	"pdf.section.certifications": "CERTIFICAÇÕES",
+	"pdf.section.projects": "PROJETOS",
+	"pdf.section.volunteer": "VOLUNTARIADO",
+	"pdf.section.custom": "SECÇÃO PERSONALIZADA",
+
 	// Form Sections
 	"section.personal.info": "Informações Pessoais",
 	"section.professional.summary": "Resumo Profissional",

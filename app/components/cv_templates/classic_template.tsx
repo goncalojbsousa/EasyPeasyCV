@@ -350,8 +350,9 @@ export function ClassicTemplate({
 
 	const LanguagesCustomRender = (
 		langs: Language[],
-		currentStyles: ReturnType<typeof buildStyles>,
-		currentLang: "pt" | "en" | "es",
+		// biome-ignore lint/suspicious/noExplicitAny: Intentional loose typing for template compatibility
+		currentStyles: any,
+		currentLang: string,
 	) => (
 		<>
 			{langs.map((langItem) => {
@@ -360,7 +361,10 @@ export function ClassicTemplate({
 					<View key={key} style={currentStyles.languageRow}>
 						<Text style={currentStyles.languageName}>{langItem.name}</Text>
 						<Text style={currentStyles.languageLevel}>
-							{translateLanguageLevel(langItem.level, currentLang)}
+							{translateLanguageLevel(
+								langItem.level,
+								currentLang as "pt" | "en" | "es",
+							)}
 						</Text>
 					</View>
 				);

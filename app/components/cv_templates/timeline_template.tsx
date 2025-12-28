@@ -17,6 +17,7 @@ import type {
 } from "../../types/cv";
 import {
 	getSectionOrder,
+	type PdfStyles,
 	renderCertificationsSection,
 	renderCustomSection,
 	renderEducationSection,
@@ -290,24 +291,30 @@ export function TimelineTemplate({
 
 	const LanguagesCustomRender = (
 		languages: Language[],
-		styles: TemplateStyles,
-		lang: "pt" | "en" | "es",
-	) => (
-		<>
-			{languages.map((langItem) => (
-				<View key={`${langItem.name}-${langItem.level}`} style={styles.langRow}>
-					<Text style={styles.langName}>{langItem.name}</Text>
-					<View style={styles.langDivider} />
-					<Text style={styles.langLevel}>
-						{translateLanguageLevel(
-							langItem.level,
-							lang === "pt" ? "pt" : lang === "es" ? "es" : "en",
-						)}
-					</Text>
-				</View>
-			))}
-		</>
-	);
+		_styles: PdfStyles,
+		lang: string,
+	) => {
+		const styles = _styles as TemplateStyles;
+		return (
+			<>
+				{languages.map((langItem) => (
+					<View
+						key={`${langItem.name}-${langItem.level}`}
+						style={styles.langRow}
+					>
+						<Text style={styles.langName}>{langItem.name}</Text>
+						<View style={styles.langDivider} />
+						<Text style={styles.langLevel}>
+							{translateLanguageLevel(
+								langItem.level,
+								lang === "pt" ? "pt" : lang === "es" ? "es" : "en",
+							)}
+						</Text>
+					</View>
+				))}
+			</>
+		);
+	};
 
 	const renderSection = (sectionKey: SectionKey) => {
 		switch (sectionKey) {

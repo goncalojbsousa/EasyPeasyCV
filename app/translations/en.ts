@@ -322,6 +322,16 @@ const enTranslations: Record<string, string> = {
 	"donation.button": "Make Donation",
 
 	// Form Sections
+	"pdf.section.summary": "SUMMARY",
+	"pdf.section.experience": "EXPERIENCE",
+	"pdf.section.education": "EDUCATION",
+	"pdf.section.skills": "SKILLS",
+	"pdf.section.languages": "LANGUAGES",
+	"pdf.section.certifications": "CERTIFICATIONS",
+	"pdf.section.projects": "PROJECTS",
+	"pdf.section.volunteer": "VOLUNTEER",
+	"pdf.section.custom": "CUSTOM SECTION",
+
 	"section.personal.info": "Personal Information",
 	"section.professional.summary": "Professional Summary",
 	"section.professional.experience": "Professional Experience",

@@ -1,4 +1,5 @@
 import { Link, Text, View } from "@react-pdf/renderer";
+import type { Style } from "@react-pdf/types";
 import type React from "react";
 import type {
 	Certification,
@@ -19,21 +20,23 @@ import {
 	translateLanguageLevel,
 } from "./template-helpers";
 
-export type PdfStyles = ReturnType<typeof buildStyles> & {
-	summaryText: unknown;
-	expItem: unknown;
-	expHeaderRow: unknown;
-	expLeft: unknown;
-	expRight: unknown;
-	jobRole: unknown;
-	company: unknown;
-	bullets: unknown;
-	activitiesText: unknown;
+export type PdfStyles = {
+	summaryText: Style;
+	expItem: Style;
+	expHeaderRow: Style;
+	expLeft: Style;
+	expRight: Style;
+	jobRole: Style;
+	company: Style;
+	bullets: Style;
+	activitiesText: Style;
+	section: Style;
+	[key: string]: Style | string | number | undefined;
 };
 
 export interface SectionRenderProps {
 	styles: PdfStyles;
-	lang: "pt" | "en" | "es";
+	lang: string;
 	settings?: CvRenderSettings;
 }
 
@@ -73,8 +76,7 @@ export function renderSummarySection(
 ) {
 	if (!resume) return null;
 
-	const label =
-		lang === "en" ? "SUMMARY" : lang === "es" ? "RESUMEN" : "RESUMO";
+	const label = translateLabel("pdf.section.summary", lang);
 
 	return (
 		<View style={styles.section} key="professional_summary">
@@ -93,12 +95,7 @@ export function renderExperienceSection(
 ) {
 	if (experiences.length === 0) return null;
 
-	const label =
-		lang === "en"
-			? "EXPERIENCE"
-			: lang === "es"
-				? "EXPERIENCIA"
-				: "EXPERIÊNCIA";
+	const label = translateLabel("pdf.section.experience", lang);
 
 	const itemsContent = (
 		<>
@@ -191,8 +188,7 @@ export function renderEducationSection(
 ) {
 	if (education.length === 0) return null;
 
-	const label =
-		lang === "en" ? "EDUCATION" : lang === "es" ? "EDUCACIÓN" : "EDUCAÇÃO";
+	const label = translateLabel("pdf.section.education", lang);
 
 	const itemsContent = (
 		<>
@@ -288,12 +284,11 @@ export function renderSkillsSection(
 	skills: string | undefined,
 	{ styles, lang }: SectionRenderProps,
 	SectionTitle: React.ComponentType<{ label: string }>,
-	customTextStyle?: PdfStyles,
+	customTextStyle?: Style,
 ) {
 	if (!skills) return null;
 
-	const label =
-		lang === "en" ? "SKILLS" : lang === "es" ? "HABILIDADES" : "COMPETÊNCIAS";
+	const label = translateLabel("pdf.section.skills", lang);
 	const textStyle = customTextStyle || styles.summaryText;
 
 	return (
@@ -311,12 +306,12 @@ export function renderLanguagesSection(
 	CustomRender?: (
 		languages: Language[],
 		styles: PdfStyles,
-		lang: "pt" | "en" | "es",
+		lang: string,
 	) => React.ReactNode,
 ) {
 	if (!languages || languages.length === 0) return null;
 
-	const label = lang === "en" ? "LANGUAGES" : "IDIOMAS";
+	const label = translateLabel("pdf.section.languages", lang);
 
 	return (
 		<View style={styles.section} key="languages">
@@ -360,12 +355,7 @@ export function renderCertificationsSection(
 ) {
 	if (!certifications || certifications.length === 0) return null;
 
-	const label =
-		lang === "en"
-			? "CERTIFICATIONS"
-			: lang === "es"
-				? "CERTIFICACIONES"
-				: "CERTIFICAÇÕES";
+	const label = translateLabel("pdf.section.certifications", lang);
 
 	return (
 		<View style={styles.section} key="certifications">
@@ -389,7 +379,10 @@ export function renderCertificationsSection(
 					{cert.validationLink && (
 						<Link
 							src={cert.validationLink}
-							style={{ fontSize: 9, color: styles.linkColor || "#2563eb" }}
+							style={{
+								fontSize: 9,
+								color: (styles.linkColor as unknown as string) || "#2563eb",
+							}}
 						>
 							{cert.validationLink}
 						</Link>
@@ -410,8 +403,7 @@ export function renderProjectsSection(
 ) {
 	if (!projects || projects.length === 0) return null;
 
-	const label =
-		lang === "en" ? "PROJECTS" : lang === "es" ? "PROYECTOS" : "PROJETOS";
+	const label = translateLabel("pdf.section.projects", lang);
 
 	return (
 		<View style={styles.section} key="projects">
@@ -450,7 +442,10 @@ export function renderProjectsSection(
 					{proj.link && (
 						<Link
 							src={proj.link}
-							style={{ fontSize: 9, color: styles.linkColor || "#2563eb" }}
+							style={{
+								fontSize: 9,
+								color: (styles.linkColor as unknown as string) || "#2563eb",
+							}}
 						>
 							{proj.link}
 						</Link>
@@ -458,7 +453,10 @@ export function renderProjectsSection(
 					{proj.sourceCode && (
 						<Link
 							src={proj.sourceCode}
-							style={{ fontSize: 9, color: styles.linkColor || "#2563eb" }}
+							style={{
+								fontSize: 9,
+								color: (styles.linkColor as unknown as string) || "#2563eb",
+							}}
 						>
 							{proj.sourceCode}
 						</Link>
@@ -478,7 +476,7 @@ export function renderVolunteerSection(
 ) {
 	if (!volunteers || volunteers.length === 0) return null;
 
-	const label = lang === "en" ? "VOLUNTEER" : "VOLUNTARIADO";
+	const label = translateLabel("pdf.section.volunteer", lang);
 
 	const itemsContent = (
 		<>
@@ -570,13 +568,7 @@ export function renderCustomSection(
 
 	if (!section.title && meaningfulFields.length === 0) return null;
 
-	const label =
-		section.title ||
-		(lang === "en"
-			? "CUSTOM SECTION"
-			: lang === "es"
-				? "SECCIÓN PERSONALIZADA"
-				: "SECÇÃO PERSONALIZADA");
+	const label = section.title || translateLabel("pdf.section.custom", lang);
 	const sectionKey = `custom_${section.id}`;
 
 	const itemsContent = (
