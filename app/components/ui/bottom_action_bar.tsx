@@ -249,7 +249,7 @@ export function BottomActionBar({
 				onClick={handleClick}
 				onKeyDown={handleKeyDown}
 				onKeyUp={handleKeyUp}
-				className="text-left"
+				className="text-left w-full block"
 			>
 				<PdfDownloadButton
 					ref={pdfButtonRef}
@@ -651,7 +651,7 @@ export function BottomActionBar({
 												<div className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-zinc-700">
 													{t("select.language")}
 												</div>
-												<div className="py-1">
+												<div className="py-1 flex flex-col">
 													{languageOptions.map((opt) => (
 														<PdfDownloadButtonWithValidation
 															key={opt.code}
@@ -659,7 +659,7 @@ export function BottomActionBar({
 														>
 															<div className="w-full flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 cursor-pointer text-left">
 																{opt.icon}
-																<span className="font-medium text-sm">
+																<span className="font-medium text-sm whitespace-nowrap">
 																	{t(opt.labelKey)}
 																</span>
 															</div>

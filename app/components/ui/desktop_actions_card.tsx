@@ -19,7 +19,7 @@ import {
 	Upload,
 	Users,
 } from "lucide-react";
-import type React from "react";
+
 import type { JSX } from "react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -219,70 +219,6 @@ export function DesktopActionsCard({
 		return icons[type as keyof typeof icons] || icons.other;
 	};
 
-	/**
-	 * PDF download button component with validation logic.
-	 * Prevents download if form validation fails, and shows a thank you modal after successful generation.
-	 * @param lang - Language for the PDF (pt, en or es)
-	 * @param children - Content to display in the button
-	 */
-	const PdfDownloadButtonWithValidation = ({
-		lang,
-		children,
-	}: {
-		lang: string;
-		children: React.ReactNode;
-	}) => {
-		const pdfButtonRef = useRef<{ generatePdf: () => Promise<void> }>(null);
-
-		const handleClick = async (e: React.MouseEvent) => {
-			if (!onGeneratePDF()) {
-				e.preventDefault();
-				e.stopPropagation();
-			} else {
-				// Call the PDF generation method
-				if (pdfButtonRef.current) {
-					await pdfButtonRef.current.generatePdf();
-				}
-				// Close dropdown after a short delay to allow PDF generation to start
-				setTimeout(() => {
-					setIsDropdownOpen(false);
-					// Show success message
-					onShowSuccessMessage();
-				}, 100);
-			}
-		};
-
-		const handlePdfGenerated = () => {
-			// Show thank you modal after PDF generation
-			setShowThankYouModal(true);
-		};
-
-		return (
-			<div onClickCapture={handleClick}>
-				<PdfDownloadButton
-					ref={pdfButtonRef}
-					personalInfo={personalInfo}
-					links={links}
-					resume={resume}
-					experiences={experiences}
-					education={education}
-					skills={skills}
-					languages={languages}
-					certifications={certifications}
-					projects={projects}
-					volunteers={volunteers}
-					lang={lang}
-					template={template}
-					color={color}
-					settings={settings}
-					onPdfGenerated={handlePdfGenerated}
-				>
-					{children}
-				</PdfDownloadButton>
-			</div>
-		);
-	};
-
 	return (
 		<div className="hidden lg:block w-80">
 			<div className="sticky top-28 max-h-[calc(100vh-7rem)] overflow-y-auto">
@@ -426,7 +362,6 @@ export function DesktopActionsCard({
 									/>
 								</button>
 
-								{/* Language selection dropdown */}
 								{isDropdownOpen &&
 									typeof document !== "undefined" &&
 									languageDropdownRect &&
@@ -437,21 +372,50 @@ export function DesktopActionsCard({
 											style={{
 												top: languageDropdownRect.bottom + 8,
 												left: languageDropdownRect.left,
-												width: languageDropdownRect.width,
+												minWidth: languageDropdownRect.width,
 											}}
 										>
 											<div className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-zinc-700">
 												{t("select.language")}
 											</div>
-											<div className="py-1">
-												<PdfDownloadButtonWithValidation lang="en">
-													<div className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 cursor-pointer">
+											<div className="py-1 flex flex-col">
+												<PdfDownloadButton
+													personalInfo={personalInfo}
+													links={links}
+													resume={resume}
+													experiences={experiences}
+													education={education}
+													skills={skills}
+													languages={languages}
+													certifications={certifications}
+													projects={projects}
+													volunteers={volunteers}
+													lang="en"
+													template={template}
+													color={color}
+													settings={settings}
+													onPdfGenerated={() => setShowThankYouModal(true)}
+												>
+													<div
+														className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 cursor-pointer w-full"
+														onClick={(e) => {
+															if (!onGeneratePDF()) {
+																e.preventDefault();
+																e.stopPropagation();
+															} else {
+																setTimeout(() => {
+																	setIsDropdownOpen(false);
+																	onShowSuccessMessage();
+																}, 100);
+															}
+														}}
+													>
 														<svg
 															xmlns="http://www.w3.org/2000/svg"
 															width="20"
 															height="20"
 															viewBox="0 0 32 32"
-															className="w-6 h-6"
+															className="w-6 h-6 shrink-0"
 														>
 															<title>Brazil Flag</title>
 															<rect
@@ -464,7 +428,7 @@ export function DesktopActionsCard({
 																fill="#071b65"
 															></rect>
 															<path
-																d="M5.101,4h-.101c-1.981,0-3.615,1.444-3.933,3.334L26.899,28h.101c1.981,0,3.615-1.444,3.933-3.334L5.101,4Z"
+																d="M5.101,4h-.101c-1.981,0-3.615,1.444-3.933,3.334L2.899,28h.101c1.981,0,3.615-1.444,3.933-3.334L5.101,4Z"
 																fill="#fff"
 															></path>
 															<path
@@ -526,19 +490,48 @@ export function DesktopActionsCard({
 																opacity=".2"
 															></path>
 														</svg>
-														<span className="font-medium text-sm">
+														<span className="font-medium text-sm whitespace-nowrap">
 															{t("language.english")}
 														</span>
 													</div>
-												</PdfDownloadButtonWithValidation>
-												<PdfDownloadButtonWithValidation lang="pt">
-													<div className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 cursor-pointer">
+												</PdfDownloadButton>
+												<PdfDownloadButton
+													personalInfo={personalInfo}
+													links={links}
+													resume={resume}
+													experiences={experiences}
+													education={education}
+													skills={skills}
+													languages={languages}
+													certifications={certifications}
+													projects={projects}
+													volunteers={volunteers}
+													lang="pt"
+													template={template}
+													color={color}
+													settings={settings}
+													onPdfGenerated={() => setShowThankYouModal(true)}
+												>
+													<div
+														className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 cursor-pointer w-full"
+														onClick={(e) => {
+															if (!onGeneratePDF()) {
+																e.preventDefault();
+																e.stopPropagation();
+															} else {
+																setTimeout(() => {
+																	setIsDropdownOpen(false);
+																	onShowSuccessMessage();
+																}, 100);
+															}
+														}}
+													>
 														<svg
 															xmlns="http://www.w3.org/2000/svg"
 															width="20"
 															height="20"
 															viewBox="0 0 32 32"
-															className="w-6 h-6"
+															className="w-6 h-6 shrink-0"
 														>
 															<title>Portuguese CV Download</title>
 															<title>Portuguese flag</title>
@@ -571,19 +564,48 @@ export function DesktopActionsCard({
 																fill="#ea3323"
 															></path>
 														</svg>
-														<span className="font-medium text-sm">
+														<span className="font-medium text-sm whitespace-nowrap">
 															{t("language.portuguese")}
 														</span>
 													</div>
-												</PdfDownloadButtonWithValidation>
-												<PdfDownloadButtonWithValidation lang="br">
-													<div className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 cursor-pointer">
+												</PdfDownloadButton>
+												<PdfDownloadButton
+													personalInfo={personalInfo}
+													links={links}
+													resume={resume}
+													experiences={experiences}
+													education={education}
+													skills={skills}
+													languages={languages}
+													certifications={certifications}
+													projects={projects}
+													volunteers={volunteers}
+													lang="br"
+													template={template}
+													color={color}
+													settings={settings}
+													onPdfGenerated={() => setShowThankYouModal(true)}
+												>
+													<div
+														className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 cursor-pointer w-full"
+														onClick={(e) => {
+															if (!onGeneratePDF()) {
+																e.preventDefault();
+																e.stopPropagation();
+															} else {
+																setTimeout(() => {
+																	setIsDropdownOpen(false);
+																	onShowSuccessMessage();
+																}, 100);
+															}
+														}}
+													>
 														<svg
 															xmlns="http://www.w3.org/2000/svg"
 															width="20"
 															height="20"
 															viewBox="0 0 32 32"
-															className="w-6 h-6"
+															className="w-6 h-6 shrink-0"
 														>
 															<title>Brazilian Portuguese CV Download</title>
 															<title>Brazilian flag</title>
@@ -611,7 +633,7 @@ export function DesktopActionsCard({
 																fill="#0a2172"
 															></circle>
 															<path
-																d="M14,14.5c-.997,0-1.958,.149-2.873,.409-.078,.35-.126,.71-.127,1.083,.944-.315,1.951-.493,2.999-.493,2.524,0,4.816,.996,6.519,2.608,.152-.326,.276-.666,.356-1.026-1.844-1.604-4.245-2.583-6.875-2.583Z"
+																d="M14,14.5c-.997,0-1.958,.149-2.873,.409-.078,.35-.126,.71-.127,1.083,.944-.315,1.951-.493,2.999-.493,2.583,0,4.816,.996,6.519,2.608,.152-.326,.276-.666,.356-1.026-1.844-1.604-4.245-2.583-6.875-2.583Z"
 																fill="#fff"
 															></path>
 															<path
@@ -620,19 +642,48 @@ export function DesktopActionsCard({
 																opacity=".2"
 															></path>
 														</svg>
-														<span className="font-medium text-sm">
+														<span className="font-medium text-sm whitespace-nowrap">
 															{t("language.brazilianPortuguese")}
 														</span>
 													</div>
-												</PdfDownloadButtonWithValidation>
-												<PdfDownloadButtonWithValidation lang="es">
-													<div className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 cursor-pointer">
+												</PdfDownloadButton>
+												<PdfDownloadButton
+													personalInfo={personalInfo}
+													links={links}
+													resume={resume}
+													experiences={experiences}
+													education={education}
+													skills={skills}
+													languages={languages}
+													certifications={certifications}
+													projects={projects}
+													volunteers={volunteers}
+													lang="es"
+													template={template}
+													color={color}
+													settings={settings}
+													onPdfGenerated={() => setShowThankYouModal(true)}
+												>
+													<div
+														className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 cursor-pointer w-full"
+														onClick={(e) => {
+															if (!onGeneratePDF()) {
+																e.preventDefault();
+																e.stopPropagation();
+															} else {
+																setTimeout(() => {
+																	setIsDropdownOpen(false);
+																	onShowSuccessMessage();
+																}, 100);
+															}
+														}}
+													>
 														<svg
 															xmlns="http://www.w3.org/2000/svg"
 															width="20"
 															height="20"
 															viewBox="0 0 32 32"
-															className="w-6 h-6"
+															className="w-6 h-6 shrink-0"
 														>
 															<title>Spanish CV Download</title>
 															<title>Spanish flag</title>
@@ -664,11 +715,11 @@ export function DesktopActionsCard({
 																opacity=".1"
 															></rect>
 														</svg>
-														<span className="font-medium text-sm">
+														<span className="font-medium text-sm whitespace-nowrap">
 															{t("language.spanish")}
 														</span>
 													</div>
-												</PdfDownloadButtonWithValidation>
+												</PdfDownloadButton>
 											</div>
 										</div>,
 										document.body,
