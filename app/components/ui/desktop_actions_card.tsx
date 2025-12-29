@@ -396,7 +396,8 @@ export function DesktopActionsCard({
 													settings={settings}
 													onPdfGenerated={() => setShowThankYouModal(true)}
 												>
-													<div
+													<button
+														type="button"
 														className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 cursor-pointer w-full"
 														onClick={(e) => {
 															if (!onGeneratePDF()) {
@@ -493,7 +494,7 @@ export function DesktopActionsCard({
 														<span className="font-medium text-sm whitespace-nowrap">
 															{t("language.english")}
 														</span>
-													</div>
+													</button>
 												</PdfDownloadButton>
 												<PdfDownloadButton
 													personalInfo={personalInfo}
@@ -512,7 +513,8 @@ export function DesktopActionsCard({
 													settings={settings}
 													onPdfGenerated={() => setShowThankYouModal(true)}
 												>
-													<div
+													<button
+														type="button"
 														className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 cursor-pointer w-full"
 														onClick={(e) => {
 															if (!onGeneratePDF()) {
@@ -567,7 +569,7 @@ export function DesktopActionsCard({
 														<span className="font-medium text-sm whitespace-nowrap">
 															{t("language.portuguese")}
 														</span>
-													</div>
+													</button>
 												</PdfDownloadButton>
 												<PdfDownloadButton
 													personalInfo={personalInfo}
@@ -586,7 +588,8 @@ export function DesktopActionsCard({
 													settings={settings}
 													onPdfGenerated={() => setShowThankYouModal(true)}
 												>
-													<div
+													<button
+														type="button"
 														className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 cursor-pointer w-full"
 														onClick={(e) => {
 															if (!onGeneratePDF()) {
@@ -645,7 +648,7 @@ export function DesktopActionsCard({
 														<span className="font-medium text-sm whitespace-nowrap">
 															{t("language.brazilianPortuguese")}
 														</span>
-													</div>
+													</button>
 												</PdfDownloadButton>
 												<PdfDownloadButton
 													personalInfo={personalInfo}
@@ -664,7 +667,8 @@ export function DesktopActionsCard({
 													settings={settings}
 													onPdfGenerated={() => setShowThankYouModal(true)}
 												>
-													<div
+													<button
+														type="button"
 														className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 cursor-pointer w-full"
 														onClick={(e) => {
 															if (!onGeneratePDF()) {
@@ -718,7 +722,7 @@ export function DesktopActionsCard({
 														<span className="font-medium text-sm whitespace-nowrap">
 															{t("language.spanish")}
 														</span>
-													</div>
+													</button>
 												</PdfDownloadButton>
 											</div>
 										</div>,
