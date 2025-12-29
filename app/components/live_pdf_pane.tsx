@@ -157,7 +157,7 @@ export function LivePdfPane({
 				</button>
 			</div>
 			<div className="flex-1 min-h-0">
-				{loading ? (
+				{!pdfBlob && loading ? (
 					<div className="w-full h-full flex items-center justify-center">
 						<div className="text-center">
 							<div className="animate-spin rounded-full h-10 w-10 border-b-2 border-sky-600 mx-auto mb-3" />
@@ -166,7 +166,7 @@ export function LivePdfPane({
 							</p>
 						</div>
 					</div>
-				) : error ? (
+				) : !pdfBlob && error ? (
 					<div className="w-full h-full flex items-center justify-center">
 						<p className="text-sm text-red-600">{error}</p>
 					</div>
