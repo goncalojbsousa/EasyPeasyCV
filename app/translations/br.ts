@@ -362,7 +362,7 @@ const brTranslations: Record<string, string> = {
 	"field.city": "Cidade",
 	"field.email": "E-mail",
 	"field.country.code": "Código do País",
-	"field.phone": "Telefone",
+	"field.phone": "Celular",
 	"field.links.social": "Links e Redes Sociais",
 	"field.link.type": "Tipo de Link",
 	"field.url": "URL",

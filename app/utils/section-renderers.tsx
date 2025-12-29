@@ -193,14 +193,8 @@ export function renderEducationSection(
 	const itemsContent = (
 		<>
 			{education.map((edu, idx) => {
-				const typeLabel = translateLabel(
-					edu.type,
-					lang === "pt" ? "pt" : lang === "es" ? "es" : "en",
-				);
-				const statusLabel = translateLabel(
-					edu.status,
-					lang === "pt" ? "pt" : lang === "es" ? "es" : "en",
-				);
+				const typeLabel = translateLabel(edu.type, lang);
+				const statusLabel = translateLabel(edu.status, lang);
 				const meta = [typeLabel, statusLabel].filter(Boolean).join(" • ");
 				const eduKey = `${edu.institution}-${edu.course}-${edu.startYear}-${edu.startMonth}-${edu.endYear}-${edu.endMonth}-${idx}`;
 
@@ -327,10 +321,7 @@ export function renderLanguagesSection(
 					}}
 				>
 					{languages.map((langItem) => {
-						const levelLabel = translateLanguageLevel(
-							langItem.level,
-							lang === "pt" ? "pt" : lang === "es" ? "es" : "en",
-						);
+						const levelLabel = translateLanguageLevel(langItem.level, lang);
 						const languageKey = `${langItem.name}-${langItem.level || "unknown"}`;
 						return (
 							<Text

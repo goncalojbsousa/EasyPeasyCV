@@ -29,6 +29,7 @@ import {
 } from "../../utils/section-renderers";
 import {
 	getSocialUrl,
+	translateLabel,
 	translateLanguageLevel,
 } from "../../utils/template-helpers";
 import {
@@ -306,21 +307,24 @@ export function ClassicTemplate({
 	color,
 	sectionOrder,
 }: ClassicTemplateProps) {
-	const l = (lang === "br" ? "pt" : lang || "pt") as "pt" | "en" | "es";
+	const l = lang || "pt";
 	const styles = buildStyles(settings, color || "blue");
 	const order = getSectionOrder(sectionOrder, customSections);
 
 	const contactItems = [
 		personalInfo?.phone && {
-			label: "Tel",
+			label: translateLabel("field.phone", l),
 			value:
 				personalInfo.countryCode && personalInfo.phone
 					? `${personalInfo.countryCode.match(/\(([^)]+)\)/)?.[1] || personalInfo.countryCode} ${personalInfo.phone}`
 					: personalInfo.phone,
 		},
-		personalInfo?.email && { label: "Email", value: personalInfo.email },
+		personalInfo?.email && {
+			label: translateLabel("field.email", l),
+			value: personalInfo.email,
+		},
 		personalInfo?.city && {
-			label: "City",
+			label: translateLabel("field.city", l),
 			value: [personalInfo.city, personalInfo.postalCode]
 				.filter(Boolean)
 				.join(" "),

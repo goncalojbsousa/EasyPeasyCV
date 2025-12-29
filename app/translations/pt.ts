@@ -362,7 +362,7 @@ const ptTranslations: Record<string, string> = {
 	"field.city": "Cidade",
 	"field.email": "Email",
 	"field.country.code": "Código do País",
-	"field.phone": "Telefone",
+	"field.phone": "Telemóvel",
 	"field.links.social": "Links e Redes Sociais",
 	"field.link.type": "Tipo de Link",
 	"field.url": "URL",

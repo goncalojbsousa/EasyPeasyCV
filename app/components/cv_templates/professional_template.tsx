@@ -21,7 +21,7 @@ import {
 	renderSummarySection,
 	renderVolunteerSection,
 } from "../../utils/section-renderers";
-import { getSocialUrl } from "../../utils/template-helpers";
+import { getSocialUrl, translateLabel } from "../../utils/template-helpers";
 import {
 	buildCommonStyles,
 	computeMetrics,
@@ -123,21 +123,24 @@ export function ProfessionalTemplate({
 	color,
 	sectionOrder,
 }: ProfessionalTemplateProps) {
-	const l = (lang === "br" ? "pt" : lang || "pt") as "pt" | "en" | "es";
+	const l = lang || "pt";
 	const styles = buildStyles(settings, color || "blue");
 	const linkColor = styles.linkColor || "#2563eb";
 	const order = getSectionOrder(sectionOrder, customSections);
 	const contactItems = [
 		personalInfo?.phone && {
-			label: "Tel",
+			label: translateLabel("field.phone", l),
 			value:
 				personalInfo.countryCode && personalInfo.phone
 					? `${personalInfo.countryCode.match(/\(([^)]+)\)/)?.[1] || personalInfo.countryCode} ${personalInfo.phone}`
 					: personalInfo.phone,
 		},
-		personalInfo?.email && { label: "Email", value: personalInfo.email },
+		personalInfo?.email && {
+			label: translateLabel("field.email", l),
+			value: personalInfo.email,
+		},
 		personalInfo?.city && {
-			label: "City",
+			label: translateLabel("field.city", l),
 			value: [personalInfo.city, personalInfo.postalCode]
 				.filter(Boolean)
 				.join(" "),
