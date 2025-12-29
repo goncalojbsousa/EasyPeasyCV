@@ -226,7 +226,7 @@ export function PdfPreview({
 
 				{/* PDF Content */}
 				<div className="flex-1 overflow-hidden p-2 bg-gray-50 dark:bg-zinc-800">
-					{!pdfUrl && loading ? (
+					{loading ? (
 						<div className="flex items-center justify-center h-full">
 							<div className="text-center">
 								<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-sky-600 mx-auto mb-4"></div>
@@ -235,7 +235,7 @@ export function PdfPreview({
 								</p>
 							</div>
 						</div>
-					) : !pdfUrl && error ? (
+					) : error ? (
 						<div className="flex items-center justify-center h-full">
 							<div className="text-center">
 								<p className="text-red-600 mb-4">{error}</p>

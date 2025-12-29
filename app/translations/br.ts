@@ -204,7 +204,7 @@ const brTranslations: Record<string, string> = {
 	"pdf.preview.error.loading": "Erro ao carregar PDF",
 	"layout.menu.title": "Layout",
 	"layout.menu.controls": "Controles de Layout",
-	"layout.controls.font": "Fonte",
+	"layout.controls.font.label": "Fonte",
 	"layout.controls.font.custom": "Personalizada",
 	"layout.controls.textScale.label": "Escala do texto",
 	"layout.controls.margins.title": "Margens",
@@ -233,12 +233,12 @@ const brTranslations: Record<string, string> = {
 	"layout.controls.header.titlePosition.below": "Abaixo do nome",
 	"layout.controls.header.divider.title": "Linha divisória",
 	"layout.controls.header.divider.thickness": "Espessura",
-	"layout.controls.header.divider.style": "Estilo",
+	"layout.controls.header.divider.style.label": "Estilo",
 	"layout.controls.header.divider.style.solid": "Sólida",
 	"layout.controls.header.divider.style.dashed": "Tracejada",
 	"layout.controls.header.icons": "Ícones de Contato",
 	"layout.controls.header.iconSpacing": "Espaçamento de ícones",
-	"layout.controls.header.alignment": "Alinhamento",
+	"layout.controls.header.alignment.label": "Alinhamento",
 	"layout.controls.header.alignment.left": "Esquerda",
 	"layout.controls.header.alignment.center": "Centro",
 	"layout.controls.header.alignment.right": "Direita",
@@ -251,7 +251,7 @@ const brTranslations: Record<string, string> = {
 	"layout.controls.photo.choose": "Escolher foto",
 	"layout.controls.photo.atsWarning":
 		"A inclusão de foto não é recomendada. Sistemas ATS não a utilizam e, na triagem humana, pode introduzir vieses desnecessários.",
-	"layout.controls.links.useThemeColor": "Usar cor do tema nos links",
+	"layout.controls.links.useThemeColor.label": "Usar cor do tema nos links",
 	"layout.controls.links.useThemeColor.help":
 		"Desative para manter o azul padrão de hiperlink.",
 	"layout.controls.quickSettings": "Configurações Rápidas",
@@ -261,7 +261,7 @@ const brTranslations: Record<string, string> = {
 	"layout.controls.density.spacious": "Espaçoso",
 	"layout.controls.density.help":
 		"Ajusta automaticamente margens, espaçamentos e tamanho de texto",
-	"layout.controls.singlePageMode": "Muito Compacto",
+	"layout.controls.singlePageMode.label": "Muito Compacto",
 	"layout.controls.singlePageMode.help":
 		"Cabe o máximo de informação possível por página",
 	"layout.controls.textAlignment.label": "Alinhamento do Texto",
@@ -270,21 +270,20 @@ const brTranslations: Record<string, string> = {
 	"layout.controls.sections.title": "Títulos das Seções",
 	"layout.controls.sections.titleColor": "Cor dos títulos",
 	"layout.controls.sections.titleSize": "Tamanho dos títulos",
-	"layout.controls.sections.dateFormat": "Formato de Data",
+	"layout.controls.sections.dateFormat.label": "Formato de Data",
 	"layout.controls.sections.dateFormat.help": "Como as datas aparecem no CV",
 	"layout.controls.dateFormat.short": "Curto (01/2020)",
 	"layout.controls.dateFormat.medium": "Médio (Jan 2020)",
 	"layout.controls.dateFormat.long": "Longo (Janeiro 2020)",
 	"layout.controls.reset": "Resetar layout para padrão",
-	"select.language": "Escolher idioma:",
+	"select.language.label": "Escolher idioma:",
 	"language.portuguese": "Português",
 	"language.english": "English",
 	"language.spanish": "Español",
 	"language.brazilianPortuguese": "Português-BR",
 
 	// Notifications
-	"data.loaded": "Dados carregados automaticamente do navegador.",
-	"data.loaded.local": "Dados carregados automaticamente do navegador.",
+	"data.loaded.from.browser": "Dados carregados automaticamente do navegador.",
 	"data.loaded.xml": "Dados importados a partir de XML.",
 	"cv.generated":
 		"Currículo gerado com sucesso! O download deve começar automaticamente.",
@@ -382,7 +381,7 @@ const brTranslations: Record<string, string> = {
 	"field.current": "Atual",
 	"field.technologies": "Tecnologias Utilizadas",
 	"field.activities": "Atividades Desenvolvidas",
-	"field.achievements": "Conquistas",
+	"field.achievements.label": "Conquistas",
 	"field.achievements.helper": "com métricas",
 	"add.experience": "Adicionar Experiência",
 	"experience.title": "Experiência",
@@ -464,7 +463,7 @@ const brTranslations: Record<string, string> = {
 	"placeholder.company": "Ex: Amazon",
 	"placeholder.course": "Ex: Graduação em Engenharia de Software",
 	"placeholder.institution": "Ex: Universidade de São Paulo",
-	"placeholder.certification": "Ex: Certificação AWS Cloud Practitioner",
+	"placeholder.certification.name": "Ex: Certificação AWS Cloud Practitioner",
 	"placeholder.issuer": "Ex: Udemy, Alura, AWS",
 	"placeholder.hours": "Ex: 40 horas",
 	"placeholder.validation.link": "Ex: www.certificate.institution.com/123456",
@@ -555,31 +554,34 @@ const brTranslations: Record<string, string> = {
 		"O currículo gerado por esta aplicação já segue estas boas práticas, mas certifique-se de personalizar o conteúdo de acordo com cada vaga específica.",
 
 	// Tip content
-	"tip.format.simple": "Use um formato simples (sem gráficos nem tabelas)",
+	"tip.format.simple.title":
+		"Use um formato simples (sem gráficos nem tabelas)",
 	"tip.format.simple.desc":
 		"Os sistemas ATS têm dificuldade em ler elementos visuais. Utilize apenas texto com uma estrutura clara.",
-	"tip.keywords": "Use palavras-chave exatas da vaga",
+	"tip.keywords.title": "Use palavras-chave exatas da vaga",
 	"tip.keywords.desc":
 		"Copie os termos usados no anúncio da vaga (tecnologias, funções, competências). O ATS procura correspondências exatas.",
-	"tip.headers": "Evite cabeçalhos personalizados",
+	"tip.headers.title": "Evite cabeçalhos personalizados",
 	"tip.headers.desc":
 		"Use termos comuns como 'Experiência Profissional', 'Educação', 'Competências'.",
-	"tip.format.file": "Salve o currículo em formato .docx ou .pdf (simples)",
+	"tip.format.file.title":
+		"Salve o currículo em formato .docx ou .pdf (simples)",
 	"tip.format.file.desc":
 		"Alguns ATS têm problemas com PDFs mal formatados ou versões antigas do Word.",
-	"tip.acronyms": "Não use siglas sem escrever também o significado",
+	"tip.acronyms.title": "Não use siglas sem escrever também o significado",
 	"tip.acronyms.desc":
 		"Exemplo: escreva 'JavaScript (JS)' ou 'Banco de Dados (BD)' para garantir que seja reconhecido.",
-	"tip.chronological": "Coloque as informações em ordem cronológica inversa",
+	"tip.chronological.title":
+		"Coloque as informações em ordem cronológica inversa",
 	"tip.chronological.desc":
 		"Comece pela experiência mais recente, pois é isso que o ATS e o recrutador querem ver.",
-	"tip.job.titles": "Inclua títulos de cargos comuns",
+	"tip.job.titles.title": "Inclua títulos de cargos comuns",
 	"tip.job.titles.desc":
 		"Use nomes genéricos como 'Desenvolvedor Backend', 'Analista de Sistemas', etc., mesmo que o nome oficial da função fosse diferente.",
-	"tip.spelling": "Evite erros ortográficos",
+	"tip.spelling.title": "Evite erros ortográficos",
 	"tip.spelling.desc":
 		"O ATS pode não reconhecer palavras escritas de forma incorreta, o que pode levar à exclusão do currículo.",
-	"tip.technical.skills": "Inclua uma seção de competências técnicas",
+	"tip.technical.skills.title": "Inclua uma seção de competências técnicas",
 	"tip.technical.skills.desc":
 		"Liste as tecnologias, linguagens e ferramentas que você utilizou (ex: Java, Git, SQL, Docker).",
 

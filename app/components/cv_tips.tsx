@@ -13,47 +13,47 @@ export function CVTips() {
 	const tips = [
 		{
 			id: "format-simple",
-			title: t("tip.format.simple"),
+			title: t("tip.format.simple.title"),
 			description: t("tip.format.simple.desc"),
 		},
 		{
 			id: "keywords",
-			title: t("tip.keywords"),
+			title: t("tip.keywords.title"),
 			description: t("tip.keywords.desc"),
 		},
 		{
 			id: "headers",
-			title: t("tip.headers"),
+			title: t("tip.headers.title"),
 			description: t("tip.headers.desc"),
 		},
 		{
 			id: "format-file",
-			title: t("tip.format.file"),
+			title: t("tip.format.file.title"),
 			description: t("tip.format.file.desc"),
 		},
 		{
 			id: "acronyms",
-			title: t("tip.acronyms"),
+			title: t("tip.acronyms.title"),
 			description: t("tip.acronyms.desc"),
 		},
 		{
 			id: "chronological",
-			title: t("tip.chronological"),
+			title: t("tip.chronological.title"),
 			description: t("tip.chronological.desc"),
 		},
 		{
 			id: "job-titles",
-			title: t("tip.job.titles"),
+			title: t("tip.job.titles.title"),
 			description: t("tip.job.titles.desc"),
 		},
 		{
 			id: "spelling",
-			title: t("tip.spelling"),
+			title: t("tip.spelling.title"),
 			description: t("tip.spelling.desc"),
 		},
 		{
 			id: "technical-skills",
-			title: t("tip.technical.skills"),
+			title: t("tip.technical.skills.title"),
 			description: t("tip.technical.skills.desc"),
 		},
 	];

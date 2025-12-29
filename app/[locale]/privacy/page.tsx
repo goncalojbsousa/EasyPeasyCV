@@ -2,9 +2,9 @@
 
 import { ArrowLeft, Lock, ScrollText, Shield } from "lucide-react";
 import Link from "next/link";
-import { Footer } from "../components/layout/footer";
-import { Navbar } from "../components/layout/navbar";
-import { useLanguage } from "../contexts/LanguageContext";
+import { Footer } from "../../components/layout/footer";
+import { Navbar } from "../../components/layout/navbar";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 /**
  * Privacy Policy page component

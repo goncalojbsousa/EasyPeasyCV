@@ -19,12 +19,12 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Footer } from "./components/layout/footer";
-import { Navbar } from "./components/layout/navbar";
-import { useLanguage } from "./contexts/LanguageContext";
+import { Footer } from "../components/layout/footer";
+import { Navbar } from "../components/layout/navbar";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export default function Home() {
-	const { t } = useLanguage();
+	const { t, language } = useLanguage();
 
 	const previewRef = useRef<HTMLDivElement>(null);
 	const [currentTplIndex, setCurrentTplIndex] = useState(0);
@@ -139,8 +139,9 @@ export default function Home() {
 
 							{/* CTA Buttons */}
 							<div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+								{/* Corrigido para usar locale dinâmico */}
 								<Link
-									href="/builder"
+									href={`/${language}/builder`}
 									className="inline-flex items-center justify-center bg-sky-600 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:bg-sky-700 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900 transition-all transform hover:scale-105"
 								>
 									<Zap className="w-5 h-5 mr-2" />
@@ -513,7 +514,7 @@ export default function Home() {
 
 					<div className="text-center">
 						<Link
-							href="/builder"
+							href={`/${language}/builder`}
 							className="inline-flex items-center justify-center bg-sky-600 text-white px-12 py-5 rounded-xl font-bold text-lg shadow-xl hover:bg-sky-700 hover:shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 transition-all transform hover:scale-105"
 						>
 							<Sparkles className="w-5 h-5 mr-2" />
@@ -643,7 +644,7 @@ export default function Home() {
 					</p>
 
 					<Link
-						href="/builder"
+						href={`/${language}/builder`}
 						className="inline-flex items-center justify-center bg-sky-600 text-white px-10 py-5 rounded-xl font-bold text-lg hover:bg-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900 transition-all shadow-xl hover:shadow-2xl transform hover:scale-105"
 					>
 						<Zap className="w-6 h-6 mr-2" />

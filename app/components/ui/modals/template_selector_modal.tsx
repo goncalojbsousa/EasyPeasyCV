@@ -99,6 +99,18 @@ export function TemplateSelectorModal({
 												className="object-cover transition-transform duration-300 group-hover:scale-[1.03] rounded-t-2xl"
 												sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
 											/>
+											<button
+												type="button"
+												aria-label={`Preview ${t(data.nameKey)}`}
+												onClick={(e) => {
+													e.stopPropagation();
+													setPreview(templateKey);
+												}}
+												className="absolute top-3 right-3 z-10 bg-white dark:bg-zinc-800 rounded-full p-2 shadow-md border border-gray-200 dark:border-zinc-700 hover:bg-sky-100 dark:hover:bg-sky-900/40 transition-colors"
+												style={{ pointerEvents: "auto" }}
+											>
+												<Eye className="w-5 h-5 text-sky-600 dark:text-sky-400" />
+											</button>
 										</div>
 										<div className="px-4 pt-4">
 											<h4 className="font-semibold text-base text-gray-900 dark:text-white">
@@ -114,18 +126,6 @@ export function TemplateSelectorModal({
 											</div>
 										)}
 									</button>
-									<button
-										type="button"
-										aria-label={`Preview ${t(data.nameKey)}`}
-										onClick={(e) => {
-											e.stopPropagation();
-											setPreview(templateKey);
-										}}
-										className="absolute top-3 right-3 z-10 bg-white dark:bg-zinc-800 rounded-full p-2 shadow-md border border-gray-200 dark:border-zinc-700 hover:bg-sky-100 dark:hover:bg-sky-900 transition-colors"
-										style={{ pointerEvents: "auto" }}
-									>
-										<Eye className="w-5 h-5 text-sky-600 dark:text-sky-400" />
-									</button>
 								</div>
 							);
 						})}
@@ -135,7 +135,7 @@ export function TemplateSelectorModal({
 				{/* Fullscreen preview modal */}
 				{preview && (
 					<div
-						className="fixed inset-0 z-[60] flex items-center justify-center p-0"
+						className="fixed inset-0 z-[60] flex items-center justify-center p-4"
 						role="dialog"
 						aria-modal="true"
 					>
@@ -145,7 +145,7 @@ export function TemplateSelectorModal({
 							className="absolute inset-0 bg-black/70"
 							aria-label="Close preview"
 						/>
-						<div className="relative bg-white dark:bg-zinc-900 shadow-2xl w-screen h-screen overflow-hidden z-[61]">
+						<div className="relative bg-white dark:bg-zinc-900 rounded-lg shadow-2xl max-w-6xl w-full max-h-[95vh] overflow-hidden z-[61]">
 							<button
 								type="button"
 								onClick={() => setPreview(null)}
@@ -154,13 +154,13 @@ export function TemplateSelectorModal({
 							>
 								<X className="w-5 h-5" />
 							</button>
-							<div className="w-full h-full flex items-center justify-center bg-gray-50 dark:bg-zinc-800 relative">
+							<div className="w-full h-full flex items-center justify-center bg-gray-50 dark:bg-zinc-800 relative min-h-[400px]">
 								<Image
 									src={templatePreviews[preview].img}
 									alt={`${t(templatePreviews[preview].nameKey)} full preview`}
 									fill
 									className="object-contain"
-									sizes="100vw"
+									sizes="95vw"
 								/>
 							</div>
 						</div>

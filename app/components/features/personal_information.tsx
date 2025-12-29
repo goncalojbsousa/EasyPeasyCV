@@ -654,7 +654,6 @@ export function PersonalInformation({
 								{t("field.link.type")}
 							</label>
 							<SelectMenu
-								id="linkTypeSelect"
 								options={linkTypeOptions}
 								value={newLinkType}
 								placeholder={t("field.link.type")}

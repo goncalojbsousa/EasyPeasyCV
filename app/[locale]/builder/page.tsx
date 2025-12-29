@@ -2,26 +2,26 @@
 
 import { Plus } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AtsExplanation } from "../components/ats_explanation";
-import { CVTips } from "../components/cv_tips";
-import { AcademicEducation } from "../components/features/academic_education";
-import { Certifications } from "../components/features/certifications";
-import { CustomSectionCard } from "../components/features/custom_sections";
-import { Languages } from "../components/features/languages";
-import { PersonalInformation } from "../components/features/personal_information";
-import { ProfessionalExperience } from "../components/features/professional_experience";
-import { ProfessionalSummary } from "../components/features/professional_summary";
-import { Projects } from "../components/features/projects";
-import { TechnicalSkills } from "../components/features/technical_skills";
-import { VolunteerWork } from "../components/features/volunteer";
-import { JobAnalysis } from "../components/job_analysis";
-import { Footer } from "../components/layout/footer";
-import { Navbar } from "../components/layout/navbar";
-import { LivePdfPane } from "../components/live_pdf_pane";
-import { PdfPreview } from "../components/pdf/pdf_preview";
-import { BottomActionBar } from "../components/ui/bottom_action_bar";
-import { FloatingActionBar } from "../components/ui/floating_action_bar";
-import { useLanguage } from "../contexts/LanguageContext";
+import { AtsExplanation } from "../../components/ats_explanation";
+import { CVTips } from "../../components/cv_tips";
+import { AcademicEducation } from "../../components/features/academic_education";
+import { Certifications } from "../../components/features/certifications";
+import { CustomSectionCard } from "../../components/features/custom_sections";
+import { Languages } from "../../components/features/languages";
+import { PersonalInformation } from "../../components/features/personal_information";
+import { ProfessionalExperience } from "../../components/features/professional_experience";
+import { ProfessionalSummary } from "../../components/features/professional_summary";
+import { Projects } from "../../components/features/projects";
+import { TechnicalSkills } from "../../components/features/technical_skills";
+import { VolunteerWork } from "../../components/features/volunteer";
+import { JobAnalysis } from "../../components/job_analysis";
+import { Footer } from "../../components/layout/footer";
+import { Navbar } from "../../components/layout/navbar";
+import { LivePdfPane } from "../../components/live_pdf_pane";
+import { PdfPreview } from "../../components/pdf/pdf_preview";
+import { BottomActionBar } from "../../components/ui/bottom_action_bar";
+import { FloatingActionBar } from "../../components/ui/floating_action_bar";
+import { useLanguage } from "../../contexts/LanguageContext";
 import type {
 	Certification,
 	CustomSection,
@@ -36,8 +36,8 @@ import type {
 	Project,
 	SectionKey,
 	Volunteer,
-} from "../types/cv";
-import { cvDataToXml, xmlToCvData } from "../utils/xml";
+} from "../../types/cv";
+import { cvDataToXml, xmlToCvData } from "../../utils/xml";
 
 type CvDataWithSettings = CvData & { settings?: CvRenderSettings };
 
@@ -418,7 +418,7 @@ export default function Builder() {
 	useEffect(() => {
 		const preloadPDF = async () => {
 			try {
-				await import("../components/pdf/pdf_download_button");
+				await import("../../components/pdf/pdf_download_button");
 			} catch {
 				// Silently handle PDF component preload failure
 			}
@@ -1066,7 +1066,7 @@ export default function Builder() {
 			// Mobile: Generate PDF and open directly
 			try {
 				const { pdf } = await import("@react-pdf/renderer");
-				const { CvDocument } = await import("../components/cv_document");
+				const { CvDocument } = await import("../../components/cv_document");
 
 				const pdfDoc = (
 					<CvDocument
@@ -1311,7 +1311,7 @@ export default function Builder() {
 								<p className="text-green-700 dark:text-green-400 text-sm">
 									{dataLoadedSource === "xml"
 										? t("data.loaded.xml")
-										: t("data.loaded.local")}
+										: t("data.loaded.from.browser")}
 								</p>
 							</div>
 						)}

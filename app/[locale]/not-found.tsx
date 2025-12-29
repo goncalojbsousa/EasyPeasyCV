@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Footer } from "./components/layout/footer";
-import { Navbar } from "./components/layout/navbar";
-import { useLanguage } from "./contexts/LanguageContext";
+import { Footer } from "../components/layout/footer";
+import { Navbar } from "../components/layout/navbar";
+import { useLanguage } from "../contexts/LanguageContext";
 
 /**
  * 404 Not Found page component

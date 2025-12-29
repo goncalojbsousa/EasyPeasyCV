@@ -280,7 +280,7 @@ export function ProfessionalExperience({
 
 									{/* Achievements and results field */}
 									<FormField
-										label={t("field.achievements")}
+										label={t("field.achievements.label")}
 										helperText={t("field.achievements.helper")}
 									>
 										<AutoResizeTextarea

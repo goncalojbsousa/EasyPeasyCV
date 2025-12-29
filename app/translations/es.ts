@@ -428,7 +428,7 @@ const esTranslations: Record<string, string> = {
 	"pdf.preview.error.loading": "Error al cargar PDF",
 	"layout.menu.title": "Diseño",
 	"layout.menu.controls": "Controles de Diseño",
-	"layout.controls.font": "Fuente",
+	"layout.controls.font.label": "Fuente",
 	"layout.controls.font.custom": "Personalizada",
 	"layout.controls.textScale.label": "Escala de texto",
 	"layout.controls.margins.title": "Márgenes",
@@ -457,12 +457,12 @@ const esTranslations: Record<string, string> = {
 	"layout.controls.header.titlePosition.below": "Debajo del nombre",
 	"layout.controls.header.divider.title": "Línea divisoria",
 	"layout.controls.header.divider.thickness": "Grosor",
-	"layout.controls.header.divider.style": "Estilo",
+	"layout.controls.header.divider.style.label": "Estilo",
 	"layout.controls.header.divider.style.solid": "Sólida",
 	"layout.controls.header.divider.style.dashed": "Discontinua",
 	"layout.controls.header.icons": "Íconos de Contacto",
 	"layout.controls.header.iconSpacing": "Espaciado de íconos",
-	"layout.controls.header.alignment": "Alineación",
+	"layout.controls.header.alignment.label": "Alineación",
 	"layout.controls.header.alignment.left": "Izquierda",
 	"layout.controls.header.alignment.center": "Centro",
 	"layout.controls.header.alignment.right": "Derecha",
@@ -475,7 +475,7 @@ const esTranslations: Record<string, string> = {
 	"layout.controls.photo.choose": "Elegir foto",
 	"layout.controls.photo.atsWarning":
 		"Aviso: no se recomienda usar foto. Los sistemas ATS ignoran imágenes y, en la etapa humana, la foto puede generar sesgos en tu contra.",
-	"layout.controls.links.useThemeColor":
+	"layout.controls.links.useThemeColor.label":
 		"Usar el color del tema en los enlaces",
 	"layout.controls.links.useThemeColor.help":
 		"Desactiva para mantener el azul estándar de hipervínculo.",
@@ -486,7 +486,7 @@ const esTranslations: Record<string, string> = {
 	"layout.controls.density.spacious": "Espacioso",
 	"layout.controls.density.help":
 		"Ajusta automáticamente márgenes, espaciado y tamaño de texto",
-	"layout.controls.singlePageMode": "Súper Compacto",
+	"layout.controls.singlePageMode.label": "Súper Compacto",
 	"layout.controls.singlePageMode.help":
 		"Ajusta la máxima información posible por página",
 	"layout.controls.textAlignment.label": "Alineación del Texto",
@@ -495,22 +495,21 @@ const esTranslations: Record<string, string> = {
 	"layout.controls.sections.title": "Títulos de Sección",
 	"layout.controls.sections.titleColor": "Color de los títulos",
 	"layout.controls.sections.titleSize": "Tamaño de los títulos",
-	"layout.controls.sections.dateFormat": "Formato de Fecha",
+	"layout.controls.sections.dateFormat.label": "Formato de Fecha",
 	"layout.controls.sections.dateFormat.help":
 		"Cómo aparecen las fechas en el CV",
 	"layout.controls.dateFormat.short": "Corto (01/2020)",
 	"layout.controls.dateFormat.medium": "Medio (Ene 2020)",
 	"layout.controls.dateFormat.long": "Largo (Enero 2020)",
 	"layout.controls.reset": "Restablecer diseño a valores predeterminados",
-	"select.language": "Elegir idioma:",
+	"select.language.label": "Elegir idioma:",
 	"language.portuguese": "Português",
 	"language.english": "English",
 	"language.spanish": "Español",
 	"language.brazilianPortuguese": "Português-BR",
 
 	// Notifications
-	"data.loaded": "Datos cargados automáticamente del navegador.",
-	"data.loaded.local": "Datos cargados automáticamente del navegador.",
+	"data.loaded.from.browser": "Datos cargados automáticamente del navegador.",
 	"data.loaded.xml": "Datos importados desde XML.",
 	"cv.generated":
 		"¡Currículum generado con éxito! La descarga debe comenzar automáticamente.",
@@ -586,7 +585,7 @@ const esTranslations: Record<string, string> = {
 	"field.current": "Actual",
 	"field.technologies": "Tecnologías Utilizadas",
 	"field.activities": "Actividades Desarrolladas",
-	"field.achievements": "Logros",
+	"field.achievements.label": "Logros",
 	"field.achievements.helper": "con métricas",
 	"add.experience": "Añadir Experiencia",
 	"experience.title": "Experiencia",
@@ -709,7 +708,7 @@ const esTranslations: Record<string, string> = {
 	"placeholder.company": "Ej: Amazon",
 	"placeholder.course": "Ej: Licenciatura en Ingeniería Informática",
 	"placeholder.institution": "Ej: Universidad de Madrid",
-	"placeholder.certification": "Ej: Certificación AWS Cloud Practitioner",
+	"placeholder.certification.name": "Ej: Certificación AWS Cloud Practitioner",
 	"placeholder.issuer": "Ej: Udemy, Alura, AWS",
 	"placeholder.hours": "Ej: 40 horas",
 	"placeholder.validation.link": "Ej: www.certificate.institution.com/123456",
@@ -800,31 +799,33 @@ const esTranslations: Record<string, string> = {
 		"El currículum generado por esta aplicación ya sigue estas buenas prácticas, pero asegúrate de personalizar el contenido de acuerdo con cada oferta específica.",
 
 	// Tip content
-	"tip.format.simple": "Usa un formato simple (sin gráficos ni tablas)",
+	"tip.format.simple.title": "Usa un formato simple (sin gráficos ni tablas)",
 	"tip.format.simple.desc":
 		"Los sistemas ATS tienen dificultad para leer elementos visuales. Utiliza solo texto con una estructura clara.",
-	"tip.keywords": "Utiliza palabras clave exactas del anuncio",
+	"tip.keywords.title": "Utiliza palabras clave exactas del anuncio",
 	"tip.keywords.desc":
 		"Copia los términos usados en el anuncio de la oferta (tecnologías, funciones, competencias). El ATS busca correspondencias exactas.",
-	"tip.headers": "Evita encabezados personalizados",
+	"tip.headers.title": "Evita encabezados personalizados",
 	"tip.headers.desc":
 		"Utiliza términos comunes como 'Experiencia Profesional', 'Educación', 'Competencias'.",
-	"tip.format.file": "Guarda el currículum en formato .docx o .pdf (simple)",
+	"tip.format.file.title":
+		"Guarda el currículum en formato .docx o .pdf (simple)",
 	"tip.format.file.desc":
 		"Algunos ATS tienen problemas con PDFs mal formateados o versiones antiguas de Word.",
-	"tip.acronyms": "No uses siglas sin escribir también el significado",
+	"tip.acronyms.title": "No uses siglas sin escribir también el significado",
 	"tip.acronyms.desc":
 		"Ejemplo: escribe 'JavaScript (JS)' o 'Base de Datos (BD)' para garantizar que sea reconocido.",
-	"tip.chronological": "Coloca la información por orden cronológico inverso",
+	"tip.chronological.title":
+		"Coloca la información por orden cronológico inverso",
 	"tip.chronological.desc":
 		"Empieza por la experiencia más reciente, pues es eso lo que el ATS y el reclutador quieren ver.",
-	"tip.job.titles": "Incluye títulos de cargos comunes",
+	"tip.job.titles.title": "Incluye títulos de cargos comunes",
 	"tip.job.titles.desc":
 		"Utiliza nombres genéricos como 'Desarrollador Backend', 'Analista de Sistemas', etc., aunque el nombre oficial de la función fuera diferente.",
-	"tip.spelling": "Evita errores ortográficos",
+	"tip.spelling.title": "Evita errores ortográficos",
 	"tip.spelling.desc":
 		"El ATS puede no reconocer palabras mal escritas, lo que puede llevar a la exclusión del currículum.",
-	"tip.technical.skills": "Incluye una sección de competencias técnicas",
+	"tip.technical.skills.title": "Incluye una sección de competencias técnicas",
 	"tip.technical.skills.desc":
 		"Lista las tecnologías, lenguajes y herramientas que utilizaste (ej: Java, Git, SQL, Docker).",
 
@@ -849,15 +850,11 @@ const esTranslations: Record<string, string> = {
 	// Actions
 	actions: "Acciones",
 	"cv.actions": "Opciones del CV",
-	"extra.features": "Funcionalidades Extra",
 	"extra.features.description": "Herramientas adicionales para mejorar tu CV",
-	"extra.features.job.analysis": "Análisis de Vacantes",
 	"extra.features.job.analysis.description":
 		"Analiza ofertas de empleo para optimizar tu CV",
-	"extra.features.ats.tips": "Consejos ATS",
 	"extra.features.ats.tips.description":
 		"Aprende a optimizar tu CV para sistemas ATS",
-	"extra.features.ats.explanation": "Explicación ATS",
 	"extra.features.ats.explanation.description":
 		"Comprende cómo funcionan los sistemas ATS",
 

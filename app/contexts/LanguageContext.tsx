@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale } from "next-intl";
 import {
 	createContext,
 	type ReactNode,
@@ -7,6 +8,7 @@ import {
 	useEffect,
 	useState,
 } from "react";
+import { usePathname, useRouter } from "../../navigation";
 import brTranslations from "../translations/br";
 import enTranslations from "../translations/en";
 import esTranslations from "../translations/es";
@@ -54,45 +56,17 @@ interface LanguageProviderProps {
  * Loads preferences from localStorage and detects browser language if not set.
  */
 export function LanguageProvider({ children }: LanguageProviderProps) {
-	const [language, setLanguageState] = useState<Language>("pt");
+	const currentLocale = useLocale() as Language;
+	const router = useRouter();
+	const pathname = usePathname();
+
 	const [cvType, setCVTypeState] = useState<CVType>("development");
 
-	// Effect: Load language and CV type from localStorage on initialization.
-	// If not set, detect browser language. Handles errors gracefully.
+	// Effect: Load CV type from localStorage on initialization.
 	useEffect(() => {
 		try {
 			// Only run in browser
 			if (typeof window !== "undefined") {
-				const savedLanguage = localStorage.getItem(
-					"cv-builder-language",
-				) as Language;
-				if (
-					savedLanguage &&
-					(savedLanguage === "pt" ||
-						savedLanguage === "en" ||
-						savedLanguage === "es" ||
-						savedLanguage === "br")
-				) {
-					setLanguageState(savedLanguage);
-				} else {
-					// Detect browser language if not set
-					const browserLanguage = (
-						navigator.language ||
-						navigator.languages?.[0] ||
-						"en"
-					).toLowerCase();
-					let detectedLanguage: Language = "en";
-					if (browserLanguage.startsWith("pt-br") || browserLanguage === "br") {
-						detectedLanguage = "br";
-					} else if (browserLanguage.startsWith("pt")) {
-						detectedLanguage = "pt";
-					} else if (browserLanguage.startsWith("es")) {
-						detectedLanguage = "es";
-					}
-					setLanguageState(detectedLanguage);
-					localStorage.setItem("cv-builder-language", detectedLanguage);
-				}
-
 				const savedCVType = localStorage.getItem("cv-builder-type") as CVType;
 				if (
 					savedCVType &&
@@ -113,14 +87,14 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 				}
 			}
 		} catch (error) {
-			console.error("Error initializing language:", error);
+			console.error("Error initializing settings:", error);
 		}
 	}, []);
 
-	// Change language and persist to localStorage
+	// Change language by redirecting to the new locale route
 	const setLanguage = (lang: Language) => {
-		setLanguageState(lang);
 		localStorage.setItem("cv-builder-language", lang);
+		router.replace(pathname, { locale: lang });
 	};
 
 	// Change CV type and persist to localStorage
@@ -136,11 +110,11 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 	 */
 	const t = (key: string): string => {
 		let translations: Record<string, string>;
-		if (language === "pt") {
+		if (currentLocale === "pt") {
 			translations = ptTranslations;
-		} else if (language === "br") {
+		} else if (currentLocale === "br") {
 			translations = brTranslations;
-		} else if (language === "es") {
+		} else if (currentLocale === "es") {
 			translations = esTranslations;
 		} else {
 			translations = enTranslations;
@@ -162,7 +136,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 
 	return (
 		<LanguageContext.Provider
-			value={{ language, setLanguage, cvType, setCVType, t }}
+			value={{ language: currentLocale, setLanguage, cvType, setCVType, t }}
 		>
 			{children}
 		</LanguageContext.Provider>

@@ -138,7 +138,7 @@ export function LayoutControls({
 		<div className="px-4 py-3 space-y-3">
 			<div>
 				<label htmlFor="font-select" className="block text-xs font-medium mb-1">
-					{t("layout.controls.font")}
+					{t("layout.controls.font.label")}
 				</label>
 				<SelectMenu
 					className="w-full"
@@ -384,7 +384,7 @@ export function LayoutControls({
 							}
 							className="rounded"
 						/>
-						{t("layout.controls.singlePageMode")}
+						{t("layout.controls.singlePageMode.label")}
 					</label>
 					<div className="text-[10px] text-gray-500 dark:text-gray-400 mt-1 ml-5">
 						{t("layout.controls.singlePageMode.help")}
@@ -534,7 +534,7 @@ export function LayoutControls({
 							className="w-full min-w-0"
 							options={dividerStyleOptions}
 							value={settings?.header.dividerStyle || "solid"}
-							placeholder={t("layout.controls.header.divider.style")}
+							placeholder={t("layout.controls.header.divider.style.label")}
 							onSelect={(value) =>
 								onSettingsChange &&
 								settings &&
@@ -576,7 +576,7 @@ export function LayoutControls({
 						}
 						className="rounded"
 					/>
-					<span>{t("layout.controls.links.useThemeColor")}</span>
+					<span>{t("layout.controls.links.useThemeColor.label")}</span>
 				</label>
 				<div className="text-[10px] text-gray-500 dark:text-gray-400 mt-1">
 					{t("layout.controls.links.useThemeColor.help")}
@@ -763,13 +763,13 @@ export function LayoutControls({
 							htmlFor="date-format-select"
 							className="block text-xs font-medium mb-1"
 						>
-							{t("layout.controls.sections.dateFormat")}
+							{t("layout.controls.sections.dateFormat.label")}
 						</label>
 						<SelectMenu
 							className="w-full"
 							options={dateFormatOptions}
 							value={settings?.sections?.dateFormat || "medium"}
-							placeholder={t("layout.controls.sections.dateFormat")}
+							placeholder={t("layout.controls.sections.dateFormat.label")}
 							onSelect={(value) =>
 								onSettingsChange &&
 								settings &&

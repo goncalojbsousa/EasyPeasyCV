@@ -9,12 +9,12 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../contexts/LanguageContext";
 import type { Certification } from "../types/cv";
-import { DragHandle, SortableList } from "./dnd/sortable-list";
-import { AutoResizeTextarea } from "./ui/auto-resize-textarea";
-import { EmptyState } from "./ui/empty-state";
-import { FormField } from "./ui/form-field";
-import { FormSection } from "./ui/form-section";
-import { IconButton } from "./ui/icon-button";
+import SortableList, { DragHandle } from "./dnd/sortable_list";
+import { AutoResizeTextarea } from "./ui/auto_resize_textarea";
+import { EmptyState } from "./ui/empty_state";
+import { FormField } from "./ui/form_field";
+import { FormSection } from "./ui/form_section";
+import { IconButton } from "./ui/icon_button";
 import { Icons } from "./ui/icons";
 
 /**
@@ -498,7 +498,7 @@ export function Certifications({
 												className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
 												placeholder={t("placeholder.issuer")}
 												value={cert.issuer}
-												onChange={(e) =>
+												onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
 													onCertificationChange(idx, "issuer", e.target.value)
 												}
 											/>

@@ -255,7 +255,6 @@ export function DesktopActionsCard({
 									{t("color.selector")}
 								</label>
 								<ColorSelector
-									id="colorSelector"
 									selectedColor={selectedColor}
 									onColorChange={onColorChange}
 									show={true}
