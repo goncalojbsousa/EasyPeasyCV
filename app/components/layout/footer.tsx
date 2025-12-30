@@ -10,7 +10,7 @@ import { useLanguage } from "../../contexts/LanguageContext";
  * @returns JSX element representing the application footer
  */
 export function Footer() {
-	const { t, locale } = useLanguage();
+	const { t, language } = useLanguage();
 
 	return (
 		<footer className="bg-white dark:bg-zinc-900 border-t border-gray-200 dark:border-zinc-700 py-6 transition-colors duration-300">
@@ -48,13 +48,13 @@ export function Footer() {
 					{/* Privacy and Terms links - Right */}
 					<div className="flex items-center gap-4">
 						<Link
-							href={`/${locale}/privacy`}
+							href={`/${language}/privacy`}
 							className="text-gray-600 dark:text-gray-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-300 text-sm"
 						>
 							{t("footer.privacy")}
 						</Link>
 						<Link
-							href={`/${locale}/terms`}
+							href={`/${language}/terms`}
 							className="text-gray-600 dark:text-gray-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-300 text-sm"
 						>
 							{t("footer.terms")}

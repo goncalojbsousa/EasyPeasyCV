@@ -11,7 +11,7 @@ import { useLanguage } from "../../contexts/LanguageContext";
  * Styled to align with the main product look while remaining formal.
  */
 export default function TermsOfService() {
-	const { t, locale } = useLanguage();
+	const { t, language } = useLanguage();
 
 	return (
 		<div className="relative min-h-screen bg-white dark:bg-zinc-900 transition-colors overflow-x-hidden">
@@ -27,7 +27,7 @@ export default function TermsOfService() {
 				<div className="flex flex-col gap-4 mb-10">
 					<div className="flex flex-wrap items-center gap-3 text-sm text-sky-700 dark:text-sky-300">
 						<Link
-							href={`/${locale}`}
+							href={`/${language}`}
 							className="inline-flex items-center gap-2 rounded-full border border-sky-100/70 dark:border-sky-900/40 bg-white/70 dark:bg-zinc-900/70 px-4 py-2 font-semibold text-sky-700 dark:text-sky-200 shadow-sm backdrop-blur hover:border-sky-300 dark:hover:border-sky-700 transition-colors"
 						>
 							<ArrowLeft className="h-4 w-4" />
@@ -178,7 +178,7 @@ export default function TermsOfService() {
 							<p className="text-gray-600 dark:text-gray-300 leading-relaxed">
 								{t("terms.privacy.policy")}{" "}
 								<Link
-									href={`/${locale}/privacy`}
+									href={`/${language}/privacy`}
 									className="text-sky-700 dark:text-sky-300 hover:underline"
 								>
 									{t("terms.privacy.link")}
@@ -293,7 +293,7 @@ export default function TermsOfService() {
 								{t("terms.privacy.description")}
 							</p>
 							<Link
-								href={`/${locale}/privacy`}
+								href={`/${language}/privacy`}
 								className="inline-flex items-center gap-2 text-sm font-semibold text-sky-700 dark:text-sky-300 hover:underline"
 							>
 								{t("terms.privacy.link")}
