@@ -11,7 +11,7 @@ import { useLanguage } from "../../contexts/LanguageContext";
  * Styled to match the main product visuals while keeping a formal tone.
  */
 export default function PrivacyPolicy() {
-	const { t } = useLanguage();
+	const { t, locale } = useLanguage();
 
 	return (
 		<div className="relative min-h-screen bg-white dark:bg-zinc-900 transition-colors overflow-x-hidden">
@@ -27,7 +27,7 @@ export default function PrivacyPolicy() {
 				<div className="flex flex-col gap-4 mb-10">
 					<div className="flex flex-wrap items-center gap-3 text-sm text-sky-700 dark:text-sky-300">
 						<Link
-							href="/"
+							href={`/${locale}`}
 							className="inline-flex items-center gap-2 rounded-full border border-sky-100/70 dark:border-sky-900/40 bg-white/70 dark:bg-zinc-900/70 px-4 py-2 font-semibold text-sky-700 dark:text-sky-200 shadow-sm backdrop-blur hover:border-sky-300 dark:hover:border-sky-700 transition-colors"
 						>
 							<ArrowLeft className="h-4 w-4" />
@@ -200,7 +200,7 @@ export default function PrivacyPolicy() {
 								{t("privacy.local.storage.description")}
 							</p>
 							<Link
-								href="/terms"
+								href={`/${locale}/terms`}
 								className="inline-flex items-center gap-2 text-sm font-semibold text-sky-700 dark:text-sky-300 hover:underline"
 							>
 								{t("terms.title")}
