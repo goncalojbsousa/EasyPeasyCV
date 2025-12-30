@@ -88,7 +88,7 @@ export function FloatingActionBar({
 	const [selectedLang, setSelectedLang] = useState<LanguageCode>(
 		(language as LanguageCode) || "en",
 	);
-	const pdfButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+	const pdfButtonRefs = useRef<Record<string, { generatePdf: () => Promise<void> } | null>>({});
 	const activeColor = selectedColor ?? color;
 
 	const languageOptions: SelectOption<LanguageCode>[] = useMemo(
@@ -117,12 +117,13 @@ export function FloatingActionBar({
 		[t],
 	);
 
-	const handleSelectLanguage = (lang: LanguageCode) => {
+	const handleSelectLanguage = async (lang: LanguageCode) => {
 		if (!onGeneratePDF()) return;
 		setSelectedLang(lang);
-		setTimeout(() => {
-			pdfButtonRefs.current[lang]?.click();
-		}, 50);
+		// Chama diretamente o método generatePdf exposto pelo PdfDownloadButton
+		if (pdfButtonRefs.current[lang] && typeof pdfButtonRefs.current[lang]?.generatePdf === 'function') {
+			await pdfButtonRefs.current[lang]!.generatePdf();
+		}
 	};
 
 	const flagIcons: Record<string, JSX.Element> = {
@@ -286,41 +287,34 @@ export function FloatingActionBar({
 							renderTriggerLabel={() => <Download className="w-5 h-5" />}
 						/>
 
-						<div className="hidden">
+						<div style={{ display: 'none' }}>
 							{languageOptions.map((lang) => (
-								<div
+								<PdfDownloadButton
 									key={lang.value}
-									ref={(el) => {
-										if (!el) return;
-										const btn = el.querySelector("button");
-										if (btn) pdfButtonRefs.current[lang.value] = btn;
+									ref={(ref) => {
+										if (ref) pdfButtonRefs.current[lang.value] = ref;
 									}}
-								>
-									<PdfDownloadButton
-										personalInfo={personalInfo}
-										links={links}
-										resume={resume}
-										experiences={experiences}
-										education={education}
-										skills={skills}
-										languages={languages}
-										certifications={certifications}
-										projects={projects}
-										volunteers={volunteers}
-										customSections={customSections}
-										lang={lang.value}
-										template={template}
-										color={activeColor}
-										settings={settings}
-										sectionOrder={sectionOrder}
-										onPdfGenerated={() => {
-											setShowThankYouModal(true);
-											onShowSuccessMessage();
-										}}
-									>
-										Generate
-									</PdfDownloadButton>
-								</div>
+									personalInfo={personalInfo}
+									links={links}
+									resume={resume}
+									experiences={experiences}
+									education={education}
+									skills={skills}
+									languages={languages}
+									certifications={certifications}
+									projects={projects}
+									volunteers={volunteers}
+									customSections={customSections}
+									lang={lang.value}
+									template={template}
+									color={activeColor}
+									settings={settings}
+									sectionOrder={sectionOrder}
+									onPdfGenerated={() => {
+										setShowThankYouModal(true);
+										onShowSuccessMessage();
+									}}
+								/>
 							))}
 						</div>
 
