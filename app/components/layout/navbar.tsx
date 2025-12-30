@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { ThemeToggle } from "../theme-toggle";
 import { LanguageSelector } from "../ui/language_selector";
+import { Github, Heart } from "lucide-react";
 
 /**
  * Navbar component
@@ -28,7 +29,7 @@ export function Navbar() {
 							className="w-10 h-10 object-contain"
 							priority
 						/>
-						<div>
+						<div className="hidden md:block">
 							<h1 className="text-2xl font-bold text-sky-600">
 								{t("app.title")}
 							</h1>
@@ -37,6 +38,24 @@ export function Navbar() {
 				</div>
 				<div className="flex items-center gap-3">
 					<LanguageSelector />
+					<a
+						href="https://ko-fi.com/easypeasycv"
+						target="_blank"
+						rel="noopener noreferrer"
+						className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-gray-600 dark:text-gray-400 hover:text-sky-600 dark:hover:text-sky-400 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900"
+						title="Support on Ko-fi"
+					>
+						<Heart className="w-5 h-5" fill="currentColor" />
+					</a>
+					<a
+						href="https://github.com/goncalojbsousa/cv-builder"
+						target="_blank"
+						rel="noopener noreferrer"
+						className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900"
+						title="GitHub Repository"
+					>
+						<Github className="w-5 h-5" fill="currentColor" />
+					</a>
 					<div className="inline-flex h-10 w-10 items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900">
 						<ThemeToggle />
 					</div>
