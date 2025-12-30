@@ -23,7 +23,7 @@ export default function PrivacyPolicy() {
 
 			<Navbar />
 
-			<main className="relative max-w-6xl mx-auto pt-32 pb-20 px-4 sm:px-6">
+			<main className="relative max-w-6xl mx-auto pt-24 pb-20 px-4 sm:px-6">
 				<div className="flex flex-col gap-4 mb-10">
 					<div className="flex flex-wrap items-center gap-3 text-sm text-sky-700 dark:text-sky-300">
 						<Link

@@ -94,7 +94,7 @@ export default function Home() {
 			<Navbar />
 
 			{/* Hero Section - Impactful and conversion-focused */}
-			<section className="relative pt-32 pb-20 px-4 sm:px-6 overflow-hidden">
+			<section className="relative pt-24 pb-20 px-4 sm:px-6 overflow-hidden">
 				{/* Background decoration */}
 				<div className="absolute inset-0 bg-gradient-to-br from-sky-50 via-white to-white dark:from-zinc-900 dark:via-zinc-900 dark:to-zinc-800 -z-10" />
 				<div className="absolute top-20 right-0 w-96 h-96 bg-sky-200/30 dark:bg-sky-900/10 rounded-full blur-3xl -z-10" />

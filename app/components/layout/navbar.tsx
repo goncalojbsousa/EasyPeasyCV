@@ -32,9 +32,6 @@ export function Navbar() {
 							<h1 className="text-2xl font-bold text-sky-600">
 								{t("app.title")}
 							</h1>
-							<p className="text-sm text-gray-600 dark:text-gray-400">
-								{t("app.subtitle")}
-							</p>
 						</div>
 					</Link>
 				</div>

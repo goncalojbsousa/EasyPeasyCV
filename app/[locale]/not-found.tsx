@@ -19,7 +19,7 @@ export default function NotFound() {
 			<Navbar />
 
 			{/* Main content */}
-			<div className="flex-1 max-w-7xl mx-auto pt-40 pb-24 px-4 sm:px-6">
+			<div className="flex-1 max-w-7xl mx-auto pt-32 pb-24 px-4 sm:px-6">
 				<div className="text-center">
 					{/* 404 Number */}
 					<div className="text-9xl font-bold text-blue-600 dark:text-blue-400 mb-8">

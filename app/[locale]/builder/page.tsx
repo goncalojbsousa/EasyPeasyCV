@@ -1301,7 +1301,7 @@ export default function Builder() {
 			<Navbar />
 
 			{/* Main content area */}
-			<div className="w-full max-w-[1600px] 2xl:max-w-[1800px] mx-auto pt-28 pb-24 px-4 sm:px-6">
+			<div className="w-full max-w-[1600px] 2xl:max-w-[1800px] mx-auto pt-24 pb-24 px-4 sm:px-6">
 				{/* Form + Live preview grid */}
 				<div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
 					<div className="lg:col-span-6 flex flex-col gap-6 sm:gap-8">
@@ -1564,7 +1564,7 @@ export default function Builder() {
 
 					{/* Live PDF Preview (desktop only) */}
 					<div className="hidden lg:block lg:col-span-6">
-						<div className="sticky top-28 h-[calc(100vh-7rem)]">
+						<div className="sticky top-24 h-[calc(100vh-7rem)]">
 							<LivePdfPane
 								personalInfo={personalInfo}
 								links={links}
