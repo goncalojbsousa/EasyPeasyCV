@@ -375,7 +375,7 @@ export function DesktopActionsCard({
 											}}
 										>
 											<div className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-zinc-700">
-												{t("select.language")}
+												{t("select.language.label")}
 											</div>
 											<div className="py-1 flex flex-col">
 												<PdfDownloadButton

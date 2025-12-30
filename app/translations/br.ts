@@ -276,7 +276,6 @@ const brTranslations: Record<string, string> = {
 	"layout.controls.dateFormat.medium": "Médio (Jan 2020)",
 	"layout.controls.dateFormat.long": "Longo (Janeiro 2020)",
 	"layout.controls.reset": "Resetar layout para padrão",
-	"select.language.label": "Escolher idioma:",
 	"language.portuguese": "Português",
 	"language.english": "English",
 	"language.spanish": "Español",
@@ -497,6 +496,7 @@ const brTranslations: Record<string, string> = {
 	"select.date": "Selecionar data",
 	"select.education.type": "Selecione",
 	"select.education.status": "Selecione",
+	"select.language.label": "Escolher idioma:",
 	"select.language.level": "Selecione",
 
 	// Link types

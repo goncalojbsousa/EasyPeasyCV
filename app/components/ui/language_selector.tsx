@@ -242,7 +242,7 @@ export function LanguageSelector() {
 				type="button"
 				onClick={() => setIsOpen(!isOpen)}
 				className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded-lg transition-colors duration-300"
-				title={t("select.language")}
+				title={t("select.language.label")}
 			>
 				{getCurrentLanguageFlag()}
 				<span className="hidden sm:inline text-sm font-medium">
@@ -256,7 +256,7 @@ export function LanguageSelector() {
 			{isOpen && (
 				<div className="absolute right-0 mt-2 w-48 bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700 py-2 z-50">
 					<div className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-zinc-700">
-						{t("select.language")}
+						{t("select.language.label")}
 					</div>
 					<div className="py-1">
 						<button

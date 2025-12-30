@@ -502,7 +502,6 @@ const esTranslations: Record<string, string> = {
 	"layout.controls.dateFormat.medium": "Medio (Ene 2020)",
 	"layout.controls.dateFormat.long": "Largo (Enero 2020)",
 	"layout.controls.reset": "Restablecer diseño a valores predeterminados",
-	"select.language.label": "Elegir idioma:",
 	"language.portuguese": "Português",
 	"language.english": "English",
 	"language.spanish": "Español",
@@ -742,6 +741,7 @@ const esTranslations: Record<string, string> = {
 	"select.date": "Seleccionar fecha",
 	"select.education.type": "Seleccionar",
 	"select.education.status": "Seleccionar",
+	"select.language.label": "Elegir idioma:",
 	"select.language.level": "Seleccionar",
 
 	// Link types

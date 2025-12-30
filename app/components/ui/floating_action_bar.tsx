@@ -277,7 +277,7 @@ export function FloatingActionBar({
 						<SelectMenu
 							options={languageOptions}
 							value={selectedLang}
-							placeholder={t("select.language")}
+							placeholder={t("select.language.label")}
 							onSelect={handleSelectLanguage}
 							buttonClassName="bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-700 border border-gray-200 dark:border-zinc-700 shadow-lg h-12 w-12 min-w-[48px] flex items-center justify-center transition-all !rounded-full !p-0"
 							dropdownClassName="bottom-full mb-2 right-0"

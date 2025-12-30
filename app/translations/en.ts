@@ -510,6 +510,7 @@ const enTranslations: Record<string, string> = {
 	"select.date": "Select date",
 	"select.education.type": "Select",
 	"select.education.status": "Select",
+	"select.language.label": "Select language:",
 	"select.language.level": "Select",
 
 	// Link types
