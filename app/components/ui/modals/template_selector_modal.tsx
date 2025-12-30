@@ -99,18 +99,6 @@ export function TemplateSelectorModal({
 												className="object-cover transition-transform duration-300 group-hover:scale-[1.03] rounded-t-2xl"
 												sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
 											/>
-											<button
-												type="button"
-												aria-label={`Preview ${t(data.nameKey)}`}
-												onClick={(e) => {
-													e.stopPropagation();
-													setPreview(templateKey);
-												}}
-												className="absolute top-3 right-3 z-10 bg-white dark:bg-zinc-800 rounded-full p-2 shadow-md border border-gray-200 dark:border-zinc-700 hover:bg-sky-100 dark:hover:bg-sky-900/40 transition-colors"
-												style={{ pointerEvents: "auto" }}
-											>
-												<Eye className="w-5 h-5 text-sky-600 dark:text-sky-400" />
-											</button>
 										</div>
 										<div className="px-4 pt-4">
 											<h4 className="font-semibold text-base text-gray-900 dark:text-white">
@@ -125,6 +113,19 @@ export function TemplateSelectorModal({
 												{t("template.selected") || "Selecionado"}
 											</div>
 										)}
+									</button>
+									{/* Botão de preview fora do botão principal, mas posicionado sobre a imagem */}
+									<button
+										type="button"
+										aria-label={`Preview ${t(data.nameKey)}`}
+										onClick={(e) => {
+											e.stopPropagation();
+											setPreview(templateKey);
+										}}
+										className="absolute top-3 right-3 z-10 bg-white dark:bg-zinc-800 rounded-full p-2 shadow-md border border-gray-200 dark:border-zinc-700 hover:bg-sky-100 dark:hover:bg-sky-900/40 transition-colors"
+										style={{ pointerEvents: "auto" }}
+									>
+										<Eye className="w-5 h-5 text-sky-600 dark:text-sky-400" />
 									</button>
 								</div>
 							);
