@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface PdfCanvasViewerProps {
 	blob: Blob | null;
@@ -10,6 +10,21 @@ interface PdfCanvasViewerProps {
 export function PdfCanvasViewer({ blob, scale = 1 }: PdfCanvasViewerProps) {
 	const containerRef = useRef<HTMLDivElement | null>(null);
 	const newContainerRef = useRef<HTMLDivElement | null>(null);
+	const [containerWidth, setContainerWidth] = useState<number>(0);
+
+	// Observe actual changes in container size.
+	useEffect(() => {
+		const container = containerRef.current;
+		if (!container) return;
+		const observer = new window.ResizeObserver((entries) => {
+			for (const entry of entries) {
+				const width = entry.contentRect.width;
+				setContainerWidth(width);
+			}
+		});
+		observer.observe(container);
+		return () => observer.disconnect();
+	}, []);
 
 	useEffect(() => {
 		let canceled = false;
@@ -45,7 +60,8 @@ export function PdfCanvasViewer({ blob, scale = 1 }: PdfCanvasViewerProps) {
 			const pdf = await loadingTask.promise;
 
 			const container = containerRef.current;
-			const width = newContainer.clientWidth || 800;
+			// Use observed container width
+			const width = containerWidth || container?.clientWidth || 800;
 
 			for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
 				if (canceled) return;
@@ -78,18 +94,12 @@ export function PdfCanvasViewer({ blob, scale = 1 }: PdfCanvasViewerProps) {
 				newContainer.appendChild(canvas);
 			}
 
-			// Swap containers smoothly
+			// Swap containers
 			if (!canceled && container) {
-				// Preserve scroll position
-				const scrollTop = container.scrollTop;
-				const scrollLeft = container.scrollLeft;
-
 				container.innerHTML = "";
 				container.append(...Array.from(newContainer.children));
-
-				// Restore scroll position
-				container.scrollTop = scrollTop;
-				container.scrollLeft = scrollLeft;
+				container.scrollTop = 0;
+				container.scrollLeft = 0;
 			}
 		}
 
@@ -98,10 +108,10 @@ export function PdfCanvasViewer({ blob, scale = 1 }: PdfCanvasViewerProps) {
 		return () => {
 			canceled = true;
 		};
-	}, [blob, scale]);
+	}, [blob, scale, containerWidth]);
 
 	return (
-		<div className="relative w-full h-full">
+		<div className="relative w-full h-full flex flex-col">
 			{/* Hidden container for rendering new PDF */}
 			<div
 				ref={newContainerRef}
@@ -112,8 +122,8 @@ export function PdfCanvasViewer({ blob, scale = 1 }: PdfCanvasViewerProps) {
 			{/* Visible container */}
 			<div
 				ref={containerRef}
-				className="w-full h-full overflow-auto bg-gray-50 dark:bg-zinc-900 p-2"
-				style={{ contain: "content" }}
+				className="w-full h-full overflow-auto bg-white dark:bg-zinc-800 p-2 flex flex-col items-center border border-gray-200 dark:border-zinc-700 rounded-lg"
+				style={{ contain: "content", minWidth: 0 }}
 			/>
 		</div>
 	);

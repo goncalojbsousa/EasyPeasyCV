@@ -125,7 +125,6 @@ export function LivePdfPane({
 		return () => {
 			canceled = true;
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [doc, isMobile]);
 
 	if (isMobile) {
@@ -140,22 +139,10 @@ export function LivePdfPane({
 		);
 	}
 
-	const refreshPreview = () => setDebouncedTick((v) => v + 1);
+	const _refreshPreview = () => setDebouncedTick((v) => v + 1);
 
 	return (
 		<div className="w-full h-full rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden flex flex-col">
-			<div className="flex items-center justify-between px-3 py-2 border-b border-gray-200 dark:border-zinc-800">
-				<div className="text-sm font-medium text-gray-700 dark:text-gray-200">
-					{t("live.preview.title")}
-				</div>
-				<button
-					onClick={refreshPreview}
-					className="text-xs px-2 py-1 rounded-md bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-zinc-700"
-					type="button"
-				>
-					{t("live.preview.refresh")}
-				</button>
-			</div>
 			<div className="flex-1 min-h-0">
 				{!pdfBlob && loading ? (
 					<div className="w-full h-full flex items-center justify-center">
