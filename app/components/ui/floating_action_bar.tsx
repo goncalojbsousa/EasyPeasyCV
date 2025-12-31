@@ -88,7 +88,9 @@ export function FloatingActionBar({
 	const [selectedLang, setSelectedLang] = useState<LanguageCode>(
 		(language as LanguageCode) || "en",
 	);
-	const pdfButtonRefs = useRef<Record<string, { generatePdf: () => Promise<void> } | null>>({});
+	const pdfButtonRefs = useRef<
+		Record<string, { generatePdf: () => Promise<void> } | null>
+	>({});
 	const activeColor = selectedColor ?? color;
 
 	const languageOptions: SelectOption<LanguageCode>[] = useMemo(
@@ -121,8 +123,11 @@ export function FloatingActionBar({
 		if (!onGeneratePDF()) return;
 		setSelectedLang(lang);
 		// Chama diretamente o método generatePdf exposto pelo PdfDownloadButton
-		if (pdfButtonRefs.current[lang] && typeof pdfButtonRefs.current[lang]?.generatePdf === 'function') {
-			await pdfButtonRefs.current[lang]!.generatePdf();
+		if (
+			pdfButtonRefs.current[lang] &&
+			typeof pdfButtonRefs.current[lang]?.generatePdf === "function"
+		) {
+			await pdfButtonRefs.current[lang]?.generatePdf();
 		}
 	};
 
@@ -287,7 +292,7 @@ export function FloatingActionBar({
 							renderTriggerLabel={() => <Download className="w-5 h-5" />}
 						/>
 
-						<div style={{ display: 'none' }}>
+						<div style={{ display: "none" }}>
 							{languageOptions.map((lang) => (
 								<PdfDownloadButton
 									key={lang.value}

@@ -1,11 +1,11 @@
 "use client";
 
+import { Github, Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { ThemeToggle } from "../theme-toggle";
 import { LanguageSelector } from "../ui/language_selector";
-import { Github, Heart } from "lucide-react";
 
 /**
  * Navbar component
