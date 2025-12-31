@@ -194,6 +194,7 @@ export default function Home() {
 										width={600}
 										height={800}
 										className="w-full h-full object-cover object-top"
+										priority
 									/>
 
 									{/* Controls - Hidden by default, visible on hover */}

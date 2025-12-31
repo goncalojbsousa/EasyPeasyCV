@@ -145,6 +145,7 @@ export default async function LocaleLayout({
 				<meta name="theme-color" content="#0284c7" />
 				<meta name="apple-mobile-web-app-capable" content="yes" />
 				<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+				<link rel="canonical" href={`https://www.easypeasycv.com/${locale}`} />
 				<link
 					rel="preconnect"
 					href="https://www.easypeasycv.com"
