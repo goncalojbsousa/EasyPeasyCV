@@ -1,9 +1,7 @@
-<div align="center" style="display: flex; align-items: center; justify-content: center; gap: 24px; margin-bottom: 18px;">
-  <img src="public/logo.webp" alt="EasyPeasyCV Logo" width="90" height="90" style="vertical-align: middle;" />
-  <span style="font-size: 2.8rem; font-weight: bold; letter-spacing: 1px; vertical-align: middle;">EasyPeasyCV</span>
-</div>
-
 <div align="center">
+  <img src="public/logo.webp" alt="EasyPeasyCV Logo" width="90" height="90" />
+  <h1>EasyPeasyCV</h1>
+
   <a href="https://github.com/goncalojbsousa/EasyPeasyCV/stargazers">
     <img src="https://img.shields.io/github/stars/goncalojbsousa/EasyPeasyCV?style=social" alt="GitHub stars" />
   </a>
@@ -19,15 +17,9 @@
   <a href="https://www.easypeasycv.com/">
     <img src="https://img.shields.io/website?url=https%3A%2F%2Fwww.easypeasycv.com" alt="Website status" />
   </a>
-</div>
 
-<div align="center">
-EasyPeasyCV is a modern, open source resume builder designed for professionals who value privacy, flexibility, and control over their data. With a focus on usability and customization, EasyPeasyCV enables users to create high-quality, ATS-friendly CVs directly in the browser, no registration or server required.
-</div>
+  <p>A modern, open source resume builder designed for professionals who value privacy, flexibility, and control over their data. Create high-quality, ATS-friendly CVs directly in the browser — no registration or server required.</p>
 
-<div style="height: 18px;"></div>
-
-<div align="center">
   <img src="public/easypeasycvpreview.gif" alt="EasyPeasyCV Preview" width="700" />
 </div>
 
