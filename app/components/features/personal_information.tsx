@@ -211,6 +211,7 @@ export function PersonalInformation({
 	const [newLinkType, setNewLinkType] = useState("LinkedIn");
 	const [newLinkValue, setNewLinkValue] = useState("");
 	const [newLinkCustomName, setNewLinkCustomName] = useState("");
+	const [linkError, setLinkError] = useState("");
 	const getSearchPlaceholder = () => {
 		const s = t("search.placeholder");
 		if (s && s !== "search.placeholder") return s;
@@ -220,22 +221,47 @@ export function PersonalInformation({
 	};
 
 	const handleAddLink = () => {
-		if (newLinkValue.trim()) {
-			// Create the full URL with prefix for the new link
-			const prefix = getLinkPrefix(newLinkType);
-			const fullValue = prefix ? `${prefix}${newLinkValue}` : newLinkValue;
+		if (!newLinkValue.trim()) return;
 
-			// Add the link with the correct type, value, and custom name if applicable
-			onAddLink(
-				newLinkType,
-				fullValue,
-				newLinkType === "Other" ? newLinkCustomName.trim() : undefined,
+		const normalizedType = newLinkType.trim().toLowerCase();
+		const candidateName =
+			newLinkType === "Other"
+				? newLinkCustomName.trim().toLowerCase()
+				: newLinkType.trim().toLowerCase();
+
+		const hasDuplicateTypeAndName = links.some((link) => {
+			const currentType = (link.type || "").trim().toLowerCase();
+			const currentName =
+				link.type === "Other"
+					? (link.customName || "").trim().toLowerCase()
+					: (link.type || "").trim().toLowerCase();
+			return currentType === normalizedType && currentName === candidateName;
+		});
+
+		if (hasDuplicateTypeAndName) {
+			setLinkError(
+				language === "pt" || language === "br"
+					? "Já existe um link com este tipo e nome."
+					: language === "es"
+						? "Ya existe un enlace con este tipo y nombre."
+						: "A link with this type and name already exists.",
 			);
-
-			// Reset the new link form fields
-			setNewLinkValue("");
-			setNewLinkCustomName("");
+			return;
 		}
+
+		setLinkError("");
+
+		const prefix = getLinkPrefix(newLinkType);
+		const fullValue = prefix ? `${prefix}${newLinkValue}` : newLinkValue;
+
+		onAddLink(
+			newLinkType,
+			fullValue,
+			newLinkType === "Other" ? newLinkCustomName.trim() : undefined,
+		);
+
+		setNewLinkValue("");
+		setNewLinkCustomName("");
 	};
 
 	const getLinkPrefix = (type: string) => {
@@ -657,7 +683,10 @@ export function PersonalInformation({
 								options={linkTypeOptions}
 								value={newLinkType}
 								placeholder={t("field.link.type")}
-								onSelect={(type) => setNewLinkType(type)}
+								onSelect={(type) => {
+									setNewLinkType(type);
+									setLinkError("");
+								}}
 								renderTriggerLabel={(option) =>
 									option?.label || t("field.link.type")
 								}
@@ -684,11 +713,19 @@ export function PersonalInformation({
 										type="text"
 										placeholder={getLinkPlaceholder(newLinkType)}
 										value={newLinkValue}
-										onChange={(e) => setNewLinkValue(e.target.value)}
+										onChange={(e) => {
+											setNewLinkValue(e.target.value);
+											setLinkError("");
+										}}
 										onKeyPress={(e) => e.key === "Enter" && handleAddLink()}
 										className={`w-full p-2 border border-gray-300 dark:border-zinc-600 ${getLinkPrefix(newLinkType) ? "rounded-r-lg" : "rounded-lg"} bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100`}
 									/>
 								</div>
+								{linkError && (
+									<p className="mt-1 text-xs text-red-600 dark:text-red-400">
+										{linkError}
+									</p>
+								)}
 							</div>
 
 							{/* Add link button */}

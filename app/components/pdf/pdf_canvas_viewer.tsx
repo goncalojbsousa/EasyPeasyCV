@@ -12,6 +12,12 @@ export function PdfCanvasViewer({ blob, scale = 1 }: PdfCanvasViewerProps) {
 	const newContainerRef = useRef<HTMLDivElement | null>(null);
 	const [containerWidth, setContainerWidth] = useState<number>(0);
 
+	// Para preservar a posição do scroll
+	const scrollPosition = useRef<{ top: number; left: number }>({
+		top: 0,
+		left: 0,
+	});
+
 	// Observe actual changes in container size.
 	useEffect(() => {
 		const container = containerRef.current;
@@ -33,6 +39,13 @@ export function PdfCanvasViewer({ blob, scale = 1 }: PdfCanvasViewerProps) {
 			if (!blob || !containerRef.current || !newContainerRef.current) return;
 			const newContainer = newContainerRef.current;
 			newContainer.innerHTML = "";
+
+			// Salva a posição do scroll antes de atualizar
+			const container = containerRef.current;
+			if (container) {
+				scrollPosition.current.top = container.scrollTop;
+				scrollPosition.current.left = container.scrollLeft;
+			}
 
 			const pdfjsLib = (await import(
 				"pdfjs-dist/build/pdf.mjs"
@@ -59,7 +72,6 @@ export function PdfCanvasViewer({ blob, scale = 1 }: PdfCanvasViewerProps) {
 			const loadingTask = pdfjsLib.getDocument({ data });
 			const pdf = await loadingTask.promise;
 
-			const container = containerRef.current;
 			// Use observed container width
 			const width = containerWidth || container?.clientWidth || 800;
 
@@ -98,8 +110,9 @@ export function PdfCanvasViewer({ blob, scale = 1 }: PdfCanvasViewerProps) {
 			if (!canceled && container) {
 				container.innerHTML = "";
 				container.append(...Array.from(newContainer.children));
-				container.scrollTop = 0;
-				container.scrollLeft = 0;
+				// Restaura a posição do scroll
+				container.scrollTop = scrollPosition.current.top;
+				container.scrollLeft = scrollPosition.current.left;
 			}
 		}
 

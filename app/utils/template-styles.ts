@@ -73,7 +73,7 @@ export function computeMetrics(
 	const lineSpacing = (s?.layout.lineSpacing ?? 1.4) * densityMult.lineHeight;
 	const finalScale = scale * densityMult.fontSize * singlePageMult;
 	const textAlign: PdfTextAlign =
-		(s?.layout.textAlignment as PdfTextAlign) || "left";
+		(s?.layout.textAlignment as PdfTextAlign) || "justify";
 
 	const sectionTitleColor =
 		s?.sections?.titleColor || getColorTheme(color).primary;

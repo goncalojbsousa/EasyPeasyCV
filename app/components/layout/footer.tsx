@@ -19,7 +19,7 @@ export function Footer() {
 					{/* Copyright section - Left */}
 					<div className="text-center sm:text-left">
 						<p className="text-gray-600 dark:text-gray-400 text-sm">
-							© 2025 EasyPeasyCV.
+							© 2026 EasyPeasyCV.
 						</p>
 					</div>
 

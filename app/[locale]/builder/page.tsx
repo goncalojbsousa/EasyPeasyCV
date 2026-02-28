@@ -97,7 +97,7 @@ export default function Builder() {
 			columns: 1,
 			atsSafe: false,
 			density: "normal",
-			textAlignment: "left",
+			textAlignment: "justify",
 			singlePageMode: false,
 		},
 		header: {

@@ -228,8 +228,8 @@ export function ProfessionalTemplate({
 										marginTop: 2,
 									}}
 								>
-									{links.map((lnk) => {
-										const linkKey = `${lnk.type}-${lnk.value}`;
+									{links.map((lnk, idx) => {
+										const linkKey = `${lnk.type}-${lnk.value}-${idx}`;
 										return (
 											<Link
 												key={linkKey}

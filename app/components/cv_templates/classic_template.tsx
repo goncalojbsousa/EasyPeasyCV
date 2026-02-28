@@ -470,8 +470,8 @@ export function ClassicTemplate({
 								{/* Social Links */}
 								{links && links.length > 0 && (
 									<View style={styles.linksRow}>
-										{links.map((lnk) => {
-											const linkKey = `${lnk.type}-${lnk.value}`;
+										{links.map((lnk, idx) => {
+											const linkKey = `${lnk.type}-${lnk.value}-${idx}`;
 											return (
 												<Link
 													key={linkKey}

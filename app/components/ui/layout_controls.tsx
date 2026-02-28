@@ -137,6 +137,86 @@ export function LayoutControls({
 	return (
 		<div className="px-4 py-3 space-y-3">
 			<div>
+				<div className="text-[11px] font-semibold mb-2 text-gray-700 dark:text-gray-300 uppercase tracking-wide">
+					{t("layout.controls.quickSettings")}
+				</div>
+
+				<div className="mb-3">
+					<label
+						htmlFor="density-select"
+						className="block text-xs font-medium mb-1"
+					>
+						{t("layout.controls.density.label")}
+					</label>
+					<SelectMenu
+						className="w-full"
+						options={densityOptions}
+						value={settings?.layout.density || "normal"}
+						placeholder={t("layout.controls.density.label")}
+						onSelect={(value) =>
+							onSettingsChange &&
+							settings &&
+							onSettingsChange({
+								...settings,
+								layout: { ...settings.layout, density: value },
+							})
+						}
+					/>
+					<div className="text-[10px] text-gray-500 dark:text-gray-400 mt-1">
+						{t("layout.controls.density.help")}
+					</div>
+				</div>
+
+				<div className="mb-3">
+					<label className="flex items-center gap-2 text-xs font-medium cursor-pointer">
+						<input
+							type="checkbox"
+							checked={settings?.layout.singlePageMode || false}
+							onChange={(e) =>
+								onSettingsChange &&
+								settings &&
+								onSettingsChange({
+									...settings,
+									layout: {
+										...settings.layout,
+										singlePageMode: e.target.checked,
+									},
+								})
+							}
+							className="rounded"
+						/>
+						{t("layout.controls.singlePageMode.label")}
+					</label>
+					<div className="text-[10px] text-gray-500 dark:text-gray-400 mt-1 ml-5">
+						{t("layout.controls.singlePageMode.help")}
+					</div>
+				</div>
+
+				<div>
+					<label
+						htmlFor="text-alignment-select"
+						className="block text-xs font-medium mb-1"
+					>
+						{t("layout.controls.textAlignment.label")}
+					</label>
+					<SelectMenu
+						className="w-full"
+						options={textAlignmentOptions}
+						value={settings?.layout.textAlignment || "justify"}
+						placeholder={t("layout.controls.textAlignment.label")}
+						onSelect={(value) =>
+							onSettingsChange &&
+							settings &&
+							onSettingsChange({
+								...settings,
+								layout: { ...settings.layout, textAlignment: value },
+							})
+						}
+					/>
+				</div>
+			</div>
+
+			<div>
 				<label htmlFor="font-select" className="block text-xs font-medium mb-1">
 					{t("layout.controls.font.label")}
 				</label>
@@ -333,86 +413,6 @@ export function LayoutControls({
 					}
 					className="w-full"
 				/>
-			</div>
-
-			<div className="border-t border-gray-200 dark:border-zinc-700 pt-3">
-				<div className="text-[11px] font-semibold mb-2 text-gray-700 dark:text-gray-300 uppercase tracking-wide">
-					{t("layout.controls.quickSettings")}
-				</div>
-
-				<div className="mb-3">
-					<label
-						htmlFor="density-select"
-						className="block text-xs font-medium mb-1"
-					>
-						{t("layout.controls.density.label")}
-					</label>
-					<SelectMenu
-						className="w-full"
-						options={densityOptions}
-						value={settings?.layout.density || "normal"}
-						placeholder={t("layout.controls.density.label")}
-						onSelect={(value) =>
-							onSettingsChange &&
-							settings &&
-							onSettingsChange({
-								...settings,
-								layout: { ...settings.layout, density: value },
-							})
-						}
-					/>
-					<div className="text-[10px] text-gray-500 dark:text-gray-400 mt-1">
-						{t("layout.controls.density.help")}
-					</div>
-				</div>
-
-				<div className="mb-3">
-					<label className="flex items-center gap-2 text-xs font-medium cursor-pointer">
-						<input
-							type="checkbox"
-							checked={settings?.layout.singlePageMode || false}
-							onChange={(e) =>
-								onSettingsChange &&
-								settings &&
-								onSettingsChange({
-									...settings,
-									layout: {
-										...settings.layout,
-										singlePageMode: e.target.checked,
-									},
-								})
-							}
-							className="rounded"
-						/>
-						{t("layout.controls.singlePageMode.label")}
-					</label>
-					<div className="text-[10px] text-gray-500 dark:text-gray-400 mt-1 ml-5">
-						{t("layout.controls.singlePageMode.help")}
-					</div>
-				</div>
-
-				<div>
-					<label
-						htmlFor="text-alignment-select"
-						className="block text-xs font-medium mb-1"
-					>
-						{t("layout.controls.textAlignment.label")}
-					</label>
-					<SelectMenu
-						className="w-full"
-						options={textAlignmentOptions}
-						value={settings?.layout.textAlignment || "left"}
-						placeholder={t("layout.controls.textAlignment.label")}
-						onSelect={(value) =>
-							onSettingsChange &&
-							settings &&
-							onSettingsChange({
-								...settings,
-								layout: { ...settings.layout, textAlignment: value },
-							})
-						}
-					/>
-				</div>
 			</div>
 
 			<div className="border-t border-gray-200 dark:border-zinc-700 pt-3">
@@ -807,7 +807,7 @@ export function LayoutControls({
 							columns: 1 as const,
 							atsSafe: false,
 							density: "normal" as const,
-							textAlignment: "left" as const,
+							textAlignment: "justify" as const,
 							singlePageMode: false,
 						};
 						const headerDefaults = {

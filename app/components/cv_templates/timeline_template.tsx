@@ -420,9 +420,9 @@ export function TimelineTemplate({
 							<View
 								style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 4 }}
 							>
-								{links.map((lnk) => (
+								{links.map((lnk, idx) => (
 									<Link
-										key={`${lnk.type}-${lnk.value}`}
+										key={`${lnk.type}-${lnk.value}-${idx}`}
 										src={getSocialUrl(lnk.type, lnk.value)}
 										style={styles.link}
 									>

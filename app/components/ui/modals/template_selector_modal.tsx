@@ -136,7 +136,7 @@ export function TemplateSelectorModal({
 				{/* Fullscreen preview modal */}
 				{preview && (
 					<div
-						className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+						className="fixed inset-0 z-[60] flex items-center justify-center p-2 md:p-4"
 						role="dialog"
 						aria-modal="true"
 					>
@@ -146,7 +146,7 @@ export function TemplateSelectorModal({
 							className="absolute inset-0 bg-black/70"
 							aria-label="Close preview"
 						/>
-						<div className="relative bg-white dark:bg-zinc-900 rounded-lg shadow-2xl max-w-6xl w-full max-h-[95vh] overflow-hidden z-[61]">
+						<div className="relative bg-white dark:bg-zinc-900 rounded-lg shadow-2xl w-[98vw] h-[96vh] overflow-hidden z-[61]">
 							<button
 								type="button"
 								onClick={() => setPreview(null)}
@@ -155,13 +155,13 @@ export function TemplateSelectorModal({
 							>
 								<X className="w-5 h-5" />
 							</button>
-							<div className="w-full h-full flex items-center justify-center bg-gray-50 dark:bg-zinc-800 relative min-h-[400px]">
+							<div className="w-full h-full flex items-center justify-center bg-gray-50 dark:bg-zinc-800 relative">
 								<Image
 									src={templatePreviews[preview].img}
 									alt={`${t(templatePreviews[preview].nameKey)} full preview`}
 									fill
 									className="object-contain"
-									sizes="95vw"
+									sizes="98vw"
 								/>
 							</div>
 						</div>
