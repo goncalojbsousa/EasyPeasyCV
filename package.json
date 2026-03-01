@@ -1,6 +1,6 @@
 {
 	"name": "easypeasycv",
-	"description": "A modern EasyPeasyCV application with real-time preview and PDF generation",
+	"description": "EasyPeasyCV is a open source resume builder designed for professionals who value privacy, flexibility, and control over their data.",
 	"version": "0.1.0",
 	"private": true,
 	"license": "MIT",
@@ -49,6 +49,7 @@
 		"typescript": "^5"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.3.10"
+		"@biomejs/biome": "2.3.10",
+		"baseline-browser-mapping": "^2.10.0"
 	}
 }
