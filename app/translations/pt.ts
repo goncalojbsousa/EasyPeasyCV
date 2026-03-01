@@ -189,6 +189,9 @@ const ptTranslations: Record<string, string> = {
 	"data.xml.title": "Dados (XML)",
 	"data.xml.export": "Exportar XML",
 	"data.xml.import": "Importar XML",
+	"data.import.error":
+		"Erro ao importar XML. Verifique o ficheiro e tente novamente.",
+	"pdf.download.error": "Erro ao gerar PDF. Por favor, tente novamente.",
 	"preview.cv": "Preview do CV",
 	preview: "Preview",
 	"live.preview.title": "Preview ao vivo",
@@ -473,7 +476,8 @@ const ptTranslations: Record<string, string> = {
 	"placeholder.project.sourceCode": "Ex: www.github.com/user/repo",
 	"placeholder.project.description":
 		"Breve descrição do projeto, objetivos, resultados...",
-	"placeholder.project.impact": "Ex: Aumentou o engajamento dos usuários em 30% após o lançamento",
+	"placeholder.project.impact":
+		"Ex: Aumentou o engajamento dos usuários em 30% após o lançamento",
 	"placeholder.organization": "Ex: Cruz Vermelha Portuguesa",
 	"placeholder.volunteer.role": "Ex: Voluntário de Apoio Social",
 	"placeholder.volunteer.description":

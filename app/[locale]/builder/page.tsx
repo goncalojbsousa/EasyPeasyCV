@@ -313,9 +313,7 @@ export default function Builder() {
 			setDataLoadedSource("xml");
 		} catch (e) {
 			console.error("XML import failed:", e);
-			alert(
-				`Erro ao importar XML: ${e instanceof Error ? e.message : String(e)}`,
-			);
+			alert(t("data.import.error"));
 		}
 	};
 
@@ -1040,9 +1038,11 @@ export default function Builder() {
 			const message =
 				language === "pt"
 					? "Adicione algum conteúdo antes de gerar o PDF."
-					: language === "es"
-						? "Agrega algún contenido antes de generar el PDF."
-						: "Add some content before generating the PDF.";
+					: language === "br"
+						? "Adicione algum conteúdo antes de gerar o PDF."
+						: language === "es"
+							? "Agrega algún contenido antes de generar el PDF."
+							: "Add some content before generating the PDF.";
 			alert(message);
 			return false; // Return false to prevent PDF generation
 		}
@@ -1055,9 +1055,11 @@ export default function Builder() {
 			const message =
 				language === "pt"
 					? "Adicione algum conteúdo antes de visualizar o PDF."
-					: language === "es"
-						? "Agrega algún contenido antes de previsualizar el PDF."
-						: "Add some content before previewing the PDF.";
+					: language === "br"
+						? "Adicione algum conteúdo antes de visualizar o PDF."
+						: language === "es"
+							? "Agrega algún contenido antes de previsualizar el PDF."
+							: "Add some content before previewing the PDF.";
 			alert(message);
 			return;
 		}
@@ -1297,11 +1299,12 @@ export default function Builder() {
 
 	return (
 		<div className="min-h-screen bg-gray-100 dark:bg-zinc-900 transition-colors duration-300">
-			{/* Header */}
 			<Navbar />
 
-			{/* Main content area */}
-			<div className="w-full max-w-[1600px] 2xl:max-w-[1800px] mx-auto pt-24 pb-24 px-4 sm:px-6">
+			<main
+				id="main-content"
+				className="w-full max-w-[1600px] 2xl:max-w-[1800px] mx-auto pt-24 pb-24 px-4 sm:px-6"
+			>
 				{/* Form + Live preview grid */}
 				<div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
 					<div className="lg:col-span-6 flex flex-col gap-6 sm:gap-8">
@@ -1546,8 +1549,6 @@ export default function Builder() {
 							</div>
 						)}
 
-
-
 						{/* Ats Explanation section */}
 						<div className="w-full">
 							<AtsExplanation />
@@ -1583,9 +1584,8 @@ export default function Builder() {
 						</div>
 					</div>
 				</div>
-			</div>
+			</main>
 
-			{/* Footer */}
 			<Footer />
 
 			{/* PDF Preview Modal */}

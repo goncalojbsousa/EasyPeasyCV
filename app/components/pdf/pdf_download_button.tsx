@@ -9,6 +9,7 @@ import type {
 	CvRenderSettings,
 	CvTemplate,
 } from "../../types/cv";
+import { useLanguage } from "../../contexts/LanguageContext";
 import { CvDocument } from "../cv_document";
 
 /**
@@ -45,6 +46,7 @@ const PdfDownloadButton = forwardRef<
 	PdfDownloadButtonProps
 >((props, ref) => {
 	const { children, onPdfGenerated, ...pdfProps } = props;
+	const { t } = useLanguage();
 	const [isLoading, setIsLoading] = useState(false);
 
 	const handleGenerateAndDownload = async () => {
@@ -89,7 +91,7 @@ const PdfDownloadButton = forwardRef<
 			}
 		} catch (error) {
 			console.error("Error generating PDF:", error);
-			alert("Erro ao gerar PDF. Por favor, tente novamente.");
+			alert(t("pdf.download.error"));
 		} finally {
 			setIsLoading(false);
 		}
@@ -114,7 +116,7 @@ const PdfDownloadButton = forwardRef<
 			disabled={isLoading}
 			className="inline-flex items-center justify-center px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
 		>
-			{isLoading ? "Gerando PDF..." : "Gerar Currículo em PDF"}
+			{isLoading ? t("pdf.preview.loading") : t("pdf.preview.download")}
 		</button>
 	);
 });

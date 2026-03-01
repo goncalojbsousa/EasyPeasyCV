@@ -413,6 +413,10 @@ const esTranslations: Record<string, string> = {
 	"data.xml.title": "Datos (XML)",
 	"data.xml.export": "Exportar XML",
 	"data.xml.import": "Importar XML",
+	"data.import.error":
+		"Error al importar XML. Comprueba el archivo e inténtalo de nuevo.",
+	"pdf.download.error":
+		"Error al generar el PDF. Por favor, inténtalo de nuevo.",
 	"preview.cv": "Vista Previa del CV",
 	preview: "Vista Previa",
 	"live.preview.title": "Vista previa en vivo",
@@ -718,7 +722,8 @@ const esTranslations: Record<string, string> = {
 	"placeholder.project.sourceCode": "Ej: www.github.com/user/repo",
 	"placeholder.project.description":
 		"Breve descripción del proyecto, objetivos, resultados...",
-	"placeholder.project.impact": "Ej: Aumentó la participación de usuarios en un 30% tras el lanzamiento",
+	"placeholder.project.impact":
+		"Ej: Aumentó la participación de usuarios en un 30% tras el lanzamiento",
 	"placeholder.organization": "Ej: Cruz Roja Española",
 	"placeholder.volunteer.role": "Ej: Voluntario de Apoyo Social",
 	"placeholder.volunteer.description":

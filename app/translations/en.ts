@@ -203,6 +203,9 @@ const enTranslations: Record<string, string> = {
 	"data.xml.title": "Data (XML)",
 	"data.xml.export": "Export XML",
 	"data.xml.import": "Import XML",
+	"data.import.error":
+		"Error importing XML. Please check the file and try again.",
+	"pdf.download.error": "Error generating PDF. Please try again.",
 	"preview.cv": "CV Preview",
 	preview: "Preview",
 	"live.preview.title": "Live Preview",
@@ -487,7 +490,8 @@ const enTranslations: Record<string, string> = {
 	"placeholder.project.sourceCode": "e.g., www.github.com/user/repo",
 	"placeholder.project.description":
 		"Brief project description, objectives, results...",
-	"placeholder.project.impact": "e.g., Increased user engagement by 30% after launch",
+	"placeholder.project.impact":
+		"e.g., Increased user engagement by 30% after launch",
 	"placeholder.organization": "e.g., Red Cross Portugal",
 	"placeholder.volunteer.role": "e.g., Social Support Volunteer",
 	"placeholder.volunteer.description":
