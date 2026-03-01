@@ -14,7 +14,7 @@ import { ProfessionalSummary } from "../../components/features/professional_summ
 import { Projects } from "../../components/features/projects";
 import { TechnicalSkills } from "../../components/features/technical_skills";
 import { VolunteerWork } from "../../components/features/volunteer";
-import { JobAnalysis } from "../../components/job_analysis";
+
 import { Footer } from "../../components/layout/footer";
 import { Navbar } from "../../components/layout/navbar";
 import { LivePdfPane } from "../../components/live_pdf_pane";
@@ -1546,10 +1546,7 @@ export default function Builder() {
 							</div>
 						)}
 
-						{/* Job Analysis section */}
-						<div className="w-full">
-							<JobAnalysis />
-						</div>
+
 
 						{/* Ats Explanation section */}
 						<div className="w-full">

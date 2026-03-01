@@ -315,7 +315,7 @@ export function AcademicEducation({
 									>
 										<AutoResizeTextarea
 											className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-											placeholder={t("placeholder.education.achievements")}
+											placeholder={t("placeholder.achievements")}
 											value={ed.achievements}
 											onChange={(e) =>
 												onEducationChange(idx, "achievements", e.target.value)

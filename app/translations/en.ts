@@ -487,6 +487,7 @@ const enTranslations: Record<string, string> = {
 	"placeholder.project.sourceCode": "e.g., www.github.com/user/repo",
 	"placeholder.project.description":
 		"Brief project description, objectives, results...",
+	"placeholder.project.impact": "e.g., Increased user engagement by 30% after launch",
 	"placeholder.organization": "e.g., Red Cross Portugal",
 	"placeholder.volunteer.role": "e.g., Social Support Volunteer",
 	"placeholder.volunteer.description":

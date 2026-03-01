@@ -65,7 +65,8 @@ interface DesktopActionsCardProps {
 	onShowPdfPreview: () => void;
 	onGeneratePDF: () => boolean;
 	onShowSuccessMessage: () => void;
-	onScrollToJobAnalysis: () => void;
+
+
 	onScrollToCVTips: () => void;
 	onScrollToAtsExplanation: () => void;
 	onExportXml: () => void;
@@ -99,7 +100,7 @@ export function DesktopActionsCard({
 	onShowPdfPreview,
 	onGeneratePDF,
 	onShowSuccessMessage,
-	onScrollToJobAnalysis,
+
 	onScrollToCVTips,
 	onScrollToAtsExplanation,
 	onExportXml,
@@ -737,7 +738,7 @@ export function DesktopActionsCard({
 							{/* Job Analysis Button */}
 							<button
 								type="button"
-								onClick={onScrollToJobAnalysis}
+
 								className="w-full bg-sky-600 text-white px-4 py-3 rounded-xl font-semibold hover:bg-sky-700 active:bg-sky-800 transition-colors duration-200 flex items-center justify-center gap-2 shadow-sm"
 								title={t("job.analysis.action.description")}
 							>

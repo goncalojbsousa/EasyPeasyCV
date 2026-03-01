@@ -718,6 +718,7 @@ const esTranslations: Record<string, string> = {
 	"placeholder.project.sourceCode": "Ej: www.github.com/user/repo",
 	"placeholder.project.description":
 		"Breve descripción del proyecto, objetivos, resultados...",
+	"placeholder.project.impact": "Ej: Aumentó la participación de usuarios en un 30% tras el lanzamiento",
 	"placeholder.organization": "Ej: Cruz Roja Española",
 	"placeholder.volunteer.role": "Ej: Voluntario de Apoyo Social",
 	"placeholder.volunteer.description":
