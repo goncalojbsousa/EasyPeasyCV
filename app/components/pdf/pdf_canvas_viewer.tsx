@@ -12,7 +12,7 @@ export function PdfCanvasViewer({ blob, scale = 1 }: PdfCanvasViewerProps) {
 	const newContainerRef = useRef<HTMLDivElement | null>(null);
 	const [containerWidth, setContainerWidth] = useState<number>(0);
 
-	// Para preservar a posição do scroll
+	// Preserve scroll position
 	const scrollPosition = useRef<{ top: number; left: number }>({
 		top: 0,
 		left: 0,
