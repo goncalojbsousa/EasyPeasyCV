@@ -113,7 +113,7 @@ export function LivePdfPane({
 					console.error("PDF preview generation error:", e);
 					if (!canceled) {
 						const msg = e instanceof Error ? e.message : JSON.stringify(e);
-						setError(`Erro ao gerar preview do PDF: ${msg}`);
+						setError(`"PDF preview generation error: ${msg}`);
 					}
 				} finally {
 					if (!canceled) setLoading(false);
