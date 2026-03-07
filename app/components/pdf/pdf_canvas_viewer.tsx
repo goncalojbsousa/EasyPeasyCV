@@ -110,7 +110,7 @@ export function PdfCanvasViewer({ blob, scale = 1 }: PdfCanvasViewerProps) {
 			if (!canceled && container) {
 				container.innerHTML = "";
 				container.append(...Array.from(newContainer.children));
-				// Restaura a posição do scroll
+				// Restore scroll position
 				container.scrollTop = scrollPosition.current.top;
 				container.scrollLeft = scrollPosition.current.left;
 			}
