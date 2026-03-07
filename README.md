@@ -1,196 +1,120 @@
-<p align="center">
-  <a href="https://github.com/goncalojbsousa/EasyPeasyCV">
-    <img src="public/logo.webp" height="96" alt="EasyPeasyCV logo" style="margin-bottom: 10px;" />
-    <h3 align="center">EasyPeasyCV</h3>
+<div align="center">
+  <img src="public/logo.webp" alt="EasyPeasyCV Logo" width="90" height="90" />
+  <h1>EasyPeasyCV</h1>
+
+  <a href="https://github.com/goncalojbsousa/EasyPeasyCV/stargazers">
+    <img src="https://img.shields.io/github/stars/goncalojbsousa/EasyPeasyCV?style=social" alt="GitHub stars" />
   </a>
-</p>
+  <a href="https://github.com/goncalojbsousa/EasyPeasyCV/network/members">
+    <img src="https://img.shields.io/github/forks/goncalojbsousa/EasyPeasyCV?style=social" alt="GitHub forks" />
+  </a>
+  <a href="https://github.com/goncalojbsousa/EasyPeasyCV/issues">
+    <img src="https://img.shields.io/github/issues/goncalojbsousa/EasyPeasyCV" alt="GitHub issues" />
+  </a>
+  <a href="https://github.com/goncalojbsousa/EasyPeasyCV/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/goncalojbsousa/EasyPeasyCV" alt="MIT License" />
+  </a>
+  <a href="https://www.easypeasycv.com/">
+    <img src="https://img.shields.io/website?url=https%3A%2F%2Fwww.easypeasycv.com" alt="Website status" />
+  </a>
 
-A modern, responsive CV builder application built with Next.js, React, and TypeScript. Features real-time preview, PDF generation, and multi-language support.
+  <p>A modern, open source resume builder designed for professionals who value privacy, flexibility, and control over their data. Create high-quality, ATS-friendly CVs directly in the browser — no registration or server required.</p>
 
-## 🌟 Features
+  <img src="public/easypeasycvpreview.gif" alt="EasyPeasyCV Preview" width="700" />
+</div>
 
-- **6 Professional Templates**: Classic, Modern, Creative, Minimal, Professional, and Timeline
-- **Full Customization**: Choose colors, reorder sections, and customize every detail
-- **Responsive Design**: Works perfectly on desktop, tablet, and mobile
-- **Auto-Save**: Your data is automatically saved in the browser
-- **Multi-language**: Available in Portuguese (pt), Brazilian Portuguese (pt-BR), English (en), and Spanish (es)
-- **Privacy-First**: Everything stays in your browser, no external servers
-- **PDF Export**: Generate professional PDFs instantly
-- **Data Import/Export (XML)**: Export your CV data to XML and re-import later
-- **ATS Optimized**: Templates designed to pass Applicant Tracking Systems
+## Why EasyPeasyCV?
 
-## 🚀 Getting Started
+EasyPeasyCV was built to solve a common problem: most online CV builders either require user registration, store personal data on external servers, or offer limited customization. This project provides a truly private, client-side solution that empowers users to design, edit, and export their resumes with full control and transparency.
 
-### Prerequisites
+- **100% Private:** All data is processed and stored locally in your browser. No accounts, no tracking, no data leaves your device.
+- **Open Source:** The codebase is public and contributions are welcome.
+- **Professional Results:** Export resumes as high-quality PDFs, optimized for Applicant Tracking Systems (ATS).
+- **Flexible Layouts:** Multiple templates and deep layout customization options.
+- **Internationalization:** Available in English, Portuguese, Brazilian Portuguese, and Spanish.
 
-- Node.js 18+ 
-- npm, yarn, pnpm, or bun
+## Key Features
 
-### Installation
+- **Real-Time Editing:** Instantly preview your CV as you edit, with changes reflected live.
+- **Multiple Templates:** Choose from several professionally designed templates, each with unique visual styles.
+- **Advanced Layout Controls:** Adjust text alignment, font, spacing, margins, section order, and more.
+- **Custom Sections:** Add your own sections and fields to tailor your resume to any industry or role.
+- **Section and Entry Reordering:** Change the order of sections and entries using intuitive arrow controls for maximum impact.
+- **Data Import & Export:** Save your CV data as XML for backup or migration, and restore it at any time.
+- **PDF Export:** Generate print-ready, ATS-compatible PDFs directly in the browser.
+- **Multi-Language Support:** Switch languages at any time; your preference is saved locally.
+- **Offline-First:** All features work without an internet connection after the initial load.
 
-1. Clone the repository:
-```bash
-git clone https://github.com/goncalojbsousa/EasyPeasyCV.git
-cd EasyPeasyCV
-```
+## Privacy by Design
 
-2. Install dependencies:
-```bash
-npm install
-# or
-yarn install
-# or
-pnpm install
-# or
-bun install
-```
+EasyPeasyCV never sends your data to any server. All information is stored in your browser's local storage and processed client-side. You can export or delete your data at any time. No analytics, no cookies, no hidden data collection.
 
-3. Run the development server:
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Getting Started
 
-4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-## 🛠️ Tech Stack
-
-- **Framework**: Next.js 15 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **PDF Generation**: @react-pdf/renderer
-- **State Management**: React Hooks
-- **Icons**: Custom SVG icons
-
-## 👩‍💻 Developer Guide
-
-### Scripts
-
-- **dev**: `npm run dev` — Starts Next.js with Turbopack for fast HMR.
-- **build**: `npm run build` — Production build.
-- **start**: `npm start` — Runs the production server after a build.
-- **lint**: `npm run lint` — ESLint via `eslint-config-next`.
-
-### Project Architecture
-
-- `app/`
-  - `page.tsx`: Landing page.
-  - `builder/`: Main CV builder page and subroutes.
-  - `components/`: Shared UI and feature components.
-    - `cv_templates/`: PDF-ready resume templates (Classic/Timeline/etc.).
-    - `ui/`: Reusable UI building blocks.
-  - `contexts/`: React contexts (e.g., `LanguageContext.tsx`).
-  - `types/`: Shared TypeScript types.
-  - `utils/`: Utility helpers.
-- `public/`: Static assets (images, icons).
- - Root configs: `next.config.ts`, `tailwind.config.ts`, `postcss.config.mjs`, `eslint.config.mjs`, `tsconfig.json`.
-
-### Internationalization (i18n)
-
-- Implemented via `LanguageContext` (`app/contexts/LanguageContext.tsx`).
-- Persists user preference in `localStorage` and auto-detects browser language.
-- Use `t(key)` for translations.
-
-### PDF Rendering
-
-- Uses `@react-pdf/renderer` to generate print-ready PDFs.
-- Core components:
-  - `app/components/pdf_preview.tsx`: Preview of final PDF.
-  - `app/components/pdf_download_button.tsx`: Triggers PDF generation and download.
-  - Templates in `app/components/cv_templates/*` render structured resume content.
-
-### Data Import/Export (XML)
-
-- Available on the Builder page.
-- Desktop: right sidebar card `Data > XML` menu in `DesktopActionsCard` (`app/components/ui/desktop-actions-card.tsx`).
-- Actions:
-  - Export: saves a `cv-data.xml` file with your current CV data.
-  - Import: choose a previously saved XML file to restore all sections (personal info, experiences, education, skills, links, etc.).
-- Implementation details:
-  - Serialization/parsing in `app/utils/xml.ts` via `cvDataToXml()` and `xmlToCvData()`.
-  - Handlers wired in the Builder page (`app/builder/page.tsx`): `handleExportXml()` and `handleImportXml()`.
-  - No server is used; all processing happens locally in the browser.
-
-### UI, Styling, and State
-
-- Tailwind CSS v4 with `@tailwindcss/postcss` pipeline.
-- Drag-and-drop ordering powered by `@dnd-kit` (e.g., in `academic_education.tsx`).
-- Client-side persistence (auto-save) in the browser; no backend required.
-
-### Development Workflow
-
-1. Install deps and run `npm run dev`.
-2. Implement changes in `app/*` with App Router conventions.
-3. Keep translations in `LanguageContext` in sync when adding UI labels.
-4. For PDF changes, update the corresponding template in `cv_templates/*`.
-5. Run `npm run lint` before committing.
-
-### Build & Deploy
-
-- Local production run: `npm run build && npm start`.
-- Works on platforms supporting Next.js 15 (e.g., Vercel). Ensure Node 18+.
-
-### Troubleshooting
-
-- Ensure Node 18+ to avoid Next.js 15 compatibility issues.
-- If Tailwind classes are missing, confirm Tailwind v4 config (`postcss.config.mjs`, `tailwind.config.ts`).
-- Clear `.next/` cache if you hit stale build artifacts.
-
-## 🌍 Internationalization
-
-The application supports multiple languages:
-- Portuguese (pt)
-- Brazilian Portuguese (pt-BR)
-- English (en)
-- Spanish (es)
-
-Language switching is available in the header.
-
-## 🤝 Contributing
-
-We welcome contributions! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+1. **Clone the repository:**
+    ```bash
+    git clone https://github.com/goncalojbsousa/EasyPeasyCV.git
+    cd EasyPeasyCV
+    ```
+2. **Install dependencies:**
+    ```bash
+    npm install
+    ```
+3. **Start the development server:**
+    ```bash
+    npm run dev
+    ```
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### How to Contribute
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+2. Create a feature branch
+3. Make your changes and test locally
+4. Run linting with [Biome](https://biomejs.dev/) and ensure all checks pass:
+    ```bash
+    npx biome check
+    ```
+5. Submit a pull request with a clear description
 
-### Development Guidelines
+## Tech Stack
 
-- Follow TypeScript best practices
-- Use meaningful commit messages
-- Add comments for complex logic
-- Test your changes thoroughly
-- Follow the existing code style
+- **Framework:** Next.js 16 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **PDF Generation:** @react-pdf/renderer
 
-## 📝 License
+## Project Architecture
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+- `app/`
+  - `[locale]/`: Internationalized routes
+    - `builder/page.tsx`: Main CV builder page
+    - `privacy/page.tsx`, `terms/page.tsx`, etc.
+    - `layout.tsx`, `not-found.tsx`, `page.tsx`
+  - `components/`: Shared components
+    - `cv_templates/`: PDF-ready resume templates (Classic, Professional, Timeline)
+    - `dnd/`: Drag and drop
+    - `features/`: CV sections
+    - `layout/`: Navbar, Footer
+    - `pdf/`: PDF preview/download
+    - `ui/`: Reusable UI elements
+  - `contexts/`: React contexts
+  - `translations/`: i18n translation files (br, en, es, pt)
+  - `types/`: Shared TypeScript types
+  - `utils/`: Helpers and hooks
+  - `globals.css`: Global CSS
+  - `robots.ts`, `sitemap.ts`: SEO
+- `public/`: Static assets
+- `i18n/`: Internationalization utilities
+- `types/`: External types (e.g., pdfjs-dist.d.ts)
+- **Root configs:** `next.config.ts`, `tailwind.config.ts`, `postcss.config.mjs`, `biome.json`, `tsconfig.json`, `package.json`
 
-## 📞 Support
+## License
 
-If you find this project helpful, consider supporting it:
+EasyPeasyCV is released under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-- ⭐ Star the repository
-- 🐛 Report bugs
-- 💡 Suggest new features
-- ☕ [Buy me a coffee](https://ko-fi.com/easypeasycv)
+## Links
 
-## 🔗 Links
-
+- [Live Website](https://www.easypeasycv.com/)
 - [GitHub Repository](https://github.com/goncalojbsousa/EasyPeasyCV)
-- [Issues](https://github.com/goncalojbsousa/EasyPeasyCV/issues)
-- [Website](https://www.easypeasycv.com/)
-
-## 🧭 Inspiration
-
-- https://github.com/codedgabriel/ats-curriculo
-- https://ats-curriculo.vercel.app/
+- [Issue Tracker](https://github.com/goncalojbsousa/EasyPeasyCV/issues)

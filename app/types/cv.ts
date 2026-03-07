@@ -2,187 +2,309 @@
  * Interface for personal information data
  */
 export interface PersonalInfo {
-  /** Full name of the person */
-  name: string;
-  /** Desired job role or position */
-  desiredRole?: string;
-  /** City of residence */
-  city: string;
-  /** Postal code */
-  postalCode: string;
-  /** Email address */
-  email: string;
-  /** Country code for phone number */
-  countryCode: string;
-  /** Phone number */
-  phone: string;
+	/** Full name of the person */
+	name: string;
+	/** Desired job role or position */
+	desiredRole: string;
+	/** City of residence */
+	city: string;
+	/** Postal code */
+	postalCode: string;
+	/** Email address */
+	email: string;
+	/** Country code for phone number */
+	countryCode: string;
+	/** Phone number */
+	phone: string;
 }
 
 /**
  * Interface for social media and portfolio links
  */
 export interface Link {
-  /** Type of link (LinkedIn, GitHub, Portfolio, etc.) */
-  type: string;
-  /** URL or username value */
-  value: string;
-  /** Custom name for the platform (when type is "Other") */
-  customName?: string;
+	/** Type of link (LinkedIn, GitHub, Portfolio, etc.) */
+	type: string;
+	/** URL or username value */
+	value: string;
+	/** Custom name for the platform (when type is "Other") */
+	customName?: string;
+	/** Hide the link label (e.g., "GitHub:") and show only the URL */
+	hideLinkLabel?: boolean;
 }
 
 /**
  * Interface for professional experience entries
  */
 export interface Experience {
-  /** Job title or role */
-  role: string;
-  /** Company name */
-  company: string;
-  /** Start month (abbreviated) */
-  startMonth: string;
-  /** Start year */
-  startYear: string;
-  /** End month (abbreviated) */
-  endMonth: string;
-  /** End year */
-  endYear: string;
-  /** Whether this is the current job */
-  current: boolean;
-  /** Technologies used in this role */
-  tech: string;
-  /** Activities and responsibilities */
-  activities: string;
-  /** Achievements and results with metrics */
-  results: string;
+	/** Job title or role */
+	role: string;
+	/** Company name */
+	company: string;
+	/** Start month (abbreviated) */
+	startMonth: string;
+	/** Start year */
+	startYear: string;
+	/** End month (abbreviated) */
+	endMonth: string;
+	/** End year */
+	endYear: string;
+	/** Whether this is the current job */
+	current: boolean;
+	/** Technologies used in this role */
+	tech: string;
+	/** Activities and responsibilities */
+	activities: string;
+	/** Achievements and results with metrics */
+	results: string;
 }
 
 /**
  * Interface for education entries
  */
 export interface Education {
-  /** Type of education (degree level) */
-  type: string;
-  /** Status of education (completed, in progress, etc.) */
-  status: string;
-  /** Course or degree name */
-  course: string;
-  /** Educational institution */
-  institution: string;
-  /** Start month (abbreviated) */
-  startMonth: string;
-  /** Start year */
-  startYear: string;
-  /** End month (abbreviated) */
-  endMonth: string;
-  /** End year */
-  endYear: string;
-  /** Description of education and achievements */
-  description: string;
+	/** Type of education (degree level) */
+	type: string;
+	/** Status of education (completed, in progress, etc.) */
+	status: string;
+	/** Course or degree name */
+	course: string;
+	/** Educational institution */
+	institution: string;
+	/** Start month (abbreviated) */
+	startMonth: string;
+	/** Start year */
+	startYear: string;
+	/** End month (abbreviated) */
+	endMonth: string;
+	/** End year */
+	endYear: string;
+	/** Whether this education is still in progress */
+	current?: boolean;
+	/** Description of education and activities */
+	description: string;
+	/** Achievements and notable accomplishments */
+	achievements: string;
 }
 
 /**
  * Interface for language proficiency entries
  */
 export interface Language {
-  /** Language name */
-  name: string;
-  /** Proficiency level */
-  level: string;
+	/** Language name */
+	name: string;
+	/** Proficiency level */
+	level: string;
 }
 
 /**
  * Interface for certification entries
  */
 export interface Certification {
-  /** Certification name */
-  name: string;
-  /** Issuing organization or institution */
-  issuer: string;
-  /** Date of completion */
-  completionDate: string;
-  /** Hours of study or course duration */
-  hours: string;
-  /** URL for certificate validation */
-  validationLink: string;
-  /** Description of certification content */
-  description: string;
+	/** Certification name */
+	name: string;
+	/** Issuing organization or institution */
+	issuer: string;
+	/** Date of completion */
+	completionDate: string;
+	/** Hours of study or course duration */
+	hours: string;
+	/** URL for certificate validation */
+	validationLink: string;
+	/** Description of certification content */
+	description: string;
 }
 
 /**
  * Interface for project entries
  */
 export interface Project {
-  /** Project name */
-  name: string;
-  /** Project description */
-  description: string;
-  /** Project URL or repository link */
-  link: string;
-  /** Source code repository URL (e.g., GitHub) */
-  sourceCode?: string;
-  /** Technologies used in the project */
-  tech: string;
-  /** Year of project completion */
-  year: string;
+	/** Project name */
+	name: string;
+	/** Project description */
+	description: string;
+	/** Project URL or repository link */
+	link: string;
+	/** Source code repository URL (e.g., GitHub) */
+	sourceCode?: string;
+	/** Technologies used in the project */
+	tech: string;
+	/** Year of project completion */
+	year: string;
+	/** Impact and results achieved with the project */
+	impact: string;
 }
 
 /**
  * Interface for volunteer work entries
  */
 export interface Volunteer {
-  /** Organization name */
-  organization: string;
-  /** Role or position in the organization */
-  role: string;
-  /** Start month (abbreviated) */
-  startMonth: string;
-  /** Start year */
-  startYear: string;
-  /** End month (abbreviated) */
-  endMonth: string;
-  /** End year */
-  endYear: string;
-  /** Whether this is the current volunteer position */
-  current: boolean;
-  /** Description of volunteer activities and responsibilities */
-  description: string;
-  /** Impact and achievements in the volunteer role */
-  impact: string;
+	/** Organization name */
+	organization: string;
+	/** Role or position in the organization */
+	role: string;
+	/** Start month (abbreviated) */
+	startMonth: string;
+	/** Start year */
+	startYear: string;
+	/** End month (abbreviated) */
+	endMonth: string;
+	/** End year */
+	endYear: string;
+	/** Whether this is the current volunteer position */
+	current: boolean;
+	/** Description of volunteer activities and responsibilities */
+	description: string;
+	/** Impact and achievements in the volunteer role */
+	impact: string;
+}
+
+/** Custom field inside a user-defined section */
+export interface CustomField {
+	id: string;
+	label: string;
+	value: string;
+	subtitle?: string;
+	startMonth?: string;
+	startYear?: string;
+	endMonth?: string;
+	endYear?: string;
+	current?: boolean;
+	bullets?: string;
+	/** Center the content text like skills section */
+	centerValue?: boolean;
+}
+
+/** Custom section created by the user */
+export interface CustomSection {
+	id: string;
+	title: string;
+	fields: CustomField[];
 }
 
 /**
  * Available CV template types
  */
-export type CvTemplate = 'classic' | 'modern' | 'creative' | 'minimal' | 'timeline' | 'professional';
+export type CvTemplate = "professional" | "timeline" | "classic";
 
-export type CvColor = 'blue' | 'green' | 'purple' | 'orange' | 'red' | 'teal' | 'indigo' | 'pink';
+export type CvColor =
+	| "blue"
+	| "green"
+	| "purple"
+	| "orange"
+	| "red"
+	| "teal"
+	| "indigo"
+	| "pink";
+
+/**
+ * Section keys for ordering CV sections
+ */
+export type PredefinedSectionKey =
+	| "professional_summary"
+	| "professional_experience"
+	| "academic_education"
+	| "technical_skills"
+	| "languages"
+	| "certifications"
+	| "projects"
+	| "volunteer";
+
+export type CustomSectionKey = `custom_${string}`;
+
+/** Section keys for ordering CV sections, including custom ones */
+export type SectionKey = PredefinedSectionKey | CustomSectionKey;
 
 /**
  * Main interface containing all CV data
  */
 export interface CvData {
-  /** Personal information */
-  personalInfo: PersonalInfo;
-  /** Social media and portfolio links */
-  links: Link[];
-  /** Professional summary */
-  resume: string;
-  /** Professional experience entries */
-  experiences: Experience[];
-  /** Education entries */
-  education: Education[];
-  /** Technical skills */
-  skills: string;
-  /** Language proficiency entries */
-  languages: Language[];
-  /** Certification entries */
-  certifications: Certification[];
-  /** Project entries */
-  projects: Project[];
-  /** Volunteer work entries */
-  volunteers: Volunteer[];
-  /** Selected CV template */
-  template?: CvTemplate;
-  /** Selected color theme */
-  color?: CvColor;
+	/** Personal information */
+	personalInfo: PersonalInfo;
+	/** Social media and portfolio links */
+	links: Link[];
+	/** Professional summary */
+	resume: string;
+	/** Professional experience entries */
+	experiences: Experience[];
+	/** Education entries */
+	education: Education[];
+	/** Technical skills */
+	skills: string;
+	/** Language proficiency entries */
+	languages: Language[];
+	/** Certification entries */
+	certifications: Certification[];
+	/** Project entries */
+	projects: Project[];
+	/** Volunteer work entries */
+	volunteers: Volunteer[];
+	/** Custom sections defined by the user */
+	customSections?: CustomSection[];
+	/** Selected CV template */
+	template?: CvTemplate;
+	/** Selected color theme */
+	color?: CvColor;
+	/** Section order for CV sections */
+	sectionOrder?: SectionKey[];
+}
+
+export type FontFamilyOption = "Helvetica" | "Times-Roman" | "Arial" | "Custom";
+export type LayoutDensity = "compact" | "normal" | "spacious";
+export type DateFormat = "short" | "medium" | "long";
+export type TextAlignment = "left" | "justify";
+
+export interface CustomFontConfig {
+	name: string;
+	dataUrl: string;
+	style?: "normal" | "bold" | "italic" | "boldItalic";
+}
+
+export interface CvLayoutSettings {
+	fontFamily: FontFamilyOption;
+	customFont?: CustomFontConfig | null;
+	textScale: number;
+	marginsCm: { top: number; right: number; bottom: number; left: number };
+	lineSpacing: number;
+	sectionSpacingPx: number;
+	columns: 1 | 2 | 3;
+	atsSafe: boolean;
+	density?: LayoutDensity;
+	textAlignment?: TextAlignment;
+	singlePageMode?: boolean;
+}
+
+export interface HeaderOptions {
+	nameFontSize: number;
+	nameFontWeight: "normal" | "bold" | "heavy";
+	nameColor: string;
+	titleStyle: "normal" | "italic" | "uppercase";
+	titlePosition: "above" | "below";
+	dividerThickness: 1 | 2 | 3;
+	dividerStyle: "solid" | "dashed";
+	iconSizePx: 16 | 18 | 20 | 22 | 24;
+	iconSpacingPx: 5 | 7 | 9 | 11 | 13 | 15;
+	iconAlignment: "left" | "center" | "right";
+}
+
+export interface PhotoOptions {
+	enabled: boolean;
+	aspectRatio: "1:1" | "3:4" | "4:3";
+	borderRadius?: number;
+	crop?: { x: number; y: number; width: number; height: number } | null;
+	dataUrl?: string | null;
+}
+
+export interface SectionOptions {
+	titleColor: string;
+	titleFontSize: number;
+	dateFormat: DateFormat;
+	/** When true, links use the selected theme color instead of the default hyperlink blue */
+	useThemeColorForLinks?: boolean;
+}
+
+export interface CvRenderSettings {
+	layout: CvLayoutSettings;
+	header: HeaderOptions;
+	photo: PhotoOptions;
+	sections: SectionOptions;
 }

@@ -1,378 +1,451 @@
-import React from 'react';
-import { Document, Page, Text, View, StyleSheet, Link } from '@react-pdf/renderer';
-import { CvData, CvColor } from '../../types/cv';
-import { getColorTheme } from '../../utils/color-themes';
+import {
+	Document,
+	Image,
+	Link,
+	Page,
+	StyleSheet,
+	Text,
+	View,
+} from "@react-pdf/renderer";
+import { Fragment, type ReactNode } from "react";
+import type {
+	CvColor,
+	CvData,
+	CvRenderSettings,
+	Language,
+	SectionKey,
+} from "../../types/cv";
+import {
+	getSectionOrder,
+	type PdfStyles,
+	renderCertificationsSection,
+	renderCustomSection,
+	renderEducationSection,
+	renderExperienceSection,
+	renderLanguagesSection,
+	renderProjectsSection,
+	renderSkillsSection,
+	renderSummarySection,
+	renderVolunteerSection,
+	type SectionWrapperProps,
+} from "../../utils/section-renderers";
+import {
+	getSocialUrl,
+	translateLabel,
+	translateLanguageLevel,
+} from "../../utils/template-helpers";
+import {
+	buildCommonStyles,
+	computeMetrics,
+	getPhotoSize,
+	type PdfTextAlign,
+} from "../../utils/template-styles";
 
-/**
- * Props interface for the TimelineTemplate component
- */
 interface TimelineTemplateProps extends CvData {
-  /** Language for the document (pt, en or es) */
-  lang?: string;
-  /** Optional color theme */
-  color?: CvColor;
+	lang?: string;
+	settings?: CvRenderSettings;
+	color?: CvColor;
 }
 
-/**
- * Timeline template styles with vertical rail and nodes
- */
-const styles = StyleSheet.create({
-  page: { padding: 30, fontSize: 10, fontFamily: 'Helvetica', backgroundColor: '#ffffff' },
-  header: { marginBottom: 18, paddingBottom: 10, borderBottomWidth: 2, borderBottomColor: '#e5e7eb', borderBottomStyle: 'solid' },
-  name: { fontSize: 24, fontWeight: 'bold', color: '#0f172a' },
-  desiredRole: { fontSize: 12, color: '#2563eb', fontWeight: 'bold', marginTop: 4 },
-  contactRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 6 },
-  contactItem: { fontSize: 9, color: '#475569', marginRight: 12 },
-  separator: { fontSize: 9, color: '#cbd5e1', marginHorizontal: 8 },
-  linksRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 6 },
-  linkItem: { fontSize: 9, color: '#2563eb', textDecoration: 'underline', marginRight: 14, marginBottom: 2 },
+const buildStyles = (settings?: CvRenderSettings, color: CvColor = "blue") => {
+	const metrics = computeMetrics(settings, color);
+	const commonStyles = buildCommonStyles(metrics, settings);
+	const lineColor = "#e5e7eb";
+	const photoDimensions = getPhotoSize(settings?.photo?.aspectRatio);
+	const photoBorderRadius = settings?.photo?.borderRadius ?? 1;
+	const linkColor = metrics.linkColor;
 
-  section: { marginBottom: 16 },
-  sectionTitle: { fontSize: 12, fontWeight: 'bold', color: '#0f172a', marginBottom: 10, textTransform: 'uppercase', letterSpacing: 0.5 },
+	const specificStyles = StyleSheet.create({
+		page: { ...commonStyles.page, color: "#111827" },
+		header: {
+			flexDirection: "row",
+			justifyContent: "space-between",
+			alignItems: "center",
+			marginBottom: 12 * metrics.singlePageMult,
+		},
+		headerLeft: { flex: 1 },
+		name: {
+			...commonStyles.name,
+			color: settings?.header.nameColor || "#0f172a",
+			marginBottom: 8 * metrics.singlePageMult,
+		},
+		title: {
+			...commonStyles.title,
+			color: "#1f2937",
+			marginBottom: 8 * metrics.singlePageMult,
+		},
+		contactRow: {
+			flexDirection: "row",
+			flexWrap: "wrap",
+			alignItems: "center",
+		},
+		contactItem: {
+			flexDirection: "row",
+			alignItems: "center",
+			marginRight: 10,
+			marginBottom: 4,
+			fontSize: 9 * metrics.finalScale,
+			color: "#374151",
+		},
+		contactLabel: { fontWeight: "bold", marginRight: 4 },
+		contactSeparator: { marginRight: 8, color: "#9ca3af" },
+		photoFrame: {
+			width: photoDimensions.width,
+			height: photoDimensions.height,
+			borderRadius: photoBorderRadius,
+			alignItems: "center",
+			justifyContent: "center",
+			backgroundColor: "#f8fafc",
+			overflow: "hidden",
+		},
+		photoImage: {
+			width: photoDimensions.width,
+			height: photoDimensions.height,
+			objectFit: "cover",
+		},
+		initials: {
+			fontSize: 20 * metrics.finalScale,
+			fontWeight: "bold",
+			color: "#0f172a",
+		},
+		divider: {
+			...commonStyles.divider,
+			marginTop: 10 * metrics.singlePageMult,
+			marginBottom: 12 * metrics.singlePageMult,
+		},
+		sectionTitleWrap: {
+			flexDirection: "row",
+			alignItems: "center",
+			marginBottom: 8 * metrics.singlePageMult,
+		},
+		sectionLine: {
+			height: settings?.header.dividerThickness || 1,
+			backgroundColor: lineColor,
+			flex: 1,
+			marginLeft: 8,
+		},
+		paragraph: {
+			fontSize: 10 * metrics.finalScale,
+			color: "#111827",
+			textAlign: metrics.textAlign,
+		},
+		subText: {
+			fontSize: 9 * metrics.finalScale,
+			color: "#374151",
+			textAlign: metrics.textAlign,
+		},
+		timelineWrap: {
+			paddingLeft: 18,
+			marginLeft: 8,
+			borderLeftWidth: 1,
+			borderLeftColor: lineColor,
+		},
+		timelineItem: {
+			position: "relative",
+			paddingLeft: 8,
+			marginBottom: 12 * metrics.singlePageMult,
+		},
+		timelineBullet: {
+			position: "absolute",
+			width: 10,
+			height: 10,
+			borderRadius: 5,
+			borderWidth: 2,
+			borderColor: metrics.accent,
+			backgroundColor: "#ffffff",
+			left: -23.5,
+			top: 0,
+		},
+		entryHeader: {
+			flexDirection: "row",
+			justifyContent: "space-between",
+			alignItems: "flex-start",
+			marginBottom: 2,
+		},
+		role: {
+			fontSize: 11 * metrics.finalScale,
+			fontWeight: "bold",
+			color: "#0f172a",
+		},
+		company: {
+			fontSize: 10 * metrics.finalScale,
+			color: "#1f2937",
+			marginBottom: 2,
+		},
+		date: {
+			fontSize: 10 * metrics.finalScale,
+			color: "#374151",
+			textAlign: "right",
+			marginLeft: 8,
+		},
+		bulletText: {
+			marginLeft: 8,
+			fontSize: 10 * metrics.finalScale,
+			color: "#0f172a",
+			textAlign: metrics.textAlign,
+		},
+		metaText: { fontSize: 9 * metrics.finalScale, color: "#4b5563" },
+		langRow: { flexDirection: "row", alignItems: "center", marginBottom: 4 },
+		langName: {
+			fontSize: 10 * metrics.finalScale,
+			fontWeight: "bold",
+			color: "#0f172a",
+		},
+		langDivider: {
+			flex: 1,
+			height: settings?.header.dividerThickness || 1,
+			backgroundColor: lineColor,
+			marginHorizontal: 6,
+		},
+		langLevel: {
+			fontSize: 9 * metrics.finalScale,
+			color: "#6b7280",
+			textTransform: "uppercase",
+		},
+		centerText: { textAlign: "center" as PdfTextAlign },
+		link: {
+			fontSize: 9 * metrics.finalScale,
+			color: linkColor,
+			marginRight: 8,
+		},
+	});
 
-  // Timeline layout
-  timelineRow: { flexDirection: 'row' },
-  rail: { width: 14, alignItems: 'center' },
-  railLine: { width: 2, backgroundColor: '#e5e7eb', flex: 1 },
-  nodeWrap: { position: 'absolute', left: 5, width: 8, height: 8, borderRadius: 4, backgroundColor: '#2563eb' },
-  content: { flex: 1, paddingLeft: 14, paddingBottom: 12 },
-  date: { fontSize: 9, color: '#64748b', marginBottom: 2 },
-  role: { fontSize: 11, fontWeight: 'bold', color: '#0f172a' },
-  meta: { fontSize: 9, color: '#64748b', marginBottom: 2 },
-  rowBetween: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 },
-  tech: { fontSize: 9, color: '#2563eb', marginBottom: 3, fontWeight: 'bold' },
-  activities: { fontSize: 9, color: '#334155', marginBottom: 3 },
-  results: { fontSize: 9, fontStyle: 'italic', color: '#059669' },
+	return {
+		...commonStyles,
+		...specificStyles,
+		_finalScale: metrics.finalScale,
+		_singlePageMult: metrics.singlePageMult,
+		_accent: metrics.accent,
+		linkColor,
+	};
+};
 
-  // Other blocks
-  summary: { fontSize: 10, color: '#334155', lineHeight: 1.4 },
-  eduTitle: { fontSize: 10, fontWeight: 'bold', color: '#0f172a' },
-  eduInst: { fontSize: 9, color: '#64748b', marginBottom: 3 },
-  eduDesc: { fontSize: 9, color: '#334155' },
-  skillsWrap: { flexDirection: 'row', flexWrap: 'wrap' },
-  skillPill: { fontSize: 9, color: '#0f172a', backgroundColor: '#e2e8f0', paddingHorizontal: 6, paddingVertical: 3, borderRadius: 4, marginRight: 6, marginBottom: 6 },
-  langItem: { fontSize: 9, color: '#0f172a', marginBottom: 4 },
-
-  projName: { fontSize: 10, fontWeight: 'bold', color: '#0f172a' },
-  projYear: { fontSize: 9, color: '#64748b', marginLeft: 6 },
-  projTech: { fontSize: 9, color: '#2563eb', marginBottom: 3 },
-  projDesc: { fontSize: 9, color: '#334155' },
-  projLink: { fontSize: 9, color: '#2563eb', textDecoration: 'underline' },
-
-  certName: { fontSize: 10, fontWeight: 'bold', color: '#0f172a' },
-  certDate: { fontSize: 9, fontStyle: 'italic', color: '#64748b' },
-  certIssuer: { fontSize: 9, color: '#64748b' },
-  certLink: { fontSize: 9, color: '#2563eb', textDecoration: 'underline' },
-  certDesc: { fontSize: 9, color: '#334155' },
-
-  volRole: { fontSize: 10, fontWeight: 'bold', color: '#0f172a' },
-  volOrg: { fontSize: 9, color: '#64748b' },
-  volDesc: { fontSize: 9, color: '#334155' },
-  volImpact: { fontSize: 9, fontStyle: 'italic', color: '#059669' },
-});
-
-// Helper functions for social links and text localization
-/**
- * Build a fully-qualified URL for a social/contact entry.
- * Supports email (mailto:), phone (tel:) and common platforms.
- */
-function getSocialUrl(type: string, value: string) {
-  if (!value) return '';
-  const val = value.trim();
-  const hasProtocol = /^https?:\/\//i.test(val);
-  const lowerType = type.toLowerCase();
-  if (lowerType === 'email') return `mailto:${val}`;
-  if (lowerType === 'phone') return `tel:${val}`;
-
-  // If already contains a known domain but missing protocol, just prefix it
-  if (!hasProtocol) {
-    if (/linkedin\.com/i.test(val)) return `https://${val}`;
-    if (/github\.com/i.test(val)) return `https://${val}`;
-    if (/gitlab\.com/i.test(val)) return `https://${val}`;
-  }
-
-  if (!hasProtocol) {
-    if (lowerType === 'linkedin') return `https://www.linkedin.com/in/${val}`;
-    if (lowerType === 'github') return `https://github.com/${val}`;
-    if (lowerType === 'gitlab') return `https://gitlab.com/${val}`;
-    // portfolio/other: assume domain or path, prefix https
-    return `https://${val}`;
-  }
-  return val;
-}
-
-/**
- * Localize a link type label (e.g., LinkedIn, Website) for the given language.
- */
-function translateLinkType(type: string, lang: string, customName?: string) {
-  const t = type.toLowerCase();
-  const isPT = lang === 'pt';
-  const isES = lang === 'es';
-  if (t === 'other' && customName) return customName;
-  if (t === 'linkedin') return 'LinkedIn';
-  if (t === 'github') return 'GitHub';
-  if (t === 'portfolio' || t === 'website') return isES ? 'Sitio Web' : isPT ? 'Website' : 'Website';
-  if (t === 'email') return isES ? 'Correo' : isPT ? 'Email' : 'Email';
-  if (t === 'phone') return isES ? 'Teléfono' : isPT ? 'Telemóvel' : 'Phone';
-  return customName || type;
-}
-
-/**
- * Translate month abbreviations across pt/en/es.
- */
-function translateMonth(month: string, lang: string) {
-  const m = month.toLowerCase();
-  const isPT = lang === 'pt';
-  const isES = lang === 'es';
-  const map: Record<string, { pt: string; es: string; en: string }> = {
-    jan: { pt: 'Jan', es: 'Ene', en: 'Jan' },
-    feb: { pt: 'Fev', es: 'Feb', en: 'Feb' },
-    mar: { pt: 'Mar', es: 'Mar', en: 'Mar' },
-    apr: { pt: 'Abr', es: 'Abr', en: 'Apr' },
-    may: { pt: 'Mai', es: 'May', en: 'May' },
-    jun: { pt: 'Jun', es: 'Jun', en: 'Jun' },
-    jul: { pt: 'Jul', es: 'Jul', en: 'Jul' },
-    aug: { pt: 'Ago', es: 'Ago', en: 'Aug' },
-    sep: { pt: 'Set', es: 'Sep', en: 'Sep' },
-    oct: { pt: 'Out', es: 'Oct', en: 'Oct' },
-    nov: { pt: 'Nov', es: 'Nov', en: 'Nov' },
-    dec: { pt: 'Dez', es: 'Dic', en: 'Dec' },
-  };
-  const l: 'pt' | 'es' | 'en' = isPT ? 'pt' : isES ? 'es' : 'en';
-  return map[m]?.[l] ?? month;
-}
-
-/**
- * Localize the "current" date label used in ranges.
- */
-function translateCurrent(lang: string) {
-  if (lang === 'en') return 'Present';
-  if (lang === 'es') return 'Actualidad';
-  return 'Atualidade';
-}
-
-// Translates language level values (CEFR codes + Native only)
-function translateLanguageLevel(level: string, lang: string) {
-  if (!level) return '';
-  const key = level.trim().toLowerCase();
-
-  const cefrMap: Record<string, string> = { a1: 'A1', a2: 'A2', b1: 'B1', b2: 'B2', c1: 'C1', c2: 'C2' };
-  const parts = key.split('.');
-  const last = parts[parts.length - 1];
-  if (cefrMap[last]) return cefrMap[last];
-
-  const native = {
-    en: { native: 'Native' },
-    es: { native: 'Nativo' },
-    pt: { native: 'Nativo' },
-  } as const;
-  type NativeDict = Record<keyof typeof native.en, string>;
-  const dict: NativeDict = lang === 'en' ? native.en : lang === 'es' ? native.es : native.pt;
-  const nativeKey = last in dict ? last : key.replace('language.level.', '');
-  if (nativeKey in dict) return dict[nativeKey as keyof NativeDict];
-  if (cefrMap[key]) return cefrMap[key];
-  return level;
-}
+type TemplateStyles = ReturnType<typeof buildStyles>;
 
 export function TimelineTemplate({
-  personalInfo,
-  links,
-  resume,
-  experiences,
-  education,
-  skills,
-  languages,
-  certifications,
-  projects,
-  volunteers,
-  lang,
-  color = 'blue',
+	personalInfo,
+	links,
+	resume,
+	experiences,
+	education,
+	skills,
+	languages,
+	certifications,
+	projects,
+	volunteers,
+	customSections,
+	lang,
+	settings,
+	color,
+	sectionOrder,
 }: TimelineTemplateProps) {
-  const theme = getColorTheme(color);
-  const dynamic = StyleSheet.create({
-    desiredRole: { color: theme.primary },
-    node: { backgroundColor: theme.primary },
-    link: { color: theme.primary },
-  });
+	const l = lang || "pt";
+	const styles = buildStyles(settings, color || "blue");
+	const order = getSectionOrder(sectionOrder, customSections);
 
-  return (
-    <Document>
-      <Page size="A4" style={styles.page}>
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.name}>{personalInfo.name}</Text>
-          {personalInfo.desiredRole && (
-            <Text style={[styles.desiredRole, dynamic.desiredRole]}>{personalInfo.desiredRole}</Text>
-          )}
-          <View style={styles.contactRow}>
-            <Text style={styles.contactItem}>{personalInfo.city} {personalInfo.postalCode ? `• ${personalInfo.postalCode}` : ''}</Text>
-            <Text style={styles.separator}>|</Text>
-            <Text style={styles.contactItem}>{personalInfo.countryCode} {personalInfo.phone}</Text>
-            <Text style={styles.separator}>|</Text>
-            <Text style={styles.contactItem}>{personalInfo.email}</Text>
-          </View>
-          {links && links.length > 0 && (
-            <View style={styles.linksRow}>
-              {links.map((l, i) => (
-                <Link key={i} src={getSocialUrl(l.type, l.value)} style={[styles.linkItem, dynamic.link]}>
-                  {translateLinkType(l.type.toLowerCase(), lang || 'pt', l.customName)}
-                </Link>
-              ))}
-            </View>
-          )}
-        </View>
+	const contactItems = [
+		personalInfo?.phone && {
+			label: translateLabel("field.phone", l),
+			value:
+				personalInfo.countryCode && personalInfo.phone
+					? `${personalInfo.countryCode.match(/\(([^)]+)\)/)?.[1] || personalInfo.countryCode} ${personalInfo.phone}`
+					: personalInfo.phone,
+		},
+		personalInfo?.email && {
+			label: translateLabel("field.email", l),
+			value: personalInfo.email,
+		},
+		personalInfo?.city && {
+			label: translateLabel("field.city", l),
+			value: [personalInfo.city, personalInfo.postalCode]
+				.filter(Boolean)
+				.join(" "),
+		},
+	].filter(Boolean) as { label: string; value: string }[];
 
-        {/* Summary */}
-        {resume && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{lang === 'en' ? 'Summary' : lang === 'es' ? 'Resumen' : 'Resumo'}</Text>
-            <Text style={styles.summary}>{resume}</Text>
-          </View>
-        )}
+	const photoSrc = settings?.photo?.enabled
+		? settings.photo?.dataUrl || null
+		: null;
 
-        {/* Experience timeline */}
-        {experiences && experiences.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{lang === 'en' ? 'Experience' : lang === 'es' ? 'Experiencia' : 'Experiência'}</Text>
-            {experiences.map((exp, i) => (
-              <View key={i} style={styles.timelineRow}>
-                <View style={styles.rail}>
-                  <View style={styles.railLine} />
-                  <View style={[styles.nodeWrap, dynamic.node]} />
-                </View>
-                <View style={styles.content}>
-                  <View style={styles.rowBetween}>
-                    <Text style={styles.role}>{exp.role}</Text>
-                    <Text style={styles.date}>
-                      {exp.startMonth && exp.startYear ? `${translateMonth(exp.startMonth, lang || 'pt')} ${exp.startYear}` : ''}
-                      {exp.startMonth && exp.startYear && (exp.endMonth || exp.endYear || exp.current) ? ' - ' : ''}
-                      {exp.current ? translateCurrent(lang || 'pt') : exp.endMonth && exp.endYear ? `${translateMonth(exp.endMonth, lang || 'pt')} ${exp.endYear}` : ''}
-                    </Text>
-                  </View>
-                  <Text style={styles.meta}>{exp.company}</Text>
-                  {exp.tech && <Text style={styles.tech}>{exp.tech}</Text>}
-                  {exp.activities && <Text style={styles.activities}>• {exp.activities}</Text>}
-                  {exp.results && <Text style={styles.results}>• {exp.results}</Text>}
-                </View>
-              </View>
-            ))}
-          </View>
-        )}
+	const SectionTitle = ({ label }: { label: string }) => (
+		<View style={styles.sectionTitleWrap}>
+			<Text style={styles.sectionTitle}>{label}</Text>
+			<View style={styles.sectionLine} />
+		</View>
+	);
 
-        {/* Education */}
-        {education && education.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{lang === 'en' ? 'Education' : lang === 'es' ? 'Educación' : 'Educação'}</Text>
-            {education.map((edu, i) => (
-              <View key={i} style={{ marginBottom: 10 }}>
-                <View style={styles.rowBetween}>
-                  <Text style={styles.eduTitle}>{edu.course}</Text>
-                  <Text style={styles.date}>
-                    {edu.startMonth && edu.startYear ? `${translateMonth(edu.startMonth, lang || 'pt')} ${edu.startYear}` : ''}
-                    {edu.startMonth && edu.startYear && (edu.endMonth || edu.endYear) ? ' - ' : ''}
-                    {edu.endMonth && edu.endYear ? `${translateMonth(edu.endMonth, lang || 'pt')} ${edu.endYear}` : ''}
-                  </Text>
-                </View>
-                <Text style={styles.eduInst}>{edu.institution}</Text>
-                {edu.description && <Text style={styles.eduDesc}>• {edu.description}</Text>}
-              </View>
-            ))}
-          </View>
-        )}
+	const TimelineItem = ({ children }: { children: ReactNode }) => (
+		<View style={styles.timelineItem}>
+			<View style={styles.timelineBullet} />
+			{children}
+		</View>
+	);
 
-        {/* Skills */}
-        {skills && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{lang === 'en' ? 'Skills' : lang === 'es' ? 'Habilidades' : 'Competências'}</Text>
-            <View style={styles.skillsWrap}>
-              {skills.split(',').map((s, i) => (
-                <Text key={i} style={styles.skillPill}>{s.trim()}</Text>
-              ))}
-            </View>
-          </View>
-        )}
+	const TimelineWrapper = ({ children, label }: SectionWrapperProps) => (
+		<View style={styles.section}>
+			<View style={styles.sectionTitleWrap}>
+				<Text style={styles.sectionTitle}>{label}</Text>
+				<View style={styles.sectionLine} />
+			</View>
+			<View style={styles.timelineWrap}>{children}</View>
+		</View>
+	);
 
-        {/* Languages */}
-        {languages && languages.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{lang === 'en' ? 'Languages' : lang === 'es' ? 'Idiomas' : 'Idiomas'}</Text>
-            {languages.map((lg, i) => (
-              <Text key={i} style={styles.langItem}>{lg.name} — {translateLanguageLevel(lg.level, lang || 'pt')}</Text>
-            ))}
-          </View>
-        )}
+	const renderProps = { styles, lang: l, settings };
 
-        {/* Projects */}
-        {projects && projects.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{lang === 'en' ? 'Projects' : lang === 'es' ? 'Proyectos' : 'Projetos'}</Text>
-            {projects.map((proj, i) => (
-              <View key={i} style={{ marginBottom: 10 }}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 2 }}>
-                  <Text style={styles.projName}>{proj.name}</Text>
-                  <Text style={styles.projYear}>{proj.year}</Text>
-                </View>
-                {proj.tech && <Text style={styles.projTech}>{proj.tech}</Text>}
-                {proj.description && <Text style={styles.projDesc}>• {proj.description}</Text>}
-                {proj.link && (
-                  <Link src={proj.link} style={styles.projLink}>
-                    {lang === 'en' ? 'View Project' : lang === 'es' ? 'Ver Proyecto' : 'Ver Projeto'}
-                  </Link>
-                )}
-                {proj.sourceCode && (
-                  <Link src={proj.sourceCode} style={styles.projLink}>
-                    {lang === 'en' ? 'Source Code' : lang === 'es' ? 'Código fuente' : 'Código-fonte'}
-                  </Link>
-                )}
-              </View>
-            ))}
-          </View>
-        )}
+	const LanguagesCustomRender = (
+		languages: Language[],
+		_styles: PdfStyles,
+		lang: string,
+	) => {
+		const styles = _styles as TemplateStyles;
+		return (
+			<>
+				{languages.map((langItem) => (
+					<View
+						key={`${langItem.name}-${langItem.level}`}
+						style={styles.langRow}
+					>
+						<Text style={styles.langName}>{langItem.name}</Text>
+						<View style={styles.langDivider} />
+						<Text style={styles.langLevel}>
+							{translateLanguageLevel(
+								langItem.level,
+								lang === "pt" ? "pt" : lang === "es" ? "es" : "en",
+							)}
+						</Text>
+					</View>
+				))}
+			</>
+		);
+	};
 
-        {/* Certifications */}
-        {certifications && certifications.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{lang === 'en' ? 'Certifications' : lang === 'es' ? 'Certificaciones' : 'Certificações'}</Text>
-            {certifications.map((cert, i) => (
-              <View key={i} style={{ marginBottom: 10 }}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 2 }}>
-                  <Text style={styles.certName}>{cert.name}</Text>
-                  <Text style={styles.certDate}>{cert.completionDate}</Text>
-                </View>
-                <Text style={styles.certIssuer}>{cert.issuer}</Text>
-                {cert.validationLink && (
-                  <Link src={cert.validationLink} style={styles.certLink}>
-                    {lang === 'en' ? 'View Certificate' : lang === 'es' ? 'Ver Certificado' : 'Ver Certificado'}
-                  </Link>
-                )}
-                {cert.description && <Text style={styles.certDesc}>{cert.description}</Text>}
-              </View>
-            ))}
-          </View>
-        )}
+	const renderSection = (sectionKey: SectionKey) => {
+		switch (sectionKey) {
+			case "professional_summary":
+				return renderSummarySection(resume, renderProps, SectionTitle);
+			case "professional_experience":
+				return renderExperienceSection(
+					experiences,
+					renderProps,
+					SectionTitle,
+					TimelineItem,
+					TimelineWrapper,
+				);
 
-        {/* Volunteer */}
-        {volunteers && volunteers.length > 0 && (
-          <View style={{ ...styles.section, marginBottom: 0 }}>
-            <Text style={styles.sectionTitle}>{lang === 'en' ? 'Volunteer Work' : 'Voluntariado'}</Text>
-            {volunteers.map((vol, i) => (
-              <View key={i} style={{ marginBottom: 10 }}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 2 }}>
-                  <Text style={styles.volRole}>{vol.role}</Text>
-                  <Text style={styles.date}>
-                    {vol.startMonth && vol.startYear ? `${translateMonth(vol.startMonth, lang || 'pt')} ${vol.startYear}` : ''}
-                    {vol.startMonth && vol.startYear && (vol.endMonth || vol.endYear || vol.current) ? ' - ' : ''}
-                    {vol.current ? translateCurrent(lang || 'pt') : vol.endMonth && vol.endYear ? `${translateMonth(vol.endMonth, lang || 'pt')} ${vol.endYear}` : ''}
-                  </Text>
-                </View>
-                <Text style={styles.volOrg}>{vol.organization}</Text>
-                {vol.description && <Text style={styles.volDesc}>• {vol.description}</Text>}
-                {vol.impact && <Text style={styles.volImpact}>• {vol.impact}</Text>}
-              </View>
-            ))}
-          </View>
-        )}
-      </Page>
-    </Document>
-  );
+			case "academic_education":
+				return renderEducationSection(
+					education,
+					renderProps,
+					SectionTitle,
+					TimelineItem,
+					TimelineWrapper,
+				);
+
+			case "technical_skills":
+				return renderSkillsSection(skills, renderProps, SectionTitle);
+
+			case "languages":
+				return renderLanguagesSection(
+					languages,
+					renderProps,
+					SectionTitle,
+					LanguagesCustomRender,
+				);
+
+			case "certifications":
+				return renderCertificationsSection(
+					certifications,
+					renderProps,
+					SectionTitle,
+				);
+
+			case "projects":
+				return renderProjectsSection(projects, renderProps, SectionTitle);
+
+			case "volunteer":
+				return renderVolunteerSection(
+					volunteers,
+					renderProps,
+					SectionTitle,
+					TimelineItem,
+					TimelineWrapper,
+				);
+
+			default:
+				if (sectionKey.startsWith("custom_")) {
+					const customId = sectionKey.replace("custom_", "");
+					const section = (customSections || []).find(
+						(cs) => cs.id === customId,
+					);
+					if (section) {
+						return renderCustomSection(
+							section,
+							renderProps,
+							SectionTitle,
+							TimelineItem,
+							TimelineWrapper,
+						);
+					}
+				}
+				return null;
+		}
+	};
+
+	return (
+		<Document>
+			<Page size="A4" style={styles.page}>
+				<View style={styles.header}>
+					<View style={styles.headerLeft}>
+						<Text style={styles.name}>{personalInfo?.name}</Text>
+						{personalInfo?.desiredRole ? (
+							<Text style={styles.title}>{personalInfo.desiredRole}</Text>
+						) : null}
+						{contactItems.length > 0 ? (
+							<View style={styles.contactRow}>
+								{contactItems.map((item, idx) => (
+									<Fragment key={`${item.label}-${item.value}`}>
+										<Text style={styles.contactItem}>
+											<Text style={styles.contactLabel}>{item.label}:</Text>{" "}
+											{item.value}
+										</Text>
+										{idx < contactItems.length - 1 ? (
+											<Text style={styles.contactSeparator}>|</Text>
+										) : null}
+									</Fragment>
+								))}
+							</View>
+						) : null}
+						{links && links.length > 0 ? (
+							<View
+								style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 4 }}
+							>
+								{links.map((lnk, idx) => (
+									<Link
+										key={`${lnk.type}-${lnk.value}-${idx}`}
+										src={getSocialUrl(lnk.type, lnk.value)}
+										style={styles.link}
+									>
+										{lnk.hideLinkLabel
+											? lnk.value
+											: `${lnk.customName || lnk.type}: ${lnk.value}`}
+									</Link>
+								))}
+							</View>
+						) : null}
+					</View>
+					{photoSrc ? (
+						<View style={styles.photoFrame}>
+							{/* eslint-disable-next-line jsx-a11y/alt-text */}
+							<Image src={photoSrc} style={styles.photoImage} />
+						</View>
+					) : null}
+				</View>
+
+				{order.map((sectionKey) => (
+					<Fragment key={sectionKey}>{renderSection(sectionKey)}</Fragment>
+				))}
+			</Page>
+		</Document>
+	);
 }
