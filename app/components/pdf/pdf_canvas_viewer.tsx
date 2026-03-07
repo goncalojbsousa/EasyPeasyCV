@@ -12,7 +12,7 @@ export function PdfCanvasViewer({ blob, scale = 1 }: PdfCanvasViewerProps) {
 	const newContainerRef = useRef<HTMLDivElement | null>(null);
 	const [containerWidth, setContainerWidth] = useState<number>(0);
 
-	// Para preservar a posição do scroll
+	// Preserve scroll position
 	const scrollPosition = useRef<{ top: number; left: number }>({
 		top: 0,
 		left: 0,
@@ -40,7 +40,7 @@ export function PdfCanvasViewer({ blob, scale = 1 }: PdfCanvasViewerProps) {
 			const newContainer = newContainerRef.current;
 			newContainer.innerHTML = "";
 
-			// Salva a posição do scroll antes de atualizar
+			// Save scroll position before updating
 			const container = containerRef.current;
 			if (container) {
 				scrollPosition.current.top = container.scrollTop;
@@ -110,7 +110,7 @@ export function PdfCanvasViewer({ blob, scale = 1 }: PdfCanvasViewerProps) {
 			if (!canceled && container) {
 				container.innerHTML = "";
 				container.append(...Array.from(newContainer.children));
-				// Restaura a posição do scroll
+				// Restore scroll position
 				container.scrollTop = scrollPosition.current.top;
 				container.scrollLeft = scrollPosition.current.left;
 			}
