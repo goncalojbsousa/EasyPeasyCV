@@ -96,6 +96,7 @@ export function PdfCanvasViewer({ blob, scale = 1 }: PdfCanvasViewerProps) {
 				if (!ctx) continue;
 				ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 				const renderTask = page.render({
+					canvas: null,
 					canvasContext: ctx,
 					viewport,
 				});
