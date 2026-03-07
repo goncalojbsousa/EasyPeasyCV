@@ -46,6 +46,7 @@ import type {
 import { useAnchorPosition } from "../../utils/useAnchorPosition";
 import PdfDownloadButton from "../pdf/pdf_download_button";
 import { LayoutControls } from "./layout_controls";
+import { ProfileDeleteModal } from "./modals/profile_delete_modal";
 import { TemplateSelectorModal } from "./modals/template_selector_modal";
 import { ThankYouModal } from "./modals/thank_you_modal";
 
@@ -123,6 +124,10 @@ export function BottomActionBar({
 	>(null);
 	const [editingProfileId, setEditingProfileId] = useState<string | null>(null);
 	const [editingProfileName, setEditingProfileName] = useState("");
+	const [profilePendingDeletion, setProfilePendingDeletion] = useState<{
+		id: string;
+		name: string;
+	} | null>(null);
 	const [showThankYouModal, setShowThankYouModal] = useState(false);
 	const [showTemplateModal, setShowTemplateModal] = useState(false);
 	const [isFooterVisible, setIsFooterVisible] = useState(false);
@@ -261,17 +266,21 @@ export function BottomActionBar({
 
 	const confirmDeleteProfile = (profile: { id: string; name: string }) => {
 		if (!onDeleteProfile) return;
+		setProfilePendingDeletion({
+			id: profile.id,
+			name: profile.name || t("profile.unnamed"),
+		});
+		setOpenMenu(null);
+	};
 
-		const message = t("profile.delete.confirm").replace(
-			"{name}",
-			profile.name || t("profile.unnamed"),
-		);
-		if (!window.confirm(message)) return;
+	const handleDeleteProfile = () => {
+		if (!profilePendingDeletion || !onDeleteProfile) return;
 
-		onDeleteProfile(profile.id);
-		if (editingProfileId === profile.id) {
+		onDeleteProfile(profilePendingDeletion.id);
+		if (editingProfileId === profilePendingDeletion.id) {
 			cancelRenamingProfile();
 		}
+		setProfilePendingDeletion(null);
 	};
 
 	const duplicateProfile = (profileId: string) => {
@@ -1152,6 +1161,13 @@ export function BottomActionBar({
 					setShowTemplateModal(false);
 				}}
 				onClose={() => setShowTemplateModal(false)}
+			/>
+
+			<ProfileDeleteModal
+				show={profilePendingDeletion !== null}
+				profileName={profilePendingDeletion?.name || t("profile.unnamed")}
+				onClose={() => setProfilePendingDeletion(null)}
+				onConfirm={handleDeleteProfile}
 			/>
 
 			<ThankYouModal

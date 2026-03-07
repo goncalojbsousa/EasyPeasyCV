@@ -39,7 +39,6 @@ export function LivePdfPane({
 }: LivePdfPaneProps) {
 	const { t } = useLanguage();
 	const [isMobile, setIsMobile] = useState(false);
-	const [_debouncedTick, setDebouncedTick] = useState(0);
 	const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -52,11 +51,6 @@ export function LivePdfPane({
 		return () => {
 			window.removeEventListener("resize", check);
 		};
-	}, []);
-
-	useEffect(() => {
-		const t = setTimeout(() => setDebouncedTick((v) => v + 1), 500);
-		return () => clearTimeout(t);
 	}, []);
 
 	const doc = useMemo(
@@ -102,28 +96,36 @@ export function LivePdfPane({
 
 	// Generate a PDF blob whenever debounced data changes
 	useEffect(() => {
+		if (isMobile) {
+			return;
+		}
+
 		let canceled = false;
-		const generate = async () => {
-			if (isMobile) return;
-			setLoading(true);
-			setError(null);
-			try {
-				const blob = await pdf(doc).toBlob();
-				if (canceled) return;
-				setPdfBlob(blob);
-			} catch (e) {
-				console.error("PDF preview generation error:", e);
-				if (!canceled) {
-					const msg = e instanceof Error ? e.message : JSON.stringify(e);
-					setError(`Erro ao gerar preview do PDF: ${msg}`);
+		const timeoutId = window.setTimeout(() => {
+			const generate = async () => {
+				setLoading(true);
+				setError(null);
+				try {
+					const blob = await pdf(doc).toBlob();
+					if (canceled) return;
+					setPdfBlob(blob);
+				} catch (e) {
+					console.error("PDF preview generation error:", e);
+					if (!canceled) {
+						const msg = e instanceof Error ? e.message : JSON.stringify(e);
+						setError(`Erro ao gerar preview do PDF: ${msg}`);
+					}
+				} finally {
+					if (!canceled) setLoading(false);
 				}
-			} finally {
-				if (!canceled) setLoading(false);
-			}
-		};
-		generate();
+			};
+
+			generate();
+		}, 500);
+
 		return () => {
 			canceled = true;
+			window.clearTimeout(timeoutId);
 		};
 	}, [doc, isMobile]);
 
@@ -138,8 +140,6 @@ export function LivePdfPane({
 			</div>
 		);
 	}
-
-	const _refreshPreview = () => setDebouncedTick((v) => v + 1);
 
 	return (
 		<div className="w-full h-full rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden flex flex-col">

@@ -98,7 +98,6 @@ export function PdfCanvasViewer({ blob, scale = 1 }: PdfCanvasViewerProps) {
 				const renderTask = page.render({
 					canvasContext: ctx,
 					viewport,
-					canvas,
 				});
 				await renderTask.promise;
 				if (canceled) return;

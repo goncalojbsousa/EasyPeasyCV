@@ -79,7 +79,7 @@ EasyPeasyCV never sends your data to any server. All information is stored in yo
 
 ## Tech Stack
 
-- **Framework:** Next.js 15 (App Router)
+- **Framework:** Next.js 16 (App Router)
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS
 - **PDF Generation:** @react-pdf/renderer

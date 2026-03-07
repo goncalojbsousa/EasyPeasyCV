@@ -110,9 +110,9 @@ export function PdfPreview({
 			const url = URL.createObjectURL(blob);
 			setPdfUrl(url);
 		} catch (error) {
-			setError(
-				`Erro ao gerar PDF: ${error instanceof Error ? error.message : "Erro desconhecido"}`,
-			);
+			const errorMessage =
+				error instanceof Error ? error.message : t("pdf.preview.error.unknown");
+			setError(`${t("pdf.preview.error.generate")}: ${errorMessage}`);
 		} finally {
 			setLoading(false);
 		}
@@ -133,6 +133,7 @@ export function PdfPreview({
 		color,
 		settings,
 		sectionOrder,
+		t,
 	]);
 
 	// Detect if the device is mobile to adjust PDF preview behavior
@@ -244,7 +245,7 @@ export function PdfPreview({
 									onClick={generatePdf}
 									className="px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors duration-300"
 								>
-									Tentar Novamente
+									{t("pdf.preview.retry")}
 								</button>
 							</div>
 						</div>
@@ -258,11 +259,10 @@ export function PdfPreview({
 											<FileText className="w-8 h-8 text-sky-600" />
 										</div>
 										<h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
-											PDF Gerado com Sucesso!
+											{t("pdf.preview.mobile.success")}
 										</h3>
 										<p className="text-gray-600 dark:text-gray-400 mb-6">
-											A visualização direta do PDF pode não funcionar no
-											telemóvel.
+											{t("pdf.preview.mobile.info")}
 										</p>
 										<div className="space-y-3">
 											<a
@@ -284,7 +284,7 @@ export function PdfPreview({
 											</a>
 										</div>
 										<p className="text-xs text-gray-500 dark:text-gray-400 mt-4">
-											Tamanho: {(pdfSize / 1024).toFixed(1)} KB
+											{t("pdf.preview.size")}: {(pdfSize / 1024).toFixed(1)} KB
 										</p>
 									</div>
 								</div>
