@@ -38,10 +38,6 @@ interface PdfPreviewProps extends CvData {
 }
 
 /**
- * PdfPreview component renders the actual PDF using iframe
- * Shows the exact PDF that will be generated
- */
-/**
  * PDF Preview component
  * Displays a real-time preview of the CV as a PDF in a modal
  * @param props - Component props including CV data, modal controls, and language
