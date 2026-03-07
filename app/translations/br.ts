@@ -218,6 +218,20 @@ const brTranslations: Record<string, string> = {
 	"layout.controls.lineSpacing.label": "Espaçamento de linha",
 	"layout.controls.sectionSpacing.label": "Espaçamento entre seções",
 	"layout.controls.columns.label": "Colunas",
+
+	// Profiles
+	"profile.selector": "Perfis de CV",
+	"profile.manage": "Gerenciar perfis",
+	"profile.new": "Novo perfil",
+	"profile.copy": "Duplicar",
+	"profile.copy.name": "Cópia de {name}",
+	"profile.rename": "Renomear",
+	"profile.rename.save": "Salvar nome",
+	"profile.rename.cancel": "Cancelar edição",
+	"profile.delete": "Excluir",
+	"profile.delete.confirm": 'Deseja excluir o perfil "{name}"?',
+	"profile.unnamed": "Perfil sem nome",
+
 	"layout.controls.header.title": "Cabeçalho",
 	"layout.controls.header.nameSection": "Nome e Cargo",
 	"layout.controls.header.nameSize": "Tamanho do nome",

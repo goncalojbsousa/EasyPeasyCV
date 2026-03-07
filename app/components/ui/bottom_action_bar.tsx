@@ -4,8 +4,10 @@ import {
 	BarChart3,
 	BookOpen,
 	Building,
+	Check,
 	ChevronDown,
 	Code,
+	Copy,
 	Database,
 	DollarSign,
 	Download,
@@ -14,9 +16,13 @@ import {
 	Heart,
 	Package,
 	Palette,
+	Pencil,
+	Plus,
+	Trash2,
 	TrendingUp,
 	Upload,
 	Users,
+	X,
 } from "lucide-react";
 import type { JSX, KeyboardEvent, MouseEvent, ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -68,6 +74,13 @@ interface BottomActionBarProps {
 	onResetSectionOrder?: () => void;
 	sectionOrder?: import("../../types/cv").SectionKey[];
 	hasAnyContent?: boolean;
+	profiles?: { id: string; name: string }[];
+	currentProfileId?: string | null;
+	onCreateProfile?: () => void;
+	onDuplicateProfile?: (id: string) => void;
+	onSwitchProfile?: (id: string) => void;
+	onRenameProfile?: (id: string, name: string) => void;
+	onDeleteProfile?: (id: string) => void;
 }
 
 export function BottomActionBar({
@@ -95,12 +108,21 @@ export function BottomActionBar({
 	onSettingsChange,
 	onResetSectionOrder,
 	hasAnyContent = false,
+	profiles,
+	currentProfileId,
+	onCreateProfile,
+	onDuplicateProfile,
+	onSwitchProfile,
+	onRenameProfile,
+	onDeleteProfile,
 }: BottomActionBarProps) {
 	const { t, cvType, setCVType } = useLanguage();
 
 	const [openMenu, setOpenMenu] = useState<
-		null | "lang" | "cvType" | "data" | "layout"
+		null | "lang" | "cvType" | "data" | "layout" | "profile"
 	>(null);
+	const [editingProfileId, setEditingProfileId] = useState<string | null>(null);
+	const [editingProfileName, setEditingProfileName] = useState("");
 	const [showThankYouModal, setShowThankYouModal] = useState(false);
 	const [showTemplateModal, setShowTemplateModal] = useState(false);
 	const [isFooterVisible, setIsFooterVisible] = useState(false);
@@ -108,15 +130,18 @@ export function BottomActionBar({
 	const langRef = useRef<HTMLDivElement>(null);
 	const cvTypeRef = useRef<HTMLDivElement>(null);
 	const dataRef = useRef<HTMLDivElement>(null);
+	const profileRef = useRef<HTMLDivElement>(null);
 	const cvTypeBtnRef = useRef<HTMLButtonElement>(null);
 	const langBtnRef = useRef<HTMLButtonElement>(null);
 	const dataBtnRef = useRef<HTMLButtonElement>(null);
+	const profileBtnRef = useRef<HTMLButtonElement>(null);
 	const importInputRef = useRef<HTMLInputElement>(null);
 	const layoutBtnRef = useRef<HTMLButtonElement>(null);
 	const layoutPortalRef = useRef<HTMLDivElement>(null);
 	const cvTypePortalRef = useRef<HTMLDivElement>(null);
 	const langPortalRef = useRef<HTMLDivElement>(null);
 	const dataPortalRef = useRef<HTMLDivElement>(null);
+	const profilePortalRef = useRef<HTMLDivElement>(null);
 	const cvTypes: CVType[] = [
 		"development",
 		"marketing",
@@ -131,36 +156,45 @@ export function BottomActionBar({
 	];
 
 	useEffect(() => {
-		const onDocClick = (e: Event) => {
+		const onDocPointerDown = (e: Event) => {
 			if (!openMenu) return;
-			const mouseEvent = e as unknown as MouseEvent;
-			const target = mouseEvent.target as Node;
+			const target = e.target as Node | null;
+			if (!target) return;
 			const targetEl = target instanceof Element ? target : null;
-			const inCvType = !!(
-				cvTypeBtnRef.current?.contains(target) ||
-				cvTypePortalRef.current?.contains(target)
-			);
-			const inLang = !!(
-				langBtnRef.current?.contains(target) ||
-				langPortalRef.current?.contains(target)
-			);
-			const inData = !!(
-				dataBtnRef.current?.contains(target) ||
-				dataPortalRef.current?.contains(target)
-			);
-			const inLayout = !!(
-				layoutBtnRef.current?.contains(target) ||
-				layoutPortalRef.current?.contains(target)
-			);
+			const path = typeof e.composedPath === "function" ? e.composedPath() : [];
+			const isWithinRef = (ref: { current: Node | null }) =>
+				!!ref.current &&
+				(path.includes(ref.current) || ref.current.contains(target));
+			const inCvType =
+				isWithinRef(cvTypeBtnRef) || isWithinRef(cvTypePortalRef);
+			const inLang = isWithinRef(langBtnRef) || isWithinRef(langPortalRef);
+			const inData = isWithinRef(dataBtnRef) || isWithinRef(dataPortalRef);
+			const inLayout =
+				isWithinRef(layoutBtnRef) || isWithinRef(layoutPortalRef);
+			const inProfile =
+				isWithinRef(profileBtnRef) || isWithinRef(profilePortalRef);
 			const inColorSelector = targetEl?.closest(
 				'[data-color-selector-portal="true"]',
 			);
 			const insideAny =
-				inCvType || inLang || inData || inLayout || !!inColorSelector;
+				inCvType ||
+				inLang ||
+				inData ||
+				inLayout ||
+				inProfile ||
+				!!inColorSelector;
 			if (!insideAny) setOpenMenu(null);
 		};
-		document.addEventListener("click", onDocClick);
-		return () => document.removeEventListener("click", onDocClick);
+		document.addEventListener("pointerdown", onDocPointerDown, true);
+		return () =>
+			document.removeEventListener("pointerdown", onDocPointerDown, true);
+	}, [openMenu]);
+
+	useEffect(() => {
+		if (openMenu !== "profile") {
+			setEditingProfileId(null);
+			setEditingProfileName("");
+		}
 	}, [openMenu]);
 
 	// Hide bar when footer is visible to avoid overlapping it
@@ -184,6 +218,7 @@ export function BottomActionBar({
 	const langPos = useAnchorPosition(langBtnRef, openMenu === "lang");
 	const dataPos = useAnchorPosition(dataBtnRef, openMenu === "data");
 	const layoutPos = useAnchorPosition(layoutBtnRef, openMenu === "layout");
+	const profilePos = useAnchorPosition(profileBtnRef, openMenu === "profile");
 
 	const getCVTypeIcon = useMemo(
 		() => (type: string) => {
@@ -203,6 +238,46 @@ export function BottomActionBar({
 		},
 		[],
 	);
+
+	const canManageProfiles = (profiles?.length ?? 0) >= 2;
+
+	const startRenamingProfile = (profileId: string, currentName: string) => {
+		setEditingProfileId(profileId);
+		setEditingProfileName(currentName);
+	};
+
+	const cancelRenamingProfile = () => {
+		setEditingProfileId(null);
+		setEditingProfileName("");
+	};
+
+	const confirmRenameProfile = () => {
+		const trimmedName = editingProfileName.trim();
+		if (!editingProfileId || !trimmedName) return;
+
+		onRenameProfile?.(editingProfileId, trimmedName);
+		cancelRenamingProfile();
+	};
+
+	const confirmDeleteProfile = (profile: { id: string; name: string }) => {
+		if (!onDeleteProfile) return;
+
+		const message = t("profile.delete.confirm").replace(
+			"{name}",
+			profile.name || t("profile.unnamed"),
+		);
+		if (!window.confirm(message)) return;
+
+		onDeleteProfile(profile.id);
+		if (editingProfileId === profile.id) {
+			cancelRenamingProfile();
+		}
+	};
+
+	const duplicateProfile = (profileId: string) => {
+		onDuplicateProfile?.(profileId);
+		setOpenMenu(null);
+	};
 
 	const PdfDownloadButtonWithValidation = ({
 		lang,
@@ -487,6 +562,299 @@ export function BottomActionBar({
 										{t(`template.${selectedTemplate}.name`)}
 									</span>
 								</button>
+
+								{profiles && (
+									<div
+										className="relative shrink-0 overflow-visible"
+										ref={profileRef}
+									>
+										<button
+											type="button"
+											ref={profileBtnRef}
+											onClick={() =>
+												setOpenMenu((prev) =>
+													prev === "profile" ? null : "profile",
+												)
+											}
+											className="flex h-9 items-center gap-2 px-3 rounded-md border border-gray-300/60 dark:border-zinc-600/60 bg-white/80 dark:bg-zinc-800/80 text-[13px] text-gray-900 dark:text-gray-100 hover:bg-white dark:hover:bg-zinc-700 shadow-sm"
+											title={t("profile.selector")}
+										>
+											<Users className="w-4 h-4" />
+											<span className="font-medium">
+												{profiles.find((p) => p.id === currentProfileId)
+													?.name ?? t("profile.unnamed")}
+											</span>
+											<ChevronDown
+												className={`w-4 h-4 transition-transform ${openMenu === "profile" ? "rotate-180" : ""}`}
+											/>
+										</button>
+										{openMenu === "profile" &&
+											profilePos &&
+											createPortal(
+												// biome-ignore lint/a11y/noStaticElementInteractions: Portal container needs to prevent event propagation
+												<div
+													ref={profilePortalRef}
+													role="presentation"
+													className="z-[70] w-[260px] max-h-[60vh] overflow-auto bg-white dark:bg-zinc-800 rounded-xl shadow-xl border border-gray-200 dark:border-zinc-700 py-2"
+													onMouseDown={(e) => e.stopPropagation()}
+													style={{
+														position: "fixed",
+														left: profilePos.left,
+														top: profilePos.top - 8,
+														transform: "translateY(-100%)",
+													}}
+												>
+													<div className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-zinc-700">
+														{t("profile.selector")}
+													</div>
+													{canManageProfiles ? (
+														<div className="px-2 py-2">
+															<div className="px-1 pb-2 text-[11px] uppercase tracking-wide text-gray-500 dark:text-gray-400">
+																{t("profile.manage")}
+															</div>
+															<div className="space-y-1">
+																{profiles.map((profile) => {
+																	const profileName =
+																		profile.name || t("profile.unnamed");
+																	const isCurrent =
+																		currentProfileId === profile.id;
+																	const isEditing =
+																		editingProfileId === profile.id;
+
+																	if (isEditing) {
+																		const isInvalidName =
+																			editingProfileName.trim() === "";
+																		return (
+																			<div
+																				key={profile.id}
+																				className="flex items-center gap-1.5 rounded-md border border-sky-200 dark:border-sky-800/60 bg-sky-50/60 dark:bg-sky-900/20 px-2 py-1.5"
+																			>
+																				<input
+																					type="text"
+																					value={editingProfileName}
+																					onChange={(e) =>
+																						setEditingProfileName(
+																							e.target.value,
+																						)
+																					}
+																					onKeyDown={(e) => {
+																						if (e.key === "Enter") {
+																							e.preventDefault();
+																							confirmRenameProfile();
+																						}
+																						if (e.key === "Escape") {
+																							e.preventDefault();
+																							cancelRenamingProfile();
+																						}
+																					}}
+																					className="min-w-0 flex-1 rounded-md border border-gray-300 dark:border-zinc-600 bg-white dark:bg-zinc-900 px-2 py-1 text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-sky-500"
+																				/>
+																				<button
+																					type="button"
+																					onClick={confirmRenameProfile}
+																					disabled={isInvalidName}
+																					title={t("profile.rename.save")}
+																					className="inline-flex h-7 w-7 items-center justify-center rounded-md text-sky-700 dark:text-sky-400 hover:bg-sky-100 dark:hover:bg-sky-900/40 disabled:opacity-40 disabled:cursor-not-allowed"
+																				>
+																					<Check className="h-4 w-4" />
+																				</button>
+																				<button
+																					type="button"
+																					onClick={cancelRenamingProfile}
+																					title={t("profile.rename.cancel")}
+																					className="inline-flex h-7 w-7 items-center justify-center rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700"
+																				>
+																					<X className="h-4 w-4" />
+																				</button>
+																			</div>
+																		);
+																	}
+
+																	return (
+																		<div
+																			key={profile.id}
+																			className={`flex items-center gap-1.5 rounded-md px-1 py-1 ${isCurrent ? "bg-sky-50 dark:bg-sky-900/20" : "hover:bg-gray-50 dark:hover:bg-zinc-700/60"}`}
+																		>
+																			<button
+																				type="button"
+																				onClick={() => {
+																					onSwitchProfile?.(profile.id);
+																					setOpenMenu(null);
+																				}}
+																				className={`min-w-0 flex-1 flex items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-gray-700 dark:text-gray-300 ${isCurrent ? "font-semibold text-sky-700 dark:text-sky-400" : ""}`}
+																			>
+																				<Users className="w-4 h-4 shrink-0" />
+																				<span className="truncate">
+																					{profileName}
+																				</span>
+																			</button>
+																			<button
+																				type="button"
+																				onClick={(e) => {
+																					e.stopPropagation();
+																					duplicateProfile(profile.id);
+																				}}
+																				title={t("profile.copy")}
+																				className="inline-flex h-7 w-7 items-center justify-center rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-700"
+																			>
+																				<Copy className="h-4 w-4" />
+																			</button>
+																			<button
+																				type="button"
+																				onClick={(e) => {
+																					e.stopPropagation();
+																					startRenamingProfile(
+																						profile.id,
+																						profileName,
+																					);
+																				}}
+																				title={t("profile.rename")}
+																				className="inline-flex h-7 w-7 items-center justify-center rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-700"
+																			>
+																				<Pencil className="h-4 w-4" />
+																			</button>
+																			<button
+																				type="button"
+																				onClick={() =>
+																					confirmDeleteProfile(profile)
+																				}
+																				title={t("profile.delete")}
+																				className="inline-flex h-7 w-7 items-center justify-center rounded-md text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+																			>
+																				<Trash2 className="h-4 w-4" />
+																			</button>
+																		</div>
+																	);
+																})}
+															</div>
+														</div>
+													) : (
+														<div className="px-2 py-2">
+															<div className="space-y-1">
+																{profiles.map((profile) => {
+																	const profileName =
+																		profile.name || t("profile.unnamed");
+																	const isCurrent =
+																		currentProfileId === profile.id;
+																	const isEditing =
+																		editingProfileId === profile.id;
+
+																	if (isEditing) {
+																		const isInvalidName =
+																			editingProfileName.trim() === "";
+																		return (
+																			<div
+																				key={profile.id}
+																				className="flex items-center gap-1.5 rounded-md border border-sky-200 dark:border-sky-800/60 bg-sky-50/60 dark:bg-sky-900/20 px-2 py-1.5"
+																			>
+																				<input
+																					type="text"
+																					value={editingProfileName}
+																					onChange={(e) =>
+																						setEditingProfileName(
+																							e.target.value,
+																						)
+																					}
+																					onKeyDown={(e) => {
+																						if (e.key === "Enter") {
+																							e.preventDefault();
+																							confirmRenameProfile();
+																						}
+																						if (e.key === "Escape") {
+																							e.preventDefault();
+																							cancelRenamingProfile();
+																						}
+																					}}
+																					className="min-w-0 flex-1 rounded-md border border-gray-300 dark:border-zinc-600 bg-white dark:bg-zinc-900 px-2 py-1 text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-sky-500"
+																				/>
+																				<button
+																					type="button"
+																					onClick={confirmRenameProfile}
+																					disabled={isInvalidName}
+																					title={t("profile.rename.save")}
+																					className="inline-flex h-7 w-7 items-center justify-center rounded-md text-sky-700 dark:text-sky-400 hover:bg-sky-100 dark:hover:bg-sky-900/40 disabled:opacity-40 disabled:cursor-not-allowed"
+																				>
+																					<Check className="h-4 w-4" />
+																				</button>
+																				<button
+																					type="button"
+																					onClick={cancelRenamingProfile}
+																					title={t("profile.rename.cancel")}
+																					className="inline-flex h-7 w-7 items-center justify-center rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700"
+																				>
+																					<X className="h-4 w-4" />
+																				</button>
+																			</div>
+																		);
+																	}
+
+																	return (
+																		<div
+																			key={profile.id}
+																			className={`flex items-center gap-1.5 rounded-md px-1 py-1 ${isCurrent ? "bg-sky-50 dark:bg-sky-900/20" : "hover:bg-gray-50 dark:hover:bg-zinc-700/60"}`}
+																		>
+																			<button
+																				type="button"
+																				onClick={() => {
+																					onSwitchProfile?.(profile.id);
+																					setOpenMenu(null);
+																				}}
+																				className={`min-w-0 flex-1 flex items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-gray-700 dark:text-gray-300 ${isCurrent ? "font-semibold text-sky-700 dark:text-sky-400" : ""}`}
+																			>
+																				<Users className="w-4 h-4 shrink-0" />
+																				<span className="truncate">
+																					{profileName}
+																				</span>
+																			</button>
+																			<button
+																				type="button"
+																				onClick={(e) => {
+																					e.stopPropagation();
+																					duplicateProfile(profile.id);
+																				}}
+																				title={t("profile.copy")}
+																				className="inline-flex h-7 w-7 items-center justify-center rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-700"
+																			>
+																				<Copy className="h-4 w-4" />
+																			</button>
+																			<button
+																				type="button"
+																				onClick={(e) => {
+																					e.stopPropagation();
+																					startRenamingProfile(
+																						profile.id,
+																						profileName,
+																					);
+																				}}
+																				title={t("profile.rename")}
+																				className="inline-flex h-7 w-7 items-center justify-center rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-700"
+																			>
+																				<Pencil className="h-4 w-4" />
+																			</button>
+																		</div>
+																	);
+																})}
+															</div>
+														</div>
+													)}
+													<button
+														type="button"
+														onClick={() => {
+															onCreateProfile?.();
+															setOpenMenu(null);
+														}}
+														className="w-full flex items-center gap-2 px-3 py-2 text-sky-700 dark:text-sky-400 hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors duration-200 border-t border-gray-100 dark:border-zinc-700 mt-1"
+													>
+														<Plus className="w-4 h-4" />
+														<span className="font-semibold text-sm">
+															{t("profile.new")}
+														</span>
+													</button>
+												</div>,
+												document.body,
+											)}
+									</div>
+								)}
 
 								<div
 									className="relative shrink-0 overflow-visible"

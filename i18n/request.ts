@@ -35,7 +35,12 @@ function unflattenMessages(
 			if (i === keys.length - 1) {
 				current[k] = value;
 			} else {
-				current[k] = current[k] || {};
+				// Se current[k] já existe e é string, converte para objeto
+				if (typeof current[k] === "string") {
+					current[k] = { _value: current[k] };
+				} else if (!current[k]) {
+					current[k] = {};
+				}
 				current = current[k] as Record<string, unknown>;
 			}
 		}

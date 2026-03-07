@@ -3,13 +3,13 @@
 import { pdf } from "@react-pdf/renderer";
 import type React from "react";
 import { forwardRef, useImperativeHandle, useState } from "react";
+import { useLanguage } from "../../contexts/LanguageContext";
 import type {
 	CvColor,
 	CvData,
 	CvRenderSettings,
 	CvTemplate,
 } from "../../types/cv";
-import { useLanguage } from "../../contexts/LanguageContext";
 import { CvDocument } from "../cv_document";
 
 /**

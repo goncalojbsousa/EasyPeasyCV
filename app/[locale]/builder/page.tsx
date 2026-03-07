@@ -41,7 +41,142 @@ import { cvDataToXml, xmlToCvData } from "../../utils/xml";
 
 type CvDataWithSettings = CvData & { settings?: CvRenderSettings };
 
+type CvProfileMeta = {
+	id: string;
+	name: string;
+	createdAt: string;
+	updatedAt: string;
+};
+
+type CvProfilesStorage = {
+	currentProfileId: string | null;
+	profiles: Record<string, CvDataWithSettings>;
+	meta: Record<string, CvProfileMeta>;
+};
+
+const PROFILES_STORAGE_KEY = "cv-builder-profiles-v1";
+const LEGACY_STORAGE_KEY = "cv-builder-data";
+
 const DEFAULT_COUNTRY_CODE = "Portugal (+351)";
+
+const DEFAULT_RENDER_SETTINGS: CvRenderSettings = {
+	layout: {
+		fontFamily: "Helvetica",
+		customFont: null,
+		textScale: 1.0,
+		marginsCm: { top: 1.5, right: 1.5, bottom: 1.5, left: 1.5 },
+		lineSpacing: 1.4,
+		sectionSpacingPx: 12,
+		columns: 1,
+		atsSafe: false,
+		density: "normal",
+		textAlignment: "justify",
+		singlePageMode: false,
+	},
+	header: {
+		nameFontSize: 22,
+		nameFontWeight: "bold",
+		nameColor: "#000000",
+		titleStyle: "normal",
+		titlePosition: "below",
+		dividerThickness: 1,
+		dividerStyle: "solid",
+		iconSizePx: 18,
+		iconSpacingPx: 9,
+		iconAlignment: "left",
+	},
+	photo: {
+		enabled: false,
+		aspectRatio: "1:1",
+		crop: null,
+		dataUrl: null,
+	},
+	sections: {
+		titleColor: "#000000",
+		titleFontSize: 12,
+		dateFormat: "medium",
+		useThemeColorForLinks: false,
+	},
+};
+
+const EMPTY_PERSONAL_INFO = {
+	name: "",
+	desiredRole: "",
+	city: "",
+	postalCode: "",
+	email: "",
+	countryCode: DEFAULT_COUNTRY_CODE,
+	phone: "",
+};
+
+const generateId = () => {
+	if (
+		typeof crypto !== "undefined" &&
+		"randomUUID" in crypto &&
+		typeof crypto.randomUUID === "function"
+	) {
+		return crypto.randomUUID();
+	}
+	return `id-${Math.random().toString(16).slice(2)}-${Date.now()}`;
+};
+
+const cloneCvData = (data: CvDataWithSettings): CvDataWithSettings => {
+	if (typeof structuredClone === "function") {
+		return structuredClone(data);
+	}
+
+	return JSON.parse(JSON.stringify(data)) as CvDataWithSettings;
+};
+
+const parseProfilesStorage = (raw: string | null): CvProfilesStorage => {
+	if (!raw) {
+		return {
+			currentProfileId: null,
+			profiles: {},
+			meta: {},
+		};
+	}
+
+	try {
+		const parsed = JSON.parse(raw) as Partial<CvProfilesStorage>;
+		return {
+			currentProfileId: parsed.currentProfileId ?? null,
+			profiles: parsed.profiles || {},
+			meta: parsed.meta || {},
+		};
+	} catch {
+		return {
+			currentProfileId: null,
+			profiles: {},
+			meta: {},
+		};
+	}
+};
+
+const getUniqueProfileName = (
+	baseName: string,
+	existingNames: Iterable<string>,
+) => {
+	const normalizedBaseName = baseName.trim() || "Profile";
+	const existingNameSet = new Set(
+		Array.from(existingNames)
+			.map((name) => name.trim())
+			.filter((name) => name !== ""),
+	);
+
+	if (!existingNameSet.has(normalizedBaseName)) {
+		return normalizedBaseName;
+	}
+
+	let counter = 2;
+	let nextName = `${normalizedBaseName} ${counter}`;
+	while (existingNameSet.has(nextName)) {
+		counter += 1;
+		nextName = `${normalizedBaseName} ${counter}`;
+	}
+
+	return nextName;
+};
 
 /**
  * CV Builder page component
@@ -50,17 +185,10 @@ const DEFAULT_COUNTRY_CODE = "Portugal (+351)";
  */
 export default function Builder() {
 	const { t, language } = useLanguage();
+	const initialNewProfileLabelRef = useRef(t("profile.new"));
 
 	// State management for all form sections
-	const [personalInfo, setPersonalInfo] = useState({
-		name: "",
-		desiredRole: "",
-		city: "",
-		postalCode: "",
-		email: "",
-		countryCode: DEFAULT_COUNTRY_CODE,
-		phone: "",
-	});
+	const [personalInfo, setPersonalInfo] = useState(EMPTY_PERSONAL_INFO);
 	const [links, setLinks] = useState<Link[]>([]);
 	const [resume, setResume] = useState("");
 	// Tracks the source of loaded data for the top notification
@@ -86,45 +214,9 @@ export default function Builder() {
 	const [selectedTemplate, setSelectedTemplate] =
 		useState<CvTemplate>("professional");
 	const [selectedColor, setSelectedColor] = useState<CvColor>("blue");
-	const [renderSettings, setRenderSettings] = useState<CvRenderSettings>({
-		layout: {
-			fontFamily: "Helvetica",
-			customFont: null,
-			textScale: 1.0,
-			marginsCm: { top: 1.5, right: 1.5, bottom: 1.5, left: 1.5 },
-			lineSpacing: 1.4,
-			sectionSpacingPx: 12,
-			columns: 1,
-			atsSafe: false,
-			density: "normal",
-			textAlignment: "justify",
-			singlePageMode: false,
-		},
-		header: {
-			nameFontSize: 22,
-			nameFontWeight: "bold",
-			nameColor: "#000000",
-			titleStyle: "normal",
-			titlePosition: "below",
-			dividerThickness: 1,
-			dividerStyle: "solid",
-			iconSizePx: 18,
-			iconSpacingPx: 9,
-			iconAlignment: "left",
-		},
-		photo: {
-			enabled: false,
-			aspectRatio: "1:1",
-			crop: null,
-			dataUrl: null,
-		},
-		sections: {
-			titleColor: "#000000",
-			titleFontSize: 12,
-			dateFormat: "medium",
-			useThemeColorForLinks: false,
-		},
-	});
+	const [renderSettings, setRenderSettings] = useState<CvRenderSettings>(
+		DEFAULT_RENDER_SETTINGS,
+	);
 
 	const defaultPredefinedOrder = useMemo(
 		() =>
@@ -145,6 +237,8 @@ export default function Builder() {
 		defaultPredefinedOrder,
 	);
 	const [customSections, setCustomSections] = useState<CustomSection[]>([]);
+	const [currentProfileId, setCurrentProfileId] = useState<string | null>(null);
+	const [profilesMeta, setProfilesMeta] = useState<CvProfileMeta[]>([]);
 
 	// Determine if the user has added any content anywhere in the CV
 	const hasAnyContent = useMemo(() => {
@@ -208,17 +302,6 @@ export default function Builder() {
 		volunteer: null,
 	});
 
-	const generateId = () => {
-		if (
-			typeof crypto !== "undefined" &&
-			"randomUUID" in crypto &&
-			typeof crypto.randomUUID === "function"
-		) {
-			return crypto.randomUUID();
-		}
-		return `id-${Math.random().toString(16).slice(2)}-${Date.now()}`;
-	};
-
 	const createCustomField = () => ({
 		id: generateId(),
 		label: "",
@@ -233,26 +316,133 @@ export default function Builder() {
 		fields: [createCustomField()],
 	});
 
+	const _resetCvStateToEmpty = () => {
+		setPersonalInfo(EMPTY_PERSONAL_INFO);
+		setLinks([]);
+		setResume("");
+		setExperiences([]);
+		setEducation([]);
+		setSkills("");
+		setLanguages([]);
+		setCertifications([]);
+		setProjects([]);
+		setVolunteers([]);
+		setCustomSections([]);
+		setSelectedTemplate("professional");
+		setSelectedColor("blue");
+		setRenderSettings(DEFAULT_RENDER_SETTINGS);
+		setSectionOrder(defaultPredefinedOrder);
+	};
+
+	const createNewProfileName = useCallback(
+		(existingNames: Iterable<string>) =>
+			getUniqueProfileName(t("profile.new"), existingNames),
+		[t],
+	);
+
+	const createCopiedProfileName = useCallback(
+		(sourceName: string, existingNames: Iterable<string>) =>
+			getUniqueProfileName(
+				t("profile.copy.name").replace(
+					"{name}",
+					sourceName.trim() || t("profile.unnamed"),
+				),
+				existingNames,
+			),
+		[t],
+	);
+
+	const applyCvDataToState = useCallback(
+		(data: CvDataWithSettings) => {
+			setPersonalInfo((prev) => ({
+				...prev,
+				...(data.personalInfo || EMPTY_PERSONAL_INFO),
+			}));
+
+			setLinks(data.links || []);
+			setResume(data.resume || "");
+			setExperiences(data.experiences || []);
+			setEducation(data.education || []);
+			setSkills(data.skills || "");
+			setLanguages(data.languages || []);
+			setCertifications(data.certifications || []);
+			setProjects(data.projects || []);
+			setVolunteers(data.volunteers || []);
+
+			const loadedCustomSections = data.customSections || [];
+			setCustomSections(loadedCustomSections);
+
+			setSelectedTemplate(data.template || "professional");
+			setSelectedColor(data.color || "blue");
+			if (data.settings) {
+				setRenderSettings(data.settings);
+			} else {
+				setRenderSettings(DEFAULT_RENDER_SETTINGS);
+			}
+
+			const customKeys = loadedCustomSections.map(
+				(cs: CustomSection) => `custom_${cs.id}` as SectionKey,
+			);
+
+			if (
+				data.sectionOrder &&
+				Array.isArray(data.sectionOrder) &&
+				data.sectionOrder.length > 0
+			) {
+				const storedOrder = data.sectionOrder as SectionKey[];
+				const mergedOrder = [
+					...storedOrder,
+					...customKeys.filter((k: SectionKey) => !storedOrder.includes(k)),
+				];
+				setSectionOrder(mergedOrder);
+			} else {
+				setSectionOrder([...defaultPredefinedOrder, ...customKeys]);
+			}
+		},
+		[defaultPredefinedOrder],
+	);
+
+	const buildCvDataFromState = useCallback(
+		(): CvDataWithSettings => ({
+			personalInfo,
+			links,
+			resume,
+			experiences,
+			education,
+			skills,
+			languages,
+			certifications,
+			projects,
+			volunteers,
+			customSections,
+			template: selectedTemplate,
+			color: selectedColor,
+			sectionOrder,
+			settings: renderSettings,
+		}),
+		[
+			personalInfo,
+			links,
+			resume,
+			experiences,
+			education,
+			skills,
+			languages,
+			certifications,
+			projects,
+			volunteers,
+			customSections,
+			selectedTemplate,
+			selectedColor,
+			sectionOrder,
+			renderSettings,
+		],
+	);
+
 	// Export current CV data to XML and trigger download
 	const handleExportXml = () => {
 		try {
-			const data = {
-				personalInfo,
-				links,
-				resume,
-				experiences,
-				education,
-				skills,
-				languages,
-				certifications,
-				projects,
-				volunteers,
-				customSections,
-				template: selectedTemplate,
-				color: selectedColor,
-				sectionOrder,
-				settings: renderSettings,
-			};
+			const data = buildCvDataFromState();
 			const xml = cvDataToXml(data);
 			const blob = new Blob([xml], { type: "application/xml;charset=utf-8" });
 			const url = URL.createObjectURL(blob);
@@ -273,42 +463,7 @@ export default function Builder() {
 		try {
 			const data = xmlToCvData(xml) as CvDataWithSettings;
 
-			setPersonalInfo({
-				...personalInfo,
-				...data.personalInfo,
-			});
-
-			setLinks(data.links || []);
-			setResume(data.resume || "");
-			setExperiences(data.experiences || []);
-			setEducation(data.education || []);
-			setSkills(data.skills || "");
-			setLanguages(data.languages || []);
-			setCertifications(data.certifications || []);
-			setProjects(data.projects || []);
-			setVolunteers(data.volunteers || []);
-			setCustomSections(data.customSections || []);
-			setSelectedTemplate(data.template || "professional");
-			setSelectedColor(data.color || "blue");
-			if (data.settings) setRenderSettings(data.settings);
-
-			const importedCustomKeys = (data.customSections || []).map(
-				(cs: CustomSection) => `custom_${cs.id}` as SectionKey,
-			);
-			if (
-				data.sectionOrder &&
-				Array.isArray(data.sectionOrder) &&
-				data.sectionOrder.length > 0
-			) {
-				const stored = data.sectionOrder as SectionKey[];
-				setSectionOrder([
-					...stored,
-					...importedCustomKeys.filter((k: SectionKey) => !stored.includes(k)),
-				]);
-			} else {
-				setSectionOrder([...defaultPredefinedOrder, ...importedCustomKeys]);
-			}
-
+			applyCvDataToState(data);
 			setDataLoaded(true);
 			setDataLoadedSource("xml");
 		} catch (e) {
@@ -319,63 +474,68 @@ export default function Builder() {
 
 	/**
 	 * Function to load data from localStorage
-	 * Retrieves saved data and checks if it's fresh (less than 7 days old)
+	 * Supports multiple CV profiles with migration from legacy single-profile storage
 	 */
 	const loadFromLocalStorage = useCallback(() => {
 		try {
-			const saved = localStorage.getItem("cv-builder-data");
-			if (saved) {
-				const data: Partial<CvDataWithSettings> = JSON.parse(saved);
+			const storage = parseProfilesStorage(
+				localStorage.getItem(PROFILES_STORAGE_KEY),
+			);
+			const profileIds = Object.keys(storage.profiles);
+			if (profileIds.length > 0) {
+				const currentId =
+					storage.currentProfileId && storage.profiles[storage.currentProfileId]
+						? storage.currentProfileId
+						: profileIds[0] || null;
 
-				setPersonalInfo((prev) => ({
-					...prev,
-					...(data.personalInfo || {
-						name: "",
-						desiredRole: "",
-						city: "",
-						postalCode: "",
-						email: "",
-						countryCode: DEFAULT_COUNTRY_CODE,
-						phone: "",
-					}),
-				}));
-				setLinks(data.links || []);
-				setResume(data.resume || "");
-				setExperiences(data.experiences || []);
-				setEducation(data.education || []);
-				setSkills(data.skills || "");
-				setLanguages(data.languages || []);
-				setCertifications(data.certifications || []);
-				setProjects(data.projects || []);
-				setVolunteers(data.volunteers || []);
-				const loadedCustomSections = data.customSections || [];
-				setCustomSections(loadedCustomSections);
-				setSelectedTemplate(data.template || "professional");
-				setSelectedColor(data.color || "blue");
-				if (data.settings) setRenderSettings(data.settings);
+				setCurrentProfileId(currentId);
+				setProfilesMeta(Object.values(storage.meta));
 
-				const customKeys = loadedCustomSections.map(
-					(cs: CustomSection) => `custom_${cs.id}` as SectionKey,
-				);
-				// Load section order if exists
-				if (data.sectionOrder && Array.isArray(data.sectionOrder)) {
-					const storedOrder = data.sectionOrder as SectionKey[];
-					const mergedOrder = [
-						...storedOrder,
-						...customKeys.filter((k: SectionKey) => !storedOrder.includes(k)),
-					];
-					setSectionOrder(mergedOrder);
-				} else {
-					setSectionOrder([...defaultPredefinedOrder, ...customKeys]);
+				if (currentId && storage.profiles[currentId]) {
+					applyCvDataToState(storage.profiles[currentId]);
+					setDataLoaded(true);
+					setDataLoadedSource("local");
 				}
+				return;
+			}
 
+			// Migration from legacy single-profile storage
+			const legacySaved = localStorage.getItem(LEGACY_STORAGE_KEY);
+			if (legacySaved) {
+				const legacyData = JSON.parse(legacySaved) as CvDataWithSettings;
+				const id = generateId();
+				const now = new Date().toISOString();
+				const name =
+					legacyData.personalInfo?.name?.trim() ||
+					legacyData.personalInfo?.desiredRole?.trim() ||
+					initialNewProfileLabelRef.current;
+
+				const storage: CvProfilesStorage = {
+					currentProfileId: id,
+					profiles: { [id]: legacyData },
+					meta: {
+						[id]: {
+							id,
+							name,
+							createdAt: now,
+							updatedAt: now,
+						},
+					},
+				};
+
+				localStorage.setItem(PROFILES_STORAGE_KEY, JSON.stringify(storage));
+
+				setCurrentProfileId(id);
+				setProfilesMeta(Object.values(storage.meta));
+				applyCvDataToState(legacyData);
 				setDataLoaded(true);
 				setDataLoadedSource("local");
+				return;
 			}
 		} catch {
 			// Silently handle error loading saved data
 		}
-	}, [defaultPredefinedOrder]);
+	}, [applyCvDataToState]);
 
 	// Load saved data when page loads
 	useEffect(() => {
@@ -426,44 +586,63 @@ export default function Builder() {
 
 	/**
 	 * Function to save data to localStorage
-	 * Stores all form data including section order
+	 * Stores all form data for the current profile, supporting multiple profiles
 	 */
 	const saveToLocalStorage = useCallback(() => {
-		const data = {
-			personalInfo,
-			links,
-			resume,
-			experiences,
-			education,
-			skills,
-			languages,
-			certifications,
-			projects,
-			volunteers,
-			customSections,
-			template: selectedTemplate,
-			color: selectedColor,
-			sectionOrder,
-			settings: renderSettings,
-		};
-		localStorage.setItem("cv-builder-data", JSON.stringify(data));
-	}, [
-		personalInfo,
-		links,
-		resume,
-		experiences,
-		education,
-		skills,
-		languages,
-		certifications,
-		projects,
-		volunteers,
-		customSections,
-		selectedTemplate,
-		selectedColor,
-		sectionOrder,
-		renderSettings,
-	]);
+		try {
+			const currentData = buildCvDataFromState();
+			const storage = parseProfilesStorage(
+				localStorage.getItem(PROFILES_STORAGE_KEY),
+			);
+
+			let profileId = currentProfileId;
+			const now = new Date().toISOString();
+
+			if (!profileId) {
+				profileId = generateId();
+				const name =
+					currentData.personalInfo?.name?.trim() ||
+					currentData.personalInfo?.desiredRole?.trim() ||
+					createNewProfileName(
+						Object.values(storage.meta).map((meta) => meta.name),
+					);
+
+				storage.meta[profileId] = {
+					id: profileId,
+					name,
+					createdAt: now,
+					updatedAt: now,
+				};
+				storage.currentProfileId = profileId;
+				setCurrentProfileId(profileId);
+			} else {
+				const existingMeta = storage.meta[profileId];
+				const name =
+					existingMeta?.name ||
+					currentData.personalInfo?.name?.trim() ||
+					currentData.personalInfo?.desiredRole?.trim() ||
+					createNewProfileName(
+						Object.values(storage.meta)
+							.filter((meta) => meta.id !== profileId)
+							.map((meta) => meta.name),
+					);
+
+				storage.meta[profileId] = {
+					id: profileId,
+					name,
+					createdAt: existingMeta?.createdAt || now,
+					updatedAt: now,
+				};
+				storage.currentProfileId = profileId;
+			}
+
+			storage.profiles[profileId] = currentData;
+			localStorage.setItem(PROFILES_STORAGE_KEY, JSON.stringify(storage));
+			setProfilesMeta(Object.values(storage.meta));
+		} catch {
+			// Silently ignore storage errors
+		}
+	}, [buildCvDataFromState, createNewProfileName, currentProfileId]);
 
 	// Auto-save data when any field changes
 	useEffect(() => {
@@ -1019,6 +1198,221 @@ export default function Builder() {
 			(cs) => `custom_${cs.id}` as SectionKey,
 		);
 		setSectionOrder([...defaultPredefinedOrder, ...customKeys]);
+	};
+
+	const handleCreateProfile = () => {
+		try {
+			const now = new Date().toISOString();
+			const storage = parseProfilesStorage(
+				localStorage.getItem(PROFILES_STORAGE_KEY),
+			);
+
+			const id = generateId();
+			const name = createNewProfileName(
+				Object.values(storage.meta).map((meta) => meta.name),
+			);
+
+			const emptyData: CvDataWithSettings = {
+				personalInfo: EMPTY_PERSONAL_INFO,
+				links: [],
+				resume: "",
+				experiences: [],
+				education: [],
+				skills: "",
+				languages: [],
+				certifications: [],
+				projects: [],
+				volunteers: [],
+				customSections: [],
+				template: "professional",
+				color: "blue",
+				sectionOrder: defaultPredefinedOrder,
+				settings: DEFAULT_RENDER_SETTINGS,
+			};
+
+			storage.profiles[id] = emptyData;
+			storage.meta[id] = {
+				id,
+				name,
+				createdAt: now,
+				updatedAt: now,
+			};
+			storage.currentProfileId = id;
+
+			localStorage.setItem(PROFILES_STORAGE_KEY, JSON.stringify(storage));
+
+			setCurrentProfileId(id);
+			setProfilesMeta(Object.values(storage.meta));
+			applyCvDataToState(emptyData);
+		} catch {
+			// Ignore errors when creating profiles
+		}
+	};
+
+	const handleDuplicateProfile = (profileId: string) => {
+		if (!profileId) return;
+
+		try {
+			saveToLocalStorage();
+			const storage = parseProfilesStorage(
+				localStorage.getItem(PROFILES_STORAGE_KEY),
+			);
+			const sourceProfile = storage.profiles[profileId];
+			if (!sourceProfile) return;
+
+			const sourceMeta = storage.meta[profileId];
+			const sourceName =
+				sourceMeta?.name ||
+				sourceProfile.personalInfo?.name?.trim() ||
+				sourceProfile.personalInfo?.desiredRole?.trim() ||
+				t("profile.unnamed");
+			const id = generateId();
+			const now = new Date().toISOString();
+			const duplicatedData = cloneCvData(sourceProfile);
+			const name = createCopiedProfileName(
+				sourceName,
+				Object.values(storage.meta).map((meta) => meta.name),
+			);
+
+			storage.profiles[id] = duplicatedData;
+			storage.meta[id] = {
+				id,
+				name,
+				createdAt: now,
+				updatedAt: now,
+			};
+			storage.currentProfileId = id;
+
+			localStorage.setItem(PROFILES_STORAGE_KEY, JSON.stringify(storage));
+			setCurrentProfileId(id);
+			setProfilesMeta(Object.values(storage.meta));
+			applyCvDataToState(duplicatedData);
+		} catch {
+			// Ignore errors during profile duplication
+		}
+	};
+
+	const handleSwitchProfile = (profileId: string) => {
+		if (!profileId || profileId === currentProfileId) return;
+
+		try {
+			// Save current profile first
+			saveToLocalStorage();
+
+			const raw = localStorage.getItem(PROFILES_STORAGE_KEY);
+			if (!raw) return;
+
+			const parsed = JSON.parse(raw) as Partial<CvProfilesStorage>;
+			const profiles = parsed.profiles || {};
+			const meta = parsed.meta || {};
+
+			const nextProfile = profiles[profileId];
+			if (!nextProfile) return;
+
+			const storage: CvProfilesStorage = {
+				currentProfileId: profileId,
+				profiles,
+				meta,
+			};
+
+			localStorage.setItem(PROFILES_STORAGE_KEY, JSON.stringify(storage));
+
+			setCurrentProfileId(profileId);
+			setProfilesMeta(Object.values(meta));
+			applyCvDataToState(nextProfile);
+		} catch {
+			// Ignore errors during profile switching
+		}
+	};
+
+	const handleRenameProfile = (profileId: string, nextName: string) => {
+		const trimmedName = nextName.trim();
+		if (!profileId || !trimmedName) return;
+
+		try {
+			const storage = parseProfilesStorage(
+				localStorage.getItem(PROFILES_STORAGE_KEY),
+			);
+			const profiles = storage.profiles;
+			const meta = storage.meta;
+			const existingMeta = meta[profileId];
+
+			if (!profiles[profileId] || !existingMeta) return;
+
+			const now = new Date().toISOString();
+			const nextMeta = {
+				...meta,
+				[profileId]: {
+					...existingMeta,
+					name: trimmedName,
+					updatedAt: now,
+				},
+			};
+
+			const activeProfileId =
+				storage.currentProfileId && profiles[storage.currentProfileId]
+					? storage.currentProfileId
+					: Object.keys(profiles)[0] || null;
+
+			const updatedStorage: CvProfilesStorage = {
+				currentProfileId: activeProfileId,
+				profiles,
+				meta: nextMeta,
+			};
+
+			localStorage.setItem(
+				PROFILES_STORAGE_KEY,
+				JSON.stringify(updatedStorage),
+			);
+			setProfilesMeta(Object.values(nextMeta));
+		} catch {
+			// Ignore errors during profile rename
+		}
+	};
+
+	const handleDeleteProfile = (profileId: string) => {
+		if (!profileId) return;
+
+		try {
+			const storage = parseProfilesStorage(
+				localStorage.getItem(PROFILES_STORAGE_KEY),
+			);
+			const profiles = { ...storage.profiles };
+			const meta = { ...storage.meta };
+
+			if (!profiles[profileId]) return;
+
+			// Keep at least one profile to avoid entering an empty/broken state.
+			if (Object.keys(profiles).length <= 1) return;
+
+			delete profiles[profileId];
+			delete meta[profileId];
+
+			const remainingProfileIds = Object.keys(profiles);
+			const activeProfileId =
+				storage.currentProfileId && profiles[storage.currentProfileId]
+					? storage.currentProfileId
+					: remainingProfileIds[0] || null;
+
+			const updatedStorage: CvProfilesStorage = {
+				currentProfileId: activeProfileId,
+				profiles,
+				meta,
+			};
+
+			localStorage.setItem(
+				PROFILES_STORAGE_KEY,
+				JSON.stringify(updatedStorage),
+			);
+			setProfilesMeta(Object.values(meta));
+			setCurrentProfileId(activeProfileId);
+
+			if (profileId === currentProfileId && activeProfileId) {
+				applyCvDataToState(profiles[activeProfileId]);
+			}
+		} catch {
+			// Ignore errors during profile deletion
+		}
 	};
 
 	/**
@@ -1636,6 +2030,13 @@ export default function Builder() {
 				onResetSectionOrder={handleResetSectionOrder}
 				sectionOrder={sectionOrder}
 				hasAnyContent={hasAnyContent}
+				profiles={profilesMeta}
+				currentProfileId={currentProfileId}
+				onCreateProfile={handleCreateProfile}
+				onDuplicateProfile={handleDuplicateProfile}
+				onSwitchProfile={handleSwitchProfile}
+				onRenameProfile={handleRenameProfile}
+				onDeleteProfile={handleDeleteProfile}
 			/>
 
 			{/* Floating Action Bar (Mobile/Tablet) */}

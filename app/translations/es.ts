@@ -443,6 +443,20 @@ const esTranslations: Record<string, string> = {
 	"layout.controls.lineSpacing.label": "Espaciado de línea",
 	"layout.controls.sectionSpacing.label": "Espaciado entre secciones",
 	"layout.controls.columns.label": "Columnas",
+
+	// Profiles
+	"profile.selector": "Perfiles de CV",
+	"profile.manage": "Gestionar perfiles",
+	"profile.new": "Nuevo perfil",
+	"profile.copy": "Duplicar",
+	"profile.copy.name": "Copia de {name}",
+	"profile.rename": "Renombrar",
+	"profile.rename.save": "Guardar nombre",
+	"profile.rename.cancel": "Cancelar edición",
+	"profile.delete": "Eliminar",
+	"profile.delete.confirm": '¿Eliminar el perfil "{name}"?',
+	"profile.unnamed": "Perfil sin nombre",
+
 	"layout.controls.header.title": "Encabezado",
 	"layout.controls.header.nameSection": "Nombre y Cargo",
 	"layout.controls.header.nameSize": "Tamaño del nombre",
