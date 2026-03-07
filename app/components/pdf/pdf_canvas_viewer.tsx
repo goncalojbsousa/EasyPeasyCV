@@ -40,7 +40,7 @@ export function PdfCanvasViewer({ blob, scale = 1 }: PdfCanvasViewerProps) {
 			const newContainer = newContainerRef.current;
 			newContainer.innerHTML = "";
 
-			// Salva a posição do scroll antes de atualizar
+			// Save scroll position before updating
 			const container = containerRef.current;
 			if (container) {
 				scrollPosition.current.top = container.scrollTop;
