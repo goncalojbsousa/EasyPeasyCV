@@ -9,26 +9,14 @@ import {
 	useState,
 } from "react";
 import { usePathname, useRouter } from "../../navigation";
-import brTranslations from "../translations/br";
-import enTranslations from "../translations/en";
-import esTranslations from "../translations/es";
-import ptTranslations from "../translations/pt";
+import { getTranslations } from "../translations";
+import type { CVType } from "../types/cv";
+import { DEFAULT_CV_TYPE, isCvType } from "../utils/cv-types";
 
 // Types for available languages
 export type Language = "pt" | "en" | "es" | "br";
 
-// Available CV types
-export type CVType =
-	| "development"
-	| "marketing"
-	| "sales"
-	| "hr"
-	| "finance"
-	| "design"
-	| "health"
-	| "education"
-	| "admin"
-	| "other";
+export type { CVType };
 
 // Context interface for language and CV type management
 interface LanguageContextType {
@@ -60,29 +48,15 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 	const router = useRouter();
 	const pathname = usePathname();
 
-	const [cvType, setCVTypeState] = useState<CVType>("development");
+	const [cvType, setCVTypeState] = useState<CVType>(DEFAULT_CV_TYPE);
 
 	// Effect: Load CV type from localStorage on initialization.
 	useEffect(() => {
 		try {
 			// Only run in browser
 			if (typeof window !== "undefined") {
-				const savedCVType = localStorage.getItem("cv-builder-type") as CVType;
-				if (
-					savedCVType &&
-					[
-						"development",
-						"marketing",
-						"sales",
-						"hr",
-						"finance",
-						"design",
-						"health",
-						"education",
-						"admin",
-						"other",
-					].includes(savedCVType)
-				) {
+				const savedCVType = localStorage.getItem("cv-builder-type");
+				if (isCvType(savedCVType)) {
 					setCVTypeState(savedCVType);
 				}
 			}
@@ -109,16 +83,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 	 * If the key is CV type-specific, returns the appropriate translation.
 	 */
 	const t = (key: string): string => {
-		let translations: Record<string, string>;
-		if (currentLocale === "pt") {
-			translations = ptTranslations;
-		} else if (currentLocale === "br") {
-			translations = brTranslations;
-		} else if (currentLocale === "es") {
-			translations = esTranslations;
-		} else {
-			translations = enTranslations;
-		}
+		const translations = getTranslations(currentLocale);
 
 		const baseTranslation = translations[key] || key;
 

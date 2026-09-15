@@ -26,7 +26,10 @@
 	"scripts": {
 		"dev": "next dev --turbopack",
 		"build": "next build",
-		"start": "next start"
+		"start": "next start",
+		"typecheck": "tsc --noEmit --incremental false",
+		"lint": "biome check app i18n types navigation.ts proxy.ts next.config.ts tailwind.config.ts",
+		"test": "tsc -p tsconfig.test.json && node --test \".tmp/test-dist/tests/*.test.js\""
 	},
 	"dependencies": {
 		"@dnd-kit/core": "^6.3.1",

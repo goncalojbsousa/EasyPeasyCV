@@ -5,7 +5,6 @@ import {
 	Code,
 	FileText,
 	GraduationCap,
-	GripVertical,
 	Heart,
 	Languages,
 	Package,
@@ -54,7 +53,4 @@ export const Icons = {
 
 	/** Checkmark icon for actions section */
 	actions: <CheckCircle className="w-6 h-6" />,
-
-	/** Drag handle icon for sortable lists */
-	drag: <GripVertical className="w-5 h-5" />,
 };

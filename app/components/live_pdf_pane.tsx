@@ -3,95 +3,24 @@
 import { pdf } from "@react-pdf/renderer";
 import { useEffect, useMemo, useState } from "react";
 import { useLanguage } from "../contexts/LanguageContext";
-import type {
-	CvColor,
-	CvData,
-	CvRenderSettings,
-	CvTemplate,
-} from "../types/cv";
-import { CvDocument } from "./cv_document";
+import { BREAKPOINTS, useIsMobile } from "../utils/useIsMobile";
+import { CvDocument, type CvRenderProps } from "./cv_document";
 import { PdfCanvasViewer } from "./pdf/pdf_canvas_viewer";
 
-interface LivePdfPaneProps extends CvData {
-	lang?: string;
-	template?: CvTemplate;
-	color?: CvColor;
-	settings?: CvRenderSettings;
-}
-
-export function LivePdfPane({
-	personalInfo,
-	links,
-	resume,
-	experiences,
-	education,
-	skills,
-	languages,
-	certifications,
-	projects,
-	volunteers,
-	customSections,
-	lang = "pt",
-	template = "professional",
-	color = "blue",
-	settings,
-	sectionOrder,
-}: LivePdfPaneProps) {
+/**
+ * Live PDF preview rendered next to the form on desktop. Regenerates the PDF
+ * shortly after the CV stops changing.
+ */
+export function LivePdfPane({ data, lang }: CvRenderProps) {
 	const { t } = useLanguage();
-	const [isMobile, setIsMobile] = useState(false);
+	const isMobile = useIsMobile(BREAKPOINTS.lg);
 	const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
-	useEffect(() => {
-		const check = () => setIsMobile(window.innerWidth < 1024);
-
-		check();
-		window.addEventListener("resize", check);
-		return () => {
-			window.removeEventListener("resize", check);
-		};
-	}, []);
-
 	const doc = useMemo(
-		() => (
-			<CvDocument
-				personalInfo={personalInfo}
-				links={links}
-				resume={resume}
-				experiences={experiences}
-				education={education}
-				skills={skills}
-				languages={languages}
-				certifications={certifications}
-				projects={projects}
-				volunteers={volunteers}
-				customSections={customSections}
-				lang={lang}
-				template={template}
-				color={color}
-				settings={settings}
-				sectionOrder={sectionOrder}
-			/>
-		),
-		[
-			personalInfo,
-			links,
-			resume,
-			experiences,
-			education,
-			skills,
-			languages,
-			certifications,
-			projects,
-			volunteers,
-			customSections,
-			lang,
-			template,
-			color,
-			settings,
-			sectionOrder,
-		],
+		() => <CvDocument data={data} lang={lang} />,
+		[data, lang],
 	);
 
 	// Generate a PDF blob whenever debounced data changes

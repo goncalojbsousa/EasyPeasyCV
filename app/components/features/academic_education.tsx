@@ -1,27 +1,21 @@
 "use client";
 
-import { GripVertical } from "lucide-react";
 import { useMemo } from "react";
 import { useLanguage } from "../../contexts/LanguageContext";
-import type { Education } from "../../types/cv";
-import {
-	getTranslatedMonthWithT,
-	MONTHS_EN as MONTHS,
-	toEN,
-} from "../../utils/months";
-import { DragHandle, SortableList } from "../dnd/sortable_list";
+import type { Education, SectionReorderProps } from "../../types/cv";
 import { AutoResizeTextarea } from "../ui/auto_resize_textarea";
-import { EmptyState } from "../ui/empty_state";
+import { DateRangeFields } from "../ui/date_range_fields";
+import { EntryCard } from "../ui/entry_card";
 import { FormField } from "../ui/form_field";
-import { FormSection } from "../ui/form_section";
-import { IconButton } from "../ui/icon_button";
 import { Icons } from "../ui/icons";
+import { ListSection } from "../ui/list_section";
 import { SelectMenu } from "../ui/select_menu";
+import { TextInput } from "../ui/text_input";
 
 /**
  * Props interface for the AcademicEducation component
  */
-interface AcademicEducationProps {
+interface AcademicEducationProps extends SectionReorderProps {
 	/** Array of education entries */
 	education: Education[];
 	/** Handler for updating education fields */
@@ -32,16 +26,6 @@ interface AcademicEducationProps {
 	onRemoveEducation: (idx: number) => void;
 	/** Handler for reordering education entries */
 	onReorderEducation?: (fromIndex: number, toIndex: number) => void;
-	/** Whether this section can be reordered */
-	canReorder?: boolean;
-	/** Callback when user clicks move up button */
-	onMoveUp?: () => void;
-	/** Callback when user clicks move down button */
-	onMoveDown?: () => void;
-	/** Whether move up button should be disabled */
-	canMoveUp?: boolean;
-	/** Whether move down button should be disabled */
-	canMoveDown?: boolean;
 }
 
 /**
@@ -68,11 +52,6 @@ const EDUCATION_STATUS = [
 /**
  * Academic Education component
  * Manages educational background entries with drag-and-drop reordering
- * @param education - Array of education entries
- * @param onEducationChange - Function to handle education field updates
- * @param onAddEducation - Function to add new education entry
- * @param onRemoveEducation - Function to remove education entry
- * @param onReorderEducation - Function to reorder education entries
  * @returns JSX element representing the academic education form section
  */
 export function AcademicEducation({
@@ -81,11 +60,7 @@ export function AcademicEducation({
 	onAddEducation,
 	onRemoveEducation,
 	onReorderEducation,
-	canReorder = false,
-	onMoveUp,
-	onMoveDown,
-	canMoveUp = true,
-	canMoveDown = true,
+	...reorder
 }: AcademicEducationProps) {
 	const { t } = useLanguage();
 	const educationTypeOptions = useMemo(
@@ -105,15 +80,6 @@ export function AcademicEducation({
 		],
 		[t],
 	);
-	const monthOptions = useMemo(
-		() =>
-			MONTHS.map((month) => ({
-				value: month,
-				label: getTranslatedMonthWithT(t, month),
-			})),
-		[t],
-	);
-	// Drag & drop handled by SortableList
 
 	// Generates a display title for each education card based on available data
 	const getEducationTitle = (ed: Education, idx: number) => {
@@ -124,219 +90,111 @@ export function AcademicEducation({
 	};
 
 	return (
-		<form className="space-y-8 flex flex-col items-center">
-			<FormSection
-				title={t("section.academic.education")}
-				icon={Icons.academicEducation}
-				canReorder={canReorder}
-				onMoveUp={onMoveUp}
-				onMoveDown={onMoveDown}
-				canMoveUp={canMoveUp}
-				canMoveDown={canMoveDown}
-			>
-				{/* Display empty state when no education entries exist */}
-				{education.length === 0 && (
-					<EmptyState message={t("empty.education")} />
-				)}
+		<ListSection
+			{...reorder}
+			title={t("section.academic.education")}
+			icon={Icons.academicEducation}
+			items={education}
+			emptyMessage={t("empty.education")}
+			addLabel={t("add.education")}
+			onAdd={onAddEducation}
+			onReorder={onReorderEducation}
+			renderItem={(ed, idx, draggable) => (
+				<EntryCard
+					key={idx}
+					entityLabel="education"
+					title={getEducationTitle(ed, idx)}
+					draggable={draggable}
+					onRemove={() => onRemoveEducation(idx)}
+				>
+					{/* Education type and status fields */}
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+						<FormField label={t("field.education.type")}>
+							<SelectMenu
+								options={educationTypeOptions}
+								value={ed.type}
+								placeholder={t("select.education.type")}
+								onSelect={(type) => onEducationChange(idx, "type", type)}
+								renderTriggerLabel={(option) =>
+									option?.label || t("select.education.type")
+								}
+							/>
+						</FormField>
+						<FormField label={t("field.education.status")}>
+							<SelectMenu
+								options={educationStatusOptions}
+								value={ed.status}
+								placeholder={t("select.education.status")}
+								onSelect={(status) => onEducationChange(idx, "status", status)}
+								renderTriggerLabel={(option) =>
+									option?.label || t("select.education.status")
+								}
+							/>
+						</FormField>
+					</div>
 
-				{/* Render each education entry via SortableList */}
-				<SortableList
-					length={education.length}
-					onReorder={(from, to) => onReorderEducation?.(from, to)}
-					renderItem={(idx) => {
-						const ed = education[idx];
-						return (
-							<div
-								key={idx}
-								className="bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg shadow-sm relative mb-6 transition-all duration-300"
-							>
-								{/* Card header with title */}
-								<div className="bg-gray-50 dark:bg-zinc-900 px-4 py-3 border-b border-gray-200 dark:border-zinc-700 rounded-t-lg transition-colors duration-300">
-									<div className="flex justify-between items-center">
-										<div className="flex items-center gap-2">
-											{education.length > 1 && (
-												<DragHandle
-													ariaLabel="Reorder education"
-													className="text-gray-400 dark:text-zinc-500 hover:text-gray-600 dark:hover:text-zinc-300 transition-colors duration-300"
-												>
-													<GripVertical className="w-4 h-4" />
-												</DragHandle>
-											)}
-											<h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-												{getEducationTitle(ed, idx)}
-											</h3>
-										</div>
-										<IconButton
-											onClick={() => onRemoveEducation(idx)}
-											variant="danger"
-											size="sm"
-											ariaLabel="Remove education"
-										>
-											{Icons.remove}
-										</IconButton>
-									</div>
-								</div>
+					{/* Course and institution fields */}
+					<div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
+						<FormField label={t("field.course")}>
+							<TextInput
+								placeholder={t("placeholder.course")}
+								value={ed.course}
+								onChange={(e) =>
+									onEducationChange(idx, "course", e.target.value)
+								}
+							/>
+						</FormField>
+						<FormField label={t("field.institution")}>
+							<TextInput
+								placeholder={t("placeholder.institution")}
+								value={ed.institution}
+								onChange={(e) =>
+									onEducationChange(idx, "institution", e.target.value)
+								}
+							/>
+						</FormField>
+					</div>
 
-								{/* Card content */}
-								<div className="p-4">
-									{/* Education type and status fields */}
-									<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-										<FormField label={t("field.education.type")}>
-											<SelectMenu
-												options={educationTypeOptions}
-												value={ed.type}
-												placeholder={t("select.education.type")}
-												onSelect={(type) =>
-													onEducationChange(idx, "type", type)
-												}
-												renderTriggerLabel={(option) =>
-													option?.label || t("select.education.type")
-												}
-											/>
-										</FormField>
-										<FormField label={t("field.education.status")}>
-											<SelectMenu
-												options={educationStatusOptions}
-												value={ed.status}
-												placeholder={t("select.education.status")}
-												onSelect={(status) =>
-													onEducationChange(idx, "status", status)
-												}
-												renderTriggerLabel={(option) =>
-													option?.label || t("select.education.status")
-												}
-											/>
-										</FormField>
-									</div>
+					{/* End dates only make sense once the course is completed */}
+					<DateRangeFields
+						startMonth={ed.startMonth}
+						startYear={ed.startYear}
+						endMonth={ed.endMonth}
+						endYear={ed.endYear}
+						showEnd={ed.status === "education.status.completed"}
+						onChange={(field, value) => onEducationChange(idx, field, value)}
+					/>
 
-									{/* Course and institution fields */}
-									<div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
-										<FormField label={t("field.course")}>
-											<input
-												type="text"
-												className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-												placeholder={t("placeholder.course")}
-												value={ed.course}
-												onChange={(e) =>
-													onEducationChange(idx, "course", e.target.value)
-												}
-											/>
-										</FormField>
-										<FormField label={t("field.institution")}>
-											<input
-												type="text"
-												className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-												placeholder={t("placeholder.institution")}
-												value={ed.institution}
-												onChange={(e) =>
-													onEducationChange(idx, "institution", e.target.value)
-												}
-											/>
-										</FormField>
-									</div>
+					{/* Description field */}
+					<div className="mb-4">
+						<FormField label={t("field.description")}>
+							<AutoResizeTextarea
+								placeholder={t("placeholder.education.description")}
+								value={ed.description}
+								onChange={(e) =>
+									onEducationChange(idx, "description", e.target.value)
+								}
+								minHeight={80}
+							/>
+						</FormField>
+					</div>
 
-									{/* Date fields - Start and End dates in parallel */}
-									<div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-4">
-										<FormField label={t("field.start.month")}>
-											<SelectMenu
-												options={monthOptions}
-												value={toEN(ed.startMonth) as string | undefined}
-												placeholder={t("select.month")}
-												onSelect={(month) =>
-													onEducationChange(idx, "startMonth", month)
-												}
-												renderTriggerLabel={(option) =>
-													option?.label || t("select.month")
-												}
-											/>
-										</FormField>
-										<FormField label={t("field.start.year")}>
-											<input
-												type="text"
-												className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-												placeholder={t("placeholder.year")}
-												value={ed.startYear}
-												onChange={(e) =>
-													onEducationChange(idx, "startYear", e.target.value)
-												}
-											/>
-										</FormField>
-
-										{/* End date fields - only show if status is "Completo" */}
-										{ed.status === "education.status.completed" && (
-											<>
-												<FormField label={t("field.end.month")}>
-													<SelectMenu
-														options={monthOptions}
-														value={toEN(ed.endMonth) as string | undefined}
-														placeholder={t("select.month")}
-														onSelect={(month) =>
-															onEducationChange(idx, "endMonth", month)
-														}
-														renderTriggerLabel={(option) =>
-															option?.label || t("select.month")
-														}
-													/>
-												</FormField>
-												<FormField label={t("field.end.year")}>
-													<input
-														type="text"
-														className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-														placeholder={t("placeholder.year")}
-														value={ed.endYear}
-														onChange={(e) =>
-															onEducationChange(idx, "endYear", e.target.value)
-														}
-													/>
-												</FormField>
-											</>
-										)}
-									</div>
-
-									{/* Description field */}
-									<div className="mb-4">
-										<FormField label={t("field.description")}>
-											<AutoResizeTextarea
-												className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-												placeholder={t("placeholder.education.description")}
-												value={ed.description}
-												onChange={(e) =>
-													onEducationChange(idx, "description", e.target.value)
-												}
-												minHeight={80}
-											/>
-										</FormField>
-									</div>
-
-									{/* Achievements field */}
-									<FormField
-										label={t("field.achievements.label")}
-										helperText={t("field.achievements.helper")}
-									>
-										<AutoResizeTextarea
-											className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-											placeholder={t("placeholder.achievements")}
-											value={ed.achievements}
-											onChange={(e) =>
-												onEducationChange(idx, "achievements", e.target.value)
-											}
-											minHeight={80}
-										/>
-									</FormField>
-								</div>
-							</div>
-						);
-					}}
-				/>
-
-				{/* Add education button at bottom */}
-				<div className="flex justify-start mt-4">
-					<IconButton onClick={onAddEducation}>
-						{Icons.add}
-						{t("add.education")}
-					</IconButton>
-				</div>
-			</FormSection>
-		</form>
+					{/* Achievements field */}
+					<FormField
+						label={t("field.achievements.label")}
+						helperText={t("field.achievements.helper")}
+					>
+						<AutoResizeTextarea
+							placeholder={t("placeholder.achievements")}
+							value={ed.achievements}
+							onChange={(e) =>
+								onEducationChange(idx, "achievements", e.target.value)
+							}
+							minHeight={80}
+						/>
+					</FormField>
+				</EntryCard>
+			)}
+		/>
 	);
 }

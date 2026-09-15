@@ -1126,6 +1126,15 @@ const enTranslations: Record<string, string> = {
 	// Footer
 	"footer.privacy": "Privacy",
 	"footer.terms": "Terms",
+
+	// Forms and validation
+	"search.placeholder": "Search...",
+	"link.error.duplicate": "A link with this type and name already exists.",
+	"content.required.pdf": "Add some content before generating the PDF.",
+	"content.required.preview": "Add some content before previewing the PDF.",
+	"thank.you.recommended.title": "Attention: Recommended Fields",
+	"thank.you.recommended.message":
+		"We recommend filling in the following fields for a more complete CV:",
 };
 
 export default enTranslations;

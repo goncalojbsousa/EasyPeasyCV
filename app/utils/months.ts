@@ -44,6 +44,52 @@ export const MONTHS_ES = [
 	"Dic",
 ] as const;
 
+/** Full month names, indexed 0-11 to match MONTHS_EN. */
+export const MONTHS_FULL: Record<"pt" | "en" | "es", readonly string[]> = {
+	pt: [
+		"Janeiro",
+		"Fevereiro",
+		"Março",
+		"Abril",
+		"Maio",
+		"Junho",
+		"Julho",
+		"Agosto",
+		"Setembro",
+		"Outubro",
+		"Novembro",
+		"Dezembro",
+	],
+	en: [
+		"January",
+		"February",
+		"March",
+		"April",
+		"May",
+		"June",
+		"July",
+		"August",
+		"September",
+		"October",
+		"November",
+		"December",
+	],
+	es: [
+		"Enero",
+		"Febrero",
+		"Marzo",
+		"Abril",
+		"Mayo",
+		"Junio",
+		"Julio",
+		"Agosto",
+		"Septiembre",
+		"Octubre",
+		"Noviembre",
+		"Diciembre",
+	],
+} as const;
+
 export type EnMonth = (typeof MONTHS_EN)[number];
 export type PtMonth = (typeof MONTHS_PT)[number];
 export type EsMonth = (typeof MONTHS_ES)[number];
@@ -105,4 +151,13 @@ export function translateMonthForLang(
 	if (lang === "en") return MONTHS_EN[i];
 	if (lang === "es") return MONTHS_ES[i];
 	return MONTHS_PT[i];
+}
+
+/** Languages the PDF templates render month/date labels in. */
+export type PdfLang = "pt" | "en" | "es";
+
+/** Map a UI locale (which includes "br") onto a PDF month language. */
+export function toPdfLang(lang?: string): PdfLang {
+	if (lang === "en" || lang === "es") return lang;
+	return "pt";
 }

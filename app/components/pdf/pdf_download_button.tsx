@@ -4,29 +4,16 @@ import { pdf } from "@react-pdf/renderer";
 import type React from "react";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import { useLanguage } from "../../contexts/LanguageContext";
-import type {
-	CvColor,
-	CvData,
-	CvRenderSettings,
-	CvTemplate,
-} from "../../types/cv";
-import { CvDocument } from "../cv_document";
+import { CvDocument, type CvRenderProps } from "../cv_document";
 
 /**
  * Props interface for the PdfDownloadButton component
  */
-interface PdfDownloadButtonProps extends CvData {
-	/** Language for the PDF document (pt or en) */
-	lang?: string;
-	/** Selected CV template */
-	template?: CvTemplate;
-	/** Selected color theme */
-	color?: CvColor;
+interface PdfDownloadButtonProps extends CvRenderProps {
 	/** Custom children to render inside the button */
 	children?: React.ReactNode;
 	/** Callback function to show thank you modal after PDF generation */
 	onPdfGenerated?: () => void;
-	settings?: CvRenderSettings;
 }
 
 /**
@@ -45,35 +32,14 @@ const PdfDownloadButton = forwardRef<
 	PdfDownloadButtonHandle,
 	PdfDownloadButtonProps
 >((props, ref) => {
-	const { children, onPdfGenerated, ...pdfProps } = props;
+	const { children, onPdfGenerated, data, lang } = props;
 	const { t } = useLanguage();
 	const [isLoading, setIsLoading] = useState(false);
 
 	const handleGenerateAndDownload = async () => {
 		setIsLoading(true);
 		try {
-			const pdfDoc = (
-				<CvDocument
-					personalInfo={pdfProps.personalInfo}
-					links={pdfProps.links}
-					resume={pdfProps.resume}
-					experiences={pdfProps.experiences}
-					education={pdfProps.education}
-					skills={pdfProps.skills}
-					languages={pdfProps.languages}
-					certifications={pdfProps.certifications}
-					projects={pdfProps.projects}
-					volunteers={pdfProps.volunteers}
-					customSections={pdfProps.customSections}
-					lang={pdfProps.lang}
-					template={pdfProps.template}
-					color={pdfProps.color}
-					settings={pdfProps.settings}
-					sectionOrder={pdfProps.sectionOrder}
-				/>
-			);
-
-			const blob = await pdf(pdfDoc).toBlob();
+			const blob = await pdf(<CvDocument data={data} lang={lang} />).toBlob();
 			const url = URL.createObjectURL(blob);
 			const link = document.createElement("a");
 			link.href = url;

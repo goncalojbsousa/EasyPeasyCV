@@ -37,71 +37,19 @@ export function ThankYouModal({
 	experiences,
 	education,
 }: ThankYouModalProps) {
-	const { t, language } = useLanguage();
+	const { t } = useLanguage();
 
 	if (!show) return null;
 
-	// Determine which recommended fields are empty
-	const emptyFields: string[] = [];
-
-	if (personalInfo) {
-		if (!personalInfo.name.trim()) {
-			const fieldName =
-				language === "pt"
-					? "Nome Completo"
-					: language === "es"
-						? "Nombre Completo"
-						: "Full Name";
-			emptyFields.push(fieldName);
-		}
-		if (!personalInfo.email.trim()) {
-			const fieldName =
-				language === "pt"
-					? "Email"
-					: language === "es"
-						? "Correo Electrónico"
-						: "Email";
-			emptyFields.push(fieldName);
-		}
-		if (!personalInfo.phone.trim()) {
-			const fieldName =
-				language === "pt"
-					? "Telefone"
-					: language === "es"
-						? "Teléfono"
-						: "Phone";
-			emptyFields.push(fieldName);
-		}
-		if (!personalInfo.desiredRole.trim()) {
-			const fieldName =
-				language === "pt"
-					? "Cargo Desejado"
-					: language === "es"
-						? "Puesto Deseado"
-						: "Desired Role";
-			emptyFields.push(fieldName);
-		}
-	}
-
-	if (!experiences || experiences.length === 0) {
-		const fieldName =
-			language === "pt"
-				? "Experiência Profissional"
-				: language === "es"
-					? "Experiencia Profesional"
-					: "Professional Experience";
-		emptyFields.push(fieldName);
-	}
-
-	if (!education || education.length === 0) {
-		const fieldName =
-			language === "pt"
-				? "Educação"
-				: language === "es"
-					? "Educación"
-					: "Education";
-		emptyFields.push(fieldName);
-	}
+	// Recommended-but-empty fields, listed as a gentle warning after download.
+	const emptyFields = [
+		!personalInfo?.name.trim() && t("field.full.name"),
+		!personalInfo?.email.trim() && t("field.email"),
+		!personalInfo?.phone.trim() && t("field.phone"),
+		!personalInfo?.desiredRole.trim() && t("cvType.field.desired.role"),
+		!experiences?.length && t("section.professional.experience"),
+		!education?.length && t("section.academic.education"),
+	].filter(Boolean) as string[];
 
 	const handleDonationClick = () => {
 		window.open("https://ko-fi.com/easypeasycv", "_blank");
@@ -148,18 +96,10 @@ export function ThankYouModal({
 								<AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-500 flex-shrink-0 mt-0.5" />
 								<div className="text-left">
 									<h4 className="text-amber-900 dark:text-amber-200 font-medium text-sm mb-2">
-										{language === "pt"
-											? "Atenção: Campos Recomendados"
-											: language === "es"
-												? "Atención: Campos Recomendados"
-												: "Attention: Recommended Fields"}
+										{t("thank.you.recommended.title")}
 									</h4>
 									<p className="text-amber-800 dark:text-amber-300 text-xs mb-3">
-										{language === "pt"
-											? "Recomendamos preencher os seguintes campos para um CV mais completo:"
-											: language === "es"
-												? "Recomendamos rellenar los siguientes campos para un CV más completo:"
-												: "We recommend filling in the following fields for a more complete CV:"}
+										{t("thank.you.recommended.message")}
 									</p>
 									<ul className="text-amber-800 dark:text-amber-300 text-xs space-y-1">
 										{emptyFields.map((field) => (

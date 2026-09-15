@@ -1162,6 +1162,16 @@ const esTranslations: Record<string, string> = {
 
 	// View Project link
 	"view.project": "Ver Proyecto",
+
+	// Forms and validation
+	"search.placeholder": "Buscar...",
+	"link.error.duplicate": "Ya existe un enlace con este tipo y nombre.",
+	"content.required.pdf": "Agrega algún contenido antes de generar el PDF.",
+	"content.required.preview":
+		"Agrega algún contenido antes de previsualizar el PDF.",
+	"thank.you.recommended.title": "Atención: Campos Recomendados",
+	"thank.you.recommended.message":
+		"Recomendamos rellenar los siguientes campos para un CV más completo:",
 };
 
 export default esTranslations;

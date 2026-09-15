@@ -1,6 +1,7 @@
 "use client";
 
 import { useLanguage } from "../../contexts/LanguageContext";
+import type { SectionReorderProps } from "../../types/cv";
 import { AutoResizeTextarea } from "../ui/auto_resize_textarea";
 import { FormField } from "../ui/form_field";
 import { FormSection } from "../ui/form_section";
@@ -9,38 +10,22 @@ import { Icons } from "../ui/icons";
 /**
  * Props interface for the ProfessionalSummary component
  */
-interface ProfessionalSummaryProps {
+interface ProfessionalSummaryProps extends SectionReorderProps {
 	/** Professional summary text content */
 	resume: string;
 	/** Handler for updating resume text */
 	onResumeChange: (resume: string) => void;
-	/** Whether this section can be reordered */
-	canReorder?: boolean;
-	/** Callback when user clicks move up button */
-	onMoveUp?: () => void;
-	/** Callback when user clicks move down button */
-	onMoveDown?: () => void;
-	/** Whether move up button should be disabled */
-	canMoveUp?: boolean;
-	/** Whether move down button should be disabled */
-	canMoveDown?: boolean;
 }
 
 /**
  * Professional Summary component
  * Manages the professional summary/resume text content for the CV
- * @param resume - Professional summary text content
- * @param onResumeChange - Function to handle resume text updates
  * @returns JSX element representing the professional summary form section
  */
 export function ProfessionalSummary({
 	resume,
 	onResumeChange,
-	canReorder = false,
-	onMoveUp,
-	onMoveDown,
-	canMoveUp = true,
-	canMoveDown = true,
+	...reorder
 }: ProfessionalSummaryProps) {
 	const { t } = useLanguage();
 
@@ -49,16 +34,12 @@ export function ProfessionalSummary({
 			<FormSection
 				title={t("section.professional.summary")}
 				icon={Icons.professionalSummary}
-				canReorder={canReorder}
-				onMoveUp={onMoveUp}
-				onMoveDown={onMoveDown}
-				canMoveUp={canMoveUp}
-				canMoveDown={canMoveDown}
+				{...reorder}
 			>
 				<FormField label={t("field.professional.summary")}>
 					<AutoResizeTextarea
-						className="w-full p-3 sm:p-4 border rounded-lg bg-white dark:bg-zinc-800 min-h-[120px] shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100 border-gray-300 dark:border-zinc-600"
-						placeholder={t(`cvType.placeholder.professional.summary`)}
+						className="min-h-[120px]"
+						placeholder={t("cvType.placeholder.professional.summary")}
 						value={resume}
 						onChange={(e) => onResumeChange(e.target.value)}
 						minHeight={120}

@@ -1,7 +1,8 @@
 "use client";
 
 import type { TextareaHTMLAttributes } from "react";
-import { useAutoResize } from "@/app/utils/useAutoResize";
+import { useAutoResize } from "../../utils/useAutoResize";
+import { FIELD_CLASS } from "./text_input";
 
 interface AutoResizeTextareaProps
 	extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "onChange"> {
@@ -12,7 +13,9 @@ interface AutoResizeTextareaProps
 }
 
 /**
- * Textarea component that automatically resizes based on content
+ * Textarea component that automatically resizes based on content.
+ * Carries the shared form control appearance, so callers only pass a
+ * `className` when they need something on top of it.
  */
 export function AutoResizeTextarea({
 	value,
@@ -34,7 +37,7 @@ export function AutoResizeTextarea({
 			ref={textareaRef}
 			value={value}
 			onChange={handleChange}
-			className={`${className} resize-none overflow-hidden`}
+			className={`${FIELD_CLASS} ${className} resize-none overflow-hidden`}
 			{...props}
 		/>
 	);

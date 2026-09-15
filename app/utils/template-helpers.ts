@@ -1,19 +1,12 @@
-import brTranslations from "../translations/br";
-import enTranslations from "../translations/en";
-import esTranslations from "../translations/es";
-import ptTranslations from "../translations/pt";
-import { translateMonthForLang } from "./months";
-
-// Translation maps for all supported languages
-const translationMaps: Record<
-	"pt" | "en" | "es" | "br",
-	Record<string, string>
-> = {
-	pt: ptTranslations,
-	en: enTranslations,
-	es: esTranslations,
-	br: brTranslations,
-};
+import { getTranslations } from "../translations";
+import type { PersonalInfo } from "../types/cv";
+import {
+	MONTHS_FULL,
+	monthIndex,
+	type PdfLang,
+	toPdfLang,
+	translateMonthForLang,
+} from "./months";
 
 /**
  * Convert centimeters to points (used for PDF measurements)
@@ -27,17 +20,14 @@ export function cmToPt(cm: number): number {
  */
 export function translateLabel(key?: string, lang?: string): string {
 	if (!key) return "";
-	const target = (lang || "pt") as "pt" | "en" | "es" | "br";
-	const map = translationMaps[target] || translationMaps.pt;
-	return map[key] || "";
+	return getTranslations(lang)[key] || "";
 }
 
 /**
  * Translate a month abbreviation to the target language
  */
 export function translateMonth(month: string, lang: string): string {
-	const target = (lang === "br" ? "pt" : lang || "pt") as "pt" | "en" | "es";
-	return translateMonthForLang(month, target);
+	return translateMonthForLang(month, toPdfLang(lang));
 }
 
 /**
@@ -45,42 +35,22 @@ export function translateMonth(month: string, lang: string): string {
  */
 export function getFullMonthName(month?: string, lang?: string): string {
 	if (!month) return "";
-	const target = (lang === "br" ? "pt" : lang || "pt") as "pt" | "en" | "es";
-
-	const monthMap: Record<string, Record<"pt" | "en" | "es", string>> = {
-		Jan: { pt: "Janeiro", en: "January", es: "Enero" },
-		Feb: { pt: "Fevereiro", en: "February", es: "Febrero" },
-		Mar: { pt: "Março", en: "March", es: "Marzo" },
-		Apr: { pt: "Abril", en: "April", es: "Abril" },
-		May: { pt: "Maio", en: "May", es: "Mayo" },
-		Jun: { pt: "Junho", en: "June", es: "Junio" },
-		Jul: { pt: "Julho", en: "July", es: "Julio" },
-		Aug: { pt: "Agosto", en: "August", es: "Agosto" },
-		Sep: { pt: "Setembro", en: "September", es: "Septiembre" },
-		Oct: { pt: "Outubro", en: "October", es: "Octubre" },
-		Nov: { pt: "Novembro", en: "November", es: "Noviembre" },
-		Dec: { pt: "Dezembro", en: "December", es: "Diciembre" },
-		Fev: { pt: "Fevereiro", en: "February", es: "Febrero" },
-		Abr: { pt: "Abril", en: "April", es: "Abril" },
-		Mai: { pt: "Maio", en: "May", es: "Mayo" },
-		Ago: { pt: "Agosto", en: "August", es: "Agosto" },
-		Set: { pt: "Setembro", en: "September", es: "Septiembre" },
-		Out: { pt: "Outubro", en: "October", es: "Octubre" },
-		Dez: { pt: "Dezembro", en: "December", es: "Diciembre" },
-		Ene: { pt: "Janeiro", en: "January", es: "Enero" },
-	};
-
-	return monthMap[month]?.[target] || month;
+	const i = monthIndex(month);
+	if (i < 0) return month;
+	return MONTHS_FULL[toPdfLang(lang)][i];
 }
 
 /**
  * Translate the word "Current" (for current job/education positions)
  */
+const CURRENT_LABEL: Record<PdfLang, string> = {
+	pt: "Atual",
+	en: "Current",
+	es: "Actual",
+};
+
 export function translateCurrent(lang: string): string {
-	const target = (lang === "br" ? "pt" : lang || "pt") as "pt" | "en" | "es";
-	if (target === "en") return "Current";
-	if (target === "es") return "Actual";
-	return "Atual";
+	return CURRENT_LABEL[toPdfLang(lang)];
 }
 
 /**
@@ -103,26 +73,10 @@ export function formatMonthYear(
 	dateFormat?: "short" | "medium" | "long",
 ): string {
 	if (!month || !year) return "";
-	const target = (lang === "br" ? "pt" : lang || "pt") as "pt" | "en" | "es";
-	const abbr = translateMonthForLang(month, target) || "";
+	const abbr = translateMonthForLang(month, toPdfLang(lang)) || "";
 
 	if (dateFormat === "short") {
-		const enMonth = translateMonthForLang(month, "en") || month;
-		const monthNum =
-			[
-				"Jan",
-				"Feb",
-				"Mar",
-				"Apr",
-				"May",
-				"Jun",
-				"Jul",
-				"Aug",
-				"Sep",
-				"Oct",
-				"Nov",
-				"Dec",
-			].indexOf(enMonth) + 1;
+		const monthNum = monthIndex(month) + 1;
 		return `${monthNum.toString().padStart(2, "0")}/${year}`;
 	}
 	if (dateFormat === "long") {
@@ -208,4 +162,43 @@ export function getSocialUrl(type: string, value: string): string {
 		return `https://${val}`;
 	}
 	return val;
+}
+
+export interface ContactItem {
+	label: string;
+	value: string;
+}
+
+/**
+ * Phone / email / location rows for a CV header, skipping anything empty.
+ * Shared by all templates, which previously each built this list themselves.
+ */
+export function buildContactItems(
+	personalInfo: PersonalInfo | undefined,
+	lang: string,
+): ContactItem[] {
+	if (!personalInfo) return [];
+
+	const dialCode =
+		personalInfo.countryCode?.match(/\(([^)]+)\)/)?.[1] ||
+		personalInfo.countryCode;
+
+	return [
+		personalInfo.phone && {
+			label: translateLabel("field.phone", lang),
+			value: dialCode
+				? `${dialCode} ${personalInfo.phone}`
+				: personalInfo.phone,
+		},
+		personalInfo.email && {
+			label: translateLabel("field.email", lang),
+			value: personalInfo.email,
+		},
+		personalInfo.city && {
+			label: translateLabel("field.city", lang),
+			value: [personalInfo.city, personalInfo.postalCode]
+				.filter(Boolean)
+				.join(" "),
+		},
+	].filter(Boolean) as ContactItem[];
 }

@@ -246,6 +246,8 @@ export interface CvData {
 	color?: CvColor;
 	/** Section order for CV sections */
 	sectionOrder?: SectionKey[];
+	/** Rendering and layout settings persisted with the CV */
+	settings?: CvRenderSettings;
 }
 
 export type FontFamilyOption = "Helvetica" | "Times-Roman" | "Arial" | "Custom";
@@ -307,4 +309,36 @@ export interface CvRenderSettings {
 	header: HeaderOptions;
 	photo: PhotoOptions;
 	sections: SectionOptions;
+}
+
+/**
+ * Domain of the CV, used to pick role-specific placeholder/label translations.
+ * The concrete list of values lives in `utils/cv-types.ts`.
+ */
+export type CVType =
+	| "development"
+	| "marketing"
+	| "sales"
+	| "hr"
+	| "finance"
+	| "design"
+	| "health"
+	| "education"
+	| "admin"
+	| "other";
+
+/**
+ * Props shared by every reorderable form section.
+ */
+export interface SectionReorderProps {
+	/** Whether this section can be reordered (false for Personal Information) */
+	canReorder?: boolean;
+	/** Callback when the user clicks the move up button */
+	onMoveUp?: () => void;
+	/** Callback when the user clicks the move down button */
+	onMoveDown?: () => void;
+	/** Whether the move up button should be enabled */
+	canMoveUp?: boolean;
+	/** Whether the move down button should be enabled */
+	canMoveDown?: boolean;
 }

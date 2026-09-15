@@ -8,31 +8,21 @@ import {
 	View,
 } from "@react-pdf/renderer";
 import React from "react";
-import type { CvColor, CvData, CvRenderSettings } from "../../types/cv";
+import type { CvColor, CvRenderSettings, SectionKey } from "../../types/cv";
 import {
 	getSectionOrder,
-	renderCertificationsSection,
-	renderCustomSection,
-	renderEducationSection,
-	renderExperienceSection,
-	renderLanguagesSection,
-	renderProjectsSection,
-	renderSkillsSection,
-	renderSummarySection,
-	renderVolunteerSection,
+	renderSectionByKey,
+	type TemplateProps,
 } from "../../utils/section-renderers";
-import { getSocialUrl, translateLabel } from "../../utils/template-helpers";
+import type { ContactItem } from "../../utils/template-helpers";
+import { buildContactItems, getSocialUrl } from "../../utils/template-helpers";
 import {
 	buildCommonStyles,
 	computeMetrics,
 	getPhotoSize,
 } from "../../utils/template-styles";
 
-interface ProfessionalTemplateProps extends CvData {
-	lang?: string;
-	settings?: CvRenderSettings;
-	color?: CvColor;
-}
+type ProfessionalTemplateProps = TemplateProps;
 
 const buildStyles = (settings?: CvRenderSettings, color: CvColor = "blue") => {
 	const metrics = computeMetrics(settings, color);
@@ -106,46 +96,13 @@ const buildStyles = (settings?: CvRenderSettings, color: CvColor = "blue") => {
 	};
 };
 
-export function ProfessionalTemplate({
-	personalInfo,
-	links,
-	resume,
-	experiences,
-	education,
-	skills,
-	languages,
-	certifications,
-	projects,
-	volunteers,
-	customSections,
-	lang,
-	settings,
-	color,
-	sectionOrder,
-}: ProfessionalTemplateProps) {
+export function ProfessionalTemplate(cv: ProfessionalTemplateProps) {
+	const { personalInfo, links, settings, lang, color } = cv;
 	const l = lang || "pt";
 	const styles = buildStyles(settings, color || "blue");
 	const linkColor = styles.linkColor || "#2563eb";
-	const order = getSectionOrder(sectionOrder, customSections);
-	const contactItems = [
-		personalInfo?.phone && {
-			label: translateLabel("field.phone", l),
-			value:
-				personalInfo.countryCode && personalInfo.phone
-					? `${personalInfo.countryCode.match(/\(([^)]+)\)/)?.[1] || personalInfo.countryCode} ${personalInfo.phone}`
-					: personalInfo.phone,
-		},
-		personalInfo?.email && {
-			label: translateLabel("field.email", l),
-			value: personalInfo.email,
-		},
-		personalInfo?.city && {
-			label: translateLabel("field.city", l),
-			value: [personalInfo.city, personalInfo.postalCode]
-				.filter(Boolean)
-				.join(" "),
-		},
-	].filter(Boolean) as { label: string; value: string }[];
+	const order = getSectionOrder(cv.sectionOrder, cv.customSections);
+	const contactItems = buildContactItems(personalInfo, l);
 
 	const SectionTitle = ({ label }: { label: string }) => (
 		<Text style={styles.sectionTitle}>{label}</Text>
@@ -153,45 +110,10 @@ export function ProfessionalTemplate({
 
 	const renderProps = { styles, lang: l, settings };
 
-	const renderSection = (sectionKey: import("../../types/cv").SectionKey) => {
-		switch (sectionKey) {
-			case "professional_summary":
-				return renderSummarySection(resume, renderProps, SectionTitle);
-			case "professional_experience":
-				return renderExperienceSection(experiences, renderProps, SectionTitle);
-			case "academic_education":
-				return renderEducationSection(education, renderProps, SectionTitle);
-			case "technical_skills":
-				return renderSkillsSection(
-					skills,
-					renderProps,
-					SectionTitle,
-					styles.skills,
-				);
-			case "languages":
-				return renderLanguagesSection(languages, renderProps, SectionTitle);
-			case "certifications":
-				return renderCertificationsSection(
-					certifications,
-					renderProps,
-					SectionTitle,
-				);
-			case "projects":
-				return renderProjectsSection(projects, renderProps, SectionTitle);
-			case "volunteer":
-				return renderVolunteerSection(volunteers, renderProps, SectionTitle);
-			default:
-				if (sectionKey.startsWith("custom_")) {
-					const customId = sectionKey.replace("custom_", "");
-					const section = (customSections || []).find(
-						(cs) => cs.id === customId,
-					);
-					if (section)
-						return renderCustomSection(section, renderProps, SectionTitle);
-				}
-				return null;
-		}
-	};
+	const renderSection = (sectionKey: SectionKey) =>
+		renderSectionByKey(sectionKey, cv, renderProps, SectionTitle, {
+			skillsTextStyle: styles.skills,
+		});
 
 	return (
 		<Document>
@@ -205,7 +127,7 @@ export function ProfessionalTemplate({
 							)}
 							{contactItems.length > 0 && (
 								<View style={styles.contactRow}>
-									{contactItems.map((item) => {
+									{contactItems.map((item: ContactItem) => {
 										const key = `${item.label}-${item.value}`;
 										return (
 											<React.Fragment key={key}>

@@ -4,15 +4,16 @@ import type React from "react";
 import type {
 	Certification,
 	CustomSection,
+	CvData,
 	CvRenderSettings,
 	Education,
 	Experience,
 	Language,
-	PredefinedSectionKey,
 	Project,
 	SectionKey,
 	Volunteer,
 } from "../types/cv";
+import { DEFAULT_PREDEFINED_SECTION_ORDER } from "./cv-data";
 import {
 	formatDateRange,
 	splitLines,
@@ -34,6 +35,12 @@ export type PdfStyles = {
 	[key: string]: Style | string | number | undefined;
 };
 
+/**
+ * Props every PDF template takes: the CV plus the language to render it in.
+ * Template, color and layout settings already live inside `CvData`.
+ */
+export type TemplateProps = CvData & { lang?: string };
+
 export interface SectionRenderProps {
 	styles: PdfStyles;
 	lang: string;
@@ -50,22 +57,12 @@ export function getSectionOrder(
 	sectionOrder: SectionKey[] | undefined,
 	customSections: CustomSection[] | undefined,
 ): SectionKey[] {
-	const defaultOrder: PredefinedSectionKey[] = [
-		"professional_summary",
-		"professional_experience",
-		"academic_education",
-		"technical_skills",
-		"languages",
-		"certifications",
-		"projects",
-		"volunteer",
-	];
-
 	const customOrder = (customSections || []).map(
 		(cs) => `custom_${cs.id}` as SectionKey,
 	);
-	const baseOrder =
-		sectionOrder && sectionOrder.length > 0 ? sectionOrder : defaultOrder;
+	const baseOrder = sectionOrder?.length
+		? sectionOrder
+		: DEFAULT_PREDEFINED_SECTION_ORDER;
 	return [...baseOrder, ...customOrder.filter((k) => !baseOrder.includes(k))];
 }
 
@@ -647,4 +644,106 @@ export function renderCustomSection(
 			{itemsContent}
 		</View>
 	);
+}
+
+/**
+ * Per-template overrides for how a few sections are laid out.
+ * Everything not overridden falls back to the default rendering.
+ */
+export interface SectionRenderOverrides {
+	/** Wraps each entry of the entry-based sections (e.g. a timeline bullet) */
+	ItemWrapper?: React.ComponentType<{ children: React.ReactNode }>;
+	/** Replaces the default section frame for the entry-based sections */
+	SectionWrapper?: React.ComponentType<SectionWrapperProps>;
+	/** Overrides the text style of the skills section */
+	skillsTextStyle?: Style;
+	/** Replaces the body of the languages section */
+	renderLanguages?: (
+		languages: Language[],
+		styles: PdfStyles,
+		lang: string,
+	) => React.ReactNode;
+}
+
+/**
+ * Renders the CV section named by `sectionKey`.
+ *
+ * All three templates order and dispatch their sections identically and only
+ * differ in the overrides above, so the dispatch lives here instead of being
+ * repeated in each template.
+ */
+export function renderSectionByKey(
+	sectionKey: SectionKey,
+	data: CvData,
+	renderProps: SectionRenderProps,
+	SectionTitle: React.ComponentType<{ label: string }>,
+	overrides: SectionRenderOverrides = {},
+): React.ReactNode {
+	const { ItemWrapper, SectionWrapper, skillsTextStyle, renderLanguages } =
+		overrides;
+
+	switch (sectionKey) {
+		case "professional_summary":
+			return renderSummarySection(data.resume, renderProps, SectionTitle);
+		case "professional_experience":
+			return renderExperienceSection(
+				data.experiences,
+				renderProps,
+				SectionTitle,
+				ItemWrapper,
+				SectionWrapper,
+			);
+		case "academic_education":
+			return renderEducationSection(
+				data.education,
+				renderProps,
+				SectionTitle,
+				ItemWrapper,
+				SectionWrapper,
+			);
+		case "technical_skills":
+			return renderSkillsSection(
+				data.skills,
+				renderProps,
+				SectionTitle,
+				skillsTextStyle,
+			);
+		case "languages":
+			return renderLanguagesSection(
+				data.languages,
+				renderProps,
+				SectionTitle,
+				renderLanguages,
+			);
+		case "certifications":
+			return renderCertificationsSection(
+				data.certifications,
+				renderProps,
+				SectionTitle,
+			);
+		case "projects":
+			return renderProjectsSection(data.projects, renderProps, SectionTitle);
+		case "volunteer":
+			return renderVolunteerSection(
+				data.volunteers,
+				renderProps,
+				SectionTitle,
+				ItemWrapper,
+				SectionWrapper,
+			);
+		default: {
+			const customId = sectionKey.replace("custom_", "");
+			const section = (data.customSections || []).find(
+				(cs) => cs.id === customId,
+			);
+			if (!section) return null;
+			return renderCustomSection(
+				section,
+				renderProps,
+				SectionTitle,
+				ItemWrapper,
+				SectionWrapper,
+			);
+		}
+	}
 }

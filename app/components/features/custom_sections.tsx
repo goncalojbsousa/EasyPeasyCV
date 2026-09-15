@@ -1,42 +1,60 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useLanguage } from "../../contexts/LanguageContext";
-import type { CustomSection } from "../../types/cv";
-import { DragHandle, SortableList } from "../dnd/sortable_list";
+import type {
+	CustomField,
+	CustomSection,
+	SectionReorderProps,
+} from "../../types/cv";
+import { SortableList } from "../dnd/sortable_list";
 import { AutoResizeTextarea } from "../ui/auto_resize_textarea";
 import { EmptyState } from "../ui/empty_state";
+import { EntryCard } from "../ui/entry_card";
 import { FormField } from "../ui/form_field";
 import { FormSection } from "../ui/form_section";
 import { IconButton } from "../ui/icon_button";
 import { Icons } from "../ui/icons";
+import { TextInput } from "../ui/text_input";
 
-interface CustomSectionCardProps {
+/** Keys of a custom field that the form can edit. */
+type CustomFieldKey = keyof Omit<CustomField, "id">;
+
+interface CustomSectionCardProps extends SectionReorderProps {
 	section: CustomSection;
 	onTitleChange: (value: string) => void;
 	onAddField: () => void;
 	onFieldChange: (
 		fieldId: string,
-		key:
-			| "label"
-			| "subtitle"
-			| "value"
-			| "startMonth"
-			| "startYear"
-			| "endMonth"
-			| "endYear"
-			| "bullets"
-			| "current"
-			| "centerValue",
+		key: CustomFieldKey,
 		value: string | boolean,
 	) => void;
 	onRemoveField: (fieldId: string) => void;
 	onRemoveSection: () => void;
 	onReorderFields?: (fromIndex: number, toIndex: number) => void;
-	canReorder?: boolean;
-	onMoveUp?: () => void;
-	onMoveDown?: () => void;
-	canMoveUp?: boolean;
-	canMoveDown?: boolean;
+}
+
+/** Small labelled checkbox used by the per-field toggles. */
+function FieldToggle({
+	checked,
+	onChange,
+	children,
+}: {
+	checked: boolean;
+	onChange: (checked: boolean) => void;
+	children: ReactNode;
+}) {
+	return (
+		<label className="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-200">
+			<input
+				type="checkbox"
+				className="rounded border-gray-300 text-sky-600 focus:ring-sky-500"
+				checked={checked}
+				onChange={(e) => onChange(e.target.checked)}
+			/>
+			{children}
+		</label>
+	);
 }
 
 export function CustomSectionCard({
@@ -47,24 +65,36 @@ export function CustomSectionCard({
 	onRemoveField,
 	onRemoveSection,
 	onReorderFields,
-	canReorder = false,
-	onMoveUp,
-	onMoveDown,
-	canMoveUp = true,
-	canMoveDown = true,
+	...reorder
 }: CustomSectionCardProps) {
 	const { t } = useLanguage();
+
+	/** Renders a free-text month/year pair for one end of the date range. */
+	const monthYearPair = (
+		field: CustomField,
+		monthKey: "startMonth" | "endMonth",
+		yearKey: "startYear" | "endYear",
+	) => (
+		<div className="grid grid-cols-2 gap-2">
+			<TextInput
+				placeholder={t("custom.field.placeholder.month")}
+				value={field[monthKey] || ""}
+				onChange={(e) => onFieldChange(field.id, monthKey, e.target.value)}
+			/>
+			<TextInput
+				placeholder={t("custom.field.placeholder.year")}
+				value={field[yearKey] || ""}
+				onChange={(e) => onFieldChange(field.id, yearKey, e.target.value)}
+			/>
+		</div>
+	);
 
 	return (
 		<div className="space-y-4">
 			<FormSection
 				title={section.title || t("custom.section.default")}
 				icon={Icons.actions}
-				canReorder={canReorder}
-				onMoveUp={onMoveUp}
-				onMoveDown={onMoveDown}
-				canMoveUp={canMoveUp}
-				canMoveDown={canMoveDown}
+				{...reorder}
 				actionButton={
 					<IconButton
 						onClick={onRemoveSection}
@@ -79,9 +109,7 @@ export function CustomSectionCard({
 			>
 				<div className="space-y-4">
 					<FormField label={t("custom.section.name")}>
-						<input
-							type="text"
-							className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+						<TextInput
 							placeholder={t("custom.section.placeholder.name")}
 							value={section.title}
 							onChange={(e) => onTitleChange(e.target.value)}
@@ -98,39 +126,18 @@ export function CustomSectionCard({
 						renderItem={(idx) => {
 							const field = section.fields[idx];
 							return (
-								<div
+								<EntryCard
 									key={field.id}
-									className="bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg shadow-sm relative mb-4 transition-colors duration-300"
+									entityLabel={t("custom.field.default")}
+									title={
+										field.label || `${t("custom.field.default")} ${idx + 1}`
+									}
+									draggable={section.fields.length > 1}
+									onRemove={() => onRemoveField(field.id)}
 								>
-									<div className="bg-gray-50 dark:bg-zinc-900 px-4 py-3 border-b border-gray-200 dark:border-zinc-700 rounded-t-lg flex items-center justify-between">
-										<div className="flex items-center gap-2">
-											{section.fields.length > 1 && (
-												<DragHandle
-													ariaLabel={t("custom.field.reorder")}
-													className="text-gray-400 dark:text-zinc-500 hover:text-gray-600 dark:hover:text-zinc-300 transition-colors duration-300"
-												>
-													{Icons.drag}
-												</DragHandle>
-											)}
-											<h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-												{field.label ||
-													`${t("custom.field.default")} ${idx + 1}`}
-											</h4>
-										</div>
-										<IconButton
-											onClick={() => onRemoveField(field.id)}
-											variant="danger"
-											size="sm"
-											ariaLabel={t("custom.field.remove")}
-										>
-											{Icons.remove}
-										</IconButton>
-									</div>
-									<div className="p-4 space-y-3">
+									<div className="space-y-3">
 										<FormField label={t("custom.field.label")}>
-											<input
-												type="text"
-												className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+											<TextInput
 												placeholder={t("custom.field.placeholder.label")}
 												value={field.label}
 												onChange={(e) =>
@@ -139,9 +146,7 @@ export function CustomSectionCard({
 											/>
 										</FormField>
 										<FormField label={t("custom.field.subtitle")}>
-											<input
-												type="text"
-												className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
+											<TextInput
 												placeholder={t("custom.field.placeholder.subtitle")}
 												value={field.subtitle || ""}
 												onChange={(e) =>
@@ -151,99 +156,34 @@ export function CustomSectionCard({
 										</FormField>
 										<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 											<FormField label={t("custom.field.start")}>
-												<div className="grid grid-cols-2 gap-2">
-													<input
-														type="text"
-														className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-														placeholder={t("custom.field.placeholder.month")}
-														value={field.startMonth || ""}
-														onChange={(e) =>
-															onFieldChange(
-																field.id,
-																"startMonth",
-																e.target.value,
-															)
-														}
-													/>
-													<input
-														type="text"
-														className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-														placeholder={t("custom.field.placeholder.year")}
-														value={field.startYear || ""}
-														onChange={(e) =>
-															onFieldChange(
-																field.id,
-																"startYear",
-																e.target.value,
-															)
-														}
-													/>
-												</div>
+												{monthYearPair(field, "startMonth", "startYear")}
 											</FormField>
 											{!field.current && (
 												<FormField label={t("custom.field.end")}>
-													<div className="grid grid-cols-2 gap-2">
-														<input
-															type="text"
-															className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-															placeholder={t("custom.field.placeholder.month")}
-															value={field.endMonth || ""}
-															onChange={(e) =>
-																onFieldChange(
-																	field.id,
-																	"endMonth",
-																	e.target.value,
-																)
-															}
-														/>
-														<input
-															type="text"
-															className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
-															placeholder={t("custom.field.placeholder.year")}
-															value={field.endYear || ""}
-															onChange={(e) =>
-																onFieldChange(
-																	field.id,
-																	"endYear",
-																	e.target.value,
-																)
-															}
-														/>
-													</div>
+													{monthYearPair(field, "endMonth", "endYear")}
 												</FormField>
 											)}
 										</div>
 										<div className="flex flex-wrap gap-4">
-											<label className="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-200">
-												<input
-													type="checkbox"
-													className="rounded border-gray-300 text-sky-600 focus:ring-sky-500"
-													checked={!!field.current}
-													onChange={(e) =>
-														onFieldChange(field.id, "current", e.target.checked)
-													}
-												/>
+											<FieldToggle
+												checked={!!field.current}
+												onChange={(checked) =>
+													onFieldChange(field.id, "current", checked)
+												}
+											>
 												{t("custom.field.current")}
-											</label>
-											<label className="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-200">
-												<input
-													type="checkbox"
-													className="rounded border-gray-300 text-sky-600 focus:ring-sky-500"
-													checked={!!field.centerValue}
-													onChange={(e) =>
-														onFieldChange(
-															field.id,
-															"centerValue",
-															e.target.checked,
-														)
-													}
-												/>
+											</FieldToggle>
+											<FieldToggle
+												checked={!!field.centerValue}
+												onChange={(checked) =>
+													onFieldChange(field.id, "centerValue", checked)
+												}
+											>
 												{t("custom.field.center")}
-											</label>
+											</FieldToggle>
 										</div>
 										<FormField label={t("custom.field.value")}>
 											<AutoResizeTextarea
-												className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
 												placeholder={t("custom.field.placeholder.value")}
 												value={field.value}
 												onChange={(e) =>
@@ -254,7 +194,6 @@ export function CustomSectionCard({
 										</FormField>
 										<FormField label={t("custom.field.bullets")}>
 											<AutoResizeTextarea
-												className="w-full p-2 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-sky-400 focus:border-sky-400 transition-all text-sm text-gray-900 dark:text-gray-100"
 												placeholder={t("custom.field.placeholder.bullets")}
 												value={field.bullets || ""}
 												onChange={(e) =>
@@ -264,7 +203,7 @@ export function CustomSectionCard({
 											/>
 										</FormField>
 									</div>
-								</div>
+								</EntryCard>
 							);
 						}}
 					/>

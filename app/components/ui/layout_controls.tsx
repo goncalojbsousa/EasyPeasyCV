@@ -2,6 +2,7 @@
 
 import { RotateCcw } from "lucide-react";
 import { useMemo } from "react";
+import { useLanguage } from "../../contexts/LanguageContext";
 import type {
 	CvColor,
 	CvRenderSettings,
@@ -15,10 +16,7 @@ import type {
 import { ColorSelector } from "./color_selector";
 import { SelectMenu, type SelectOption } from "./select_menu";
 
-type TFunc = (key: string) => string;
-
 interface LayoutControlsProps {
-	t: TFunc;
 	settings?: CvRenderSettings;
 	selectedColor: CvColor;
 	onColorChange: (c: CvColor) => void;
@@ -27,13 +25,13 @@ interface LayoutControlsProps {
 }
 
 export function LayoutControls({
-	t,
 	settings,
 	selectedColor,
 	onColorChange,
 	onSettingsChange,
 	onResetSectionOrder,
 }: LayoutControlsProps) {
+	const { t } = useLanguage();
 	const fontOptions: SelectOption<FontFamilyOption>[] = useMemo(
 		() => [
 			{ value: "Helvetica", label: "Helvetica" },

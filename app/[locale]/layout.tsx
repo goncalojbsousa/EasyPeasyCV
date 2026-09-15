@@ -3,7 +3,9 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
 import type { ReactNode } from "react";
+import { routing } from "../../navigation";
 import { LanguageProvider } from "../contexts/LanguageContext";
+import type { Locale } from "../translations";
 import "../globals.css";
 import type { Metadata } from "next";
 import Script from "next/script";
@@ -12,15 +14,16 @@ const inter = Inter({ subsets: ["latin"] });
 
 // Generate static params for all supported locales
 export function generateStaticParams() {
-	return [
-		{ locale: "en" },
-		{ locale: "pt" },
-		{ locale: "br" },
-		{ locale: "es" },
-	];
+	return routing.locales.map((locale) => ({ locale }));
 }
 
-type Locale = "en" | "pt" | "br" | "es";
+/** BCP 47 tags used in Open Graph metadata. */
+const OG_LOCALES: Record<Locale, string> = {
+	en: "en_US",
+	pt: "pt_PT",
+	br: "pt_BR",
+	es: "es_ES",
+};
 
 const metaByLang: Record<Locale, { title: string; description: string }> = {
 	en: {
@@ -87,14 +90,7 @@ export async function generateMetadata({
 					alt: "EasyPeasyCV - Free, Secure CV Builder",
 				},
 			],
-			locale:
-				locale === "en"
-					? "en_US"
-					: locale === "pt"
-						? "pt_PT"
-						: locale === "br"
-							? "pt_BR"
-							: "es_ES",
+			locale: OG_LOCALES[locale as Locale] ?? OG_LOCALES.en,
 			type: "website",
 		},
 		twitter: {

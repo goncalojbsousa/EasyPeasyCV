@@ -1121,6 +1121,16 @@ const ptTranslations: Record<string, string> = {
 	// Footer
 	"footer.privacy": "Privacidade",
 	"footer.terms": "Termos",
+
+	// Forms and validation
+	"search.placeholder": "Procurar...",
+	"link.error.duplicate": "Já existe um link com este tipo e nome.",
+	"content.required.pdf": "Adicione algum conteúdo antes de gerar o PDF.",
+	"content.required.preview":
+		"Adicione algum conteúdo antes de visualizar o PDF.",
+	"thank.you.recommended.title": "Atenção: Campos Recomendados",
+	"thank.you.recommended.message":
+		"Recomendamos preencher os seguintes campos para um CV mais completo:",
 };
 
 export default ptTranslations;

@@ -10,26 +10,20 @@ import {
 import React from "react";
 import type {
 	CvColor,
-	CvData,
 	CvRenderSettings,
 	Language,
+	SectionKey,
 } from "../../types/cv";
 import {
 	getSectionOrder,
-	renderCertificationsSection,
-	renderCustomSection,
-	renderEducationSection,
-	renderExperienceSection,
-	renderLanguagesSection,
-	renderProjectsSection,
-	renderSkillsSection,
-	renderSummarySection,
-	renderVolunteerSection,
+	renderSectionByKey,
 	type SectionWrapperProps,
+	type TemplateProps,
 } from "../../utils/section-renderers";
+import type { ContactItem } from "../../utils/template-helpers";
 import {
+	buildContactItems,
 	getSocialUrl,
-	translateLabel,
 	translateLanguageLevel,
 } from "../../utils/template-helpers";
 import {
@@ -39,11 +33,7 @@ import {
 	type PdfTextAlign,
 } from "../../utils/template-styles";
 
-interface ClassicTemplateProps extends CvData {
-	lang?: string;
-	settings?: CvRenderSettings;
-	color?: CvColor;
-}
+type ClassicTemplateProps = TemplateProps;
 
 const buildStyles = (settings?: CvRenderSettings, color: CvColor = "blue") => {
 	const metrics = computeMetrics(settings, color);
@@ -290,46 +280,13 @@ const buildStyles = (settings?: CvRenderSettings, color: CvColor = "blue") => {
 	};
 };
 
-export function ClassicTemplate({
-	personalInfo,
-	links,
-	resume,
-	experiences,
-	education,
-	skills,
-	languages,
-	certifications,
-	projects,
-	volunteers,
-	customSections,
-	lang,
-	settings,
-	color,
-	sectionOrder,
-}: ClassicTemplateProps) {
+export function ClassicTemplate(cv: ClassicTemplateProps) {
+	const { personalInfo, links, settings, lang, color } = cv;
 	const l = lang || "pt";
 	const styles = buildStyles(settings, color || "blue");
-	const order = getSectionOrder(sectionOrder, customSections);
+	const order = getSectionOrder(cv.sectionOrder, cv.customSections);
 
-	const contactItems = [
-		personalInfo?.phone && {
-			label: translateLabel("field.phone", l),
-			value:
-				personalInfo.countryCode && personalInfo.phone
-					? `${personalInfo.countryCode.match(/\(([^)]+)\)/)?.[1] || personalInfo.countryCode} ${personalInfo.phone}`
-					: personalInfo.phone,
-		},
-		personalInfo?.email && {
-			label: translateLabel("field.email", l),
-			value: personalInfo.email,
-		},
-		personalInfo?.city && {
-			label: translateLabel("field.city", l),
-			value: [personalInfo.city, personalInfo.postalCode]
-				.filter(Boolean)
-				.join(" "),
-		},
-	].filter(Boolean) as { label: string; value: string }[];
+	const contactItems = buildContactItems(personalInfo, l);
 
 	const photoSrc = settings?.photo?.enabled
 		? settings.photo?.dataUrl || null
@@ -376,70 +333,12 @@ export function ClassicTemplate({
 		</>
 	);
 
-	const renderSection = (sectionKey: import("../../types/cv").SectionKey) => {
-		switch (sectionKey) {
-			case "professional_summary":
-				return renderSummarySection(resume, renderProps, SectionTitle);
-			case "professional_experience":
-				return renderExperienceSection(
-					experiences,
-					renderProps,
-					SectionTitle,
-					TimelineItem,
-					TimelineWrapper,
-				);
-			case "academic_education":
-				return renderEducationSection(
-					education,
-					renderProps,
-					SectionTitle,
-					TimelineItem,
-					TimelineWrapper,
-				);
-			case "technical_skills":
-				return renderSkillsSection(skills, renderProps, SectionTitle);
-			case "languages":
-				return renderLanguagesSection(
-					languages,
-					renderProps,
-					SectionTitle,
-					LanguagesCustomRender,
-				);
-			case "certifications":
-				return renderCertificationsSection(
-					certifications,
-					renderProps,
-					SectionTitle,
-				);
-			case "projects":
-				return renderProjectsSection(projects, renderProps, SectionTitle);
-			case "volunteer":
-				return renderVolunteerSection(
-					volunteers,
-					renderProps,
-					SectionTitle,
-					TimelineItem,
-					TimelineWrapper,
-				);
-			default:
-				if (sectionKey.startsWith("custom_")) {
-					const customId = sectionKey.replace("custom_", "");
-					const section = (customSections || []).find(
-						(cs) => cs.id === customId,
-					);
-					if (section) {
-						return renderCustomSection(
-							section,
-							renderProps,
-							SectionTitle,
-							TimelineItem,
-							TimelineWrapper,
-						);
-					}
-				}
-				return null;
-		}
-	};
+	const renderSection = (sectionKey: SectionKey) =>
+		renderSectionByKey(sectionKey, cv, renderProps, SectionTitle, {
+			ItemWrapper: TimelineItem,
+			SectionWrapper: TimelineWrapper,
+			renderLanguages: LanguagesCustomRender,
+		});
 
 	return (
 		<Document>
@@ -456,7 +355,7 @@ export function ClassicTemplate({
 
 								{/* Contact Information */}
 								<View style={styles.contactRow}>
-									{contactItems.map((item) => (
+									{contactItems.map((item: ContactItem) => (
 										<View
 											key={`${item.label}-${item.value}`}
 											style={styles.contactItem}

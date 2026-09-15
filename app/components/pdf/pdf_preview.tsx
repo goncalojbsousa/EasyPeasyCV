@@ -11,100 +11,46 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useLanguage } from "../../contexts/LanguageContext";
-import type {
-	CvColor,
-	CvData,
-	CvRenderSettings,
-	CvTemplate,
-} from "../../types/cv";
-import { CvDocument } from "../cv_document";
+import { useIsMobile } from "../../utils/useIsMobile";
+import { CvDocument, type CvRenderProps } from "../cv_document";
 import { PdfCanvasViewer } from "./pdf_canvas_viewer";
 
 /**
  * Props interface for the PdfPreview component
  */
-interface PdfPreviewProps extends CvData {
+interface PdfPreviewProps extends CvRenderProps {
 	/** Whether to show the preview */
 	show?: boolean;
 	/** Function to close the preview */
 	onClose?: () => void;
-	/** Language for the document (pt or en) */
-	lang?: string;
-	/** Selected CV template */
-	template?: CvTemplate;
-	/** Selected color theme */
-	color?: CvColor;
-	settings?: CvRenderSettings;
 }
 
 /**
  * PDF Preview component
  * Displays a real-time preview of the CV as a PDF in a modal
- * @param props - Component props including CV data, modal controls, and language
- * @returns JSX element representing a modal with PDF preview
  */
 export function PdfPreview({
-	personalInfo,
-	links,
-	resume,
-	experiences,
-	education,
-	skills,
-	languages,
-	certifications,
-	projects,
-	volunteers,
-	customSections,
+	data,
+	lang,
 	show = false,
 	onClose,
-	lang = "pt",
-	template = "professional",
-	color = "blue",
-	settings,
-	sectionOrder,
 }: PdfPreviewProps) {
 	const { t } = useLanguage();
+	const isMobile = useIsMobile();
 	const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 	const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	const [isMobile, setIsMobile] = useState(false);
 	const [pdfSize, setPdfSize] = useState<number>(0);
 
 	const generatePdf = useCallback(async () => {
 		setLoading(true);
 		setError(null);
 		try {
-			// Create the PDF document component with all CV data
-			const pdfDoc = (
-				<CvDocument
-					personalInfo={personalInfo}
-					links={links}
-					resume={resume}
-					experiences={experiences}
-					education={education}
-					skills={skills}
-					languages={languages}
-					certifications={certifications}
-					projects={projects}
-					volunteers={volunteers}
-					customSections={customSections}
-					lang={lang}
-					template={template}
-					color={color}
-					settings={settings}
-					sectionOrder={sectionOrder}
-				/>
-			);
-
-			// Generate a PDF blob from the document
-			const blob = await pdf(pdfDoc).toBlob();
+			const blob = await pdf(<CvDocument data={data} lang={lang} />).toBlob();
 			setPdfSize(blob.size);
 			setPdfBlob(blob);
-
-			// Create a URL from the PDF blob for preview
-			const url = URL.createObjectURL(blob);
-			setPdfUrl(url);
+			setPdfUrl(URL.createObjectURL(blob));
 		} catch (error) {
 			const errorMessage =
 				error instanceof Error ? error.message : t("pdf.preview.error.unknown");
@@ -112,35 +58,7 @@ export function PdfPreview({
 		} finally {
 			setLoading(false);
 		}
-	}, [
-		personalInfo,
-		links,
-		resume,
-		experiences,
-		education,
-		skills,
-		languages,
-		certifications,
-		projects,
-		volunteers,
-		customSections,
-		lang,
-		template,
-		color,
-		settings,
-		sectionOrder,
-		t,
-	]);
-
-	// Detect if the device is mobile to adjust PDF preview behavior
-	useEffect(() => {
-		const checkMobile = () => {
-			setIsMobile(window.innerWidth < 768);
-		};
-		checkMobile();
-		window.addEventListener("resize", checkMobile);
-		return () => window.removeEventListener("resize", checkMobile);
-	}, []);
+	}, [data, lang, t]);
 
 	// Generate PDF whenever the modal is shown or any relevant data changes
 	useEffect(() => {
