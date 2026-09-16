@@ -45,8 +45,14 @@ export function Footer() {
 						</a>
 					</div>
 
-					{/* Privacy and Terms links - Right */}
+					{/* Help, Privacy and Terms links - Right */}
 					<div className="flex items-center gap-4">
+						<Link
+							href={`/${language}/faq`}
+							className="text-gray-600 dark:text-gray-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-300 text-sm"
+						>
+							{t("footer.faq")}
+						</Link>
 						<Link
 							href={`/${language}/privacy`}
 							className="text-gray-600 dark:text-gray-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-300 text-sm"

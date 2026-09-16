@@ -1239,6 +1239,59 @@ const enTranslations: Record<string, string> = {
 	"examples.help":
 		"Only changes the field examples and hints, for this profile. Your resume itself is not changed.",
 	"examples.current": "Examples: {area}",
+	"footer.faq": "Help",
+	"faq.badge": "Help",
+	"faq.title": "Frequently asked questions",
+	"faq.subtitle":
+		"Quick answers about your data, building your CV and the project. If you can't find what you need, get in touch at the bottom of the page.",
+	"faq.group.data": "Privacy and data",
+	"faq.group.building": "Building your CV",
+	"faq.group.project": "About EasyPeasyCV",
+	"faq.account.q": "Do I need an account?",
+	"faq.account.a":
+		"No. Open the builder and start writing. There is no sign-up, login or email.",
+	"faq.where.q": "Where is my data stored?",
+	"faq.where.a":
+		"Only in your browser, on this device. Your CV and its PDF are created on your computer, and the content of your CV is never sent to a server.",
+	"faq.lose.q": "Can I lose my CV?",
+	"faq.lose.a":
+		"Yes, if you clear your browser data, use a private window, or switch browser or device. To keep a copy, use Data (XML) › Export XML every now and then.",
+	"faq.move.q": "How do I move my CV to another computer?",
+	"faq.move.a":
+		"Export the XML in this browser, then use Data (XML) › Import XML in the other one. Importing replaces the content of the open profile, so create a new profile first if you want to keep the current one.",
+	"faq.profiles.q": "Can I have more than one CV?",
+	"faq.profiles.a":
+		"Yes. In CV Profiles you can create, duplicate and rename profiles, for example one CV per kind of job. Each profile keeps its own content and design.",
+	"faq.design.q": "How do I change how my CV looks?",
+	"faq.design.a":
+		"In Design, pick a preset and then adjust the colour, font, margins, header and the style of each section. The preview updates as you go.",
+	"faq.pages.q": "My CV has too many pages. What can I do?",
+	"faq.pages.a":
+		"Try Super Compact mode, offered above the preview and under Design › Page. You can also lower the density and margins, or shorten older experience.",
+	"faq.language.q": "Can I download my CV in another language?",
+	"faq.language.a":
+		"Yes. In Generate CV you choose the PDF's language: section titles and fixed labels use that language. What you wrote is not translated.",
+	"faq.examples.q": "What are the Examples for?",
+	"faq.examples.a":
+		"They switch the field examples and hints to your professional field. They don't change your CV.",
+	"faq.free.q": "Is it really free?",
+	"faq.free.a":
+		"Yes, with no paid plans and no watermarks. The project is open source (MIT licence) and runs on voluntary support.",
+	"faq.ats.q": "Will my CV get through ATS software?",
+	"faq.ats.a":
+		"The PDF contains real text and a simple structure that ATS software can read. No tool can guarantee a pass: your content and the job's keywords still matter most.",
+	"faq.contact.title": "Didn't find your answer?",
+	"faq.contact.description":
+		"EasyPeasyCV is open source and feedback is handled on GitHub. You'll need a free GitHub account.",
+	"faq.contact.bug.title": "Report a bug",
+	"faq.contact.bug.description":
+		"Something not working as it should? Tell us what happened and how to reproduce it.",
+	"faq.contact.idea.title": "Suggest an idea",
+	"faq.contact.idea.description":
+		"A feature or improvement that would help you.",
+	"faq.contact.note":
+		"GitHub issues are public: don't include personal data or your CV.",
+	"faq.contact.opensInNewTab": "(opens in a new tab)",
 };
 
 export default enTranslations;
