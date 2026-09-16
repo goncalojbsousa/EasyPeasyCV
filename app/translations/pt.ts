@@ -1178,7 +1178,6 @@ const ptTranslations: Record<string, string> = {
 	"design.sections.help":
 		"Cada secção pode ser apresentada de forma diferente.",
 	"design.sections.entryStyle": "Apresentação das entradas",
-	"design.sections.custom": "Secções personalizadas",
 	"design.entries.plain": "Simples",
 	"design.entries.card": "Com barra",
 	"design.entries.timeline": "Cronologia",
@@ -1223,6 +1222,15 @@ const ptTranslations: Record<string, string> = {
 	"navigator.reorder": "Arrastar para reordenar",
 	"navigator.filled": "Preenchida",
 	"navigator.empty": "Por preencher",
+
+	// Individually styled custom sections
+	"design.custom.title": "Secções personalizadas",
+	"design.custom.help":
+		"Define um estilo por omissão e, se quiseres, dá a cada secção o seu próprio estilo.",
+	"design.sections.customDefault": "Estilo por omissão",
+	"design.custom.own": "Tem estilo próprio.",
+	"design.custom.useDefault": "Usar o estilo por omissão",
+	"design.custom.followsDefault": "Segue o estilo por omissão.",
 };
 
 export default ptTranslations;

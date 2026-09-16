@@ -19,6 +19,12 @@ import { useDesignSettings } from "./use_design_settings";
 
 type TabId = "presets" | "page" | "header" | "sections";
 
+/** What the panel needs to know about a custom section to style it. */
+export interface CustomSectionSummary {
+	id: string;
+	title: string;
+}
+
 const TABS: { id: TabId; labelKey: string; icon: ReactNode }[] = [
 	{
 		id: "presets",
@@ -50,6 +56,8 @@ interface DesignPanelProps {
 	onResetSectionOrder?: () => void;
 	/** Legacy theme of a CV saved before the modular system */
 	legacyTemplate?: CvTemplate;
+	/** The CV's custom sections, each of which can be styled individually */
+	customSections?: CustomSectionSummary[];
 	/** Opens this tab first, e.g. when entered from a section's own shortcut */
 	initialTab?: TabId;
 }
@@ -69,6 +77,7 @@ export function DesignPanel({
 	onColorChange,
 	onResetSectionOrder,
 	legacyTemplate,
+	customSections,
 	initialTab = "presets",
 }: DesignPanelProps) {
 	const { t } = useLanguage();
@@ -116,7 +125,9 @@ export function DesignPanel({
 				{tab === "presets" && <PresetsTab design={design} />}
 				{tab === "page" && <PageTab design={design} />}
 				{tab === "header" && <HeaderTab design={design} />}
-				{tab === "sections" && <SectionsTab design={design} />}
+				{tab === "sections" && (
+					<SectionsTab design={design} customSections={customSections} />
+				)}
 			</div>
 
 			{/* Footer actions */}

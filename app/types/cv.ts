@@ -403,8 +403,17 @@ export interface CvStyleSettings {
 	datePlacement: DatePlacement;
 	/** Bullet marker — global */
 	bullets: BulletVariant;
-	/** Per-section entry presentation */
+	/**
+	 * Per-section entry presentation. `custom` is the default for every custom
+	 * section that has no style of its own in `customSectionEntries`.
+	 */
 	entries: Record<StyledSectionKey, EntryVariant>;
+	/**
+	 * Entry presentation chosen for an individual custom section, keyed by the
+	 * section's id. Kept here rather than on the section so that applying a
+	 * preset resets it together with every other style choice.
+	 */
+	customSectionEntries?: Record<string, EntryVariant>;
 	/** Languages section presentation */
 	languages: LanguagesVariant;
 	/** Skills section presentation */

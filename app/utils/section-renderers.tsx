@@ -8,11 +8,12 @@ import type {
 	CvData,
 	CvRenderSettings,
 	CvStyleSettings,
+	EntryVariant,
 	Language,
 	SectionKey,
-	StyledSectionKey,
 } from "../types/cv";
 import { DEFAULT_PREDEFINED_SECTION_ORDER } from "./cv-data";
+import { getCustomSectionVariant } from "./style-presets";
 import {
 	formatDateRange,
 	splitLines,
@@ -195,14 +196,14 @@ function EntryBlock({
  */
 function renderEntrySection(
 	sectionKey: string,
-	styleKey: StyledSectionKey,
+	variant: EntryVariant,
 	label: string,
 	entries: EntryContent[],
 	{ styles, style, SectionTitle }: SectionRenderProps,
 ) {
 	if (entries.length === 0) return null;
 
-	const frame = buildEntryFrame(styles, style.entries[styleKey]);
+	const frame = buildEntryFrame(styles, variant);
 	const items = (
 		<>
 			{entries.map((entry) => (
@@ -291,7 +292,7 @@ export function renderExperienceSection(
 
 	return renderEntrySection(
 		"professional_experience",
-		"professional_experience",
+		props.style.entries.professional_experience,
 		translateLabel("pdf.section.experience", lang),
 		entries,
 		props,
@@ -326,7 +327,7 @@ export function renderEducationSection(
 
 	return renderEntrySection(
 		"academic_education",
-		"academic_education",
+		props.style.entries.academic_education,
 		translateLabel("pdf.section.education", lang),
 		entries,
 		props,
@@ -446,7 +447,7 @@ export function renderCertificationsSection(
 
 	return renderEntrySection(
 		"certifications",
-		"certifications",
+		props.style.entries.certifications,
 		translateLabel("pdf.section.certifications", lang),
 		entries,
 		props,
@@ -477,7 +478,7 @@ export function renderProjectsSection(
 
 	return renderEntrySection(
 		"projects",
-		"projects",
+		props.style.entries.projects,
 		translateLabel("pdf.section.projects", lang),
 		entries,
 		props,
@@ -509,7 +510,7 @@ export function renderVolunteerSection(
 
 	return renderEntrySection(
 		"volunteer",
-		"volunteer",
+		props.style.entries.volunteer,
 		translateLabel("pdf.section.volunteer", lang),
 		entries,
 		props,
@@ -558,7 +559,7 @@ export function renderCustomSection(
 
 	return renderEntrySection(
 		sectionKey,
-		"custom",
+		getCustomSectionVariant(props.style, section.id),
 		section.title || translateLabel("pdf.section.custom", lang),
 		entries,
 		props,

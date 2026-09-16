@@ -6,6 +6,7 @@ import { DEFAULT_RENDER_SETTINGS } from "../app/utils/cv-data";
 import {
 	cloneStyle,
 	DEFAULT_CV_STYLE,
+	getCustomSectionVariant,
 	matchPreset,
 	PRESET_KEYS,
 	resolveStyle,
@@ -86,5 +87,48 @@ describe("modular style presets", () => {
 			"mutating a clone must not affect the preset",
 		);
 		assert.equal(STYLE_PRESETS.classic.sectionTitle.align, "left");
+	});
+});
+
+describe("individually styled custom sections", () => {
+	test("a custom section follows the custom default until it has its own style", () => {
+		const style = cloneStyle(STYLE_PRESETS.classic);
+		assert.equal(getCustomSectionVariant(style, "awards"), "card");
+
+		style.entries.custom = "timeline";
+		assert.equal(
+			getCustomSectionVariant(style, "awards"),
+			"timeline",
+			"changing the default must reach sections without their own style",
+		);
+
+		style.customSectionEntries = { awards: "plain" };
+		assert.equal(getCustomSectionVariant(style, "awards"), "plain");
+		assert.equal(
+			getCustomSectionVariant(style, "talks"),
+			"timeline",
+			"other custom sections keep following the default",
+		);
+	});
+
+	test("a style with a per-section choice no longer matches a preset", () => {
+		const style = cloneStyle(STYLE_PRESETS.timeline);
+		style.customSectionEntries = { awards: "card" };
+		assert.equal(matchPreset(style), null);
+	});
+
+	test("an empty override map still matches its preset", () => {
+		const style = cloneStyle(STYLE_PRESETS.timeline);
+		style.customSectionEntries = {};
+		assert.equal(matchPreset(style), "timeline");
+	});
+
+	test("cloneStyle copies per-section choices independently", () => {
+		const original = cloneStyle(STYLE_PRESETS.professional);
+		original.customSectionEntries = { awards: "card" };
+		const copy = cloneStyle(original);
+		assert.ok(copy.customSectionEntries);
+		copy.customSectionEntries.awards = "timeline";
+		assert.equal(original.customSectionEntries.awards, "card");
 	});
 });

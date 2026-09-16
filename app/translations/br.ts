@@ -1178,7 +1178,6 @@ const brTranslations: Record<string, string> = {
 	"design.sections.help":
 		"Cada seção pode ser apresentada de um jeito diferente.",
 	"design.sections.entryStyle": "Apresentação das entradas",
-	"design.sections.custom": "Seções personalizadas",
 	"design.entries.plain": "Simples",
 	"design.entries.card": "Com barra",
 	"design.entries.timeline": "Linha do tempo",
@@ -1224,6 +1223,15 @@ const brTranslations: Record<string, string> = {
 	"navigator.reorder": "Arrastar para reordenar",
 	"navigator.filled": "Preenchida",
 	"navigator.empty": "Não preenchida",
+
+	// Individually styled custom sections
+	"design.custom.title": "Seções personalizadas",
+	"design.custom.help":
+		"Defina um estilo padrão e, se quiser, dê a cada seção seu próprio estilo.",
+	"design.sections.customDefault": "Estilo padrão",
+	"design.custom.own": "Tem estilo próprio.",
+	"design.custom.useDefault": "Usar o estilo padrão",
+	"design.custom.followsDefault": "Segue o estilo padrão.",
 };
 
 export default brTranslations;
