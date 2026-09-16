@@ -5,22 +5,24 @@ import { useLanguage } from "../../contexts/LanguageContext";
 
 interface PageCountProps {
 	pageCount: number | null;
-	/** Whether single-page mode is already on */
-	singlePageMode?: boolean;
-	/** Turns single-page mode on; the action is hidden when omitted */
-	onFitToOnePage?: () => void;
+	/** Whether the Super Compact layout is already on */
+	compactMode?: boolean;
+	/** Turns the Super Compact layout on; the action is hidden when omitted */
+	onEnableCompactMode?: () => void;
 }
 
 /**
- * How many pages the CV takes, plus a one-click fix when it spills over.
+ * How many pages the CV takes, plus a shortcut to tighten the layout when it
+ * spills over.
  *
- * "Does it fit on one page?" is the question people ask of a CV, so the answer
- * sits right above the preview instead of having to be counted by scrolling.
+ * The shortcut toggles the same "Super Compact" option as the Design panel and
+ * uses its name: it reduces spacing and text size, which often — but not
+ * always — saves a page, so it must not promise a single page.
  */
 export function PageCount({
 	pageCount,
-	singlePageMode = false,
-	onFitToOnePage,
+	compactMode = false,
+	onEnableCompactMode,
 }: PageCountProps) {
 	const { t } = useLanguage();
 	if (pageCount === null) return null;
@@ -45,20 +47,21 @@ export function PageCount({
 				{label}
 			</span>
 
-			{overflowing && !singlePageMode && onFitToOnePage && (
+			{overflowing && !compactMode && onEnableCompactMode && (
 				<button
 					type="button"
-					onClick={onFitToOnePage}
+					onClick={onEnableCompactMode}
+					title={t("layout.controls.singlePageMode.help")}
 					className="inline-flex items-center gap-1 rounded-md px-2 py-0.5 font-medium text-sky-700 dark:text-sky-300 hover:bg-sky-50 dark:hover:bg-sky-900/25 transition-colors"
 				>
 					<Minimize2 className="w-3.5 h-3.5" />
-					{t("preview.fitOnePage")}
+					{t("preview.compact.try")}
 				</button>
 			)}
 
-			{overflowing && singlePageMode && (
+			{overflowing && compactMode && (
 				<span className="text-gray-500 dark:text-gray-400">
-					{t("preview.singlePageActive")}
+					{t("preview.compact.active")}
 				</span>
 			)}
 		</div>

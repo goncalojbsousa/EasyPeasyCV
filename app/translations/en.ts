@@ -1211,8 +1211,8 @@ const enTranslations: Record<string, string> = {
 		"Browser storage is full. Remove the photo or export your CV as XML so you don't lose changes.",
 	"preview.pages.one": "1 page",
 	"preview.pages.many": "{n} pages",
-	"preview.fitOnePage": "Fit to one page",
-	"preview.singlePageActive": "Single-page mode is already on",
+	"preview.compact.try": "Use Super Compact mode",
+	"preview.compact.active": "Super Compact mode is on",
 	"completeness.title": "Recommended",
 	"completeness.complete": "Recommended fields complete",
 	"completeness.help":

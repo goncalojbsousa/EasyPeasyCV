@@ -504,7 +504,7 @@ export default function Builder() {
 		[cvData],
 	);
 
-	const fitToOnePage = () =>
+	const enableCompactMode = () =>
 		setRenderSettings((prev) => ({
 			...prev,
 			layout: { ...prev.layout, singlePageMode: true },
@@ -793,7 +793,7 @@ export default function Builder() {
 							<LivePdfPane
 								data={cvData}
 								lang={language}
-								onFitToOnePage={fitToOnePage}
+								onEnableCompactMode={enableCompactMode}
 							/>
 						</div>
 					</div>
@@ -807,7 +807,7 @@ export default function Builder() {
 				show={showPdfPreview}
 				onClose={() => setShowPdfPreview(false)}
 				lang={language}
-				onFitToOnePage={fitToOnePage}
+				onEnableCompactMode={enableCompactMode}
 			/>
 
 			{undoToast}

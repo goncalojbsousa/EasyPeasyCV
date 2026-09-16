@@ -1248,8 +1248,8 @@ const esTranslations: Record<string, string> = {
 		"El almacenamiento del navegador está lleno. Elimina la foto o exporta el currículum en XML para no perder cambios.",
 	"preview.pages.one": "1 página",
 	"preview.pages.many": "{n} páginas",
-	"preview.fitOnePage": "Ajustar a una página",
-	"preview.singlePageActive": "El modo de una página ya está activo",
+	"preview.compact.try": "Usar modo Súper Compacto",
+	"preview.compact.active": "Modo Súper Compacto activo",
 	"completeness.title": "Recomendados",
 	"completeness.complete": "Campos recomendados completos",
 	"completeness.help":
