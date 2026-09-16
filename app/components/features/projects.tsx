@@ -1,7 +1,7 @@
 "use client";
 
 import { useLanguage } from "../../contexts/LanguageContext";
-import type { Project, SectionReorderProps } from "../../types/cv";
+import type { Project, SectionControlProps } from "../../types/cv";
 import { AutoResizeTextarea } from "../ui/auto_resize_textarea";
 import { EntryCard } from "../ui/entry_card";
 import { FormField } from "../ui/form_field";
@@ -12,7 +12,7 @@ import { TextInput } from "../ui/text_input";
 /**
  * Props interface for the Projects component
  */
-interface ProjectsProps extends SectionReorderProps {
+interface ProjectsProps extends SectionControlProps {
 	/** Array of project entries */
 	projects: Project[];
 	/** Handler for updating project fields */
@@ -58,8 +58,8 @@ export function Projects({
 					draggable={draggable}
 					onRemove={() => onRemoveProject(idx)}
 				>
-					{/* Project name and year fields */}
-					<div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
+					{/* Project name and year: a year is four characters */}
+					<div className="grid grid-cols-1 sm:grid-cols-[minmax(0,3fr)_minmax(0,1fr)] gap-4 sm:gap-6 mb-4">
 						<FormField label={t("field.project.name")}>
 							<TextInput
 								placeholder={t("cvType.placeholder.project.name")}

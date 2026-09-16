@@ -17,6 +17,7 @@
 /.next/
 /out/
 
+
 # production
 /build
 
@@ -42,3 +43,5 @@ next-env.d.ts
 
 # local test output
 .tmp/
+
+.claude

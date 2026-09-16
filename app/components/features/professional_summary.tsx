@@ -1,7 +1,7 @@
 "use client";
 
 import { useLanguage } from "../../contexts/LanguageContext";
-import type { SectionReorderProps } from "../../types/cv";
+import type { SectionControlProps } from "../../types/cv";
 import { AutoResizeTextarea } from "../ui/auto_resize_textarea";
 import { FormField } from "../ui/form_field";
 import { FormSection } from "../ui/form_section";
@@ -10,7 +10,7 @@ import { Icons } from "../ui/icons";
 /**
  * Props interface for the ProfessionalSummary component
  */
-interface ProfessionalSummaryProps extends SectionReorderProps {
+interface ProfessionalSummaryProps extends SectionControlProps {
 	/** Professional summary text content */
 	resume: string;
 	/** Handler for updating resume text */

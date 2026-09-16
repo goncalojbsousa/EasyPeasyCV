@@ -1,9 +1,4 @@
-import type {
-	CvColor,
-	CvData,
-	CvRenderSettings,
-	CvTemplate,
-} from "../../types/cv";
+import type { CvColor, CvData, CvRenderSettings } from "../../types/cv";
 import type { CvProfileMeta } from "../../utils/useCvProfiles";
 
 /**
@@ -13,9 +8,8 @@ import type { CvProfileMeta } from "../../utils/useCvProfiles";
  * two presentations of one set of actions rather than two parallel APIs.
  */
 export interface BuilderActions {
-	/** The CV being edited — also carries template, color, settings and order */
+	/** The CV being edited — also carries color, settings, style and order */
 	data: CvData;
-	onTemplateChange: (template: CvTemplate) => void;
 	onColorChange: (color: CvColor) => void;
 	onSettingsChange: (settings: CvRenderSettings) => void;
 	onResetSectionOrder: () => void;

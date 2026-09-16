@@ -17,6 +17,8 @@ export interface ListState<T> {
 	/** Append a blank entry produced by `createEmpty` */
 	add: () => void;
 	remove: (index: number) => void;
+	/** Put an entry back at a position (used to undo a removal) */
+	insert: (index: number, item: T) => void;
 	/** Patch one field of one entry */
 	update: (index: number, field: string, value: string | boolean) => void;
 	reorder: (from: number, to: number) => void;
@@ -41,6 +43,16 @@ export function useListState<T>(createEmpty: () => T): ListState<T> {
 		[],
 	);
 
+	const insert = useCallback(
+		(index: number, item: T) =>
+			setItems((prev) => {
+				const next = [...prev];
+				next.splice(Math.min(index, next.length), 0, item);
+				return next;
+			}),
+		[],
+	);
+
 	const update = useCallback(
 		(index: number, field: string, value: string | boolean) =>
 			setItems((prev) =>
@@ -57,7 +69,7 @@ export function useListState<T>(createEmpty: () => T): ListState<T> {
 	);
 
 	return useMemo(
-		() => ({ items, set: setItems, add, remove, update, reorder }),
-		[items, add, remove, update, reorder],
+		() => ({ items, set: setItems, add, remove, insert, update, reorder }),
+		[items, add, remove, insert, update, reorder],
 	);
 }

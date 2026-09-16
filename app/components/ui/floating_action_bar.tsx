@@ -1,15 +1,6 @@
 "use client";
 
-import {
-	Database,
-	Download,
-	Eye,
-	FileText,
-	Grid2x2,
-	Menu,
-	Users,
-	X,
-} from "lucide-react";
+import { Database, Download, Eye, Menu, Palette, Users, X } from "lucide-react";
 import type { ReactNode } from "react";
 import { useState } from "react";
 import { useLanguage } from "../../contexts/LanguageContext";
@@ -21,11 +12,11 @@ import {
 } from "../builder/action_menus";
 import type { BuilderActions } from "../builder/builder_actions";
 import { useBuilderDialogs } from "../builder/use_builder_dialogs";
+import { DesignPanel } from "../design/design_panel";
 import { BottomSheet } from "./bottom_sheet";
 import { CvTypeIcon } from "./cv_type_icon";
-import { LayoutControls } from "./layout_controls";
 
-type Sheet = null | "profile" | "cvType" | "layout" | "pdf" | "data";
+type Sheet = null | "profile" | "cvType" | "design" | "pdf" | "data";
 
 interface FloatingActionBarProps extends BuilderActions {
 	/** Opens the full preview (a PDF tab on mobile, a modal otherwise) */
@@ -63,30 +54,35 @@ export function FloatingActionBar(props: FloatingActionBarProps) {
 	const { t, cvType } = useLanguage();
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [sheet, setSheet] = useState<Sheet>(null);
-	const {
-		dialogs,
-		openTemplatePicker,
-		requestProfileDeletion,
-		onPdfGenerated,
-	} = useBuilderDialogs(props);
+	const { dialogs, requestProfileDeletion, onPdfGenerated } =
+		useBuilderDialogs(props);
 
 	const closeSheet = () => setSheet(null);
 
-	/** FAB that opens a bottom sheet, collapsing the stack on the way. */
+	/**
+	 * FAB that opens a bottom sheet, collapsing the stack on the way.
+	 *
+	 * An unavailable action stays tappable (only dimmed): touch screens have no
+	 * tooltips, so tapping is the only way to learn why it is unavailable.
+	 */
 	const sheetButton = (
 		target: Exclude<Sheet, null>,
 		title: string,
 		icon: ReactNode,
-		disabled = false,
+		unavailable?: () => void,
 	) => (
 		<button
 			type="button"
-			disabled={disabled}
+			aria-disabled={unavailable ? true : undefined}
 			onClick={() => {
+				if (unavailable) {
+					unavailable();
+					return;
+				}
 				setSheet(target);
 				setIsMenuOpen(false);
 			}}
-			className={FAB_CLASS}
+			className={`${FAB_CLASS} ${unavailable ? "opacity-50" : ""}`}
 			title={title}
 		>
 			{icon}
@@ -102,36 +98,26 @@ export function FloatingActionBar(props: FloatingActionBarProps) {
 							"pdf",
 							t("generate.ats.resume"),
 							<Download className="w-5 h-5" />,
-							!hasAnyContent,
+							// onGeneratePDF explains what is missing
+							hasAnyContent ? undefined : () => onGeneratePDF(),
 						)}
 
+						{/* onShowPdfPreview explains itself when there is no content */}
 						<button
 							type="button"
 							onClick={onShowPdfPreview}
-							disabled={!hasAnyContent}
-							className={FAB_CLASS}
+							aria-disabled={hasAnyContent ? undefined : true}
+							className={`${FAB_CLASS} ${hasAnyContent ? "" : "opacity-50"}`}
 							title={t("preview.cv")}
 						>
 							<Eye className="w-5 h-5" />
 						</button>
 
 						{sheetButton(
-							"layout",
-							t("layout.menu.title"),
-							<Grid2x2 className="w-5 h-5" />,
+							"design",
+							t("design.title"),
+							<Palette className="w-5 h-5" />,
 						)}
-
-						<button
-							type="button"
-							onClick={() => {
-								openTemplatePicker();
-								setIsMenuOpen(false);
-							}}
-							className={FAB_CLASS}
-							title={t("template.selector")}
-						>
-							<FileText className="w-5 h-5" />
-						</button>
 
 						{sheetButton(
 							"profile",
@@ -183,16 +169,18 @@ export function FloatingActionBar(props: FloatingActionBarProps) {
 			</BottomSheet>
 
 			<BottomSheet
-				show={sheet === "layout"}
-				title={t("layout.menu.controls")}
+				show={sheet === "design"}
+				title={t("design.title")}
 				onClose={closeSheet}
+				maxWidthClassName="max-w-md"
 			>
-				<LayoutControls
+				<DesignPanel
 					settings={data.settings}
+					onSettingsChange={onSettingsChange}
 					selectedColor={data.color ?? "blue"}
 					onColorChange={onColorChange}
-					onSettingsChange={onSettingsChange}
 					onResetSectionOrder={onResetSectionOrder}
+					legacyTemplate={data.template}
 				/>
 			</BottomSheet>
 

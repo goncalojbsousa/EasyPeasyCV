@@ -2,54 +2,32 @@
 
 import { AlertCircle, CheckCircle, Heart, Plus, X } from "lucide-react";
 import { useLanguage } from "../../../contexts/LanguageContext";
-import type { Education, Experience, PersonalInfo } from "../../../types/cv";
+import type { CvData } from "../../../types/cv";
+import { getRecommendedFields } from "../../../utils/cv-completeness";
 
-/**
- * Props interface for the ThankYouModal component
- */
 interface ThankYouModalProps {
 	/** Whether the modal is visible */
 	show: boolean;
 	/** Function to close the modal */
 	onClose: () => void;
-	/** Personal information to check for empty fields */
-	personalInfo?: PersonalInfo;
-	/** Professional experiences to check if empty */
-	experiences?: Experience[];
-	/** Education entries to check if empty */
-	education?: Education[];
+	/** The CV that was just generated, checked for missing recommended fields */
+	data: CvData;
 }
 
 /**
  * ThankYouModal component
- * Displays a thank you message, warnings for empty fields, and donation option after PDF generation
- * @param show - Whether the modal is visible
- * @param onClose - Function to close the modal
- * @param personalInfo - Personal information to check for empty fields
- * @param experiences - Professional experiences to check if empty
- * @param education - Education entries to check if empty
- * @returns JSX element representing the thank you modal
+ * Displays a thank you message, a reminder of any recommended fields still
+ * empty, and the donation option after PDF generation.
  */
-export function ThankYouModal({
-	show,
-	onClose,
-	personalInfo,
-	experiences,
-	education,
-}: ThankYouModalProps) {
+export function ThankYouModal({ show, onClose, data }: ThankYouModalProps) {
 	const { t } = useLanguage();
 
 	if (!show) return null;
 
-	// Recommended-but-empty fields, listed as a gentle warning after download.
-	const emptyFields = [
-		!personalInfo?.name.trim() && t("field.full.name"),
-		!personalInfo?.email.trim() && t("field.email"),
-		!personalInfo?.phone.trim() && t("field.phone"),
-		!personalInfo?.desiredRole.trim() && t("cvType.field.desired.role"),
-		!experiences?.length && t("section.professional.experience"),
-		!education?.length && t("section.academic.education"),
-	].filter(Boolean) as string[];
+	// Same list the builder's completeness indicator shows while editing.
+	const emptyFields = getRecommendedFields(data)
+		.filter((field) => !field.done)
+		.map((field) => t(field.labelKey));
 
 	const handleDonationClick = () => {
 		window.open("https://ko-fi.com/easypeasycv", "_blank");

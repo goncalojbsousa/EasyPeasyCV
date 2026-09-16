@@ -3,7 +3,16 @@
 import { Plus } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AtsExplanation } from "../../components/ats_explanation";
+import {
+	BuilderToolbar,
+	type NavigatorSection,
+	SECTION_TITLE_KEYS,
+} from "../../components/builder/builder_toolbar";
 import { CVTips } from "../../components/cv_tips";
+import {
+	SectionStyleSheet,
+	type StyleTarget,
+} from "../../components/design/section_style_sheet";
 import { AcademicEducation } from "../../components/features/academic_education";
 import { Certifications } from "../../components/features/certifications";
 import { CustomSectionCard } from "../../components/features/custom_sections";
@@ -20,6 +29,7 @@ import { LivePdfPane } from "../../components/live_pdf_pane";
 import { PdfPreview } from "../../components/pdf/pdf_preview";
 import { BottomActionBar } from "../../components/ui/bottom_action_bar";
 import { FloatingActionBar } from "../../components/ui/floating_action_bar";
+import { useUndoToast } from "../../components/ui/undo_toast";
 import { useLanguage } from "../../contexts/LanguageContext";
 import type {
 	Certification,
@@ -34,10 +44,17 @@ import type {
 	Language,
 	Link,
 	Project,
+	SectionControlProps,
 	SectionKey,
-	SectionReorderProps,
 	Volunteer,
 } from "../../types/cv";
+import {
+	getRecommendedFields,
+	isSectionFilled,
+	type NavigableSectionKey,
+	PERSONAL_INFO_KEY,
+	type RecommendedField,
+} from "../../utils/cv-completeness";
 import {
 	createEmptyCertification,
 	createEmptyCustomField,
@@ -51,19 +68,25 @@ import {
 	DEFAULT_COLOR,
 	DEFAULT_PREDEFINED_SECTION_ORDER,
 	DEFAULT_RENDER_SETTINGS,
-	DEFAULT_TEMPLATE,
 	EMPTY_PERSONAL_INFO,
 	hasCvContent,
 	shouldAutoSaveCvData,
 } from "../../utils/cv-data";
 import { useCvProfiles } from "../../utils/useCvProfiles";
 import { useIsMobile } from "../../utils/useIsMobile";
-import { moveItem, useListState } from "../../utils/useListState";
+import {
+	type ListState,
+	moveItem,
+	useListState,
+} from "../../utils/useListState";
 import { cvDataToXml, xmlToCvData } from "../../utils/xml";
 import { EXAMPLE_CV } from "./example-data";
 
-/** Offset applied when scrolling a section into view, to clear the sticky header. */
-const HEADER_OFFSET_PX = 115;
+/**
+ * Offset applied when scrolling a section into view: clears the fixed navbar
+ * plus the sticky builder toolbar pinned beneath it.
+ */
+const HEADER_OFFSET_PX = 140;
 
 function scrollToElement(element: HTMLElement | null) {
 	if (!element) return;
@@ -86,9 +109,15 @@ export default function Builder() {
 	const [personalInfo, setPersonalInfo] = useState(EMPTY_PERSONAL_INFO);
 	const [resume, setResume] = useState("");
 	const [skills, setSkills] = useState("");
-	const [selectedTemplate, setSelectedTemplate] =
-		useState<CvTemplate>(DEFAULT_TEMPLATE);
 	const [selectedColor, setSelectedColor] = useState<CvColor>(DEFAULT_COLOR);
+	/**
+	 * Legacy theme of a loaded CV. Never set from the UI — it exists so a CV
+	 * saved before the modular style system keeps rendering the same way and
+	 * survives an XML round-trip.
+	 */
+	const [legacyTemplate, setLegacyTemplate] = useState<CvTemplate | undefined>(
+		undefined,
+	);
 	const [renderSettings, setRenderSettings] = useState<CvRenderSettings>(
 		DEFAULT_RENDER_SETTINGS,
 	);
@@ -112,9 +141,29 @@ export default function Builder() {
 	const [dataLoaded, setDataLoaded] = useState(false);
 	const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 	const [showPdfPreview, setShowPdfPreview] = useState(false);
+	/** The section whose style shortcut is open, if any */
+	const [styleTarget, setStyleTarget] = useState<StyleTarget | null>(null);
 
 	// Refs for section elements to enable auto-scroll
 	const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+	/**
+	 * Collapsed sections, owned here (not by each section) so the navigator can
+	 * show which ones are collapsed and expand a section when jumping to it.
+	 */
+	const [collapsedSections, setCollapsedSections] = useState<Set<string>>(
+		() => new Set(),
+	);
+	const setSectionCollapsed = (key: string, collapsed: boolean) =>
+		setCollapsedSections((prev) => {
+			if (prev.has(key) === collapsed) return prev;
+			const next = new Set(prev);
+			if (collapsed) next.add(key);
+			else next.delete(key);
+			return next;
+		});
+
+	const { showUndo, toast: undoToast } = useUndoToast();
 
 	/** The complete CV: the single value passed to preview, export and storage. */
 	const cvData = useMemo<CvData>(
@@ -130,7 +179,7 @@ export default function Builder() {
 			projects: projects.items,
 			volunteers: volunteers.items,
 			customSections,
-			template: selectedTemplate,
+			template: legacyTemplate,
 			color: selectedColor,
 			sectionOrder,
 			settings: renderSettings,
@@ -147,7 +196,7 @@ export default function Builder() {
 			projects.items,
 			volunteers.items,
 			customSections,
-			selectedTemplate,
+			legacyTemplate,
 			selectedColor,
 			sectionOrder,
 			renderSettings,
@@ -169,7 +218,7 @@ export default function Builder() {
 			certifications.set(data.certifications || []);
 			projects.set(data.projects || []);
 			volunteers.set(data.volunteers || []);
-			setSelectedTemplate(data.template || DEFAULT_TEMPLATE);
+			setLegacyTemplate(data.template);
 			setSelectedColor(data.color || DEFAULT_COLOR);
 			setRenderSettings(data.settings || DEFAULT_RENDER_SETTINGS);
 
@@ -297,9 +346,37 @@ export default function Builder() {
 
 	const handleRemoveCustomSection = (sectionId: string) => {
 		const key = customSectionKey(sectionId);
+		const sectionIndex = customSections.findIndex((s) => s.id === sectionId);
+		const removed = customSections[sectionIndex];
+		const orderIndex = sectionOrder.indexOf(key);
+		if (!removed) return;
+
 		setCustomSections((prev) => prev.filter((s) => s.id !== sectionId));
 		setSectionOrder((prev) => prev.filter((k) => k !== key));
+
+		showUndo(t("undo.sectionRemoved"), () => {
+			setCustomSections((prev) => {
+				const next = [...prev];
+				next.splice(Math.min(sectionIndex, next.length), 0, removed);
+				return next;
+			});
+			setSectionOrder((prev) => {
+				const next = [...prev];
+				next.splice(Math.min(orderIndex, next.length), 0, key);
+				return next;
+			});
+		});
 	};
+
+	/** Removes an entry from a list section, offering to put it back. */
+	const removeWithUndo =
+		<T,>(list: ListState<T>) =>
+		(index: number) => {
+			const removed = list.items[index];
+			if (removed === undefined) return;
+			list.remove(index);
+			showUndo(t("undo.removed"), () => list.insert(index, removed));
+		};
 
 	/** Apply `patch` to one custom section, leaving the others untouched. */
 	const patchCustomSection = (
@@ -334,11 +411,25 @@ export default function Builder() {
 			),
 		}));
 
-	const handleRemoveCustomField = (sectionId: string, fieldId: string) =>
-		patchCustomSection(sectionId, (section) => ({
-			...section,
-			fields: section.fields.filter((field) => field.id !== fieldId),
+	const handleRemoveCustomField = (sectionId: string, fieldId: string) => {
+		const section = customSections.find((s) => s.id === sectionId);
+		const fieldIndex = section?.fields.findIndex((f) => f.id === fieldId) ?? -1;
+		const removed = section?.fields[fieldIndex];
+		if (!removed) return;
+
+		patchCustomSection(sectionId, (current) => ({
+			...current,
+			fields: current.fields.filter((field) => field.id !== fieldId),
 		}));
+
+		showUndo(t("undo.removed"), () =>
+			patchCustomSection(sectionId, (current) => {
+				const fields = [...current.fields];
+				fields.splice(Math.min(fieldIndex, fields.length), 0, removed);
+				return { ...current, fields };
+			}),
+		);
+	};
 
 	const handleReorderCustomFields = (
 		sectionId: string,
@@ -370,6 +461,54 @@ export default function Builder() {
 			...DEFAULT_PREDEFINED_SECTION_ORDER,
 			...customSections.map((cs) => customSectionKey(cs.id)),
 		]);
+
+	// --------------------------------------------------------------- Navigation
+	/** Scrolls to a section, expanding it first if it is collapsed. */
+	const jumpToSection = (key: NavigableSectionKey) => {
+		setSectionCollapsed(key, false);
+		// Wait for the expanded content to be laid out before measuring.
+		setTimeout(() => scrollToElement(sectionRefs.current[key]), 0);
+	};
+
+	/** Takes the user to a missing recommended field, focusing it when possible. */
+	const jumpToField = (field: RecommendedField) => {
+		jumpToSection(field.section);
+		if (!field.inputId) return;
+		const inputId = field.inputId;
+		// Focus after the smooth scroll, so the browser does not jump abruptly.
+		setTimeout(
+			() => document.getElementById(inputId)?.focus({ preventScroll: true }),
+			450,
+		);
+	};
+
+	const sectionLabel = (key: NavigableSectionKey) => {
+		if (key.startsWith("custom_")) {
+			const section = customSections.find(
+				(cs) => customSectionKey(cs.id) === key,
+			);
+			return section?.title || t("custom.section.default");
+		}
+		return t(SECTION_TITLE_KEYS[key] ?? key);
+	};
+
+	const toNavigatorSection = (key: NavigableSectionKey): NavigatorSection => ({
+		key,
+		label: sectionLabel(key),
+		filled: isSectionFilled(key, cvData),
+		collapsed: collapsedSections.has(key),
+	});
+
+	const recommendedFields = useMemo(
+		() => getRecommendedFields(cvData),
+		[cvData],
+	);
+
+	const fitToOnePage = () =>
+		setRenderSettings((prev) => ({
+			...prev,
+			layout: { ...prev.layout, singlePageMode: true },
+		}));
 
 	// ------------------------------------------------------------------ PDF gate
 	/** Guard shared by the download and preview actions. */
@@ -408,12 +547,30 @@ export default function Builder() {
 	// ------------------------------------------------------------------ Sections
 	/** Renders the section identified by `sectionKey` at its current position. */
 	const renderSection = (sectionKey: SectionKey, index: number) => {
-		const reorder: SectionReorderProps = {
+		const isCustom = sectionKey.startsWith("custom_");
+		const reorder: SectionControlProps = {
 			canReorder: true,
 			onMoveUp: () => moveSection(sectionKey, -1),
 			onMoveDown: () => moveSection(sectionKey, 1),
 			canMoveUp: index > 0,
 			canMoveDown: index < sectionOrder.length - 1,
+			collapsed: collapsedSections.has(sectionKey),
+			onToggleCollapsed: () =>
+				setSectionCollapsed(sectionKey, !collapsedSections.has(sectionKey)),
+			// Sections that have style variants get a shortcut to them; the
+			// summary has none.
+			...(sectionKey === "professional_summary"
+				? {}
+				: {
+						onOpenStyle: () =>
+							setStyleTarget(isCustom ? "custom" : (sectionKey as StyleTarget)),
+					}),
+			...(isCustom
+				? {
+						onRemove: () =>
+							handleRemoveCustomSection(sectionKey.replace("custom_", "")),
+					}
+				: {}),
 		};
 
 		switch (sectionKey) {
@@ -432,7 +589,7 @@ export default function Builder() {
 						experiences={experiences.items}
 						onExperienceChange={experiences.update}
 						onAddExperience={experiences.add}
-						onRemoveExperience={experiences.remove}
+						onRemoveExperience={removeWithUndo(experiences)}
 						onReorderExperiences={experiences.reorder}
 					/>
 				);
@@ -443,7 +600,7 @@ export default function Builder() {
 						education={education.items}
 						onEducationChange={education.update}
 						onAddEducation={education.add}
-						onRemoveEducation={education.remove}
+						onRemoveEducation={removeWithUndo(education)}
 						onReorderEducation={education.reorder}
 					/>
 				);
@@ -462,7 +619,7 @@ export default function Builder() {
 						languages={languages.items}
 						onLanguageChange={languages.update}
 						onAddLanguage={languages.add}
-						onRemoveLanguage={languages.remove}
+						onRemoveLanguage={removeWithUndo(languages)}
 						onReorderLanguages={languages.reorder}
 					/>
 				);
@@ -473,7 +630,7 @@ export default function Builder() {
 						certifications={certifications.items}
 						onCertificationChange={certifications.update}
 						onAddCertification={certifications.add}
-						onRemoveCertification={certifications.remove}
+						onRemoveCertification={removeWithUndo(certifications)}
 						onReorderCertifications={certifications.reorder}
 					/>
 				);
@@ -484,7 +641,7 @@ export default function Builder() {
 						projects={projects.items}
 						onProjectChange={projects.update}
 						onAddProject={projects.add}
-						onRemoveProject={projects.remove}
+						onRemoveProject={removeWithUndo(projects)}
 						onReorderProjects={projects.reorder}
 					/>
 				);
@@ -495,7 +652,7 @@ export default function Builder() {
 						volunteers={volunteers.items}
 						onVolunteerChange={volunteers.update}
 						onAddVolunteer={volunteers.add}
-						onRemoveVolunteer={volunteers.remove}
+						onRemoveVolunteer={removeWithUndo(volunteers)}
 						onReorderVolunteers={volunteers.reorder}
 					/>
 				);
@@ -517,7 +674,6 @@ export default function Builder() {
 						onRemoveField={(fieldId) =>
 							handleRemoveCustomField(sectionId, fieldId)
 						}
-						onRemoveSection={() => handleRemoveCustomSection(sectionId)}
 						onReorderFields={(from, to) =>
 							handleReorderCustomFields(sectionId, from, to)
 						}
@@ -538,6 +694,19 @@ export default function Builder() {
 				{/* Form + Live preview grid */}
 				<div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
 					<div className="lg:col-span-6 flex flex-col gap-6 sm:gap-8">
+						<BuilderToolbar
+							fixedSection={toNavigatorSection(PERSONAL_INFO_KEY)}
+							sections={sectionOrder.map(toNavigatorSection)}
+							onJump={jumpToSection}
+							onReorder={(from, to) =>
+								setSectionOrder((prev) => moveItem(prev, from, to))
+							}
+							recommended={recommendedFields}
+							onJumpToField={jumpToField}
+							lastSavedAt={profiles.lastSavedAt}
+							saveError={profiles.saveError}
+						/>
+
 						{dataLoaded && (
 							<Notice
 								message={
@@ -550,15 +719,28 @@ export default function Builder() {
 						{showSuccessMessage && <Notice message={t("cv.generated")} />}
 
 						{/* Personal Information is always first and cannot be reordered */}
-						<PersonalInformation
-							links={links.items}
-							personalInfo={personalInfo}
-							onAddLink={handleAddLink}
-							onRemoveLink={links.remove}
-							onPersonalInfoChange={handlePersonalInfoChange}
-							onReorderLinks={links.reorder}
-							onToggleLinkLabel={handleToggleLinkLabel}
-						/>
+						<div
+							ref={(el) => {
+								sectionRefs.current[PERSONAL_INFO_KEY] = el;
+							}}
+						>
+							<PersonalInformation
+								links={links.items}
+								personalInfo={personalInfo}
+								onAddLink={handleAddLink}
+								onRemoveLink={removeWithUndo(links)}
+								onPersonalInfoChange={handlePersonalInfoChange}
+								onReorderLinks={links.reorder}
+								onToggleLinkLabel={handleToggleLinkLabel}
+								collapsed={collapsedSections.has(PERSONAL_INFO_KEY)}
+								onToggleCollapsed={() =>
+									setSectionCollapsed(
+										PERSONAL_INFO_KEY,
+										!collapsedSections.has(PERSONAL_INFO_KEY),
+									)
+								}
+							/>
+						</div>
 
 						{sectionOrder.map((sectionKey, index) => (
 							<div
@@ -605,10 +787,14 @@ export default function Builder() {
 						</div>
 					</div>
 
-					{/* Live PDF Preview (desktop only) */}
+					{/* Live PDF Preview (desktop; smaller screens use the preview modal) */}
 					<div className="hidden lg:block lg:col-span-6">
 						<div className="sticky top-24 h-[calc(100vh-7rem)]">
-							<LivePdfPane data={cvData} lang={language} />
+							<LivePdfPane
+								data={cvData}
+								lang={language}
+								onFitToOnePage={fitToOnePage}
+							/>
 						</div>
 					</div>
 				</div>
@@ -621,12 +807,25 @@ export default function Builder() {
 				show={showPdfPreview}
 				onClose={() => setShowPdfPreview(false)}
 				lang={language}
+				onFitToOnePage={fitToOnePage}
+			/>
+
+			{undoToast}
+
+			{/* Style options for one section, opened from its own header */}
+			<SectionStyleSheet
+				target={styleTarget}
+				settings={renderSettings}
+				onSettingsChange={setRenderSettings}
+				color={selectedColor}
+				onColorChange={setSelectedColor}
+				legacyTemplate={legacyTemplate}
+				onClose={() => setStyleTarget(null)}
 			/>
 
 			{/* Desktop action bar */}
 			<BottomActionBar
 				data={cvData}
-				onTemplateChange={setSelectedTemplate}
 				onColorChange={setSelectedColor}
 				onSettingsChange={setRenderSettings}
 				onResetSectionOrder={handleResetSectionOrder}
@@ -647,7 +846,6 @@ export default function Builder() {
 			{/* Mobile/tablet action bar */}
 			<FloatingActionBar
 				data={cvData}
-				onTemplateChange={setSelectedTemplate}
 				onColorChange={setSelectedColor}
 				onSettingsChange={setRenderSettings}
 				onResetSectionOrder={handleResetSectionOrder}

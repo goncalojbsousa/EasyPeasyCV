@@ -1,5 +1,5 @@
 import { StyleSheet } from "@react-pdf/renderer";
-import type { CvColor, CvRenderSettings } from "../types/cv";
+import type { CvColor, CvRenderSettings, CvStyleSettings } from "../types/cv";
 import { getColorTheme } from "./color-themes";
 import { cmToPt } from "./template-helpers";
 
@@ -150,8 +150,9 @@ export function buildCommonStyles(
 			fontSize: 12 * finalScale,
 			color: "#000000",
 			marginBottom: 6 * singlePageMult,
-			textTransform:
-				settings?.header.titleStyle === "uppercase" ? "uppercase" : "none",
+			...(settings?.header.titleStyle === "uppercase"
+				? ({ textTransform: "uppercase" } as const)
+				: {}),
 			fontStyle: settings?.header.titleStyle === "italic" ? "italic" : "normal",
 		},
 		divider: {
@@ -209,3 +210,273 @@ export function buildCommonStyles(
 		},
 	});
 }
+
+/**
+ * The complete stylesheet the renderer draws with: the shared base above plus
+ * the pieces the variant components need.
+ *
+ * There is one of these for the whole app — the variants pick which styles
+ * they use, instead of each old template shipping its own sheet.
+ */
+/**
+ * `textTransform: "none"` is not a value @react-pdf understands: it breaks the
+ * text measurement (the string still paints, but lays out as zero width), so
+ * the property has to be omitted rather than set to "none".
+ */
+function textTransform(transform: "none" | "uppercase") {
+	return transform === "uppercase"
+		? ({ textTransform: "uppercase" } as const)
+		: {};
+}
+
+export function buildCvStyles(
+	settings: CvRenderSettings | undefined,
+	color: CvColor,
+	style: CvStyleSettings,
+) {
+	const metrics = computeMetrics(settings, color);
+	const base = buildCommonStyles(metrics, settings);
+	const { finalScale, singlePageMult, accent, linkColor } = metrics;
+	const ruleColor = "#e5e7eb";
+	const photo = getPhotoSize(settings?.photo?.aspectRatio);
+	const photoRadius = settings?.photo?.borderRadius ?? 1;
+	const centered = style.header.align === "center";
+	const ruleWidth = (settings?.header.dividerThickness ?? 1) as number;
+	const dashed = settings?.header.dividerStyle === "dashed";
+
+	const variantStyles = StyleSheet.create({
+		/* ------------------------------------------------------------ header */
+		header: {
+			flexDirection: "column",
+			marginBottom: 10 * singlePageMult,
+		},
+		headerRow: {
+			flexDirection: "row",
+			alignItems: centered ? "center" : "flex-start",
+			justifyContent: "space-between",
+			gap: 12,
+		},
+		headerMain: {
+			flex: 1,
+			alignItems: centered ? "center" : "flex-start",
+		},
+		headerText: {
+			textAlign: centered ? "center" : "left",
+		},
+		contactWrap: {
+			flexDirection: "row",
+			flexWrap: "wrap",
+			justifyContent: centered ? "center" : "flex-start",
+			alignItems: "center",
+			color: "#000000",
+			fontSize: 9 * finalScale,
+			marginTop: 2,
+		},
+		contactStack: {
+			flexDirection: "column",
+			alignItems: centered ? "center" : "flex-start",
+			color: "#000000",
+			fontSize: 9 * finalScale,
+			marginTop: 2,
+		},
+		contactItem: {
+			flexDirection: "row",
+			marginRight: 10,
+			marginBottom: 3,
+		},
+		contactItemStacked: {
+			flexDirection: "row",
+			marginBottom: 2,
+		},
+		contactLabel: {
+			fontWeight: "bold",
+			marginRight: 4,
+			color: "#000000",
+		},
+		contactSeparator: {
+			marginRight: 8,
+			marginBottom: 3,
+			color: "#9ca3af",
+		},
+		linksWrap: {
+			flexDirection: "row",
+			flexWrap: "wrap",
+			justifyContent: centered ? "center" : "flex-start",
+			marginTop: 3,
+		},
+		link: {
+			fontSize: 9 * finalScale,
+			color: linkColor,
+			marginRight: 8,
+			marginBottom: 2,
+		},
+		photoFrame: {
+			width: photo.width,
+			height: photo.height,
+			borderRadius: photoRadius,
+			overflow: "hidden",
+			backgroundColor: "#f5f5f5",
+		},
+		photoImage: {
+			width: photo.width,
+			height: photo.height,
+			objectFit: "cover",
+		},
+		headerDivider: {
+			width: "100%",
+			borderBottomWidth: ruleWidth,
+			borderBottomColor: ruleColor,
+			borderStyle: dashed ? "dashed" : "solid",
+			marginTop: 8 * singlePageMult,
+		},
+
+		/* ------------------------------------------------------ section title */
+		/**
+		 * Heading text without `textAlign`.
+		 *
+		 * Setting `textAlign` makes a @react-pdf Text claim the full available
+		 * width, which would leave no room for a rule beside it — so the
+		 * inline-rule variant uses this style and the others use the aligned one
+		 * below.
+		 */
+		titleText: {
+			...base.sectionTitle,
+			marginBottom: 0,
+			...textTransform(style.sectionTitle.transform),
+		},
+		titleTextAligned: {
+			...base.sectionTitle,
+			marginBottom: 0,
+			textAlign: style.sectionTitle.align === "center" ? "center" : "left",
+			...textTransform(style.sectionTitle.transform),
+		},
+		titlePlain: {
+			marginBottom: 6 * singlePageMult,
+		},
+		titleRuled: {
+			marginBottom: 8 * singlePageMult,
+			paddingBottom: 4 * singlePageMult,
+			borderBottomWidth: ruleWidth,
+			borderBottomColor: ruleColor,
+			borderStyle: dashed ? "dashed" : "solid",
+		},
+		titleInlineRow: {
+			flexDirection: "row",
+			alignItems: "center",
+			marginBottom: 8 * singlePageMult,
+		},
+		titleInlineRule: {
+			height: ruleWidth,
+			backgroundColor: ruleColor,
+			flex: 1,
+			marginLeft: 8,
+		},
+		titleBlock: {
+			marginBottom: 8 * singlePageMult,
+			paddingVertical: 3 * singlePageMult,
+			paddingHorizontal: 6,
+			backgroundColor: getColorTheme(color).accent,
+			borderRadius: 2,
+		},
+
+		/* -------------------------------------------------------- entry frames */
+		entryPlain: {
+			marginBottom: 8 * singlePageMult,
+		},
+		entryCard: {
+			marginBottom: 10 * singlePageMult,
+			paddingLeft: 8,
+			borderLeftWidth: 2,
+			borderLeftColor: accent,
+		},
+		timelineRail: {
+			paddingLeft: 18,
+			marginLeft: 8,
+			borderLeftWidth: 1,
+			borderLeftColor: ruleColor,
+		},
+		timelineItem: {
+			position: "relative",
+			paddingLeft: 8,
+			marginBottom: 12 * singlePageMult,
+		},
+		timelineBullet: {
+			position: "absolute",
+			width: 10,
+			height: 10,
+			borderRadius: 5,
+			borderWidth: 2,
+			borderColor: accent,
+			backgroundColor: "#ffffff",
+			left: -23.5,
+			top: 0,
+		},
+
+		/* ------------------------------------------------------------- entries */
+		entryDateBelow: {
+			fontSize: 9 * finalScale,
+			color: "#4b5563",
+			marginBottom: 3 * singlePageMult,
+		},
+
+		/* ----------------------------------------------------------- languages */
+		langInlineWrap: {
+			flexDirection: "row",
+			flexWrap: "wrap",
+			justifyContent:
+				style.sectionTitle.align === "center" ? "center" : "flex-start",
+		},
+		langInlineItem: {
+			marginRight: 12,
+			fontSize: 10 * finalScale,
+			color: "#000000",
+		},
+		langRow: {
+			flexDirection: "row",
+			alignItems: "center",
+			justifyContent: "space-between",
+			marginBottom: 5 * singlePageMult,
+			paddingBottom: 3 * singlePageMult,
+			borderBottomWidth: 0.5,
+			borderBottomColor: ruleColor,
+		},
+		langLeaderRow: {
+			flexDirection: "row",
+			alignItems: "center",
+			marginBottom: 4 * singlePageMult,
+		},
+		langLeaderRule: {
+			flex: 1,
+			height: ruleWidth,
+			backgroundColor: ruleColor,
+			marginHorizontal: 6,
+		},
+		langName: {
+			fontSize: 10 * finalScale,
+			fontWeight: "bold",
+			color: "#000000",
+		},
+		langLevel: {
+			fontSize: 9 * finalScale,
+			color: "#6b7280",
+			textTransform: "uppercase",
+		},
+
+		/* -------------------------------------------------------------- skills */
+		skillsCentered: {
+			...base.summaryText,
+			textAlign: "center",
+		},
+	});
+
+	return {
+		...base,
+		...variantStyles,
+		_finalScale: finalScale,
+		_singlePageMult: singlePageMult,
+		_accent: accent,
+		linkColor,
+	};
+}
+
+export type CvStyleSheet = ReturnType<typeof buildCvStyles>;

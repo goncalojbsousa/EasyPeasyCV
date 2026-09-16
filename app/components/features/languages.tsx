@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { useLanguage } from "../../contexts/LanguageContext";
-import type { Language, SectionReorderProps } from "../../types/cv";
+import type { Language, SectionControlProps } from "../../types/cv";
 import { EntryCard } from "../ui/entry_card";
 import { FormField } from "../ui/form_field";
 import { Icons } from "../ui/icons";
@@ -13,7 +13,7 @@ import { TextInput } from "../ui/text_input";
 /**
  * Props interface for the Languages component
  */
-interface LanguagesProps extends SectionReorderProps {
+interface LanguagesProps extends SectionControlProps {
 	/** Array of language entries */
 	languages: Language[];
 	/** Handler for updating language fields */

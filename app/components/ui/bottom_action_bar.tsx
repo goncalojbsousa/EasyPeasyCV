@@ -1,6 +1,6 @@
 "use client";
 
-import { Database, FileText, Grid2x2, Users } from "lucide-react";
+import { Database, FileText, Palette, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLanguage } from "../../contexts/LanguageContext";
 import {
@@ -11,11 +11,11 @@ import {
 } from "../builder/action_menus";
 import type { BuilderActions } from "../builder/builder_actions";
 import { useBuilderDialogs } from "../builder/use_builder_dialogs";
+import { DesignPanel } from "../design/design_panel";
 import { CvTypeIcon } from "./cv_type_icon";
-import { LayoutControls } from "./layout_controls";
 import { PopoverMenu } from "./popover_menu";
 
-type OpenMenu = null | "profile" | "cvType" | "layout" | "pdf" | "data";
+type OpenMenu = null | "profile" | "cvType" | "design" | "pdf" | "data";
 
 /**
  * Hides the bar while the footer is on screen, so it never covers it.
@@ -67,12 +67,8 @@ export function BottomActionBar(props: BuilderActions) {
 	const { t, cvType } = useLanguage();
 	const [openMenu, setOpenMenu] = useState<OpenMenu>(null);
 	const isFooterVisible = useFooterVisible();
-	const {
-		dialogs,
-		openTemplatePicker,
-		requestProfileDeletion,
-		onPdfGenerated,
-	} = useBuilderDialogs(props);
+	const { dialogs, requestProfileDeletion, onPdfGenerated } =
+		useBuilderDialogs(props);
 
 	const close = () => setOpenMenu(null);
 	/** Wires one PopoverMenu into the single-open-menu state. */
@@ -98,18 +94,6 @@ export function BottomActionBar(props: BuilderActions) {
 					<div className="px-2.5 py-2">
 						<div className="overflow-x-auto overflow-y-visible no-scrollbar">
 							<div className="inline-flex items-center gap-1.5 whitespace-nowrap min-w-max">
-								<button
-									type="button"
-									onClick={openTemplatePicker}
-									className="flex h-9 items-center gap-2 px-3 rounded-md border border-gray-300/60 dark:border-zinc-600/60 bg-white/80 dark:bg-zinc-800/80 text-[13px] text-gray-900 dark:text-gray-100 hover:bg-white dark:hover:bg-zinc-700 shrink-0 shadow-sm"
-									title={t("template.selector")}
-								>
-									<FileText className="w-4 h-4" />
-									<span className="font-medium">
-										{t(`template.${data.template ?? "professional"}.name`)}
-									</span>
-								</button>
-
 								<PopoverMenu
 									{...menuState("profile")}
 									icon={<Users className="w-4 h-4" />}
@@ -144,18 +128,19 @@ export function BottomActionBar(props: BuilderActions) {
 								<Divider />
 
 								<PopoverMenu
-									{...menuState("layout")}
-									icon={<Grid2x2 className="w-4 h-4" />}
-									label={t("layout.menu.title")}
-									panelTitle={t("layout.menu.controls")}
-									panelClassName="w-[380px] max-w-[90vw] max-h-[70vh] overflow-y-auto overflow-x-hidden"
+									{...menuState("design")}
+									icon={<Palette className="w-4 h-4" />}
+									label={t("design.title")}
+									panelTitle={t("design.title")}
+									panelClassName="w-[430px] max-w-[92vw] max-h-[72vh] overflow-y-auto overflow-x-hidden"
 								>
-									<LayoutControls
+									<DesignPanel
 										settings={data.settings}
+										onSettingsChange={onSettingsChange}
 										selectedColor={data.color ?? "blue"}
 										onColorChange={onColorChange}
-										onSettingsChange={onSettingsChange}
 										onResetSectionOrder={onResetSectionOrder}
+										legacyTemplate={data.template}
 									/>
 								</PopoverMenu>
 
@@ -163,6 +148,7 @@ export function BottomActionBar(props: BuilderActions) {
 									{...menuState("pdf")}
 									variant="primary"
 									disabled={!hasAnyContent}
+									disabledReason={t("generate.disabled.reason")}
 									icon={<FileText className="w-5 h-5" />}
 									label={t("generate.ats.resume")}
 									panelTitle={t("select.language.label")}

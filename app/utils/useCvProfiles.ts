@@ -115,6 +115,14 @@ export interface CvProfilesController {
 	switchTo: (profileId: string) => void;
 	rename: (profileId: string, nextName: string) => void;
 	remove: (profileId: string) => void;
+	/** ISO timestamp of the last successful save of the current profile */
+	lastSavedAt: string | null;
+	/**
+	 * True when the last save failed — typically the browser storage quota being
+	 * exceeded by a large photo — so the UI can warn instead of losing work
+	 * silently.
+	 */
+	saveError: boolean;
 }
 
 /**
@@ -135,6 +143,7 @@ export function useCvProfiles({
 }: UseCvProfilesOptions): CvProfilesController {
 	const [currentProfileId, setCurrentProfileId] = useState<string | null>(null);
 	const [profiles, setProfiles] = useState<CvProfileMeta[]>([]);
+	const [saveError, setSaveError] = useState(false);
 
 	// Kept in refs so the load/save effects do not re-run on every keystroke.
 	const dataRef = useRef(data);
@@ -221,8 +230,10 @@ export function useCvProfiles({
 			storage.profiles[profileId] = currentData;
 			storage.currentProfileId = profileId;
 			commit(storage);
+			setSaveError(false);
 		} catch {
-			// Silently ignore storage errors
+			// Most likely the storage quota; surfaced to the UI through `saveError`.
+			setSaveError(true);
 		}
 	}, [commit, currentProfileId]);
 
@@ -360,6 +371,10 @@ export function useCvProfiles({
 		[applyData, commit, currentProfileId],
 	);
 
+	const lastSavedAt =
+		profiles.find((profile) => profile.id === currentProfileId)?.updatedAt ??
+		null;
+
 	return {
 		profiles,
 		currentProfileId,
@@ -368,5 +383,7 @@ export function useCvProfiles({
 		switchTo,
 		rename,
 		remove,
+		lastSavedAt,
+		saveError,
 	};
 }

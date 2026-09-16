@@ -1,7 +1,7 @@
 "use client";
 
 import { useLanguage } from "../../contexts/LanguageContext";
-import type { Certification, SectionReorderProps } from "../../types/cv";
+import type { Certification, SectionControlProps } from "../../types/cv";
 import { AutoResizeTextarea } from "../ui/auto_resize_textarea";
 import { DatePicker } from "../ui/date_picker";
 import { EntryCard } from "../ui/entry_card";
@@ -13,7 +13,7 @@ import { TextInput } from "../ui/text_input";
 /**
  * Props interface for the Certifications component
  */
-interface CertificationsProps extends SectionReorderProps {
+interface CertificationsProps extends SectionControlProps {
 	/** Array of certification entries */
 	certifications: Certification[];
 	/** Handler for updating certification fields */
@@ -90,7 +90,7 @@ export function Certifications({
 					</div>
 
 					{/* Completion date, hours, and validation link fields */}
-					<div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-4">
+					<div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)_minmax(0,2fr)] gap-4 sm:gap-6 mb-4">
 						<FormField label={t("field.completion.date")}>
 							<DatePicker
 								value={cert.completionDate}
@@ -109,16 +109,18 @@ export function Certifications({
 								}
 							/>
 						</FormField>
-						<FormField label={t("field.validation.link")}>
-							<TextInput
-								type="url"
-								placeholder={t("placeholder.validation.link")}
-								value={cert.validationLink}
-								onChange={(e) =>
-									onCertificationChange(idx, "validationLink", e.target.value)
-								}
-							/>
-						</FormField>
+						<div className="sm:col-span-2 xl:col-span-1">
+							<FormField label={t("field.validation.link")}>
+								<TextInput
+									type="url"
+									placeholder={t("placeholder.validation.link")}
+									value={cert.validationLink}
+									onChange={(e) =>
+										onCertificationChange(idx, "validationLink", e.target.value)
+									}
+								/>
+							</FormField>
+						</div>
 					</div>
 
 					{/* Description field */}

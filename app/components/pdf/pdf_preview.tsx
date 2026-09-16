@@ -13,6 +13,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { useIsMobile } from "../../utils/useIsMobile";
 import { CvDocument, type CvRenderProps } from "../cv_document";
+import { PageCount } from "./page_count";
 import { PdfCanvasViewer } from "./pdf_canvas_viewer";
 
 /**
@@ -23,6 +24,8 @@ interface PdfPreviewProps extends CvRenderProps {
 	show?: boolean;
 	/** Function to close the preview */
 	onClose?: () => void;
+	/** Turns on single-page mode, offered when the CV spills onto more pages */
+	onFitToOnePage?: () => void;
 }
 
 /**
@@ -34,6 +37,7 @@ export function PdfPreview({
 	lang,
 	show = false,
 	onClose,
+	onFitToOnePage,
 }: PdfPreviewProps) {
 	const { t } = useLanguage();
 	const isMobile = useIsMobile();
@@ -42,6 +46,7 @@ export function PdfPreview({
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [pdfSize, setPdfSize] = useState<number>(0);
+	const [pageCount, setPageCount] = useState<number | null>(null);
 
 	const generatePdf = useCallback(async () => {
 		setLoading(true);
@@ -117,6 +122,13 @@ export function PdfPreview({
 						</span>
 						{t("pdf.preview.title")}
 					</h2>
+					<div className="hidden sm:block flex-1 px-4">
+						<PageCount
+							pageCount={pageCount}
+							singlePageMode={data.settings?.layout.singlePageMode}
+							onFitToOnePage={onFitToOnePage}
+						/>
+					</div>
 					<div className="flex items-center gap-2">
 						<button
 							type="button"
@@ -204,7 +216,11 @@ export function PdfPreview({
 								</div>
 							) : (
 								<div className="w-full h-full overflow-hidden bg-transparent">
-									<PdfCanvasViewer blob={pdfBlob} scale={1.0} />
+									<PdfCanvasViewer
+										blob={pdfBlob}
+										scale={1.0}
+										onPageCount={setPageCount}
+									/>
 								</div>
 							)}
 						</div>

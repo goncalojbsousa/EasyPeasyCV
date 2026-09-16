@@ -31,6 +31,8 @@ interface PopoverMenuProps {
 	panelClassName?: string;
 	variant?: keyof typeof TRIGGER_VARIANTS;
 	disabled?: boolean;
+	/** Explains why the trigger is disabled, shown as its tooltip */
+	disabledReason?: string;
 	children: ReactNode;
 }
 
@@ -51,6 +53,7 @@ export function PopoverMenu({
 	panelClassName = "w-[260px] max-h-[60vh] overflow-auto",
 	variant = "plain",
 	disabled = false,
+	disabledReason,
 	children,
 }: PopoverMenuProps) {
 	const triggerRef = useRef<HTMLButtonElement>(null);
@@ -89,7 +92,12 @@ export function PopoverMenu({
 	}, [open, onOpenChange]);
 
 	return (
-		<div className="relative shrink-0 overflow-visible">
+		<div
+			className="relative shrink-0 overflow-visible"
+			// Disabled buttons do not reliably show their own tooltip, so the reason
+			// sits on the wrapper.
+			title={disabled ? disabledReason : undefined}
+		>
 			<button
 				type="button"
 				ref={triggerRef}
@@ -99,7 +107,7 @@ export function PopoverMenu({
 					onOpenChange(!open);
 				}}
 				className={`${TRIGGER_BASE} ${TRIGGER_VARIANTS[variant]}`}
-				title={label}
+				title={disabled ? undefined : label}
 			>
 				{icon}
 				<span className="font-medium">{label}</span>

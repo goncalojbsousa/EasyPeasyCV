@@ -1,17 +1,16 @@
 import { Link, Text, View } from "@react-pdf/renderer";
-import type { Style } from "@react-pdf/types";
 import type React from "react";
+import type { ReactNode } from "react";
+import { Fragment } from "react";
+import { buildEntryFrame } from "../components/cv_templates/entry_frame";
 import type {
-	Certification,
 	CustomSection,
 	CvData,
 	CvRenderSettings,
-	Education,
-	Experience,
+	CvStyleSettings,
 	Language,
-	Project,
 	SectionKey,
-	Volunteer,
+	StyledSectionKey,
 } from "../types/cv";
 import { DEFAULT_PREDEFINED_SECTION_ORDER } from "./cv-data";
 import {
@@ -20,37 +19,16 @@ import {
 	translateLabel,
 	translateLanguageLevel,
 } from "./template-helpers";
-
-export type PdfStyles = {
-	summaryText: Style;
-	expItem: Style;
-	expHeaderRow: Style;
-	expLeft: Style;
-	expRight: Style;
-	jobRole: Style;
-	company: Style;
-	bullets: Style;
-	activitiesText: Style;
-	section: Style;
-	[key: string]: Style | string | number | undefined;
-};
-
-/**
- * Props every PDF template takes: the CV plus the language to render it in.
- * Template, color and layout settings already live inside `CvData`.
- */
-export type TemplateProps = CvData & { lang?: string };
+import type { CvStyleSheet } from "./template-styles";
 
 export interface SectionRenderProps {
-	styles: PdfStyles;
+	styles: CvStyleSheet;
 	lang: string;
 	settings?: CvRenderSettings;
-}
-
-export interface SectionWrapperProps {
-	children: React.ReactNode;
-	sectionKey: string;
-	label: string;
+	/** The modular presentation choices for this CV */
+	style: CvStyleSettings;
+	/** The globally chosen section heading */
+	SectionTitle: React.ComponentType<{ label: string }>;
 }
 
 export function getSectionOrder(
@@ -66,270 +44,382 @@ export function getSectionOrder(
 	return [...baseOrder, ...customOrder.filter((k) => !baseOrder.includes(k))];
 }
 
+/* -------------------------------------------------------------------------- */
+/*                              Shared building blocks                        */
+/* -------------------------------------------------------------------------- */
+
+const BULLET_MARKERS = { dot: "• ", dash: "– ", none: "" } as const;
+
+/** A list of bullet lines, using the globally chosen marker. */
+function Bullets({
+	lines,
+	keyPrefix,
+	styles,
+	style,
+}: {
+	lines: string[];
+	keyPrefix: string;
+	styles: CvStyleSheet;
+	style: CvStyleSettings;
+}) {
+	if (lines.length === 0) return null;
+	const marker = BULLET_MARKERS[style.bullets];
+
+	return (
+		<View style={{ marginTop: 2 }}>
+			{lines.map((line) => (
+				<Text
+					key={`${keyPrefix}-${line}`}
+					style={
+						style.bullets === "none"
+							? { ...styles.bullets, marginLeft: 0 }
+							: styles.bullets
+					}
+				>
+					{marker}
+					{line}
+				</Text>
+			))}
+		</View>
+	);
+}
+
+/**
+ * The normalised shape every list section maps its data onto, so that date
+ * placement, bullet style and entry framing behave identically everywhere.
+ */
+export interface EntryContent {
+	key: string;
+	title?: string;
+	subtitle?: string;
+	/** Secondary detail appended to the subtitle, e.g. degree • status */
+	meta?: string;
+	date?: string;
+	body?: string;
+	bullets?: string[];
+	/** Rendered after the body, e.g. a technologies line or links */
+	extra?: ReactNode;
+	/** Centre the body text (custom sections can opt into this per field) */
+	centerBody?: boolean;
+	/**
+	 * Keep the date next to the title in italics instead of in the date column.
+	 * Used by certifications and projects, which have a single short date.
+	 */
+	inlineDate?: boolean;
+}
+
+/** One entry, honouring the global date placement and bullet options. */
+function EntryBlock({
+	entry,
+	styles,
+	style,
+}: {
+	entry: EntryContent;
+	styles: CvStyleSheet;
+	style: CvStyleSettings;
+}) {
+	const dateBelow = style.datePlacement === "below";
+	const inlineDate = entry.inlineDate && !dateBelow;
+	const showDateColumn = Boolean(entry.date) && !dateBelow && !inlineDate;
+
+	const subtitleText =
+		entry.subtitle || entry.meta ? (
+			<Text style={{ ...styles.company, marginBottom: 0 }}>
+				{entry.subtitle}
+				{entry.meta && (
+					<Text style={{ fontSize: 9, color: "#000000" }}>
+						{entry.subtitle ? "  |  " : ""}
+						{entry.meta}
+					</Text>
+				)}
+			</Text>
+		) : null;
+
+	return (
+		<>
+			{(entry.title || subtitleText || entry.date) && (
+				<View style={styles.expHeaderRow}>
+					<View style={styles.expLeft}>
+						{entry.title && (
+							<Text style={styles.jobRole}>
+								{entry.title}
+								{inlineDate && entry.date ? (
+									<Text style={{ fontSize: 10, fontStyle: "italic" }}>
+										{` ${entry.date}`}
+									</Text>
+								) : null}
+							</Text>
+						)}
+						{subtitleText}
+						{dateBelow && entry.date && (
+							<Text style={styles.entryDateBelow}>{entry.date}</Text>
+						)}
+					</View>
+					{showDateColumn && (
+						<View style={styles.expRight}>
+							<Text>{entry.date}</Text>
+						</View>
+					)}
+				</View>
+			)}
+
+			{entry.body && (
+				<Text
+					style={
+						entry.centerBody
+							? { ...styles.activitiesText, textAlign: "center" }
+							: styles.activitiesText
+					}
+				>
+					{entry.body}
+				</Text>
+			)}
+
+			{entry.bullets && (
+				<Bullets
+					lines={entry.bullets}
+					keyPrefix={entry.key}
+					styles={styles}
+					style={style}
+				/>
+			)}
+
+			{entry.extra}
+		</>
+	);
+}
+
+/**
+ * Renders a whole list section: the heading plus every entry inside the frame
+ * chosen for that section.
+ */
+function renderEntrySection(
+	sectionKey: string,
+	styleKey: StyledSectionKey,
+	label: string,
+	entries: EntryContent[],
+	{ styles, style, SectionTitle }: SectionRenderProps,
+) {
+	if (entries.length === 0) return null;
+
+	const frame = buildEntryFrame(styles, style.entries[styleKey]);
+	const items = (
+		<>
+			{entries.map((entry) => (
+				<frame.Item key={entry.key}>
+					<EntryBlock entry={entry} styles={styles} style={style} />
+				</frame.Item>
+			))}
+		</>
+	);
+
+	return (
+		<View style={styles.section} key={sectionKey}>
+			<SectionTitle label={label} />
+			{frame.List ? <frame.List>{items}</frame.List> : items}
+		</View>
+	);
+}
+
+/** A themed hyperlink line. */
+function LinkLine({ href, styles }: { href: string; styles: CvStyleSheet }) {
+	return (
+		<Link
+			src={href}
+			style={{
+				fontSize: 9,
+				color: (styles.linkColor as unknown as string) || "#2563eb",
+			}}
+		>
+			{href}
+		</Link>
+	);
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                  Sections                                  */
+/* -------------------------------------------------------------------------- */
+
 export function renderSummarySection(
 	resume: string | undefined,
-	{ styles, lang }: SectionRenderProps,
-	SectionTitle: React.ComponentType<{ label: string }>,
+	{ styles, lang, SectionTitle }: SectionRenderProps,
 ) {
 	if (!resume) return null;
 
-	const label = translateLabel("pdf.section.summary", lang);
-
 	return (
 		<View style={styles.section} key="professional_summary">
-			<SectionTitle label={label} />
+			<SectionTitle label={translateLabel("pdf.section.summary", lang)} />
 			<Text style={styles.summaryText}>{resume}</Text>
 		</View>
 	);
 }
 
 export function renderExperienceSection(
-	experiences: Experience[],
-	{ styles, lang, settings }: SectionRenderProps,
-	SectionTitle: React.ComponentType<{ label: string }>,
-	ItemWrapper?: React.ComponentType<{ children: React.ReactNode }>,
-	SectionWrapper?: React.ComponentType<SectionWrapperProps>,
+	experiences: CvData["experiences"],
+	props: SectionRenderProps,
 ) {
-	if (experiences.length === 0) return null;
+	const { lang, settings, styles } = props;
 
-	const label = translateLabel("pdf.section.experience", lang);
+	const entries: EntryContent[] = (experiences || []).map((exp, idx) => ({
+		key: `${exp.company}-${exp.role}-${exp.startYear}-${exp.endYear}-${idx}`,
+		title: exp.role,
+		subtitle: exp.company,
+		date: formatDateRange(
+			exp.startMonth,
+			exp.startYear,
+			exp.endMonth,
+			exp.endYear,
+			exp.current,
+			lang,
+			settings?.sections?.dateFormat,
+		),
+		body: exp.activities,
+		bullets: splitLines(exp.results),
+		extra: exp.tech ? (
+			<Text
+				style={{
+					marginTop: 4,
+					color: "#000000",
+					fontSize: styles.activitiesText?.fontSize || 10,
+					textAlign: styles.activitiesText?.textAlign || undefined,
+				}}
+			>
+				{exp.tech}
+			</Text>
+		) : undefined,
+	}));
 
-	const itemsContent = (
-		<>
-			{experiences.map((exp, idx) => {
-				const expKey = `${exp.company}-${exp.role}-${exp.startYear}-${exp.startMonth}-${exp.endYear}-${exp.endMonth}-${idx}`;
-				const content = (
-					<View key={expKey} style={styles.expItem}>
-						<View style={styles.expHeaderRow}>
-							<View style={styles.expLeft}>
-								{exp.role && <Text style={styles.jobRole}>{exp.role}</Text>}
-								{exp.company && (
-									<Text style={styles.company}>{exp.company}</Text>
-								)}
-							</View>
-							<View style={styles.expRight}>
-								<Text>
-									{formatDateRange(
-										exp.startMonth,
-										exp.startYear,
-										exp.endMonth,
-										exp.endYear,
-										exp.current,
-										lang,
-										settings?.sections?.dateFormat,
-									)}
-								</Text>
-							</View>
-						</View>
-						{exp.activities && (
-							<Text style={styles.activitiesText}>{exp.activities}</Text>
-						)}
-						{exp.results && (
-							<View style={{ marginTop: 2 }}>
-								{splitLines(exp.results).map((line) => {
-									const bulletKey = `${expKey}-${line}`;
-									return (
-										<Text key={bulletKey} style={styles.bullets}>
-											• {line}
-										</Text>
-									);
-								})}
-							</View>
-						)}
-						{exp.tech && (
-							<Text
-								style={{
-									marginTop: 4,
-									color: "#000000",
-									fontSize: styles.activitiesText?.fontSize || 10,
-									textAlign: styles.activitiesText?.textAlign || undefined,
-								}}
-							>
-								{exp.tech}
-							</Text>
-						)}
-					</View>
-				);
-
-				return ItemWrapper ? (
-					<ItemWrapper key={expKey}>{content}</ItemWrapper>
-				) : (
-					content
-				);
-			})}
-		</>
-	);
-
-	if (SectionWrapper) {
-		return (
-			<SectionWrapper sectionKey="professional_experience" label={label}>
-				{itemsContent}
-			</SectionWrapper>
-		);
-	}
-
-	return (
-		<View style={styles.section} key="professional_experience">
-			<SectionTitle label={label} />
-			{itemsContent}
-		</View>
+	return renderEntrySection(
+		"professional_experience",
+		"professional_experience",
+		translateLabel("pdf.section.experience", lang),
+		entries,
+		props,
 	);
 }
 
 export function renderEducationSection(
-	education: Education[],
-	{ styles, lang, settings }: SectionRenderProps,
-	SectionTitle: React.ComponentType<{ label: string }>,
-	ItemWrapper?: React.ComponentType<{ children: React.ReactNode }>,
-	SectionWrapper?: React.ComponentType<SectionWrapperProps>,
+	education: CvData["education"],
+	props: SectionRenderProps,
 ) {
-	if (education.length === 0) return null;
+	const { lang, settings } = props;
 
-	const label = translateLabel("pdf.section.education", lang);
+	const entries: EntryContent[] = (education || []).map((edu, idx) => ({
+		key: `${edu.institution}-${edu.course}-${edu.startYear}-${edu.endYear}-${idx}`,
+		title: edu.course,
+		subtitle: edu.institution,
+		meta: [translateLabel(edu.type, lang), translateLabel(edu.status, lang)]
+			.filter(Boolean)
+			.join(" • "),
+		date: formatDateRange(
+			edu.startMonth,
+			edu.startYear,
+			edu.endMonth,
+			edu.endYear,
+			edu.current,
+			lang,
+			settings?.sections?.dateFormat,
+		),
+		body: edu.description,
+		bullets: splitLines(edu.achievements),
+	}));
 
-	const itemsContent = (
-		<>
-			{education.map((edu, idx) => {
-				const typeLabel = translateLabel(edu.type, lang);
-				const statusLabel = translateLabel(edu.status, lang);
-				const meta = [typeLabel, statusLabel].filter(Boolean).join(" • ");
-				const eduKey = `${edu.institution}-${edu.course}-${edu.startYear}-${edu.startMonth}-${edu.endYear}-${edu.endMonth}-${idx}`;
-
-				const content = (
-					<View key={eduKey} style={styles.expItem}>
-						<View style={{ ...styles.expHeaderRow, alignItems: "center" }}>
-							<View style={styles.expLeft}>
-								<Text style={styles.jobRole}>{edu.course}</Text>
-								{(edu.institution || meta) && (
-									<Text style={{ ...styles.company, marginBottom: 0 }}>
-										{edu.institution}
-										{meta && (
-											<Text
-												style={{ fontSize: 9, color: "#000000", marginTop: 0 }}
-											>
-												{"  |  "}
-												{meta}
-											</Text>
-										)}
-									</Text>
-								)}
-							</View>
-							<View style={styles.expRight}>
-								<Text>
-									{formatDateRange(
-										edu.startMonth,
-										edu.startYear,
-										edu.endMonth,
-										edu.endYear,
-										edu.current,
-										lang,
-										settings?.sections?.dateFormat,
-									)}
-								</Text>
-							</View>
-						</View>
-						{edu.description && (
-							<Text style={styles.activitiesText}>{edu.description}</Text>
-						)}
-						{edu.achievements && (
-							<View style={{ marginTop: 2 }}>
-								{splitLines(edu.achievements).map((line) => {
-									const achievementKey = `${eduKey}-${line}`;
-									return (
-										<Text key={achievementKey} style={styles.bullets}>
-											• {line}
-										</Text>
-									);
-								})}
-							</View>
-						)}
-					</View>
-				);
-
-				return ItemWrapper ? (
-					<ItemWrapper key={eduKey}>{content}</ItemWrapper>
-				) : (
-					content
-				);
-			})}
-		</>
-	);
-
-	if (SectionWrapper) {
-		return (
-			<SectionWrapper sectionKey="academic_education" label={label}>
-				{itemsContent}
-			</SectionWrapper>
-		);
-	}
-
-	return (
-		<View style={styles.section} key="academic_education">
-			<SectionTitle label={label} />
-			{itemsContent}
-		</View>
+	return renderEntrySection(
+		"academic_education",
+		"academic_education",
+		translateLabel("pdf.section.education", lang),
+		entries,
+		props,
 	);
 }
 
 export function renderSkillsSection(
 	skills: string | undefined,
-	{ styles, lang }: SectionRenderProps,
-	SectionTitle: React.ComponentType<{ label: string }>,
-	customTextStyle?: Style,
+	{ styles, lang, style, SectionTitle }: SectionRenderProps,
 ) {
 	if (!skills) return null;
 
 	const label = translateLabel("pdf.section.skills", lang);
-	const textStyle = customTextStyle || styles.summaryText;
 
 	return (
 		<View style={styles.section} key="technical_skills">
 			<SectionTitle label={label} />
-			<Text style={textStyle}>{skills}</Text>
+			{style.skills === "bulleted" ? (
+				<View>
+					{skills
+						.split(/[,;\n]/)
+						.map((entry) => entry.trim())
+						.filter(Boolean)
+						.map((entry) => (
+							<Text key={entry} style={styles.bullets}>
+								{BULLET_MARKERS[style.bullets]}
+								{entry}
+							</Text>
+						))}
+				</View>
+			) : (
+				<Text
+					style={
+						style.skills === "centered"
+							? styles.skillsCentered
+							: styles.summaryText
+					}
+				>
+					{skills}
+				</Text>
+			)}
 		</View>
 	);
 }
 
 export function renderLanguagesSection(
 	languages: Language[] | undefined,
-	{ styles, lang }: SectionRenderProps,
-	SectionTitle: React.ComponentType<{ label: string }>,
-	CustomRender?: (
-		languages: Language[],
-		styles: PdfStyles,
-		lang: string,
-	) => React.ReactNode,
+	{ styles, lang, style, SectionTitle }: SectionRenderProps,
 ) {
 	if (!languages || languages.length === 0) return null;
 
 	const label = translateLabel("pdf.section.languages", lang);
+	const rows = languages.map((item) => ({
+		key: `${item.name}-${item.level || "unknown"}`,
+		name: item.name,
+		level: translateLanguageLevel(item.level, lang),
+	}));
 
 	return (
 		<View style={styles.section} key="languages">
 			<SectionTitle label={label} />
-			{CustomRender ? (
-				CustomRender(languages, styles, lang)
-			) : (
-				<View
-					style={{
-						flexDirection: "row",
-						justifyContent: "center",
-						flexWrap: "wrap",
-					}}
-				>
-					{languages.map((langItem) => {
-						const levelLabel = translateLanguageLevel(langItem.level, lang);
-						const languageKey = `${langItem.name}-${langItem.level || "unknown"}`;
-						return (
-							<Text
-								key={languageKey}
-								style={{ marginHorizontal: 6, fontSize: 10 }}
-							>
-								{langItem.name}
-								{levelLabel ? ` (${levelLabel})` : ""}
-							</Text>
-						);
-					})}
+
+			{style.languages === "rows" && (
+				<View>
+					{rows.map((row) => (
+						<View key={row.key} style={styles.langRow}>
+							<Text style={styles.langName}>{row.name}</Text>
+							<Text style={styles.langLevel}>{row.level}</Text>
+						</View>
+					))}
+				</View>
+			)}
+
+			{style.languages === "leaders" && (
+				<View>
+					{rows.map((row) => (
+						<View key={row.key} style={styles.langLeaderRow}>
+							<Text style={styles.langName}>{row.name}</Text>
+							<View style={styles.langLeaderRule} />
+							<Text style={styles.langLevel}>{row.level}</Text>
+						</View>
+					))}
+				</View>
+			)}
+
+			{style.languages === "inline" && (
+				<View style={styles.langInlineWrap}>
+					{rows.map((row) => (
+						<Text key={row.key} style={styles.langInlineItem}>
+							{row.name}
+							{row.level ? ` (${row.level})` : ""}
+						</Text>
+					))}
 				</View>
 			)}
 		</View>
@@ -337,210 +427,101 @@ export function renderLanguagesSection(
 }
 
 export function renderCertificationsSection(
-	certifications: Certification[] | undefined,
-	{ styles, lang }: SectionRenderProps,
-	SectionTitle: React.ComponentType<{ label: string }>,
+	certifications: CvData["certifications"],
+	props: SectionRenderProps,
 ) {
-	if (!certifications || certifications.length === 0) return null;
+	const { lang, styles } = props;
 
-	const label = translateLabel("pdf.section.certifications", lang);
+	const entries: EntryContent[] = (certifications || []).map((cert, idx) => ({
+		key: `${cert.name}-${cert.issuer}-${cert.completionDate}-${idx}`,
+		title: cert.name,
+		subtitle: cert.issuer,
+		date: cert.completionDate,
+		inlineDate: true,
+		bullets: cert.description ? [cert.description] : undefined,
+		extra: cert.validationLink ? (
+			<LinkLine href={cert.validationLink} styles={styles} />
+		) : undefined,
+	}));
 
-	return (
-		<View style={styles.section} key="certifications">
-			<SectionTitle label={label} />
-			{certifications.map((cert, i) => (
-				<View
-					key={`${cert.name}-${cert.issuer}-${cert.completionDate}-${i}`}
-					style={{ marginBottom: 6 }}
-				>
-					<Text style={{ ...styles.jobRole }}>
-						{cert.name}{" "}
-						<Text style={{ fontSize: 10, fontStyle: "italic" }}>
-							{cert.completionDate}
-						</Text>
-					</Text>
-					{cert.issuer && (
-						<Text style={{ fontSize: 10, color: "#000000" }}>
-							{cert.issuer}
-						</Text>
-					)}
-					{cert.validationLink && (
-						<Link
-							src={cert.validationLink}
-							style={{
-								fontSize: 9,
-								color: (styles.linkColor as unknown as string) || "#2563eb",
-							}}
-						>
-							{cert.validationLink}
-						</Link>
-					)}
-					{cert.description && (
-						<Text style={styles.bullets}>• {cert.description}</Text>
-					)}
-				</View>
-			))}
-		</View>
+	return renderEntrySection(
+		"certifications",
+		"certifications",
+		translateLabel("pdf.section.certifications", lang),
+		entries,
+		props,
 	);
 }
 
 export function renderProjectsSection(
-	projects: Project[] | undefined,
-	{ styles, lang }: SectionRenderProps,
-	SectionTitle: React.ComponentType<{ label: string }>,
+	projects: CvData["projects"],
+	props: SectionRenderProps,
 ) {
-	if (!projects || projects.length === 0) return null;
+	const { lang, styles } = props;
 
-	const label = translateLabel("pdf.section.projects", lang);
+	const entries: EntryContent[] = (projects || []).map((proj, idx) => ({
+		key: `${proj.name}-${proj.year}-${idx}`,
+		title: proj.name,
+		subtitle: proj.tech,
+		date: proj.year,
+		inlineDate: true,
+		body: proj.description,
+		bullets: splitLines(proj.impact),
+		extra: (
+			<>
+				{proj.link && <LinkLine href={proj.link} styles={styles} />}
+				{proj.sourceCode && <LinkLine href={proj.sourceCode} styles={styles} />}
+			</>
+		),
+	}));
 
-	return (
-		<View style={styles.section} key="projects">
-			<SectionTitle label={label} />
-			{projects.map((proj, i) => (
-				<View
-					key={`${proj.name}-${proj.year}-${i}`}
-					style={{ marginBottom: 6 }}
-				>
-					<Text style={styles.jobRole}>
-						{proj.name}{" "}
-						{proj.year ? (
-							<Text style={{ fontSize: 10, fontStyle: "italic" }}>
-								{proj.year}
-							</Text>
-						) : null}
-					</Text>
-					{proj.tech && (
-						<Text style={{ fontSize: 10, color: "#000000" }}>{proj.tech}</Text>
-					)}
-					{proj.description && (
-						<Text style={styles.activitiesText}>{proj.description}</Text>
-					)}
-					{proj.impact && (
-						<View style={{ marginTop: 2 }}>
-							{splitLines(proj.impact).map((line) => {
-								const impactKey = `${proj.name}-${proj.year}-${line}`;
-								return (
-									<Text key={impactKey} style={styles.bullets}>
-										• {line}
-									</Text>
-								);
-							})}
-						</View>
-					)}
-					{proj.link && (
-						<Link
-							src={proj.link}
-							style={{
-								fontSize: 9,
-								color: (styles.linkColor as unknown as string) || "#2563eb",
-							}}
-						>
-							{proj.link}
-						</Link>
-					)}
-					{proj.sourceCode && (
-						<Link
-							src={proj.sourceCode}
-							style={{
-								fontSize: 9,
-								color: (styles.linkColor as unknown as string) || "#2563eb",
-							}}
-						>
-							{proj.sourceCode}
-						</Link>
-					)}
-				</View>
-			))}
-		</View>
+	return renderEntrySection(
+		"projects",
+		"projects",
+		translateLabel("pdf.section.projects", lang),
+		entries,
+		props,
 	);
 }
 
 export function renderVolunteerSection(
-	volunteers: Volunteer[] | undefined,
-	{ styles, lang, settings }: SectionRenderProps,
-	SectionTitle: React.ComponentType<{ label: string }>,
-	ItemWrapper?: React.ComponentType<{ children: React.ReactNode }>,
-	SectionWrapper?: React.ComponentType<SectionWrapperProps>,
+	volunteers: CvData["volunteers"],
+	props: SectionRenderProps,
 ) {
-	if (!volunteers || volunteers.length === 0) return null;
+	const { lang, settings } = props;
 
-	const label = translateLabel("pdf.section.volunteer", lang);
+	const entries: EntryContent[] = (volunteers || []).map((vol, idx) => ({
+		key: `${vol.organization}-${vol.role}-${vol.startYear}-${vol.endYear}-${idx}`,
+		title: vol.role,
+		subtitle: vol.organization,
+		date: formatDateRange(
+			vol.startMonth,
+			vol.startYear,
+			vol.endMonth,
+			vol.endYear,
+			vol.current,
+			lang,
+			settings?.sections?.dateFormat,
+		),
+		body: vol.description,
+		bullets: splitLines(vol.impact),
+	}));
 
-	const itemsContent = (
-		<>
-			{volunteers.map((vol, i) => {
-				const volKey = `${vol.organization}-${vol.role}-${vol.startYear}-${vol.startMonth}-${vol.endYear}-${vol.endMonth}-${i}`;
-				const content = (
-					<View key={volKey} style={{ marginBottom: 6 }}>
-						<View style={styles.expHeaderRow}>
-							<View style={styles.expLeft}>
-								<Text style={styles.jobRole}>{vol.role}</Text>
-								<Text style={styles.company}>{vol.organization}</Text>
-							</View>
-							<View style={styles.expRight}>
-								<Text>
-									{formatDateRange(
-										vol.startMonth,
-										vol.startYear,
-										vol.endMonth,
-										vol.endYear,
-										vol.current,
-										lang,
-										settings?.sections?.dateFormat,
-									)}
-								</Text>
-							</View>
-						</View>
-						{vol.description && (
-							<Text style={styles.activitiesText}>{vol.description}</Text>
-						)}
-						{vol.impact && (
-							<View style={{ marginTop: 2 }}>
-								{splitLines(vol.impact).map((line) => {
-									const impactKey = `${volKey}-${line}`;
-									return (
-										<Text key={impactKey} style={styles.bullets}>
-											• {line}
-										</Text>
-									);
-								})}
-							</View>
-						)}
-					</View>
-				);
-
-				return ItemWrapper ? (
-					<ItemWrapper key={volKey}>{content}</ItemWrapper>
-				) : (
-					content
-				);
-			})}
-		</>
-	);
-
-	if (SectionWrapper) {
-		return (
-			<SectionWrapper sectionKey="volunteer" label={label}>
-				{itemsContent}
-			</SectionWrapper>
-		);
-	}
-
-	return (
-		<View style={styles.section} key="volunteer">
-			<SectionTitle label={label} />
-			{itemsContent}
-		</View>
+	return renderEntrySection(
+		"volunteer",
+		"volunteer",
+		translateLabel("pdf.section.volunteer", lang),
+		entries,
+		props,
 	);
 }
 
 export function renderCustomSection(
 	section: CustomSection,
-	{ styles, lang, settings }: SectionRenderProps,
-	SectionTitle: React.ComponentType<{ label: string }>,
-	ItemWrapper?: React.ComponentType<{ children: React.ReactNode }>,
-	SectionWrapper?: React.ComponentType<SectionWrapperProps>,
+	props: SectionRenderProps,
 ) {
+	const { lang, settings } = props;
+
 	const meaningfulFields = (section.fields || []).filter(
 		(f) =>
 			f.label ||
@@ -556,193 +537,72 @@ export function renderCustomSection(
 
 	if (!section.title && meaningfulFields.length === 0) return null;
 
-	const label = section.title || translateLabel("pdf.section.custom", lang);
 	const sectionKey = `custom_${section.id}`;
+	const entries: EntryContent[] = meaningfulFields.map((field, idx) => ({
+		key: `${sectionKey}-${field.id || idx}`,
+		title: field.label,
+		subtitle: field.subtitle,
+		date: formatDateRange(
+			field.startMonth,
+			field.startYear,
+			field.endMonth,
+			field.endYear,
+			field.current,
+			lang,
+			settings?.sections?.dateFormat,
+		),
+		body: field.value,
+		bullets: splitLines(field.bullets),
+		centerBody: field.centerValue,
+	}));
 
-	const itemsContent = (
-		<>
-			{meaningfulFields.map((field, idx) => {
-				const content = (
-					<View key={field.id || idx} style={{ marginBottom: 8 }}>
-						{(field.label ||
-							field.subtitle ||
-							field.startYear ||
-							field.endYear ||
-							field.startMonth ||
-							field.endMonth ||
-							field.current) && (
-							<View style={styles.expHeaderRow}>
-								<View style={styles.expLeft}>
-									{field.label && (
-										<Text style={styles.jobRole}>{field.label}</Text>
-									)}
-									{field.subtitle && (
-										<Text style={styles.company}>{field.subtitle}</Text>
-									)}
-								</View>
-								<View style={styles.expRight}>
-									<Text>
-										{formatDateRange(
-											field.startMonth,
-											field.startYear,
-											field.endMonth,
-											field.endYear,
-											field.current,
-											lang,
-											settings?.sections?.dateFormat,
-										)}
-									</Text>
-								</View>
-							</View>
-						)}
-						{field.value && (
-							<Text
-								style={
-									field.centerValue
-										? { ...styles.activitiesText, textAlign: "center" }
-										: styles.activitiesText
-								}
-							>
-								{field.value}
-							</Text>
-						)}
-						{field.bullets && (
-							<View style={{ marginTop: 2 }}>
-								{splitLines(field.bullets).map((line) => {
-									const bulletKey = `${sectionKey}-${field.id || "field"}-${line}`;
-									return (
-										<Text key={bulletKey} style={styles.bullets}>
-											• {line}
-										</Text>
-									);
-								})}
-							</View>
-						)}
-					</View>
-				);
-
-				return ItemWrapper ? (
-					<ItemWrapper key={field.id || idx}>{content}</ItemWrapper>
-				) : (
-					content
-				);
-			})}
-		</>
+	return renderEntrySection(
+		sectionKey,
+		"custom",
+		section.title || translateLabel("pdf.section.custom", lang),
+		entries,
+		props,
 	);
-
-	if (SectionWrapper) {
-		return (
-			<SectionWrapper sectionKey={sectionKey} label={label}>
-				{itemsContent}
-			</SectionWrapper>
-		);
-	}
-
-	return (
-		<View style={styles.section} key={sectionKey}>
-			<SectionTitle label={label} />
-			{itemsContent}
-		</View>
-	);
-}
-
-/**
- * Per-template overrides for how a few sections are laid out.
- * Everything not overridden falls back to the default rendering.
- */
-export interface SectionRenderOverrides {
-	/** Wraps each entry of the entry-based sections (e.g. a timeline bullet) */
-	ItemWrapper?: React.ComponentType<{ children: React.ReactNode }>;
-	/** Replaces the default section frame for the entry-based sections */
-	SectionWrapper?: React.ComponentType<SectionWrapperProps>;
-	/** Overrides the text style of the skills section */
-	skillsTextStyle?: Style;
-	/** Replaces the body of the languages section */
-	renderLanguages?: (
-		languages: Language[],
-		styles: PdfStyles,
-		lang: string,
-	) => React.ReactNode;
 }
 
 /**
  * Renders the CV section named by `sectionKey`.
  *
- * All three templates order and dispatch their sections identically and only
- * differ in the overrides above, so the dispatch lives here instead of being
- * repeated in each template.
+ * Every presentation difference now comes from `props.style`, so there is a
+ * single dispatch for the whole app rather than one per theme.
  */
 export function renderSectionByKey(
 	sectionKey: SectionKey,
 	data: CvData,
-	renderProps: SectionRenderProps,
-	SectionTitle: React.ComponentType<{ label: string }>,
-	overrides: SectionRenderOverrides = {},
-): React.ReactNode {
-	const { ItemWrapper, SectionWrapper, skillsTextStyle, renderLanguages } =
-		overrides;
-
+	props: SectionRenderProps,
+): ReactNode {
 	switch (sectionKey) {
 		case "professional_summary":
-			return renderSummarySection(data.resume, renderProps, SectionTitle);
+			return renderSummarySection(data.resume, props);
 		case "professional_experience":
-			return renderExperienceSection(
-				data.experiences,
-				renderProps,
-				SectionTitle,
-				ItemWrapper,
-				SectionWrapper,
-			);
+			return renderExperienceSection(data.experiences, props);
 		case "academic_education":
-			return renderEducationSection(
-				data.education,
-				renderProps,
-				SectionTitle,
-				ItemWrapper,
-				SectionWrapper,
-			);
+			return renderEducationSection(data.education, props);
 		case "technical_skills":
-			return renderSkillsSection(
-				data.skills,
-				renderProps,
-				SectionTitle,
-				skillsTextStyle,
-			);
+			return renderSkillsSection(data.skills, props);
 		case "languages":
-			return renderLanguagesSection(
-				data.languages,
-				renderProps,
-				SectionTitle,
-				renderLanguages,
-			);
+			return renderLanguagesSection(data.languages, props);
 		case "certifications":
-			return renderCertificationsSection(
-				data.certifications,
-				renderProps,
-				SectionTitle,
-			);
+			return renderCertificationsSection(data.certifications, props);
 		case "projects":
-			return renderProjectsSection(data.projects, renderProps, SectionTitle);
+			return renderProjectsSection(data.projects, props);
 		case "volunteer":
-			return renderVolunteerSection(
-				data.volunteers,
-				renderProps,
-				SectionTitle,
-				ItemWrapper,
-				SectionWrapper,
-			);
+			return renderVolunteerSection(data.volunteers, props);
 		default: {
 			const customId = sectionKey.replace("custom_", "");
 			const section = (data.customSections || []).find(
 				(cs) => cs.id === customId,
 			);
 			if (!section) return null;
-			return renderCustomSection(
-				section,
-				renderProps,
-				SectionTitle,
-				ItemWrapper,
-				SectionWrapper,
+			return (
+				<Fragment key={sectionKey}>
+					{renderCustomSection(section, props)}
+				</Fragment>
 			);
 		}
 	}

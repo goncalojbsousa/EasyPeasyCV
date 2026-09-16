@@ -1,7 +1,7 @@
 "use client";
 
 import { useLanguage } from "../../contexts/LanguageContext";
-import type { SectionReorderProps } from "../../types/cv";
+import type { SectionControlProps } from "../../types/cv";
 import { FormField } from "../ui/form_field";
 import { FormSection } from "../ui/form_section";
 import { Icons } from "../ui/icons";
@@ -10,7 +10,7 @@ import { TextInput } from "../ui/text_input";
 /**
  * Props interface for the TechnicalSkills component
  */
-interface TechnicalSkillsProps extends SectionReorderProps {
+interface TechnicalSkillsProps extends SectionControlProps {
 	/** Technical skills text content */
 	skills: string;
 	/** Handler for updating skills text */

@@ -1,13 +1,12 @@
 import { Font } from "@react-pdf/renderer";
 import type { CvData, CvRenderSettings } from "../types/cv";
-import { ClassicTemplate } from "./cv_templates/classic_template";
-import { ProfessionalTemplate } from "./cv_templates/professional_template";
-import { TimelineTemplate } from "./cv_templates/timeline_template";
+import { resolveStyle } from "../utils/style-presets";
+import { CvRenderer } from "./cv_templates/cv_renderer";
 
 /**
  * Props for every component that renders a CV: the CV itself plus the language
- * it should be rendered in. Template, color and layout settings travel inside
- * `CvData`, so the whole PDF pipeline shares one prop shape.
+ * it should be rendered in. Presentation choices travel inside
+ * `CvData.settings.style`, so the whole PDF pipeline shares one prop shape.
  */
 export interface CvRenderProps {
 	data: CvData;
@@ -17,7 +16,7 @@ export interface CvRenderProps {
 
 /**
  * A custom uploaded font must be registered with @react-pdf before any
- * template references it by name.
+ * style references it by name.
  */
 function registerCustomFont(settings?: CvRenderSettings) {
 	if (settings?.layout.fontFamily !== "Custom") return;
@@ -37,20 +36,18 @@ function registerCustomFont(settings?: CvRenderSettings) {
 }
 
 /**
- * Main CV Document component
- * Selects and renders the template named by `data.template`.
+ * Main CV Document component.
+ * Resolves the modular style (migrating CVs saved with a legacy theme) and
+ * hands it to the renderer.
  */
 export function CvDocument({ data, lang }: CvRenderProps) {
 	registerCustomFont(data.settings);
 
-	const templateProps = { ...data, lang, color: data.color ?? "blue" };
-
-	switch (data.template) {
-		case "timeline":
-			return <TimelineTemplate {...templateProps} />;
-		case "classic":
-			return <ClassicTemplate {...templateProps} />;
-		default:
-			return <ProfessionalTemplate {...templateProps} />;
-	}
+	return (
+		<CvRenderer
+			data={data}
+			lang={lang || "pt"}
+			style={resolveStyle(data.settings, data.template)}
+		/>
+	);
 }

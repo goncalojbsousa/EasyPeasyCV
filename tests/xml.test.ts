@@ -1,10 +1,15 @@
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
-import type { CvData, CvRenderSettings } from "../app/types/cv";
+import type {
+	CvData,
+	CvRenderSettings,
+	CvStyleSettings,
+} from "../app/types/cv";
 import {
 	createEmptyCvData,
 	DEFAULT_RENDER_SETTINGS,
 } from "../app/utils/cv-data";
+import { STYLE_PRESETS } from "../app/utils/style-presets";
 import { CV_XML_VERSION, cvDataToXml, xmlToCvData } from "../app/utils/xml";
 
 function clone<T>(value: T): T {
@@ -64,6 +69,26 @@ function customSettings(): CvRenderSettings {
 			titleFontSize: 14,
 			dateFormat: "long",
 			useThemeColorForLinks: true,
+		},
+	};
+}
+
+/** A style where every modular option differs from the defaults. */
+function customStyle(): CvStyleSettings {
+	return {
+		sectionTitle: { variant: "block", align: "center", transform: "none" },
+		header: { align: "center", contact: "stacked", divider: true },
+		datePlacement: "below",
+		bullets: "dash",
+		languages: "leaders",
+		skills: "bulleted",
+		entries: {
+			professional_experience: "timeline",
+			academic_education: "card",
+			certifications: "plain",
+			projects: "card",
+			volunteer: "timeline",
+			custom: "plain",
 		},
 	};
 }
@@ -252,6 +277,24 @@ const cases: Array<[string, CvData]> = [
 					density: "spacious",
 					textAlignment: "left",
 				},
+			};
+		}),
+	],
+	[
+		"fully customised modular style",
+		withCv((data) => {
+			data.settings = {
+				...clone(DEFAULT_RENDER_SETTINGS),
+				style: customStyle(),
+			};
+		}),
+	],
+	[
+		"classic preset style",
+		withCv((data) => {
+			data.settings = {
+				...clone(DEFAULT_RENDER_SETTINGS),
+				style: clone(STYLE_PRESETS.classic),
 			};
 		}),
 	],

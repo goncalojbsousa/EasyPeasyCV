@@ -6,15 +6,19 @@ import type {
 	CustomSection,
 	CvData,
 	CvRenderSettings,
+	CvStyleSettings,
 	Education,
 	Experience,
 	Language,
 	Link,
 	Project,
 	SectionKey,
+	StyledSectionKey,
 	Volunteer,
 } from "../types/cv";
+import { STYLED_SECTION_KEYS } from "../types/cv";
 import { DEFAULT_COUNTRY_CODE, DEFAULT_RENDER_SETTINGS } from "./cv-data";
+import { DEFAULT_CV_STYLE } from "./style-presets";
 
 export const CV_XML_VERSION = "2";
 
@@ -245,6 +249,46 @@ function optionalNumber(
 	return Number.isFinite(value) ? value : undefined;
 }
 
+/**
+ * Tag names for the per-section entry variants.
+ *
+ * Every tag inside <presentation> is deliberately unique across the whole
+ * document: element lookups here search descendants, so a tag that also exists
+ * elsewhere in the CV (e.g. "projects") would be ambiguous.
+ */
+const ENTRY_VARIANT_TAGS: Record<StyledSectionKey, string> = {
+	professional_experience: "experienceEntries",
+	academic_education: "educationEntries",
+	certifications: "certificationEntries",
+	projects: "projectEntries",
+	volunteer: "volunteerEntries",
+	custom: "customEntries",
+};
+
+function styleToXml(style?: CvStyleSettings): string {
+	if (!style) return "";
+
+	const entries = STYLED_SECTION_KEYS.map((key) =>
+		el(ENTRY_VARIANT_TAGS[key], style.entries[key]),
+	).join("\n        ");
+
+	return `<presentation>
+      ${el("titleVariant", style.sectionTitle.variant)}
+      ${el("titleAlign", style.sectionTitle.align)}
+      ${el("titleTransform", style.sectionTitle.transform)}
+      ${el("headerAlign", style.header.align)}
+      ${el("headerContact", style.header.contact)}
+      ${el("headerDivider", style.header.divider)}
+      ${el("datePlacement", style.datePlacement)}
+      ${el("bulletVariant", style.bullets)}
+      ${el("languagesVariant", style.languages)}
+      ${el("skillsVariant", style.skills)}
+      <entryVariants>
+        ${entries}
+      </entryVariants>
+    </presentation>`;
+}
+
 function settingsToXml(settings?: CvRenderSettings): string {
 	if (!settings) return "";
 	const customFontXml = settings.layout.customFont
@@ -301,6 +345,7 @@ function settingsToXml(settings?: CvRenderSettings): string {
       ${cropXml}
       ${el("dataUrl", settings.photo.dataUrl || "")}
     </photo>
+    ${styleToXml(settings.style)}
     <sections>
       ${el("titleColor", settings.sections.titleColor)}
       ${el("titleFontSize", settings.sections.titleFontSize)}
@@ -308,6 +353,50 @@ function settingsToXml(settings?: CvRenderSettings): string {
       ${el("useThemeColorForLinks", Boolean(settings.sections.useThemeColorForLinks))}
     </sections>
   </settings>`;
+}
+
+/**
+ * Reads the modular presentation block. Returns undefined for CVs exported
+ * before the modular system existed; `resolveStyle()` then migrates those from
+ * the legacy `template` name.
+ */
+function parseStyle(settingsEl: XmlElementLike): CvStyleSettings | undefined {
+	const el = firstElement(settingsEl, "presentation");
+	if (!el) return undefined;
+
+	const defaults = DEFAULT_CV_STYLE;
+	const entriesEl = firstElement(el, "entryVariants");
+
+	const pick = <T extends string>(
+		parent: XmlElementLike | null,
+		tag: string,
+		fallback: T,
+	): T => (optionalText(parent ?? undefined, tag) as T) || fallback;
+
+	const entries = Object.fromEntries(
+		STYLED_SECTION_KEYS.map((key) => [
+			key,
+			pick(entriesEl, ENTRY_VARIANT_TAGS[key], defaults.entries[key]),
+		]),
+	) as CvStyleSettings["entries"];
+
+	return {
+		sectionTitle: {
+			variant: pick(el, "titleVariant", defaults.sectionTitle.variant),
+			align: pick(el, "titleAlign", defaults.sectionTitle.align),
+			transform: pick(el, "titleTransform", defaults.sectionTitle.transform),
+		},
+		header: {
+			align: pick(el, "headerAlign", defaults.header.align),
+			contact: pick(el, "headerContact", defaults.header.contact),
+			divider: booleanContent(el, "headerDivider", defaults.header.divider),
+		},
+		datePlacement: pick(el, "datePlacement", defaults.datePlacement),
+		bullets: pick(el, "bulletVariant", defaults.bullets),
+		languages: pick(el, "languagesVariant", defaults.languages),
+		skills: pick(el, "skillsVariant", defaults.skills),
+		entries,
+	};
 }
 
 function parseSettings(cvEl: XmlElementLike): CvRenderSettings | undefined {
@@ -322,6 +411,7 @@ function parseSettings(cvEl: XmlElementLike): CvRenderSettings | undefined {
 	const cropEl = firstElement(photoEl, "crop");
 	const sectionsEl = firstElement(settingsEl, "sections");
 	const defaults = DEFAULT_RENDER_SETTINGS;
+	const style = parseStyle(settingsEl);
 
 	const customFont = customFontEl
 		? {
@@ -461,6 +551,7 @@ function parseSettings(cvEl: XmlElementLike): CvRenderSettings | undefined {
 				Boolean(defaults.sections.useThemeColorForLinks),
 			),
 		},
+		...(style ? { style } : {}),
 	};
 }
 

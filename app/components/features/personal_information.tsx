@@ -5,6 +5,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useLanguage } from "../../contexts/LanguageContext";
 import type { Link, PersonalInfo } from "../../types/cv";
 import { getCountryOptions } from "../../utils/countries";
+import { PERSONAL_INPUT_IDS } from "../../utils/cv-completeness";
 import { getLinkType, LINK_TYPES, stripLinkPrefix } from "../../utils/links";
 import { DragHandle, SortableList } from "../dnd/sortable_list";
 import { FormField } from "../ui/form_field";
@@ -31,6 +32,9 @@ interface PersonalInformationProps {
 	onReorderLinks?: (fromIndex: number, toIndex: number) => void;
 	/** Handler for toggling link label visibility */
 	onToggleLinkLabel?: (idx: number) => void;
+	/** Controlled collapsed state, owned by the builder page */
+	collapsed?: boolean;
+	onToggleCollapsed?: () => void;
 }
 
 /**
@@ -46,6 +50,8 @@ export function PersonalInformation({
 	onPersonalInfoChange,
 	onReorderLinks,
 	onToggleLinkLabel,
+	collapsed,
+	onToggleCollapsed,
 }: PersonalInformationProps) {
 	const { t } = useLanguage();
 	const [newLinkType, setNewLinkType] = useState("LinkedIn");
@@ -117,11 +123,17 @@ export function PersonalInformation({
 
 	return (
 		<form className="space-y-8">
-			<FormSection title={t("section.personal.info")} icon={Icons.personalInfo}>
+			<FormSection
+				title={t("section.personal.info")}
+				icon={Icons.personalInfo}
+				collapsed={collapsed}
+				onToggleCollapsed={onToggleCollapsed}
+			>
 				{/* Name and desired role fields */}
 				<div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
 					<FormField label={t("field.full.name")}>
 						<TextInput
+							id={PERSONAL_INPUT_IDS.name}
 							placeholder={t("placeholder.full.name")}
 							value={personalInfo.name}
 							onChange={(e) => onPersonalInfoChange("name", e.target.value)}
@@ -129,6 +141,7 @@ export function PersonalInformation({
 					</FormField>
 					<FormField label={t("cvType.field.desired.role")}>
 						<TextInput
+							id={PERSONAL_INPUT_IDS.desiredRole}
 							placeholder={t("cvType.placeholder.desired.role")}
 							value={personalInfo.desiredRole}
 							onChange={(e) =>
@@ -138,8 +151,8 @@ export function PersonalInformation({
 					</FormField>
 				</div>
 
-				{/* Postal code and city fields */}
-				<div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4">
+				{/* Postal code and city: a code is short, a city name is not */}
+				<div className="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-4 sm:gap-6 mb-4">
 					<FormField label={t("field.postal.code")}>
 						<TextInput
 							placeholder={t("placeholder.postal.code")}
@@ -159,15 +172,18 @@ export function PersonalInformation({
 				</div>
 
 				{/* Email, country code, and phone fields */}
-				<div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-6">
-					<FormField label={t("field.email")}>
-						<TextInput
-							type="email"
-							placeholder={t("placeholder.email")}
-							value={personalInfo.email}
-							onChange={(e) => onPersonalInfoChange("email", e.target.value)}
-						/>
-					</FormField>
+				<div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-[minmax(0,2fr)_minmax(0,1.5fr)_minmax(0,1.5fr)] gap-4 sm:gap-6 mb-6">
+					<div className="sm:col-span-2 xl:col-span-1">
+						<FormField label={t("field.email")}>
+							<TextInput
+								type="email"
+								id={PERSONAL_INPUT_IDS.email}
+								placeholder={t("placeholder.email")}
+								value={personalInfo.email}
+								onChange={(e) => onPersonalInfoChange("email", e.target.value)}
+							/>
+						</FormField>
+					</div>
 					<FormField label={t("field.country.code")}>
 						<SelectMenu
 							options={countryOptions}
@@ -185,6 +201,7 @@ export function PersonalInformation({
 					</FormField>
 					<FormField label={t("field.phone")}>
 						<TextInput
+							id={PERSONAL_INPUT_IDS.phone}
 							placeholder={t("placeholder.phone")}
 							value={personalInfo.phone}
 							onChange={(e) => onPersonalInfoChange("phone", e.target.value)}

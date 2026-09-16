@@ -1,14 +1,14 @@
 "use client";
 
 import type { ReactNode } from "react";
-import type { SectionReorderProps } from "../../types/cv";
+import type { SectionControlProps } from "../../types/cv";
 import { SortableList } from "../dnd/sortable_list";
 import { EmptyState } from "./empty_state";
 import { FormSection } from "./form_section";
 import { IconButton } from "./icon_button";
 import { Icons } from "./icons";
 
-interface ListSectionProps<T> extends SectionReorderProps {
+interface ListSectionProps<T> extends SectionControlProps {
 	/** Section title */
 	title: string;
 	/** Section icon */
@@ -43,25 +43,13 @@ export function ListSection<T>({
 	onAdd,
 	onReorder,
 	renderItem,
-	canReorder = false,
-	onMoveUp,
-	onMoveDown,
-	canMoveUp = true,
-	canMoveDown = true,
+	...controls
 }: ListSectionProps<T>) {
 	const draggable = items.length > 1;
 
 	return (
 		<form className="space-y-8 flex flex-col items-center">
-			<FormSection
-				title={title}
-				icon={icon}
-				canReorder={canReorder}
-				onMoveUp={onMoveUp}
-				onMoveDown={onMoveDown}
-				canMoveUp={canMoveUp}
-				canMoveDown={canMoveDown}
-			>
+			<FormSection title={title} icon={icon} {...controls}>
 				{items.length === 0 && <EmptyState message={emptyMessage} />}
 
 				<SortableList

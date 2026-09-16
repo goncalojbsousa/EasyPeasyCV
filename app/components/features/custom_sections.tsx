@@ -5,7 +5,7 @@ import { useLanguage } from "../../contexts/LanguageContext";
 import type {
 	CustomField,
 	CustomSection,
-	SectionReorderProps,
+	SectionControlProps,
 } from "../../types/cv";
 import { SortableList } from "../dnd/sortable_list";
 import { AutoResizeTextarea } from "../ui/auto_resize_textarea";
@@ -20,7 +20,7 @@ import { TextInput } from "../ui/text_input";
 /** Keys of a custom field that the form can edit. */
 type CustomFieldKey = keyof Omit<CustomField, "id">;
 
-interface CustomSectionCardProps extends SectionReorderProps {
+interface CustomSectionCardProps extends SectionControlProps {
 	section: CustomSection;
 	onTitleChange: (value: string) => void;
 	onAddField: () => void;
@@ -30,7 +30,6 @@ interface CustomSectionCardProps extends SectionReorderProps {
 		value: string | boolean,
 	) => void;
 	onRemoveField: (fieldId: string) => void;
-	onRemoveSection: () => void;
 	onReorderFields?: (fromIndex: number, toIndex: number) => void;
 }
 
@@ -63,9 +62,8 @@ export function CustomSectionCard({
 	onAddField,
 	onFieldChange,
 	onRemoveField,
-	onRemoveSection,
 	onReorderFields,
-	...reorder
+	...controls
 }: CustomSectionCardProps) {
 	const { t } = useLanguage();
 
@@ -94,18 +92,7 @@ export function CustomSectionCard({
 			<FormSection
 				title={section.title || t("custom.section.default")}
 				icon={Icons.actions}
-				{...reorder}
-				actionButton={
-					<IconButton
-						onClick={onRemoveSection}
-						variant="danger"
-						size="sm"
-						ariaLabel={t("custom.section.remove")}
-					>
-						{Icons.remove}
-						{t("custom.section.remove")}
-					</IconButton>
-				}
+				{...controls}
 			>
 				<div className="space-y-4">
 					<FormField label={t("custom.section.name")}>

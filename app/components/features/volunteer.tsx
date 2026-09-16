@@ -1,7 +1,7 @@
 "use client";
 
 import { useLanguage } from "../../contexts/LanguageContext";
-import type { SectionReorderProps, Volunteer } from "../../types/cv";
+import type { SectionControlProps, Volunteer } from "../../types/cv";
 import { AutoResizeTextarea } from "../ui/auto_resize_textarea";
 import { CurrentCheckbox, DateRangeFields } from "../ui/date_range_fields";
 import { EntryCard } from "../ui/entry_card";
@@ -13,7 +13,7 @@ import { TextInput } from "../ui/text_input";
 /**
  * Props interface for the VolunteerWork component
  */
-interface VolunteerWorkProps extends SectionReorderProps {
+interface VolunteerWorkProps extends SectionControlProps {
 	/** Array of volunteer entries */
 	volunteers: Volunteer[];
 	/** Handler for updating volunteer fields */

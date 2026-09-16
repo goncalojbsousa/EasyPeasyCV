@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { useLanguage } from "../../contexts/LanguageContext";
-import type { Education, SectionReorderProps } from "../../types/cv";
+import type { Education, SectionControlProps } from "../../types/cv";
 import { AutoResizeTextarea } from "../ui/auto_resize_textarea";
 import { DateRangeFields } from "../ui/date_range_fields";
 import { EntryCard } from "../ui/entry_card";
@@ -15,7 +15,7 @@ import { TextInput } from "../ui/text_input";
 /**
  * Props interface for the AcademicEducation component
  */
-interface AcademicEducationProps extends SectionReorderProps {
+interface AcademicEducationProps extends SectionControlProps {
 	/** Array of education entries */
 	education: Education[];
 	/** Handler for updating education fields */

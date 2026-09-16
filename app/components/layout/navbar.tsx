@@ -18,6 +18,13 @@ export function Navbar() {
 
 	return (
 		<header className="fixed top-0 left-0 right-0 z-50 border-b border-gray-200/80 dark:border-zinc-700/60 bg-white/70 dark:bg-zinc-900/60 backdrop-blur supports-[backdrop-filter]:bg-white/60 supports-[backdrop-filter]:dark:bg-zinc-900/50 transition-colors">
+			{/* First focusable element, so keyboard users can bypass the navbar */}
+			<a
+				href="#main-content"
+				className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-[100] focus:rounded-md focus:bg-sky-600 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white focus:shadow-lg"
+			>
+				{t("a11y.skipToContent")}
+			</a>
 			<div className="w-full px-4 sm:px-6 py-3 flex justify-between items-center">
 				<div className="flex items-center gap-3">
 					<Link href="/" className="flex items-center gap-3">

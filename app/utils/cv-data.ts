@@ -15,6 +15,8 @@ import type {
 	Volunteer,
 } from "../types/cv";
 
+import { DEFAULT_CV_STYLE } from "./style-presets";
+
 export const DEFAULT_COUNTRY_CODE = "Portugal (+351)";
 export const DEFAULT_TEMPLATE: CvTemplate = "professional";
 export const DEFAULT_COLOR: CvColor = "blue";
@@ -68,6 +70,7 @@ export const DEFAULT_RENDER_SETTINGS: CvRenderSettings = {
 		dateFormat: "medium",
 		useThemeColorForLinks: false,
 	},
+	style: DEFAULT_CV_STYLE,
 };
 
 export const EMPTY_PERSONAL_INFO: PersonalInfo = {
