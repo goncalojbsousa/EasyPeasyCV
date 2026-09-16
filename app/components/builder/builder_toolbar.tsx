@@ -13,13 +13,16 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../../contexts/LanguageContext";
+import type { CVType } from "../../types/cv";
 import type {
 	NavigableSectionKey,
 	RecommendedField,
 } from "../../utils/cv-completeness";
 import { useDismissable } from "../../utils/useDismissable";
 import { DragHandle, SortableList } from "../dnd/sortable_list";
+import { CvTypeIcon } from "../ui/cv_type_icon";
 import { FLOATING_SURFACE } from "../ui/floating_surface";
+import { CvTypeMenu } from "./action_menus";
 
 /** Translation keys for the predefined sections' titles. */
 export const SECTION_TITLE_KEYS: Record<string, string> = {
@@ -52,6 +55,9 @@ interface BuilderToolbarProps {
 	onJumpToField: (field: RecommendedField) => void;
 	lastSavedAt: string | null;
 	saveError: boolean;
+	/** Area whose examples the form shows */
+	examplesType: CVType;
+	onExamplesTypeChange: (type: CVType) => void;
 }
 
 const LOCALE_TAGS: Record<string, string> = {
@@ -72,8 +78,12 @@ function useDropdown() {
 const TRIGGER =
 	"inline-flex items-center gap-1.5 h-8 rounded-md px-2.5 text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors";
 
-const PANEL =
-	"absolute left-0 top-full mt-2 z-40 w-[min(320px,calc(100vw-2rem))] rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 shadow-xl";
+const PANEL_BASE =
+	"absolute top-full mt-2 z-40 w-[min(320px,calc(100vw-2rem))] rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 shadow-xl";
+/** Panel opening under a trigger at the toolbar's left end */
+const PANEL = `${PANEL_BASE} left-0`;
+/** Panel opening under a trigger at the toolbar's right end */
+const PANEL_END = `${PANEL_BASE} right-0`;
 
 /* -------------------------------------------------------------------------- */
 
@@ -259,6 +269,61 @@ function CompletenessIndicator({
 	);
 }
 
+/**
+ * Picks the professional area of the form's examples. It sits with the form
+ * tools rather than the CV actions, and says so in its panel, because it only
+ * changes placeholders and labels — never the CV itself.
+ */
+function ExamplesPicker({
+	examplesType,
+	onExamplesTypeChange,
+}: Pick<BuilderToolbarProps, "examplesType" | "onExamplesTypeChange">) {
+	const { t } = useLanguage();
+	const { open, setOpen, ref } = useDropdown();
+	const area = t(`cv.type.${examplesType}`);
+
+	return (
+		<div className="relative" ref={ref}>
+			<button
+				type="button"
+				onClick={() => setOpen((value) => !value)}
+				aria-expanded={open}
+				aria-label={t("examples.current").replace("{area}", area)}
+				title={t("examples.current").replace("{area}", area)}
+				className={TRIGGER}
+			>
+				<CvTypeIcon type={examplesType} />
+				<span className="hidden sm:inline">{t("examples.title")}</span>
+				<ChevronDown
+					className={`w-3.5 h-3.5 transition-transform ${open ? "rotate-180" : ""}`}
+				/>
+			</button>
+
+			{open && (
+				<div className={PANEL_END}>
+					<div className="px-3 pt-3 pb-1">
+						<p className="text-sm font-semibold text-gray-800 dark:text-gray-100">
+							{t("examples.selector")}
+						</p>
+						<p className="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">
+							{t("examples.help")}
+						</p>
+					</div>
+					<div className="max-h-[60vh] overflow-y-auto px-1 pb-1">
+						<CvTypeMenu
+							value={examplesType}
+							onSelect={(type) => {
+								onExamplesTypeChange(type);
+								setOpen(false);
+							}}
+						/>
+					</div>
+				</div>
+			)}
+		</div>
+	);
+}
+
 /** "Saved at 14:32", refreshed every 30s, or a warning when saving failed. */
 function SaveStatus({
 	lastSavedAt,
@@ -312,7 +377,8 @@ function SaveStatus({
 }
 
 /**
- * The strip pinned above the form: where am I, what's missing, is it saved.
+ * The strip pinned above the form: where am I, what's missing, which examples
+ * am I seeing, is it saved.
  *
  * These three answers used to be absent (saving was silent, completeness was
  * only reported after download, and a long CV had no overview), so they share
@@ -335,7 +401,11 @@ export function BuilderToolbar(props: BuilderToolbarProps) {
 					onJumpToField={props.onJumpToField}
 				/>
 			</div>
-			<div className="pr-1.5">
+			<div className="flex items-center gap-2 pr-1.5">
+				<ExamplesPicker
+					examplesType={props.examplesType}
+					onExamplesTypeChange={props.onExamplesTypeChange}
+				/>
 				<SaveStatus
 					lastSavedAt={props.lastSavedAt}
 					saveError={props.saveError}

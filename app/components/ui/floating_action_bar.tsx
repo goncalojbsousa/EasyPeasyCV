@@ -5,7 +5,6 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import { useLanguage } from "../../contexts/LanguageContext";
 import {
-	CvTypeMenu,
 	PdfLanguageMenu,
 	ProfileMenu,
 	XmlDataMenu,
@@ -14,9 +13,8 @@ import type { BuilderActions } from "../builder/builder_actions";
 import { useBuilderDialogs } from "../builder/use_builder_dialogs";
 import { DesignPanel } from "../design/design_panel";
 import { BottomSheet } from "./bottom_sheet";
-import { CvTypeIcon } from "./cv_type_icon";
 
-type Sheet = null | "profile" | "cvType" | "design" | "pdf" | "data";
+type Sheet = null | "profile" | "design" | "pdf" | "data";
 
 interface FloatingActionBarProps extends BuilderActions {
 	/** Opens the full preview (a PDF tab on mobile, a modal otherwise) */
@@ -51,7 +49,7 @@ export function FloatingActionBar(props: FloatingActionBarProps) {
 		onRenameProfile,
 	} = props;
 
-	const { t, cvType } = useLanguage();
+	const { t } = useLanguage();
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [sheet, setSheet] = useState<Sheet>(null);
 	const { dialogs, requestProfileDeletion, onPdfGenerated } =
@@ -129,12 +127,6 @@ export function FloatingActionBar(props: FloatingActionBarProps) {
 							"data",
 							t("data.xml.title"),
 							<Database className="w-5 h-5" />,
-						)}
-
-						{sheetButton(
-							"cvType",
-							t("cv.type.selector"),
-							<CvTypeIcon type={cvType} className="w-5 h-5" />,
 						)}
 					</div>
 				)}
@@ -217,15 +209,6 @@ export function FloatingActionBar(props: FloatingActionBarProps) {
 					onImportXml={onImportXml}
 					onDone={closeSheet}
 				/>
-			</BottomSheet>
-
-			<BottomSheet
-				show={sheet === "cvType"}
-				title={t("cv.type.selector")}
-				onClose={closeSheet}
-				maxWidthClassName="max-w-sm"
-			>
-				<CvTypeMenu onSelected={closeSheet} />
 			</BottomSheet>
 
 			{dialogs}

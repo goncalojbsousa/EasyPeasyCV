@@ -35,6 +35,7 @@ import type {
 	Certification,
 	CustomField,
 	CustomSection,
+	CVType,
 	CvColor,
 	CvData,
 	CvRenderSettings,
@@ -102,7 +103,7 @@ function scrollToElement(element: HTMLElement | null) {
  * preview and the action bars.
  */
 export default function Builder() {
-	const { t, language } = useLanguage();
+	const { t, language, cvType, setCVType } = useLanguage();
 	const isMobile = useIsMobile();
 
 	// ---------------------------------------------------------------- CV state
@@ -125,6 +126,8 @@ export default function Builder() {
 		DEFAULT_PREDEFINED_SECTION_ORDER,
 	);
 	const [customSections, setCustomSections] = useState<CustomSection[]>([]);
+	/** Area whose examples the form shows; stored with the profile. */
+	const [examplesType, setExamplesType] = useState<CVType | undefined>();
 
 	const links = useListState<Link>(() => ({ type: "LinkedIn", value: "" }));
 	const experiences = useListState<Experience>(createEmptyExperience);
@@ -183,6 +186,7 @@ export default function Builder() {
 			color: selectedColor,
 			sectionOrder,
 			settings: renderSettings,
+			cvType: examplesType,
 		}),
 		[
 			personalInfo,
@@ -200,8 +204,12 @@ export default function Builder() {
 			selectedColor,
 			sectionOrder,
 			renderSettings,
+			examplesType,
 		],
 	);
+
+	// The form's placeholders and labels follow the profile being edited.
+	useEffect(() => setCVType(examplesType), [examplesType, setCVType]);
 
 	const hasAnyContent = useMemo(() => hasCvContent(cvData), [cvData]);
 
@@ -221,6 +229,7 @@ export default function Builder() {
 			setLegacyTemplate(data.template);
 			setSelectedColor(data.color || DEFAULT_COLOR);
 			setRenderSettings(data.settings || DEFAULT_RENDER_SETTINGS);
+			setExamplesType(data.cvType);
 
 			const loadedCustomSections = data.customSections || [];
 			setCustomSections(loadedCustomSections);
@@ -706,6 +715,8 @@ export default function Builder() {
 							onJumpToField={jumpToField}
 							lastSavedAt={profiles.lastSavedAt}
 							saveError={profiles.saveError}
+							examplesType={cvType}
+							onExamplesTypeChange={setExamplesType}
 						/>
 
 						{dataLoaded && (

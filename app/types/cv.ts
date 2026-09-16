@@ -250,6 +250,12 @@ export interface CvData {
 	sectionOrder?: SectionKey[];
 	/** Rendering and layout settings persisted with the CV */
 	settings?: CvRenderSettings;
+	/**
+	 * Professional area whose examples the form shows (placeholders and a few
+	 * field labels). Editor-only: it never changes the rendered CV. Unset on CVs
+	 * saved before it was stored per profile.
+	 */
+	cvType?: CVType;
 }
 
 export type FontFamilyOption = "Helvetica" | "Times-Roman" | "Arial" | "Custom";

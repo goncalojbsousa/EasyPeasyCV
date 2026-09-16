@@ -647,7 +647,6 @@ const enTranslations: Record<string, string> = {
 	"extra.features": "Extra Features",
 
 	// CV Type Selector
-	"cv.type.selector": "Resume Type",
 	"cv.type.development": "Development/IT",
 	"cv.type.marketing": "Marketing/Digital",
 	"cv.type.sales": "Sales/Commercial",
@@ -1235,6 +1234,11 @@ const enTranslations: Record<string, string> = {
 	"design.custom.own": "Has its own style.",
 	"design.custom.useDefault": "Use the default",
 	"design.custom.followsDefault": "Follows the default style.",
+	"examples.title": "Examples",
+	"examples.selector": "Examples for your field",
+	"examples.help":
+		"Only changes the field examples and hints, for this profile. Your resume itself is not changed.",
+	"examples.current": "Examples: {area}",
 };
 
 export default enTranslations;
