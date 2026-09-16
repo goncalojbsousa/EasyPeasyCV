@@ -4,7 +4,6 @@ import { Database, FileText, Palette, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLanguage } from "../../contexts/LanguageContext";
 import {
-	CvTypeMenu,
 	PdfLanguageMenu,
 	ProfileMenu,
 	XmlDataMenu,
@@ -12,11 +11,10 @@ import {
 import type { BuilderActions } from "../builder/builder_actions";
 import { useBuilderDialogs } from "../builder/use_builder_dialogs";
 import { DesignPanel } from "../design/design_panel";
-import { CvTypeIcon } from "./cv_type_icon";
 import { FLOATING_SURFACE } from "./floating_surface";
 import { PopoverMenu } from "./popover_menu";
 
-type OpenMenu = null | "profile" | "cvType" | "design" | "pdf" | "data";
+type OpenMenu = null | "profile" | "design" | "pdf" | "data";
 
 /**
  * Hides the bar while the footer is on screen, so it never covers it.
@@ -65,7 +63,7 @@ export function BottomActionBar(props: BuilderActions) {
 		onRenameProfile,
 	} = props;
 
-	const { t, cvType } = useLanguage();
+	const { t } = useLanguage();
 	const [openMenu, setOpenMenu] = useState<OpenMenu>(null);
 	const isFooterVisible = useFooterVisible();
 	const { dialogs, requestProfileDeletion, onPdfGenerated } =
@@ -117,15 +115,6 @@ export function BottomActionBar(props: BuilderActions) {
 										}}
 										onDone={close}
 									/>
-								</PopoverMenu>
-
-								<PopoverMenu
-									{...menuState("cvType")}
-									icon={<CvTypeIcon type={cvType} />}
-									label={t(`cv.type.${cvType}`)}
-									panelTitle={t("cv.type.selector")}
-								>
-									<CvTypeMenu onSelected={close} />
 								</PopoverMenu>
 
 								<Divider />

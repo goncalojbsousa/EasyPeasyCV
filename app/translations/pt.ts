@@ -637,7 +637,6 @@ const ptTranslations: Record<string, string> = {
 	"extra.features": "Funcionalidades Extra",
 
 	// CV Type Selector
-	"cv.type.selector": "Tipo de Currículo",
 	"cv.type.development": "Desenvolvimento/IT",
 	"cv.type.marketing": "Marketing/Digital",
 	"cv.type.sales": "Vendas/Comercial",
@@ -1231,6 +1230,11 @@ const ptTranslations: Record<string, string> = {
 	"design.custom.own": "Tem estilo próprio.",
 	"design.custom.useDefault": "Usar o estilo por omissão",
 	"design.custom.followsDefault": "Segue o estilo por omissão.",
+	"examples.title": "Exemplos",
+	"examples.selector": "Exemplos para a área",
+	"examples.help":
+		"Muda apenas os exemplos e sugestões dos campos, neste perfil. O teu CV não é alterado.",
+	"examples.current": "Exemplos: {area}",
 };
 
 export default ptTranslations;

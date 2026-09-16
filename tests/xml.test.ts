@@ -408,6 +408,7 @@ const cases: Array<[string, CvData]> = [
 			];
 			data.template = "classic";
 			data.color = "purple";
+			data.cvType = "health";
 			data.settings = customSettings();
 			data.sectionOrder = [
 				...(data.sectionOrder || []),
@@ -430,6 +431,15 @@ describe("CV XML round-trip", () => {
 			assert.deepStrictEqual(secondImported, imported);
 		});
 	}
+
+	test("ignores an unknown examples area", () => {
+		const xml = cvDataToXml(
+			withCv((data) => {
+				data.cvType = "health";
+			}),
+		).replace("<cvType>health</cvType>", "<cvType>astronaut</cvType>");
+		assert.equal(xmlToCvData(xml).cvType, undefined);
+	});
 
 	test("imports legacy v1 XML without requiring a version attribute", () => {
 		const legacyXml = `<?xml version="1.0" encoding="UTF-8"?>

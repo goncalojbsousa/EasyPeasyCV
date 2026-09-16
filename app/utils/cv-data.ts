@@ -147,7 +147,8 @@ export function hasCvConfigurationChanges(data: CvData): boolean {
 		(data.color || DEFAULT_COLOR) !== DEFAULT_COLOR ||
 		!deepEqual(sectionOrder, DEFAULT_PREDEFINED_SECTION_ORDER) ||
 		(data.settings !== undefined &&
-			!deepEqual(data.settings, DEFAULT_RENDER_SETTINGS))
+			!deepEqual(data.settings, DEFAULT_RENDER_SETTINGS)) ||
+		data.cvType !== undefined
 	);
 }
 

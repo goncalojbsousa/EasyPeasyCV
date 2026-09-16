@@ -888,7 +888,6 @@ const esTranslations: Record<string, string> = {
 		"Comprende cómo funcionan los sistemas ATS",
 
 	// CV Type Selector
-	"cv.type.selector": "Tipo de Currículum",
 	"cv.type.development": "Desarrollo/IT",
 	"cv.type.marketing": "Marketing/Digital",
 	"cv.type.sales": "Ventas/Comercial",
@@ -1273,6 +1272,11 @@ const esTranslations: Record<string, string> = {
 	"design.custom.own": "Tiene estilo propio.",
 	"design.custom.useDefault": "Usar el predeterminado",
 	"design.custom.followsDefault": "Sigue el estilo predeterminado.",
+	"examples.title": "Ejemplos",
+	"examples.selector": "Ejemplos para tu área",
+	"examples.help":
+		"Solo cambia los ejemplos y sugerencias de los campos, en este perfil. Tu currículum no se modifica.",
+	"examples.current": "Ejemplos: {area}",
 };
 
 export default esTranslations;

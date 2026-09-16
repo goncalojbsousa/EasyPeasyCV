@@ -4,6 +4,7 @@ import { useLocale } from "next-intl";
 import {
 	createContext,
 	type ReactNode,
+	useCallback,
 	useContext,
 	useEffect,
 	useState,
@@ -12,6 +13,8 @@ import { usePathname, useRouter } from "../../navigation";
 import { getTranslations } from "../translations";
 import type { CVType } from "../types/cv";
 import { DEFAULT_CV_TYPE, isCvType } from "../utils/cv-types";
+
+const LEGACY_CV_TYPE_KEY = "cv-builder-type";
 
 // Types for available languages
 export type Language = "pt" | "en" | "es" | "br";
@@ -23,8 +26,14 @@ interface LanguageContextType {
 	language: Language;
 
 	setLanguage: (lang: Language) => void;
+	/** Professional area whose examples the form shows */
 	cvType: CVType;
-	setCVType: (type: CVType) => void;
+	/**
+	 * Show the examples of `type`. The choice is stored per profile by the
+	 * builder; `undefined` (a profile that never picked one) falls back to the
+	 * area chosen back when it was a browser-wide preference.
+	 */
+	setCVType: (type: CVType | undefined) => void;
 	t: (key: string) => string;
 }
 
@@ -48,20 +57,18 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 	const router = useRouter();
 	const pathname = usePathname();
 
-	const [cvType, setCVTypeState] = useState<CVType>(DEFAULT_CV_TYPE);
+	const [selectedCvType, setSelectedCvType] = useState<CVType | undefined>();
+	const [legacyCvType, setLegacyCvType] = useState<CVType>(DEFAULT_CV_TYPE);
+	const cvType = selectedCvType ?? legacyCvType;
 
-	// Effect: Load CV type from localStorage on initialization.
+	// The area used to be one browser-wide preference; it is only read now, as
+	// the fallback for profiles saved before the choice moved into each profile.
 	useEffect(() => {
 		try {
-			// Only run in browser
-			if (typeof window !== "undefined") {
-				const savedCVType = localStorage.getItem("cv-builder-type");
-				if (isCvType(savedCVType)) {
-					setCVTypeState(savedCVType);
-				}
-			}
-		} catch (error) {
-			console.error("Error initializing settings:", error);
+			const saved = localStorage.getItem(LEGACY_CV_TYPE_KEY);
+			if (isCvType(saved)) setLegacyCvType(saved);
+		} catch {
+			// Storage unavailable: keep the default area
 		}
 	}, []);
 
@@ -71,11 +78,10 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 		router.replace(pathname, { locale: lang });
 	};
 
-	// Change CV type and persist to localStorage
-	const setCVType = (type: CVType) => {
-		setCVTypeState(type);
-		localStorage.setItem("cv-builder-type", type);
-	};
+	const setCVType = useCallback(
+		(type: CVType | undefined) => setSelectedCvType(type),
+		[],
+	);
 
 	/**
 	 * Translation function

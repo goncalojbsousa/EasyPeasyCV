@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { useRef, useState } from "react";
 import { useLanguage } from "../../contexts/LanguageContext";
-import type { CvData } from "../../types/cv";
+import type { CVType, CvData } from "../../types/cv";
 import { CV_TYPES } from "../../utils/cv-types";
 import type { CvProfileMeta } from "../../utils/useCvProfiles";
 import PdfDownloadButton, {
@@ -35,8 +35,14 @@ const ICON_BUTTON =
 
 // ---------------------------------------------------------------- CV type menu
 
-export function CvTypeMenu({ onSelected }: { onSelected?: () => void }) {
-	const { t, cvType, setCVType } = useLanguage();
+export function CvTypeMenu({
+	value,
+	onSelect,
+}: {
+	value: CVType;
+	onSelect: (type: CVType) => void;
+}) {
+	const { t } = useLanguage();
 
 	return (
 		<div className="py-1">
@@ -44,11 +50,8 @@ export function CvTypeMenu({ onSelected }: { onSelected?: () => void }) {
 				<MenuItem
 					key={type}
 					icon={<CvTypeIcon type={type} />}
-					selected={cvType === type}
-					onClick={() => {
-						setCVType(type);
-						onSelected?.();
-					}}
+					selected={value === type}
+					onClick={() => onSelect(type)}
 				>
 					{t(`cv.type.${type}`)}
 				</MenuItem>

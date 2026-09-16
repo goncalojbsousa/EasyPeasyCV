@@ -19,6 +19,7 @@ import type {
 } from "../types/cv";
 import { STYLED_SECTION_KEYS } from "../types/cv";
 import { DEFAULT_COUNTRY_CODE, DEFAULT_RENDER_SETTINGS } from "./cv-data";
+import { isCvType } from "./cv-types";
 import { DEFAULT_CV_STYLE } from "./style-presets";
 
 export const CV_XML_VERSION = "2";
@@ -740,6 +741,7 @@ export function cvDataToXml(data: CvData): string {
   ${el("template", data.template || "")}
   ${el("color", data.color || "")}
   ${settingsToXml(data.settings)}
+  ${data.cvType ? el("cvType", data.cvType) : ""}
 </cv>`;
 	return xml;
 }
@@ -935,6 +937,7 @@ export function xmlToCvData(xml: string): CvData {
 	const template = textContent(cvEl, "template") as CvData["template"];
 	const color = textContent(cvEl, "color") as CvData["color"];
 	const settings = parseSettings(cvEl);
+	const cvType = textContent(cvEl, "cvType");
 
 	return {
 		personalInfo,
@@ -952,5 +955,6 @@ export function xmlToCvData(xml: string): CvData {
 		template,
 		color,
 		settings,
+		...(isCvType(cvType) ? { cvType } : {}),
 	};
 }
