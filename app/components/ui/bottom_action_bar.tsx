@@ -141,6 +141,7 @@ export function BottomActionBar(props: BuilderActions) {
 										onColorChange={onColorChange}
 										onResetSectionOrder={onResetSectionOrder}
 										legacyTemplate={data.template}
+										customSections={data.customSections}
 									/>
 								</PopoverMenu>
 

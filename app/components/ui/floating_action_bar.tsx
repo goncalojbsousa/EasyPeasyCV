@@ -181,6 +181,7 @@ export function FloatingActionBar(props: FloatingActionBarProps) {
 					onColorChange={onColorChange}
 					onResetSectionOrder={onResetSectionOrder}
 					legacyTemplate={data.template}
+					customSections={data.customSections}
 				/>
 			</BottomSheet>
 

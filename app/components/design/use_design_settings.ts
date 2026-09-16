@@ -38,6 +38,10 @@ export interface DesignController {
 	patchSectionTitle: (patch: Partial<CvStyleSettings["sectionTitle"]>) => void;
 	patchHeaderStyle: (patch: Partial<CvStyleSettings["header"]>) => void;
 	setEntryVariant: (key: StyledSectionKey, variant: EntryVariant) => void;
+	/** Gives one custom section its own entry presentation */
+	setCustomSectionVariant: (sectionId: string, variant: EntryVariant) => void;
+	/** Makes one custom section follow the custom-section default again */
+	clearCustomSectionVariant: (sectionId: string) => void;
 
 	/** The preset the current style matches, or null once customised */
 	activePreset: CvTemplate | null;
@@ -100,6 +104,24 @@ export function useDesignSettings(
 					...style,
 					entries: { ...style.entries, [key]: variant },
 				}),
+			setCustomSectionVariant: (sectionId, variant) =>
+				commitStyle({
+					...style,
+					customSectionEntries: {
+						...style.customSectionEntries,
+						[sectionId]: variant,
+					},
+				}),
+			clearCustomSectionVariant: (sectionId) => {
+				const { [sectionId]: _removed, ...rest } =
+					style.customSectionEntries ?? {};
+				const { customSectionEntries: _all, ...withoutOverrides } = style;
+				commitStyle(
+					Object.keys(rest).length > 0
+						? { ...withoutOverrides, customSectionEntries: rest }
+						: withoutOverrides,
+				);
+			},
 
 			activePreset: matchPreset(style),
 			applyPreset: (preset) => commitStyle(cloneStyle(STYLE_PRESETS[preset])),

@@ -1218,7 +1218,6 @@ const esTranslations: Record<string, string> = {
 	"design.sections.title": "Estilo por sección",
 	"design.sections.help": "Cada sección puede presentarse de forma diferente.",
 	"design.sections.entryStyle": "Presentación de las entradas",
-	"design.sections.custom": "Secciones personalizadas",
 	"design.entries.plain": "Simple",
 	"design.entries.card": "Con barra",
 	"design.entries.timeline": "Cronología",
@@ -1265,6 +1264,15 @@ const esTranslations: Record<string, string> = {
 	"navigator.reorder": "Arrastrar para reordenar",
 	"navigator.filled": "Completada",
 	"navigator.empty": "Sin completar",
+
+	// Individually styled custom sections
+	"design.custom.title": "Secciones personalizadas",
+	"design.custom.help":
+		"Define un estilo predeterminado y, si quieres, dale a cada sección su propio estilo.",
+	"design.sections.customDefault": "Estilo predeterminado",
+	"design.custom.own": "Tiene estilo propio.",
+	"design.custom.useDefault": "Usar el predeterminado",
+	"design.custom.followsDefault": "Sigue el estilo predeterminado.",
 };
 
 export default esTranslations;

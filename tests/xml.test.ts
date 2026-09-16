@@ -290,6 +290,22 @@ const cases: Array<[string, CvData]> = [
 		}),
 	],
 	[
+		"custom sections with their own styles",
+		withCv((data) => {
+			data.customSections = [
+				{ id: "awards", title: "Awards", fields: [] },
+				{ id: "talks", title: "Talks", fields: [] },
+			];
+			data.settings = {
+				...clone(DEFAULT_RENDER_SETTINGS),
+				style: {
+					...customStyle(),
+					customSectionEntries: { awards: "timeline", talks: "card" },
+				},
+			};
+		}),
+	],
+	[
 		"classic preset style",
 		withCv((data) => {
 			data.settings = {

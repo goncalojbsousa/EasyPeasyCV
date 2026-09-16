@@ -1183,7 +1183,6 @@ const enTranslations: Record<string, string> = {
 	"design.sections.title": "Per-section style",
 	"design.sections.help": "Each section can be presented differently.",
 	"design.sections.entryStyle": "Entry presentation",
-	"design.sections.custom": "Custom sections",
 	"design.entries.plain": "Plain",
 	"design.entries.card": "Accent bar",
 	"design.entries.timeline": "Timeline",
@@ -1227,6 +1226,15 @@ const enTranslations: Record<string, string> = {
 	"navigator.reorder": "Drag to reorder",
 	"navigator.filled": "Filled in",
 	"navigator.empty": "Not filled in",
+
+	// Individually styled custom sections
+	"design.custom.title": "Custom sections",
+	"design.custom.help":
+		"Set a default style, and give any section its own style if you like.",
+	"design.sections.customDefault": "Default style",
+	"design.custom.own": "Has its own style.",
+	"design.custom.useDefault": "Use the default",
+	"design.custom.followsDefault": "Follows the default style.",
 };
 
 export default enTranslations;

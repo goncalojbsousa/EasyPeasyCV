@@ -562,8 +562,9 @@ export default function Builder() {
 			...(sectionKey === "professional_summary"
 				? {}
 				: {
-						onOpenStyle: () =>
-							setStyleTarget(isCustom ? "custom" : (sectionKey as StyleTarget)),
+						// A custom section is targeted by its own key, so each one is
+						// styled individually.
+						onOpenStyle: () => setStyleTarget(sectionKey as StyleTarget),
 					}),
 			...(isCustom
 				? {
@@ -815,6 +816,11 @@ export default function Builder() {
 			{/* Style options for one section, opened from its own header */}
 			<SectionStyleSheet
 				target={styleTarget}
+				customSectionTitle={
+					styleTarget?.startsWith("custom_")
+						? sectionLabel(styleTarget)
+						: undefined
+				}
 				settings={renderSettings}
 				onSettingsChange={setRenderSettings}
 				color={selectedColor}

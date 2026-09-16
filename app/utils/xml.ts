@@ -8,6 +8,7 @@ import type {
 	CvRenderSettings,
 	CvStyleSettings,
 	Education,
+	EntryVariant,
 	Experience,
 	Language,
 	Link,
@@ -272,6 +273,22 @@ function styleToXml(style?: CvStyleSettings): string {
 		el(ENTRY_VARIANT_TAGS[key], style.entries[key]),
 	).join("\n        ");
 
+	// Only written when some custom section has a style of its own, so CVs
+	// without one keep exporting exactly as before.
+	const customStyles = Object.entries(style.customSectionEntries ?? {});
+	const customStylesXml = customStyles.length
+		? `<customSectionStyles>
+        ${customStyles
+					.map(
+						([sectionId, variant]) => `<customSectionStyle>
+          ${el("styledSectionId", sectionId)}
+          ${el("styledSectionVariant", variant)}
+        </customSectionStyle>`,
+					)
+					.join("\n        ")}
+      </customSectionStyles>`
+		: "";
+
 	return `<presentation>
       ${el("titleVariant", style.sectionTitle.variant)}
       ${el("titleAlign", style.sectionTitle.align)}
@@ -286,6 +303,7 @@ function styleToXml(style?: CvStyleSettings): string {
       <entryVariants>
         ${entries}
       </entryVariants>
+      ${customStylesXml}
     </presentation>`;
 }
 
@@ -380,6 +398,19 @@ function parseStyle(settingsEl: XmlElementLike): CvStyleSettings | undefined {
 		]),
 	) as CvStyleSettings["entries"];
 
+	const customSectionEntries = Object.fromEntries(
+		Array.from(
+			firstElement(el, "customSectionStyles")?.getElementsByTagName(
+				"customSectionStyle",
+			) ?? [],
+		)
+			.map((item) => [
+				textContent(item, "styledSectionId"),
+				textContent(item, "styledSectionVariant") as EntryVariant,
+			])
+			.filter(([sectionId, variant]) => sectionId && variant),
+	) as Record<string, EntryVariant>;
+
 	return {
 		sectionTitle: {
 			variant: pick(el, "titleVariant", defaults.sectionTitle.variant),
@@ -396,6 +427,9 @@ function parseStyle(settingsEl: XmlElementLike): CvStyleSettings | undefined {
 		languages: pick(el, "languagesVariant", defaults.languages),
 		skills: pick(el, "skillsVariant", defaults.skills),
 		entries,
+		...(Object.keys(customSectionEntries).length > 0
+			? { customSectionEntries }
+			: {}),
 	};
 }
 

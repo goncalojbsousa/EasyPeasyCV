@@ -21,15 +21,19 @@ import {
 	Segmented,
 	Slider,
 } from "./controls";
+import type { CustomSectionSummary } from "./design_panel";
 import {
+	CustomSectionVariantPicker,
 	EntryVariantPicker,
 	LanguagesVariantPicker,
 	SkillsVariantPicker,
 } from "./section_style_options";
 import type { DesignController } from "./use_design_settings";
 
-/** Sections that render a list of entries, in the order they appear in the CV. */
-const ENTRY_SECTIONS: StyledSectionKey[] = STYLED_SECTION_KEYS;
+/** Predefined list sections; custom sections get their own group below. */
+const ENTRY_SECTIONS: StyledSectionKey[] = STYLED_SECTION_KEYS.filter(
+	(key) => key !== "custom",
+);
 
 /**
  * Section headings (global), dates and bullets (global), and the per-section
@@ -38,7 +42,13 @@ const ENTRY_SECTIONS: StyledSectionKey[] = STYLED_SECTION_KEYS;
  * The global/per-section split is made explicit by the group headings, so the
  * user can tell at a glance which choices affect the whole CV.
  */
-export function SectionsTab({ design }: { design: DesignController }) {
+export function SectionsTab({
+	design,
+	customSections = [],
+}: {
+	design: DesignController;
+	customSections?: CustomSectionSummary[];
+}) {
 	const { t } = useLanguage();
 	const { sections } = design.settings;
 	const style = design.style;
@@ -180,6 +190,20 @@ export function SectionsTab({ design }: { design: DesignController }) {
 					))}
 					<SkillsVariantPicker design={design} />
 					<LanguagesVariantPicker design={design} />
+				</div>
+			</Group>
+
+			<Group title={t("design.custom.title")} help={t("design.custom.help")}>
+				<div className="space-y-3">
+					<EntryVariantPicker sectionKey="custom" design={design} />
+					{customSections.map((section) => (
+						<CustomSectionVariantPicker
+							key={section.id}
+							sectionId={section.id}
+							title={section.title || t("custom.section.default")}
+							design={design}
+						/>
+					))}
 				</div>
 			</Group>
 		</div>

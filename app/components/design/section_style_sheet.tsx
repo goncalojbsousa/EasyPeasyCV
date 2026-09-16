@@ -2,6 +2,7 @@
 
 import { useLanguage } from "../../contexts/LanguageContext";
 import type {
+	CustomSectionKey,
 	CvColor,
 	CvRenderSettings,
 	CvTemplate,
@@ -9,6 +10,7 @@ import type {
 } from "../../types/cv";
 import { BottomSheet } from "../ui/bottom_sheet";
 import {
+	CustomSectionVariantPicker,
 	EntryVariantPicker,
 	LanguagesVariantPicker,
 	SECTION_LABEL_KEYS,
@@ -18,11 +20,16 @@ import { useDesignSettings } from "./use_design_settings";
 
 /**
  * A section whose style can be tweaked from its own header. Skills and
- * languages are not entry lists, so they have their own pickers.
+ * languages are not entry lists, so they have their own pickers; a custom
+ * section is addressed by its own key so it can be styled individually.
  */
-export type StyleTarget = StyledSectionKey | "technical_skills" | "languages";
+export type StyleTarget =
+	| Exclude<StyledSectionKey, "custom">
+	| "technical_skills"
+	| "languages"
+	| CustomSectionKey;
 
-const TARGET_LABEL_KEYS: Record<StyleTarget, string> = {
+const TARGET_LABEL_KEYS: Record<string, string> = {
 	...SECTION_LABEL_KEYS,
 	technical_skills: "section.technical.skills",
 	languages: "section.languages",
@@ -31,6 +38,8 @@ const TARGET_LABEL_KEYS: Record<StyleTarget, string> = {
 interface SectionStyleSheetProps {
 	/** The section to customise, or null when the sheet is closed */
 	target: StyleTarget | null;
+	/** Display title of a custom section target, as the user typed it */
+	customSectionTitle?: string;
 	settings?: CvRenderSettings;
 	onSettingsChange: (settings: CvRenderSettings) => void;
 	color: CvColor;
@@ -49,6 +58,7 @@ interface SectionStyleSheetProps {
  */
 export function SectionStyleSheet({
 	target,
+	customSectionTitle,
 	settings,
 	onSettingsChange,
 	color,
@@ -65,26 +75,51 @@ export function SectionStyleSheet({
 		legacyTemplate,
 	);
 
+	const customSectionId = target?.startsWith("custom_")
+		? target.slice("custom_".length)
+		: null;
+	const title = customSectionId
+		? customSectionTitle || t("custom.section.default")
+		: target
+			? t(TARGET_LABEL_KEYS[target])
+			: "";
+
+	const renderPicker = () => {
+		if (!target) return null;
+		if (customSectionId) {
+			return (
+				<CustomSectionVariantPicker
+					sectionId={customSectionId}
+					title={t("design.sections.entryStyle")}
+					design={design}
+				/>
+			);
+		}
+		if (target === "technical_skills") {
+			return <SkillsVariantPicker design={design} />;
+		}
+		if (target === "languages") {
+			return <LanguagesVariantPicker design={design} />;
+		}
+		return (
+			<EntryVariantPicker
+				sectionKey={target as StyledSectionKey}
+				design={design}
+				label={t("design.sections.entryStyle")}
+			/>
+		);
+	};
+
 	return (
 		<BottomSheet
 			show={target !== null}
-			title={target ? t(TARGET_LABEL_KEYS[target]) : ""}
+			title={title}
 			onClose={onClose}
 			maxWidthClassName="max-w-sm"
 		>
 			{target && (
 				<div className="px-4 py-3 space-y-2">
-					{target === "technical_skills" && (
-						<SkillsVariantPicker design={design} />
-					)}
-					{target === "languages" && <LanguagesVariantPicker design={design} />}
-					{target !== "technical_skills" && target !== "languages" && (
-						<EntryVariantPicker
-							sectionKey={target}
-							design={design}
-							label={t("design.sections.entryStyle")}
-						/>
-					)}
+					{renderPicker()}
 					<p className="text-[10px] text-gray-500 dark:text-gray-400">
 						{t("design.section.sheet.help")}
 					</p>

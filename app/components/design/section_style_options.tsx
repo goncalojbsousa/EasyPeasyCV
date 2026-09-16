@@ -8,6 +8,7 @@ import type {
 	SkillsVariant,
 	StyledSectionKey,
 } from "../../types/cv";
+import { getCustomSectionVariant } from "../../utils/style-presets";
 import { OptionGrid } from "./controls";
 import type { DesignController } from "./use_design_settings";
 
@@ -18,19 +19,7 @@ export const SECTION_LABEL_KEYS: Record<StyledSectionKey, string> = {
 	certifications: "section.certifications",
 	projects: "section.projects",
 	volunteer: "section.volunteer",
-	custom: "design.sections.custom",
-};
-
-/**
- * Which form section maps onto which style key, so the per-section shortcut in
- * the builder form knows what to offer. Summary has no variants of its own.
- */
-export const FORM_SECTION_STYLE_KEYS: Record<string, StyledSectionKey> = {
-	professional_experience: "professional_experience",
-	academic_education: "academic_education",
-	certifications: "certifications",
-	projects: "projects",
-	volunteer: "volunteer",
+	custom: "design.sections.customDefault",
 };
 
 function useEntryChoices() {
@@ -72,6 +61,57 @@ export function EntryVariantPicker({
 			value={design.style.entries[sectionKey]}
 			onChange={(variant) => design.setEntryVariant(sectionKey, variant)}
 		/>
+	);
+}
+
+/**
+ * The entry-presentation picker for one custom section.
+ *
+ * A custom section follows the custom-section default until the user picks a
+ * variant for it; from then on it keeps its own choice, and can be pointed back
+ * at the default so it tracks future changes to it again.
+ */
+export function CustomSectionVariantPicker({
+	sectionId,
+	title,
+	design,
+}: {
+	sectionId: string;
+	title: string;
+	design: DesignController;
+}) {
+	const { t } = useLanguage();
+	const choices = useEntryChoices();
+	const ownVariant = design.style.customSectionEntries?.[sectionId];
+
+	return (
+		<div className="space-y-1">
+			<OptionGrid
+				label={title}
+				group="entries"
+				choices={choices}
+				value={getCustomSectionVariant(design.style, sectionId)}
+				onChange={(variant) =>
+					design.setCustomSectionVariant(sectionId, variant)
+				}
+			/>
+			<p className="flex flex-wrap items-center gap-x-2 text-[10px] text-gray-500 dark:text-gray-400">
+				{ownVariant ? (
+					<>
+						<span>{t("design.custom.own")}</span>
+						<button
+							type="button"
+							onClick={() => design.clearCustomSectionVariant(sectionId)}
+							className="font-medium text-sky-700 dark:text-sky-300 hover:underline"
+						>
+							{t("design.custom.useDefault")}
+						</button>
+					</>
+				) : (
+					<span>{t("design.custom.followsDefault")}</span>
+				)}
+			</p>
+		</div>
 	);
 }
 

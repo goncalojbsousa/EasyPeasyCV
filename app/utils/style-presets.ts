@@ -77,7 +77,33 @@ export function cloneStyle(style: CvStyleSettings): CvStyleSettings {
 		entries: { ...style.entries },
 		languages: style.languages,
 		skills: style.skills,
+		...(style.customSectionEntries
+			? { customSectionEntries: { ...style.customSectionEntries } }
+			: {}),
 	};
+}
+
+/**
+ * The entry presentation of one custom section: its own choice when it has
+ * one, otherwise the default for custom sections.
+ */
+export function getCustomSectionVariant(
+	style: CvStyleSettings,
+	sectionId: string,
+): EntryVariant {
+	return style.customSectionEntries?.[sectionId] ?? style.entries.custom;
+}
+
+/** Whether two per-section override maps hold the same choices. */
+function overridesEqual(
+	a: Record<string, EntryVariant> = {},
+	b: Record<string, EntryVariant> = {},
+): boolean {
+	const aKeys = Object.keys(a);
+	return (
+		aKeys.length === Object.keys(b).length &&
+		aKeys.every((key) => a[key] === b[key])
+	);
 }
 
 /**
@@ -110,7 +136,8 @@ function stylesEqual(a: CvStyleSettings, b: CvStyleSettings): boolean {
 		a.bullets === b.bullets &&
 		a.languages === b.languages &&
 		a.skills === b.skills &&
-		STYLED_SECTION_KEYS.every((key) => a.entries[key] === b.entries[key])
+		STYLED_SECTION_KEYS.every((key) => a.entries[key] === b.entries[key]) &&
+		overridesEqual(a.customSectionEntries, b.customSectionEntries)
 	);
 }
 
