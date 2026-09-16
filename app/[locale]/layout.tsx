@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 import { routing } from "../../navigation";
 import { LanguageProvider } from "../contexts/LanguageContext";
 import type { Locale } from "../translations";
+import { OG_LOCALES, SITE_URL } from "../utils/page-metadata";
 import "../globals.css";
 import type { Metadata } from "next";
 import Script from "next/script";
@@ -16,14 +17,6 @@ const inter = Inter({ subsets: ["latin"] });
 export function generateStaticParams() {
 	return routing.locales.map((locale) => ({ locale }));
 }
-
-/** BCP 47 tags used in Open Graph metadata. */
-const OG_LOCALES: Record<Locale, string> = {
-	en: "en_US",
-	pt: "pt_PT",
-	br: "pt_BR",
-	es: "es_ES",
-};
 
 const metaByLang: Record<Locale, { title: string; description: string }> = {
 	en: {
@@ -57,7 +50,7 @@ export async function generateMetadata({
 	const meta = metaByLang[locale as Locale] || metaByLang.en;
 
 	return {
-		metadataBase: new URL("https://www.easypeasycv.com"),
+		metadataBase: new URL(SITE_URL),
 		title: {
 			default: meta.title,
 			template: "%s | EasyPeasyCV",
@@ -80,17 +73,13 @@ export async function generateMetadata({
 		openGraph: {
 			title: meta.title,
 			description: meta.description,
-			url: `https://www.easypeasycv.com/${locale}`,
+			url: `${SITE_URL}/${locale}`,
 			siteName: "EasyPeasyCV",
-			images: [
-				{
-					url: "https://www.easypeasycv.com/socialmedia.webp",
-					width: 1200,
-					height: 630,
-					alt: "EasyPeasyCV - Free, Secure CV Builder",
-				},
-			],
+			// The image comes from ./opengraph-image.tsx, rendered per locale.
 			locale: OG_LOCALES[locale as Locale] ?? OG_LOCALES.en,
+			alternateLocale: Object.entries(OG_LOCALES)
+				.filter(([code]) => code !== locale)
+				.map(([, tag]) => tag),
 			type: "website",
 		},
 		twitter: {
@@ -98,7 +87,6 @@ export async function generateMetadata({
 			site: "@easypeasycv",
 			title: meta.title,
 			description: meta.description,
-			images: ["https://www.easypeasycv.com/socialmedia.webp"],
 		},
 		alternates: {
 			canonical: `/${locale}`,
