@@ -13,6 +13,7 @@ import type { BuilderActions } from "../builder/builder_actions";
 import { useBuilderDialogs } from "../builder/use_builder_dialogs";
 import { DesignPanel } from "../design/design_panel";
 import { CvTypeIcon } from "./cv_type_icon";
+import { FLOATING_SURFACE } from "./floating_surface";
 import { PopoverMenu } from "./popover_menu";
 
 type OpenMenu = null | "profile" | "cvType" | "design" | "pdf" | "data";
@@ -90,7 +91,9 @@ export function BottomActionBar(props: BuilderActions) {
 						: "opacity-100"
 				}`}
 			>
-				<div className="inline-flex max-w-[calc(100vw-2rem)] rounded-xl border border-gray-200/80 dark:border-zinc-700/60 shadow-xl ring-1 ring-black/10 bg-white/70 dark:bg-zinc-900/60 backdrop-blur supports-[backdrop-filter]:bg-white/60 supports-[backdrop-filter]:dark:bg-zinc-900/50">
+				<div
+					className={`inline-flex max-w-[calc(100vw-2rem)] ${FLOATING_SURFACE}`}
+				>
 					<div className="px-2.5 py-2">
 						<div className="overflow-x-auto overflow-y-visible no-scrollbar">
 							<div className="inline-flex items-center gap-1.5 whitespace-nowrap min-w-max">

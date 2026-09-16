@@ -19,6 +19,7 @@ import type {
 } from "../../utils/cv-completeness";
 import { useDismissable } from "../../utils/useDismissable";
 import { DragHandle, SortableList } from "../dnd/sortable_list";
+import { FLOATING_SURFACE } from "../ui/floating_surface";
 
 /** Translation keys for the predefined sections' titles. */
 export const SECTION_TITLE_KEYS: Record<string, string> = {
@@ -319,7 +320,9 @@ function SaveStatus({
  */
 export function BuilderToolbar(props: BuilderToolbarProps) {
 	return (
-		<div className="sticky top-[4.5rem] z-30 -mx-1 flex items-center justify-between gap-2 rounded-xl border border-gray-200/80 dark:border-zinc-700/60 bg-white/85 dark:bg-zinc-900/80 backdrop-blur px-2 py-1.5 shadow-sm">
+		<div
+			className={`sticky top-[4.5rem] z-30 -mx-1 flex items-center justify-between gap-2 px-2 py-1.5 ${FLOATING_SURFACE}`}
+		>
 			<div className="flex items-center gap-1">
 				<SectionNavigator
 					fixedSection={props.fixedSection}
