@@ -9,15 +9,19 @@ import { PageCount } from "./pdf/page_count";
 import { PdfCanvasViewer } from "./pdf/pdf_canvas_viewer";
 
 interface LivePdfPaneProps extends CvRenderProps {
-	/** Turns on single-page mode, offered when the CV spills onto more pages */
-	onFitToOnePage?: () => void;
+	/** Turns on the Super Compact layout, offered when the CV spills onto more pages */
+	onEnableCompactMode?: () => void;
 }
 
 /**
  * Live PDF preview rendered next to the form on desktop. Regenerates the PDF
  * shortly after the CV stops changing.
  */
-export function LivePdfPane({ data, lang, onFitToOnePage }: LivePdfPaneProps) {
+export function LivePdfPane({
+	data,
+	lang,
+	onEnableCompactMode,
+}: LivePdfPaneProps) {
 	const { t } = useLanguage();
 	// The pane is only laid out from the `lg` breakpoint; below it, skip the
 	// (expensive) rendering entirely. Smaller screens use the preview modal.
@@ -73,8 +77,8 @@ export function LivePdfPane({ data, lang, onFitToOnePage }: LivePdfPaneProps) {
 				<div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-gray-200 dark:border-zinc-800">
 					<PageCount
 						pageCount={pageCount}
-						singlePageMode={data.settings?.layout.singlePageMode}
-						onFitToOnePage={onFitToOnePage}
+						compactMode={data.settings?.layout.singlePageMode}
+						onEnableCompactMode={onEnableCompactMode}
 					/>
 					{loading && (
 						<output className="inline-flex">

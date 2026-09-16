@@ -24,8 +24,8 @@ interface PdfPreviewProps extends CvRenderProps {
 	show?: boolean;
 	/** Function to close the preview */
 	onClose?: () => void;
-	/** Turns on single-page mode, offered when the CV spills onto more pages */
-	onFitToOnePage?: () => void;
+	/** Turns on the Super Compact layout, offered when the CV spills onto more pages */
+	onEnableCompactMode?: () => void;
 }
 
 /**
@@ -37,7 +37,7 @@ export function PdfPreview({
 	lang,
 	show = false,
 	onClose,
-	onFitToOnePage,
+	onEnableCompactMode,
 }: PdfPreviewProps) {
 	const { t } = useLanguage();
 	const isMobile = useIsMobile();
@@ -125,8 +125,8 @@ export function PdfPreview({
 					<div className="hidden sm:block flex-1 px-4">
 						<PageCount
 							pageCount={pageCount}
-							singlePageMode={data.settings?.layout.singlePageMode}
-							onFitToOnePage={onFitToOnePage}
+							compactMode={data.settings?.layout.singlePageMode}
+							onEnableCompactMode={onEnableCompactMode}
 						/>
 					</div>
 					<div className="flex items-center gap-2">

@@ -1207,8 +1207,8 @@ const ptTranslations: Record<string, string> = {
 		"O armazenamento do navegador está cheio. Remove a fotografia ou exporta o CV em XML para não perder alterações.",
 	"preview.pages.one": "1 página",
 	"preview.pages.many": "{n} páginas",
-	"preview.fitOnePage": "Ajustar a uma página",
-	"preview.singlePageActive": "Modo página única já ativo",
+	"preview.compact.try": "Usar modo Muito Compacto",
+	"preview.compact.active": "Modo Muito Compacto ativo",
 	"completeness.title": "Recomendados",
 	"completeness.complete": "Campos recomendados preenchidos",
 	"completeness.help":
