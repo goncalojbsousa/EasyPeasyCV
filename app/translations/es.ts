@@ -1277,6 +1277,59 @@ const esTranslations: Record<string, string> = {
 	"examples.help":
 		"Solo cambia los ejemplos y sugerencias de los campos, en este perfil. Tu currículum no se modifica.",
 	"examples.current": "Ejemplos: {area}",
+	"footer.faq": "Ayuda",
+	"faq.badge": "Ayuda",
+	"faq.title": "Preguntas frecuentes",
+	"faq.subtitle":
+		"Respuestas rápidas sobre tus datos, cómo crear tu currículum y el proyecto. Si no encuentras lo que buscas, escríbenos al final de la página.",
+	"faq.group.data": "Privacidad y datos",
+	"faq.group.building": "Crear el currículum",
+	"faq.group.project": "Sobre EasyPeasyCV",
+	"faq.account.q": "¿Necesito crear una cuenta?",
+	"faq.account.a":
+		"No. Abres el creador y empiezas a escribir. No hay registro, inicio de sesión ni correo.",
+	"faq.where.q": "¿Dónde se guardan mis datos?",
+	"faq.where.a":
+		"Solo en tu navegador, en este dispositivo. El currículum y el PDF se generan en tu ordenador y el contenido de tu currículum nunca se envía a un servidor.",
+	"faq.lose.q": "¿Puedo perder mi currículum?",
+	"faq.lose.a":
+		"Sí, si borras los datos del navegador, usas una ventana privada o cambias de navegador o de dispositivo. Para tener una copia, usa de vez en cuando Datos (XML) › Exportar XML.",
+	"faq.move.q": "¿Cómo paso el currículum a otro ordenador?",
+	"faq.move.a":
+		"Exporta el XML en este navegador y, en el otro, usa Datos (XML) › Importar XML. La importación sustituye el contenido del perfil abierto, así que crea antes un perfil nuevo si quieres conservar el actual.",
+	"faq.profiles.q": "¿Puedo tener varios currículums?",
+	"faq.profiles.a":
+		"Sí. En Perfiles de CV puedes crear, duplicar y renombrar perfiles, por ejemplo un currículum para cada tipo de puesto. Cada perfil guarda su contenido y su diseño.",
+	"faq.design.q": "¿Cómo cambio el aspecto del currículum?",
+	"faq.design.a":
+		"En Diseño eliges una base y luego ajustas el color, la tipografía, los márgenes, el encabezado y el estilo de cada sección. La vista previa se actualiza mientras lo cambias.",
+	"faq.pages.q": "Mi currículum tiene demasiadas páginas. ¿Qué puedo hacer?",
+	"faq.pages.a":
+		"Prueba el modo Súper Compacto, que aparece encima de la vista previa y en Diseño › Página. También puedes reducir la densidad y los márgenes, o acortar las experiencias más antiguas.",
+	"faq.language.q": "¿Puedo descargar el currículum en otro idioma?",
+	"faq.language.a":
+		"Sí. En Generar CV eliges el idioma del PDF: los títulos de las secciones y los textos fijos aparecen en ese idioma. Lo que has escrito no se traduce.",
+	"faq.examples.q": "¿Para qué sirven los Ejemplos?",
+	"faq.examples.a":
+		"Cambian los ejemplos y sugerencias de los campos a tu área profesional. No modifican el currículum.",
+	"faq.free.q": "¿De verdad es gratis?",
+	"faq.free.a":
+		"Sí, sin planes de pago ni marcas de agua. El proyecto es de código abierto (licencia MIT) y se mantiene con apoyos voluntarios.",
+	"faq.ats.q": "¿Mi currículum pasará los sistemas ATS?",
+	"faq.ats.a":
+		"El PDF contiene texto real y una estructura sencilla que los ATS pueden leer. Ninguna herramienta garantiza el resultado: el contenido y las palabras clave de la oferta siguen siendo lo más importante.",
+	"faq.contact.title": "¿No encontraste la respuesta?",
+	"faq.contact.description":
+		"EasyPeasyCV es de código abierto y los comentarios se gestionan en GitHub. Necesitas una cuenta de GitHub, que es gratuita.",
+	"faq.contact.bug.title": "Informar de un error",
+	"faq.contact.bug.description":
+		"¿Algo no funciona como debería? Cuéntanos qué pasó y cómo reproducirlo.",
+	"faq.contact.idea.title": "Sugerir una idea",
+	"faq.contact.idea.description":
+		"Una función o mejora que te resultaría útil.",
+	"faq.contact.note":
+		"Las issues de GitHub son públicas: no incluyas datos personales ni tu currículum.",
+	"faq.contact.opensInNewTab": "(se abre en una pestaña nueva)",
 };
 
 export default esTranslations;

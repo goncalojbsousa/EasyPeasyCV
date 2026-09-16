@@ -1235,6 +1235,59 @@ const ptTranslations: Record<string, string> = {
 	"examples.help":
 		"Muda apenas os exemplos e sugestões dos campos, neste perfil. O teu CV não é alterado.",
 	"examples.current": "Exemplos: {area}",
+	"footer.faq": "Ajuda",
+	"faq.badge": "Ajuda",
+	"faq.title": "Perguntas frequentes",
+	"faq.subtitle":
+		"Respostas rápidas sobre os teus dados, como criar o CV e o projeto. Se não encontrares o que procuras, fala connosco no fim da página.",
+	"faq.group.data": "Privacidade e dados",
+	"faq.group.building": "Criar o CV",
+	"faq.group.project": "Sobre o EasyPeasyCV",
+	"faq.account.q": "Preciso de criar conta?",
+	"faq.account.a":
+		"Não. Abres o criador e começas a escrever. Não há registo, login nem email.",
+	"faq.where.q": "Onde ficam guardados os meus dados?",
+	"faq.where.a":
+		"Só no teu browser, neste dispositivo. O CV e o PDF são gerados no teu computador e o conteúdo do teu CV nunca é enviado para um servidor.",
+	"faq.lose.q": "Posso perder o meu CV?",
+	"faq.lose.a":
+		"Sim, se limpares os dados do browser, usares uma janela privada ou mudares de browser ou de dispositivo. Para teres uma cópia, usa de vez em quando Dados (XML) › Exportar XML.",
+	"faq.move.q": "Como passo o CV para outro computador?",
+	"faq.move.a":
+		"Exporta o XML neste browser e, no outro, usa Dados (XML) › Importar XML. A importação substitui o conteúdo do perfil aberto, por isso cria antes um perfil novo se quiseres manter o atual.",
+	"faq.profiles.q": "Posso ter vários CVs?",
+	"faq.profiles.a":
+		"Sim. Em Perfis de CV podes criar, duplicar e renomear perfis, por exemplo um CV para cada tipo de vaga. Cada perfil guarda o seu conteúdo e o seu design.",
+	"faq.design.q": "Como mudo o aspeto do CV?",
+	"faq.design.a":
+		"Em Design escolhes uma base e depois ajustas a cor, o tipo de letra, as margens, o cabeçalho e o estilo de cada secção. A pré-visualização atualiza enquanto mexes.",
+	"faq.pages.q": "O meu CV tem páginas a mais. O que posso fazer?",
+	"faq.pages.a":
+		"Experimenta o modo Muito Compacto, que aparece por cima da pré-visualização e em Design › Página. Também podes reduzir a densidade e as margens, ou encurtar experiências mais antigas.",
+	"faq.language.q": "Posso descarregar o CV noutra língua?",
+	"faq.language.a":
+		"Sim. Em Gerar CV escolhes a língua do PDF: os títulos das secções e os textos fixos ficam nessa língua. O que escreveste não é traduzido.",
+	"faq.examples.q": "Para que servem os Exemplos?",
+	"faq.examples.a":
+		"Mudam os exemplos e sugestões dos campos para a tua área profissional. Não alteram o CV.",
+	"faq.free.q": "É mesmo grátis?",
+	"faq.free.a":
+		"Sim, sem planos pagos nem marcas de água. O projeto é open source (licença MIT) e mantém-se com apoios voluntários.",
+	"faq.ats.q": "O CV passa nos sistemas ATS?",
+	"faq.ats.a":
+		"O PDF tem texto real e uma estrutura simples, que os ATS conseguem ler. Nenhuma ferramenta garante que passa: o conteúdo e as palavras-chave da vaga continuam a ser o mais importante.",
+	"faq.contact.title": "Não encontraste a resposta?",
+	"faq.contact.description":
+		"O EasyPeasyCV é open source e o feedback é tratado no GitHub. Precisas de uma conta GitHub, que é gratuita.",
+	"faq.contact.bug.title": "Reportar um erro",
+	"faq.contact.bug.description":
+		"Algo não funciona como devia? Conta o que aconteceu e como repetir.",
+	"faq.contact.idea.title": "Sugerir uma ideia",
+	"faq.contact.idea.description":
+		"Uma funcionalidade ou melhoria que te dava jeito.",
+	"faq.contact.note":
+		"As issues no GitHub são públicas: não incluas dados pessoais nem o teu CV.",
+	"faq.contact.opensInNewTab": "(abre num novo separador)",
 };
 
 export default ptTranslations;
