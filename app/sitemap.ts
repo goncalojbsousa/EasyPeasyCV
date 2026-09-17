@@ -1,8 +1,8 @@
 import type { MetadataRoute } from "next";
+import { SITE_URL } from "./utils/page-metadata";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-	const baseUrl = "https://www.easypeasycv.com";
-	const now = new Date();
+	const baseUrl = SITE_URL;
 	const locales = ["en", "pt", "br", "es"];
 	const localizedPaths = ["", "/builder", "/faq", "/privacy", "/terms"];
 
@@ -16,11 +16,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
 		for (const locale of locales) {
 			languages[locale] = `${baseUrl}/${locale}${route}`;
 		}
+		// Shown to visitors whose language matches none of the above
+		languages["x-default"] = `${baseUrl}/en${route}`;
 
 		for (const locale of locales) {
 			sitemapEntries.push({
 				url: `${baseUrl}/${locale}${route}`,
-				lastModified: now,
 				changeFrequency:
 					path === "" ? "weekly" : path === "/builder" ? "weekly" : "yearly",
 				priority:

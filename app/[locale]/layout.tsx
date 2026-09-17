@@ -9,7 +9,6 @@ import type { Locale } from "../translations";
 import { OG_LOCALES, SITE_URL } from "../utils/page-metadata";
 import "../globals.css";
 import type { Metadata } from "next";
-import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -95,6 +94,7 @@ export async function generateMetadata({
 				pt: "/pt",
 				"pt-BR": "/br",
 				es: "/es",
+				"x-default": "/en",
 			},
 		},
 		robots: {
@@ -137,27 +137,31 @@ export default async function LocaleLayout({
 					crossOrigin=""
 				/>
 				<link rel="dns-prefetch" href="https://www.easypeasycv.com" />
-				<Script
-					id="org-ld-json"
+				{/* Rendered server-side, so crawlers see it without running scripts */}
+				<script
 					type="application/ld+json"
-					strategy="afterInteractive"
-				>
-					{JSON.stringify({
-						"@context": "https://schema.org",
-						"@type": "SoftwareApplication",
-						name: "EasyPeasyCV",
-						url: "https://www.easypeasycv.com",
-						applicationCategory: "DesignApplication",
-						operatingSystem: "Web",
-						offers: {
-							"@type": "Offer",
-							price: "0",
-							priceCurrency: "USD",
-						},
-						description: meta.description,
-						logo: "https://www.easypeasycv.com/logo.webp",
-					})}
-				</Script>
+					// biome-ignore lint/security/noDangerouslySetInnerHtml: static JSON-LD built here
+					dangerouslySetInnerHTML={{
+						__html: JSON.stringify({
+							"@context": "https://schema.org",
+							"@type": "SoftwareApplication",
+							name: "EasyPeasyCV",
+							url: `${SITE_URL}/${locale}`,
+							applicationCategory: "DesignApplication",
+							operatingSystem: "Web",
+							inLanguage: locale === "br" ? "pt-BR" : locale,
+							isAccessibleForFree: true,
+							offers: {
+								"@type": "Offer",
+								price: "0",
+								priceCurrency: "EUR",
+							},
+							description: meta.description,
+							logo: `${SITE_URL}/logo.webp`,
+							sameAs: ["https://github.com/goncalojbsousa/EasyPeasyCV"],
+						}),
+					}}
+				/>
 			</head>
 			<body className="antialiased">
 				<NextIntlClientProvider messages={messages}>
