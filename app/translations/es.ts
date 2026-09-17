@@ -1330,6 +1330,76 @@ const esTranslations: Record<string, string> = {
 	"faq.contact.note":
 		"Las issues de GitHub son públicas: no incluyas datos personales ni tu currículum.",
 	"faq.contact.opensInNewTab": "(se abre en una pestaña nueva)",
+	"home.cta": "Crear mi currículum",
+	"home.hero.eyebrow": "Gratis y de código abierto",
+	"home.hero.title": "Haz tu currículum en minutos",
+	"home.hero.subtitle":
+		"Escribes, ves el resultado al lado y descargas el PDF. Sin cuenta, sin pagar y sin marca de agua.",
+	"home.hero.note":
+		"No pedimos tu correo. Tu currículum solo se guarda en tu ordenador.",
+	"home.hero.media.alt":
+		"El creador de EasyPeasyCV: el formulario a la izquierda y el currículum actualizándose a la derecha",
+	"home.result.title": "Esto es lo que descargas",
+	"home.result.subtitle":
+		"Un PDF limpio, listo para enviar. El currículum es tuyo de principio a fin.",
+	"home.result.watermark":
+		"Sin marca de agua, sin nuestro logotipo y sin pagar en el último paso.",
+	"home.result.ats":
+		"Fácil de leer para los filtros automáticos que muchas empresas usan para revisar currículums.",
+	"home.result.language":
+		"Descarga el mismo currículum con los títulos en español, inglés o portugués.",
+	"home.compare.title": "Por qué es diferente",
+	"home.compare.subtitle":
+		"Muchas webs de currículum son gratis hasta que pulsas descargar.",
+	"home.compare.others": "Muchas webs de currículum",
+	"home.compare.account.others": "Piden tu correo y te obligan a registrarte",
+	"home.compare.account.us": "Empiezas a escribir al momento",
+	"home.compare.data.others": "Guardan tu currículum en sus servidores",
+	"home.compare.data.us":
+		"Tu currículum se queda en tu ordenador. Nosotros no lo vemos.",
+	"home.compare.download.others": "Cobran o ponen marca de agua en el PDF",
+	"home.compare.download.us": "PDF gratis y limpio, siempre",
+	"home.compare.subscription.others": "Suscripciones que se renuevan solas",
+	"home.compare.subscription.us": "No hay nada que pagar ni cancelar",
+	"home.styles.title": "Elige un estilo",
+	"home.styles.subtitle":
+		"Empieza con un estilo base y ajusta los colores, la tipografía y cada sección.",
+	"home.styles.media.alt": "Ejemplo de estilo de currículum",
+	"home.styles.link": "Probar los estilos",
+	"home.details.title": "Pensado para el día a día",
+	"home.details.mobile.title": "También en el móvil",
+	"home.details.mobile.description":
+		"Puedes hacer todo el currículum en el móvil, sin instalar nada.",
+	"home.details.mobile.media.alt": "EasyPeasyCV abierto en un móvil",
+	"home.details.versions.title": "Un currículum para cada oferta",
+	"home.details.versions.description":
+		"Guarda varias versiones y duplica una para adaptarla a otro puesto.",
+	"home.details.autosave.title": "Guardado automático",
+	"home.details.autosave.description":
+		"Cierra la página y sigue más tarde, en el mismo navegador.",
+	"home.details.backup.title": "Copia en un archivo",
+	"home.details.backup.description":
+		"Guarda tu currículum en un archivo y ábrelo en otro ordenador.",
+	"home.details.languages.title": "En 4 idiomas",
+	"home.details.languages.description":
+		"Español, inglés y portugués de Portugal y de Brasil.",
+	"home.details.ats.title": "Listo para los filtros automáticos",
+	"home.details.ats.description":
+		"Texto real y una estructura sencilla que los sistemas de selección pueden leer.",
+	"home.about.title": "Quién hace EasyPeasyCV",
+	"home.about.p1":
+		"¡Hola! Creé EasyPeasyCV porque hacer un currículum no debería obligarte a registrarte, entregar tus datos o pagar en el último paso.",
+	"home.about.p2":
+		"Es un proyecto personal y de código abierto: el código es público y cualquiera puede ver cómo funciona. Si te ha ayudado, puedes apoyar el proyecto o dejar una sugerencia.",
+	"home.about.media.alt": "Foto de quien hace EasyPeasyCV",
+	"home.about.github": "Ver el código en GitHub",
+	"home.about.support": "Apoyar el proyecto",
+	"home.about.feedback": "Dejar una sugerencia",
+	"home.faq.title": "Preguntas frecuentes",
+	"home.faq.link": "Ver todas las preguntas",
+	"home.final.title": "¿Listo para empezar?",
+	"home.final.subtitle": "Tarda pocos minutos y no necesitas cuenta.",
+	"home.styles.custom": "Personalizado",
 };
 
 export default esTranslations;

@@ -1292,6 +1292,76 @@ const enTranslations: Record<string, string> = {
 	"faq.contact.note":
 		"GitHub issues are public: don't include personal data or your CV.",
 	"faq.contact.opensInNewTab": "(opens in a new tab)",
+	"home.cta": "Create my CV",
+	"home.hero.eyebrow": "Free and open source",
+	"home.hero.title": "Make your CV in minutes",
+	"home.hero.subtitle":
+		"Type, see the result next to it, and download the PDF. No account, no payment and no watermark.",
+	"home.hero.note":
+		"We don't ask for your email. Your CV is only saved on your computer.",
+	"home.hero.media.alt":
+		"The EasyPeasyCV builder: the form on the left and the CV updating on the right",
+	"home.result.title": "This is what you download",
+	"home.result.subtitle":
+		"A clean PDF, ready to send. The CV is yours from start to finish.",
+	"home.result.watermark":
+		"No watermark, no logo of ours and no payment at the last step.",
+	"home.result.ats":
+		"Easy to read for the automatic filters many companies use to screen CVs.",
+	"home.result.language":
+		"Download the same CV with headings in English, Portuguese or Spanish.",
+	"home.compare.title": "Why it's different",
+	"home.compare.subtitle":
+		"Many CV sites are free right up until you click download.",
+	"home.compare.others": "Many CV sites",
+	"home.compare.account.others": "Ask for your email and make you sign up",
+	"home.compare.account.us": "You start writing straight away",
+	"home.compare.data.others": "Keep your CV on their servers",
+	"home.compare.data.us": "Your CV stays on your computer. We never see it.",
+	"home.compare.download.others": "Charge you or watermark the PDF",
+	"home.compare.download.us": "A free, clean PDF, every time",
+	"home.compare.subscription.others": "Subscriptions that renew on their own",
+	"home.compare.subscription.us": "Nothing to pay for or cancel",
+	"home.styles.title": "Pick a style",
+	"home.styles.subtitle":
+		"Start from a base style, then adjust colours, font and each section.",
+	"home.styles.media.alt": "Example CV style",
+	"home.styles.link": "Try the styles",
+	"home.details.title": "Made for real life",
+	"home.details.mobile.title": "On your phone too",
+	"home.details.mobile.description":
+		"You can build your whole CV on your phone, with nothing to install.",
+	"home.details.mobile.media.alt": "EasyPeasyCV open on a phone",
+	"home.details.versions.title": "A CV for every application",
+	"home.details.versions.description":
+		"Keep several versions and duplicate one to tailor it to another job.",
+	"home.details.autosave.title": "Saved automatically",
+	"home.details.autosave.description":
+		"Close the page and carry on later, in the same browser.",
+	"home.details.backup.title": "A copy in a file",
+	"home.details.backup.description":
+		"Save your CV to a file and open it on another computer.",
+	"home.details.languages.title": "In 4 languages",
+	"home.details.languages.description":
+		"English, Spanish, and Portuguese from Portugal and Brazil.",
+	"home.details.ats.title": "Ready for automatic filters",
+	"home.details.ats.description":
+		"Real text and a simple structure that recruitment software can read.",
+	"home.about.title": "Who makes EasyPeasyCV",
+	"home.about.p1":
+		"Hi! I made EasyPeasyCV because writing a CV shouldn't mean signing up, handing over your data or paying at the last step.",
+	"home.about.p2":
+		"It's a personal, open source project: the code is public and anyone can see how it works. If it helped you, you can support the project or send a suggestion.",
+	"home.about.media.alt": "Photo of the person who makes EasyPeasyCV",
+	"home.about.github": "See the code on GitHub",
+	"home.about.support": "Support the project",
+	"home.about.feedback": "Send a suggestion",
+	"home.faq.title": "Frequently asked questions",
+	"home.faq.link": "See all questions",
+	"home.final.title": "Ready to start?",
+	"home.final.subtitle":
+		"It takes a few minutes and you don't need an account.",
+	"home.styles.custom": "Custom",
 };
 
 export default enTranslations;

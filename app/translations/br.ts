@@ -1289,6 +1289,76 @@ const brTranslations: Record<string, string> = {
 	"faq.contact.note":
 		"As issues no GitHub são públicas: não inclua dados pessoais nem seu currículo.",
 	"faq.contact.opensInNewTab": "(abre em uma nova aba)",
+	"home.cta": "Criar meu currículo",
+	"home.hero.eyebrow": "Gratuito e open source",
+	"home.hero.title": "Faça seu currículo em minutos",
+	"home.hero.subtitle":
+		"Você escreve, vê o resultado ao lado e baixa o PDF. Sem cadastro, sem pagar e sem marca d'água.",
+	"home.hero.note":
+		"Não pedimos e-mail. Seu currículo fica salvo só no seu computador.",
+	"home.hero.media.alt":
+		"O criador do EasyPeasyCV: o formulário à esquerda e o currículo atualizando à direita",
+	"home.result.title": "É isto que você baixa",
+	"home.result.subtitle":
+		"Um PDF limpo, pronto para enviar. O currículo é seu do começo ao fim.",
+	"home.result.watermark":
+		"Sem marca d'água, sem o nosso logo e sem pagar no último passo.",
+	"home.result.ats":
+		"Fácil de ler pelos filtros automáticos que muitas empresas usam para triar currículos.",
+	"home.result.language":
+		"Baixe o mesmo currículo com os títulos em português, inglês ou espanhol.",
+	"home.compare.title": "Por que é diferente",
+	"home.compare.subtitle":
+		"Muitos sites de currículo dizem que são grátis até você clicar em baixar.",
+	"home.compare.others": "Muitos sites de currículo",
+	"home.compare.account.others": "Pedem e-mail e obrigam a criar conta",
+	"home.compare.account.us": "Você já começa escrevendo",
+	"home.compare.data.others": "Guardam seu currículo nos servidores deles",
+	"home.compare.data.us":
+		"O currículo fica no seu computador. Nós não o vemos.",
+	"home.compare.download.others": "Cobram ou colocam marca d'água no PDF",
+	"home.compare.download.us": "PDF grátis e limpo, sempre",
+	"home.compare.subscription.others": "Assinaturas que renovam sozinhas",
+	"home.compare.subscription.us": "Não há nada para pagar nem cancelar",
+	"home.styles.title": "Escolha um estilo",
+	"home.styles.subtitle":
+		"Comece por um estilo base e ajuste as cores, a fonte e cada seção.",
+	"home.styles.media.alt": "Exemplo de estilo de currículo",
+	"home.styles.link": "Experimentar os estilos",
+	"home.details.title": "Pensado para o dia a dia",
+	"home.details.mobile.title": "No celular também",
+	"home.details.mobile.description":
+		"Dá para fazer o currículo inteiro no celular, sem instalar nada.",
+	"home.details.mobile.media.alt": "O EasyPeasyCV aberto em um celular",
+	"home.details.versions.title": "Um currículo para cada vaga",
+	"home.details.versions.description":
+		"Salve várias versões e duplique uma para adaptar a outra vaga.",
+	"home.details.autosave.title": "Salvo automaticamente",
+	"home.details.autosave.description":
+		"Feche a página e continue mais tarde, no mesmo navegador.",
+	"home.details.backup.title": "Cópia em um arquivo",
+	"home.details.backup.description":
+		"Salve seu currículo em um arquivo e abra em outro computador.",
+	"home.details.languages.title": "Em 4 idiomas",
+	"home.details.languages.description":
+		"Português do Brasil e de Portugal, inglês e espanhol.",
+	"home.details.ats.title": "Pronto para os filtros automáticos",
+	"home.details.ats.description":
+		"Texto real e uma estrutura simples, que os sistemas de recrutamento conseguem ler.",
+	"home.about.title": "Quem faz o EasyPeasyCV",
+	"home.about.p1":
+		"Oi! Criei o EasyPeasyCV porque fazer um currículo não deveria obrigar você a criar conta, entregar seus dados ou pagar no último passo.",
+	"home.about.p2":
+		"É um projeto pessoal e open source: o código é público e qualquer pessoa pode ver como funciona. Se ele te ajudou, você pode apoiar o projeto ou deixar uma sugestão.",
+	"home.about.media.alt": "Foto de quem faz o EasyPeasyCV",
+	"home.about.github": "Ver o código no GitHub",
+	"home.about.support": "Apoiar o projeto",
+	"home.about.feedback": "Deixar uma sugestão",
+	"home.faq.title": "Perguntas frequentes",
+	"home.faq.link": "Ver todas as perguntas",
+	"home.final.title": "Pronto para começar?",
+	"home.final.subtitle": "Leva poucos minutos e você não precisa de cadastro.",
+	"home.styles.custom": "Personalizado",
 };
 
 export default brTranslations;
