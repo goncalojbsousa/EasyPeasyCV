@@ -982,6 +982,7 @@ const enTranslations: Record<string, string> = {
 	"faq.tips.subtitle":
 		"Small things that help your CV get through automatic filters and get read by the people who decide.",
 	"completeness.tipsLink": "Tips for a good CV",
+	"builder.heading": "Build your CV",
 };
 
 export default enTranslations;

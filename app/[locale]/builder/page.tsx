@@ -679,6 +679,9 @@ export default function Builder() {
 				id="main-content"
 				className="w-full max-w-[1600px] 2xl:max-w-[1800px] mx-auto pt-24 pb-24 px-4 sm:px-6"
 			>
+				{/* The page's one heading; the form sections carry their own */}
+				<h1 className="sr-only">{t("builder.heading")}</h1>
+
 				{/* Form + Live preview grid */}
 				<div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
 					<div className="lg:col-span-6 flex flex-col gap-6 sm:gap-8">

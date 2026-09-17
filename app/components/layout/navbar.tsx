@@ -69,10 +69,11 @@ export function Navbar({ builderCta = false }: { builderCta?: boolean }) {
 							className="w-10 h-10 object-contain"
 							priority
 						/>
+						{/* A span, not a heading: each page owns its own <h1> */}
 						<div className="hidden md:block">
-							<h1 className="text-2xl font-bold text-sky-600">
+							<span className="text-2xl font-bold text-sky-600">
 								{t("app.title")}
-							</h1>
+							</span>
 						</div>
 					</Link>
 				</div>
