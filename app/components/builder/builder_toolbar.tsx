@@ -2,6 +2,7 @@
 
 import {
 	AlertTriangle,
+	ArrowUpRight,
 	Check,
 	CheckCircle2,
 	ChevronDown,
@@ -202,7 +203,7 @@ function CompletenessIndicator({
 	recommended,
 	onJumpToField,
 }: Pick<BuilderToolbarProps, "recommended" | "onJumpToField">) {
-	const { t } = useLanguage();
+	const { t, language } = useLanguage();
 	const { open, setOpen, ref } = useDropdown();
 	const done = recommended.filter((field) => field.done).length;
 	const total = recommended.length;
@@ -263,6 +264,15 @@ function CompletenessIndicator({
 							</li>
 						))}
 					</ul>
+					<a
+						href={`/${language}/faq#tips`}
+						target="_blank"
+						rel="noopener noreferrer"
+						className="flex items-center justify-between gap-2 border-t border-gray-100 dark:border-zinc-700 px-4 py-2.5 text-xs font-medium text-sky-700 dark:text-sky-400 hover:bg-gray-50 dark:hover:bg-zinc-700/50 rounded-b-xl"
+					>
+						{t("completeness.tipsLink")}
+						<ArrowUpRight aria-hidden="true" className="w-3.5 h-3.5" />
+					</a>
 				</div>
 			)}
 		</div>
