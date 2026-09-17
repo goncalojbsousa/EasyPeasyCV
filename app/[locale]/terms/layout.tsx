@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 import {
 	type LocalizedCopy,
@@ -37,6 +38,15 @@ export async function generateMetadata({
 	return localizedPageMetadata(locale, "terms", COPY);
 }
 
-export default function TermsLayout({ children }: { children: ReactNode }) {
+export default async function TermsLayout({
+	children,
+	params,
+}: {
+	children: ReactNode;
+	params: Promise<{ locale: string }>;
+}) {
+	const { locale } = await params;
+	// Opts this route into static rendering (next-intl)
+	setRequestLocale(locale);
 	return children;
 }
