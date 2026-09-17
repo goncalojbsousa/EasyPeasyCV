@@ -16,6 +16,7 @@ import {
 	LANDING_MEDIA,
 	LandingMedia,
 } from "../components/landing/landing_media";
+import { RevealOnScroll } from "../components/landing/reveal_on_scroll";
 import { StyleSwitcher } from "../components/landing/style_switcher";
 import { Footer } from "../components/layout/footer";
 import { Navbar, PAGE_CTA_ID } from "../components/layout/navbar";
@@ -59,7 +60,7 @@ function SectionHeading({
 	subtitle?: string;
 }) {
 	return (
-		<div className="max-w-2xl">
+		<div className="reveal max-w-2xl">
 			<h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
 				{title}
 			</h2>
@@ -90,22 +91,23 @@ export default async function Home({
 	return (
 		<div className="min-h-screen bg-white dark:bg-zinc-900 transition-colors">
 			<Navbar builderCta />
+			<RevealOnScroll />
 
 			<main id="main-content">
 				{/* ------------------------------------------------------------ Hero */}
 				<section className="px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-24">
 					<div className="mx-auto max-w-6xl">
 						<div className="mx-auto max-w-3xl text-center">
-							<p className="text-sm font-medium text-sky-700 dark:text-sky-400">
+							<p className="intro text-sm font-medium text-sky-700 dark:text-sky-400">
 								{t("home.hero.eyebrow")}
 							</p>
-							<h1 className="mt-3 text-4xl sm:text-6xl font-bold tracking-tight text-gray-900 dark:text-white">
+							<h1 className="intro [--intro-delay:80ms] mt-3 text-4xl sm:text-6xl font-bold tracking-tight text-gray-900 dark:text-white">
 								{t("home.hero.title")}
 							</h1>
-							<p className="mt-5 text-lg sm:text-xl text-gray-600 dark:text-gray-300">
+							<p className="intro [--intro-delay:160ms] mt-5 text-lg sm:text-xl text-gray-600 dark:text-gray-300">
 								{t("home.hero.subtitle")}
 							</p>
-							<div className="mt-8 flex flex-col items-center gap-3">
+							<div className="intro [--intro-delay:240ms] mt-8 flex flex-col items-center gap-3">
 								<div id={PAGE_CTA_ID}>
 									<PrimaryCta href={builderHref}>{t("home.cta")}</PrimaryCta>
 								</div>
@@ -115,7 +117,7 @@ export default async function Home({
 							</div>
 						</div>
 
-						<div className="relative mx-auto mt-14 aspect-video max-w-5xl overflow-hidden rounded-xl bg-white dark:bg-zinc-800 ring-1 ring-gray-200 dark:ring-zinc-700 shadow-[0_30px_80px_-30px_rgba(15,23,42,0.35)]">
+						<div className="intro [--intro-delay:360ms] relative mx-auto mt-14 aspect-video max-w-5xl overflow-hidden rounded-xl bg-white dark:bg-zinc-800 ring-1 ring-gray-200 dark:ring-zinc-700 shadow-[0_30px_80px_-30px_rgba(15,23,42,0.35)]">
 							<LandingMedia
 								asset={LANDING_MEDIA.hero}
 								alt={t("home.hero.media.alt")}
@@ -134,7 +136,7 @@ export default async function Home({
 								title={t("home.result.title")}
 								subtitle={t("home.result.subtitle")}
 							/>
-							<ul className="mt-8 space-y-4">
+							<ul className="reveal mt-8 space-y-4">
 								{[
 									"home.result.watermark",
 									"home.styles.subtitle",
@@ -179,7 +181,7 @@ export default async function Home({
 							subtitle={t("home.compare.subtitle")}
 						/>
 
-						<div className="mt-10 overflow-hidden rounded-xl ring-1 ring-gray-200 dark:ring-zinc-700">
+						<div className="reveal mt-10 overflow-hidden rounded-xl ring-1 ring-gray-200 dark:ring-zinc-700">
 							<div className="grid grid-cols-2 bg-gray-50 dark:bg-zinc-800 text-sm font-semibold">
 								<div className="px-4 sm:px-6 py-3 text-gray-500 dark:text-gray-400">
 									{t("home.compare.others")}
@@ -220,7 +222,7 @@ export default async function Home({
 							<SectionHeading title={t("home.details.title")} />
 							<dl className="mt-10 grid gap-x-10 gap-y-8 sm:grid-cols-2">
 								{DETAILS.map(({ key, icon: Icon }) => (
-									<div key={key} className="flex gap-4">
+									<div key={key} className="reveal flex gap-4">
 										<Icon
 											aria-hidden="true"
 											className="mt-0.5 h-6 w-6 shrink-0 text-sky-600 dark:text-sky-400"
@@ -237,7 +239,7 @@ export default async function Home({
 								))}
 							</dl>
 						</div>
-						<div className="relative mx-auto aspect-[390/844] w-full max-w-[280px] overflow-hidden rounded-[2rem] bg-white dark:bg-zinc-800 ring-8 ring-gray-900 dark:ring-zinc-700 shadow-xl">
+						<div className="reveal relative mx-auto aspect-[390/844] w-full max-w-[280px] overflow-hidden rounded-[2rem] bg-white dark:bg-zinc-800 ring-8 ring-gray-900 dark:ring-zinc-700 shadow-xl">
 							<LandingMedia
 								asset={LANDING_MEDIA.mobile}
 								alt={t("home.details.mobile.media.alt")}
@@ -250,7 +252,7 @@ export default async function Home({
 				{/* ----------------------------------------------------------- About */}
 				<section className="px-4 sm:px-6 py-16 sm:py-24">
 					<div className="mx-auto max-w-3xl">
-						<div className="flex flex-col gap-8 sm:flex-row sm:items-start">
+						<div className="reveal flex flex-col gap-8 sm:flex-row sm:items-start">
 							<div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-full">
 								<LandingMedia
 									asset={LANDING_MEDIA.author}
@@ -305,7 +307,7 @@ export default async function Home({
 						<SectionHeading title={t("home.faq.title")} />
 						<div className="mt-8 divide-y divide-gray-200 dark:divide-zinc-700 border-y border-gray-200 dark:border-zinc-700">
 							{FAQ_PREVIEW.map((id) => (
-								<div key={id} className="py-5">
+								<div key={id} className="reveal py-5">
 									<h3 className="font-semibold text-gray-900 dark:text-white">
 										{t(`faq.${id}.q`)}
 									</h3>
@@ -327,7 +329,7 @@ export default async function Home({
 
 				{/* ------------------------------------------------------- Final CTA */}
 				<section className="px-4 sm:px-6 py-16 sm:py-24">
-					<div className="mx-auto max-w-4xl rounded-2xl bg-sky-600 dark:bg-sky-700 px-6 py-14 text-center">
+					<div className="reveal mx-auto max-w-4xl rounded-2xl bg-sky-600 dark:bg-sky-700 px-6 py-14 text-center">
 						<h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
 							{t("home.final.title")}
 						</h2>
