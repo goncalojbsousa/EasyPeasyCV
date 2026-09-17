@@ -20,7 +20,7 @@
 
   <p>A modern, open source resume builder designed for professionals who value privacy, flexibility, and control over their data. Create high-quality, ATS-friendly CVs directly in the browser — no registration or server required.</p>
 
-  <img src="public/easypeasycvpreview.gif" alt="EasyPeasyCV Preview" width="700" />
+  <img src="docs/preview.gif" alt="EasyPeasyCV Preview" width="700" />
 </div>
 
 ## Why EasyPeasyCV?
