@@ -6,7 +6,6 @@ const esTranslations: Record<string, string> = {
 	"cvType.field.technologies": "Tecnologías Utilizadas",
 	// Header
 	"app.title": "EasyPeasyCV",
-	"app.subtitle": "Crea un currículum profesional en minutos",
 
 	// Open Source Section
 	"landing.opensource.support.button": "Apoyar el Proyecto",
@@ -103,71 +102,51 @@ const esTranslations: Record<string, string> = {
 		"Ej: Desarrollé proyectos específicos del área\nImplementé procesos y mejoras",
 	"other.placeholder.achievements":
 		"Ej: Logré objetivos específicos del área\nImplementé mejoras con resultados positivos",
-	"other.placeholder.experience.description":
-		"Ej: Desarrollé e implementé proyectos en el área, demostrando competencias técnicas y habilidades interpersonales relevantes para el puesto.",
 	"other.placeholder.project.description":
 		"Ej: Proyecto específico del área, incluyendo objetivos, metodología y resultados alcanzados.",
 	"other.placeholder.project.name": "Ej: Proyecto Específico",
 
 	// Development specific placeholders for projects and experience
-	"development.placeholder.experience.description":
-		"Ej: Desarrollé aplicaciones web full-stack utilizando React y Node.js. Implementé APIs RESTful y optimicé el rendimiento de la aplicación, reduciendo el tiempo de carga en un 40%.",
 	"development.placeholder.project.description":
 		"Ej: Aplicación web para gestión de tareas desarrollada con React, Node.js y MongoDB. Incluye autenticación, roles de usuario y funcionalidades en tiempo real.",
 	"development.placeholder.project.name": "Ej: Aplicación de Gestión de Tareas",
 
 	// Marketing specific placeholders for projects and experience
-	"marketing.placeholder.experience.description":
-		"Ej: Gestioné campañas de marketing digital para múltiples clientes, implementando estrategias de SEO, SEM y redes sociales que aumentaron el tráfico orgánico en un 40%.",
 	"marketing.placeholder.project.description":
 		"Ej: Campaña de marketing digital para lanzamiento de producto, incluyendo estrategia de contenidos, SEO y redes sociales. Resultado: 200% de aumento en conversiones.",
 	"marketing.placeholder.project.name": "Ej: Campaña de Lanzamiento",
 
 	// Sales specific placeholders for projects and experience
-	"sales.placeholder.experience.description":
-		"Ej: Gestioné una cartera de 50 clientes B2B, desarrollando relaciones comerciales y superando las metas de ventas en un 120% durante tres años consecutivos.",
 	"sales.placeholder.project.description":
 		"Ej: Implementación de nueva estrategia de ventas para mercado internacional, incluyendo prospección, negociación y cierre. Resultado: aumento de 35% en ventas internacionales.",
 	"sales.placeholder.project.name": "Ej: Expansión Internacional",
 
 	// HR specific placeholders for projects and experience
-	"hr.placeholder.experience.description":
-		"Ej: Gestioné procesos de reclutamiento y selección para 30+ posiciones técnicas y gerenciales, reduciendo el tiempo de contratación en un 30% e implementando nuevas políticas de RRHH.",
 	"hr.placeholder.project.description":
 		"Ej: Implementación de nuevo sistema de evaluación de desempeño, incluyendo definición de KPIs, formación y seguimiento. Resultado: mejora de 40% en retención de talento.",
 	"hr.placeholder.project.name": "Ej: Sistema de Evaluación",
 
 	// Finance specific placeholders for projects and experience
-	"finance.placeholder.experience.description":
-		"Ej: Gestioné la contabilidad para 15 empresas, preparando informes mensuales, trimestrales y anuales. Implementé procesos de control interno y optimicé flujos de trabajo.",
 	"finance.placeholder.project.description":
 		"Ej: Proyecto de implementación de sistema contable, incluyendo migración de datos y formación de usuarios. Resultado: reducción del 30% en tiempo de procesamiento.",
 	"finance.placeholder.project.name": "Ej: Proyecto Contable",
 
 	// Design specific placeholders for projects and experience
-	"design.placeholder.experience.description":
-		"Ej: Creé identidades visuales para más de 20 marcas, incluyendo logos, guías de estilo y materiales promocionales. Colaboré con equipos de marketing para desarrollar campañas visuales.",
 	"design.placeholder.project.description":
 		"Ej: Rediseño completo de la identidad visual de una startup, incluyendo logo, sitio web y materiales promocionales. Resultado: aumento del 50% en reconocimiento de marca.",
 	"design.placeholder.project.name": "Ej: Proyecto de Diseño",
 
 	// Health specific placeholders for projects and experience
-	"health.placeholder.experience.description":
-		"Ej: Proporcioné atención especializada a pacientes en unidad de cuidados intensivos, coordinando equipos multidisciplinarios y mejorando protocolos de atención que redujeron las infecciones hospitalarias en un 40%.",
 	"health.placeholder.project.description":
 		"Ej: Implementación de nuevo protocolo de atención al paciente, incluyendo formación del personal y seguimiento. Resultado: mejora del 60% en satisfacción del paciente.",
 	"health.placeholder.project.name": "Ej: Protocolo de Atención",
 
 	// Education specific placeholders for projects and experience
-	"education.placeholder.experience.description":
-		"Ej: Enseñé asignaturas de Matemáticas y Ciencias a estudiantes de secundaria, desarrollando planes de estudio innovadores que mejoraron el rendimiento de los estudiantes en un 25%.",
 	"education.placeholder.project.description":
 		"Ej: Desarrollo e implementación de programa de enseñanza híbrida, incluyendo creación de contenidos digitales y evaluación. Resultado: mejora del 30% en participación estudiantil.",
 	"education.placeholder.project.name": "Ej: Programa Educativo",
 
 	// Admin specific placeholders for projects and experience
-	"admin.placeholder.experience.description":
-		"Ej: Gestioné la administración para una empresa con 50 empleados, coordinando eventos corporativos, optimizando procesos y reduciendo el tiempo de procesamiento administrativo en un 60%.",
 	"admin.placeholder.project.description":
 		"Ej: Proyecto de digitalización de procesos administrativos, incluyendo implementación de sistema de gestión documental y formación de equipos. Resultado: reducción del 60% en tiempo de procesamiento.",
 	"admin.placeholder.project.name": "Ej: Proyecto Administrativo",
@@ -222,13 +201,7 @@ const esTranslations: Record<string, string> = {
 	"admin.placeholder.role": "Ej: Asistente Administrativo",
 	"other.placeholder.role": "Ej: Especialista",
 
-	// Rule for personal information
-	"rule.personal.info":
-		"La información personal es opcional, pero recomendamos incluir al menos nombre, correo electrónico y teléfono para facilitar el contacto.",
-
 	// CTA Section (deduplicated entries removed)
-	"generate.cv": "Generar CV",
-	"generate.resume": "Generar Currículum",
 	"generate.ats.resume": "Generar CV",
 	"data.xml.title": "Datos (XML)",
 	"data.xml.export": "Exportar XML",
@@ -239,8 +212,6 @@ const esTranslations: Record<string, string> = {
 		"Error al generar el PDF. Por favor, inténtalo de nuevo.",
 	"preview.cv": "Vista Previa del CV",
 	preview: "Vista Previa",
-	"live.preview.title": "Vista previa en vivo",
-	"live.preview.refresh": "Actualizar",
 	"live.preview.loading": "Generando vista previa…",
 	"live.preview.empty": "Sin contenido para previsualizar.",
 	"pdf.preview.title": "Vista previa del PDF",
@@ -256,10 +227,7 @@ const esTranslations: Record<string, string> = {
 	"pdf.preview.error.generate": "Error al generar PDF",
 	"pdf.preview.error.unknown": "Error desconocido",
 	"pdf.preview.error.loading": "Error al cargar PDF",
-	"layout.menu.title": "Diseño",
-	"layout.menu.controls": "Controles de Diseño",
 	"layout.controls.font.label": "Fuente",
-	"layout.controls.font.custom": "Personalizada",
 	"layout.controls.textScale.label": "Escala de texto",
 	"layout.controls.margins.title": "Márgenes",
 	"layout.controls.margins.top": "Superior",
@@ -268,7 +236,6 @@ const esTranslations: Record<string, string> = {
 	"layout.controls.margins.right": "Derecha",
 	"layout.controls.lineSpacing.label": "Espaciado de línea",
 	"layout.controls.sectionSpacing.label": "Espaciado entre secciones",
-	"layout.controls.columns.label": "Columnas",
 
 	// Profiles
 	"profile.selector": "Perfiles de CV",
@@ -286,39 +253,25 @@ const esTranslations: Record<string, string> = {
 	"profile.delete.cancel": "Cancelar",
 	"profile.unnamed": "Perfil sin nombre",
 
-	"layout.controls.header.title": "Encabezado",
 	"layout.controls.header.nameSection": "Nombre y Cargo",
 	"layout.controls.header.nameSize": "Tamaño del nombre",
 	"layout.controls.header.weight.label": "Peso",
 	"layout.controls.header.weight.normal": "Normal",
 	"layout.controls.header.weight.bold": "Negrita",
 	"layout.controls.header.weight.heavy": "Pesada",
-	"layout.controls.header.iconSize": "Tamaño de íconos",
 	"layout.controls.header.color": "Color",
 	"layout.controls.header.titleStyle.label": "Estilo del título",
 	"layout.controls.header.titleStyle.normal": "Normal",
 	"layout.controls.header.titleStyle.italic": "Itálico",
 	"layout.controls.header.titleStyle.uppercase": "Mayúsculas",
-	"layout.controls.header.titlePosition.label": "Posición del título",
-	"layout.controls.header.titlePosition.above": "Encima del nombre",
-	"layout.controls.header.titlePosition.below": "Debajo del nombre",
 	"layout.controls.header.divider.title": "Línea divisoria",
 	"layout.controls.header.divider.thickness": "Grosor",
 	"layout.controls.header.divider.style.label": "Estilo",
 	"layout.controls.header.divider.style.solid": "Sólida",
 	"layout.controls.header.divider.style.dashed": "Discontinua",
-	"layout.controls.header.icons": "Íconos de Contacto",
-	"layout.controls.header.iconSpacing": "Espaciado de íconos",
-	"layout.controls.header.alignment.label": "Alineación",
-	"layout.controls.header.alignment.left": "Izquierda",
-	"layout.controls.header.alignment.center": "Centro",
-	"layout.controls.header.alignment.right": "Derecha",
 	"layout.controls.photo.title": "Foto",
 	"layout.controls.photo.enable": "Activar foto",
-	"layout.controls.photo.aspectRatio": "Proporción",
 	"layout.controls.photo.borderRadius.label": "Radio de Borde",
-	"layout.controls.photo.help":
-		"La foto se limita al 20% del área del encabezado.",
 	"layout.controls.photo.choose": "Elegir foto",
 	"layout.controls.photo.atsWarning":
 		"Aviso: no se recomienda usar foto. Los sistemas ATS ignoran imágenes y, en la etapa humana, la foto puede generar sesgos en tu contra.",
@@ -326,7 +279,6 @@ const esTranslations: Record<string, string> = {
 		"Usar el color del tema en los enlaces",
 	"layout.controls.links.useThemeColor.help":
 		"Desactiva para mantener el azul estándar de hipervínculo.",
-	"layout.controls.quickSettings": "Configuración Rápida",
 	"layout.controls.density.label": "Densidad del Diseño",
 	"layout.controls.density.compact": "Compacto",
 	"layout.controls.density.normal": "Normal",
@@ -339,12 +291,9 @@ const esTranslations: Record<string, string> = {
 	"layout.controls.textAlignment.label": "Alineación del Texto",
 	"layout.controls.textAlignment.left": "Izquierda",
 	"layout.controls.textAlignment.justify": "Justificado",
-	"layout.controls.sections.title": "Títulos de Sección",
 	"layout.controls.sections.titleColor": "Color de los títulos",
 	"layout.controls.sections.titleSize": "Tamaño de los títulos",
 	"layout.controls.sections.dateFormat.label": "Formato de Fecha",
-	"layout.controls.sections.dateFormat.help":
-		"Cómo aparecen las fechas en el CV",
 	"layout.controls.dateFormat.short": "Corto (01/2020)",
 	"layout.controls.dateFormat.medium": "Medio (Ene 2020)",
 	"layout.controls.dateFormat.long": "Largo (Enero 2020)",
@@ -359,16 +308,8 @@ const esTranslations: Record<string, string> = {
 	"data.loaded.xml": "Datos importados desde XML.",
 	"cv.generated":
 		"¡Currículum generado con éxito! La descarga debe comenzar automáticamente.",
-	"section.order.info.title": "Organiza las secciones de tu CV",
-	"section.order.info.description":
-		"Usa las flechas arriba y abajo en cada sección para reorganizarlas",
 	"section.order.reset": "Restaurar Orden Predeterminada del Template",
 	"fill.example": "Rellenar con datos de ejemplo",
-	"validation.required": "Por favor, rellena todos los campos obligatorios:",
-	"validation.name": "Nombre completo",
-	"validation.email": "Email",
-	"validation.role": "Cargo deseado",
-	"validation.resume": "Resumen profesional",
 
 	// Thank you modal
 	"thank.you.title": "¡Gracias por usar EasyPeasyCV!",
@@ -401,7 +342,6 @@ const esTranslations: Record<string, string> = {
 
 	// Personal Information
 	"field.full.name": "Nombre completo",
-	"field.desired.role": "Cargo Deseado",
 	"field.postal.code": "Código Postal",
 	"field.city": "Ciudad",
 	"field.email": "Email",
@@ -413,13 +353,6 @@ const esTranslations: Record<string, string> = {
 
 	// Professional Summary
 	"field.professional.summary": "Resumen Profesional",
-	"resume.placeholder":
-		"Desarrollador Fullstack con experiencia en el desarrollo de aplicaciones web escalables, responsivas y centradas en el usuario. Trabajo con TypeScript, React, Next.js, Node.js, PostgreSQL y Prisma, con fuerte atención a la performance, usabilidad y calidad del código...",
-	"professional.summary.title": "Resumen Profesional",
-	"professional.summary.description":
-		"Breve descripción de tu perfil profesional, experiencia y objetivos",
-	"professional.summary.placeholder":
-		"Profesional con X años de experiencia en [área]. Especializado en [competencias principales]. Logros destacados incluyen [mencionar 1-2 logros con métricas si es posible]. Busco [objetivo profesional].",
 
 	// Professional Experience
 	"field.role": "Cargo",
@@ -429,18 +362,12 @@ const esTranslations: Record<string, string> = {
 	"field.end.month": "Mes Fin",
 	"field.end.year": "Año Fin",
 	"field.current": "Actual",
-	"field.technologies": "Tecnologías Utilizadas",
 	"field.activities": "Actividades Desarrolladas",
 	"field.achievements.label": "Logros",
 	"field.achievements.helper": "con métricas",
 	"add.experience": "Añadir Experiencia",
 	"experience.title": "Experiencia",
 	"section.professional.experience": "Experiencia Profesional",
-	"professional.experience.title": "Experiencia Profesional",
-	"professional.experience.description":
-		"Detalla tu trayectoria laboral en orden cronológico inverso",
-	"professional.experience.placeholder":
-		"Describe tus responsabilidades, proyectos y logros en este puesto. Incluye tecnologías utilizadas y resultados cuantificables cuando sea posible.",
 
 	// Academic Education
 	"field.course": "Curso",
@@ -466,19 +393,12 @@ const esTranslations: Record<string, string> = {
 	"education.status.interrupted": "Interrumpido",
 
 	// Technical Skills
-	"skills.placeholder": "Ej: JavaScript, React, Node.js, SQL",
 	"field.technical.skills.helper": "Separa las competencias por coma",
-	"technical.skills.title": "Competencias Técnicas",
-	"technical.skills.description":
-		"Lista tus habilidades técnicas relevantes para el puesto",
-	"technical.skills.placeholder":
-		"Ej: JavaScript, React, Node.js, SQL, Git, Docker",
 
 	// Languages
 	"field.language": "Idioma",
 	"field.level": "Nivel",
 	"add.language": "Añadir Idioma",
-	"language.title": "Idioma",
 
 	// Language levels - CEFR (Common European Framework of Reference for Languages)
 	"language.level.a1": "A1",
@@ -501,13 +421,11 @@ const esTranslations: Record<string, string> = {
 	// Projects
 	"field.project.name": "Nombre del Proyecto",
 	"field.year": "Año",
-	"field.project.technologies": "Tecnologías",
 	"field.project.link": "Enlace",
 	"field.project.sourceCode": "Código fuente",
 	"add.project": "Añadir Proyecto",
 	"project.title": "Proyecto",
 	"section.projects": "Proyectos",
-	"section.custom": "Sección personalizada",
 	"custom.section.add": "Agregar sección personalizada",
 	"custom.section.default": "Sección personalizada",
 	"custom.section.name": "Título de la sección",
@@ -528,14 +446,7 @@ const esTranslations: Record<string, string> = {
 	"custom.field.placeholder.year": "Año",
 	"custom.field.current": "Actual",
 	"custom.field.add": "Agregar campo",
-	"custom.field.remove": "Eliminar campo",
 	"custom.field.default": "Campo",
-	"custom.field.reorder": "Reordenar campo",
-	"projects.title": "Proyectos",
-	"projects.description":
-		"Destaca tus proyectos personales o profesionales más relevantes",
-	"projects.placeholder":
-		"Describe brevemente el proyecto, su propósito, tecnologías utilizadas y tu rol específico. Incluye resultados o impacto si es posible.",
 
 	// Volunteer Work
 	"field.organization": "Organización",
@@ -545,7 +456,6 @@ const esTranslations: Record<string, string> = {
 
 	// Placeholders
 	"placeholder.full.name": "Ej: Juan Pérez",
-	"placeholder.desired.role": "Ej: Desarrollador Full Stack",
 	"placeholder.postal.code": "Ej: 1234-567",
 	"placeholder.city": "Ej: Madrid",
 	"placeholder.email": "Ej: email@ejemplo.com",
@@ -558,23 +468,16 @@ const esTranslations: Record<string, string> = {
 	"placeholder.issuer": "Ej: Udemy, Alura, AWS",
 	"placeholder.hours": "Ej: 40 horas",
 	"placeholder.validation.link": "Ej: www.certificate.institution.com/123456",
-	"placeholder.project.name": "Ej: Portfolio Website",
 	"placeholder.project.year": "Ej: 2023",
-	"placeholder.project.tech": "Ej: React, Node.js, MongoDB",
 	"placeholder.project.link": "Ej: www.miproyecto.com",
 	"placeholder.project.sourceCode": "Ej: www.github.com/user/repo",
-	"placeholder.project.description":
-		"Breve descripción del proyecto, objetivos, resultados...",
 	"placeholder.project.impact":
 		"Ej: Aumentó la participación de usuarios en un 30% tras el lanzamiento",
 	"placeholder.organization": "Ej: Cruz Roja Española",
-	"placeholder.volunteer.role": "Ej: Voluntario de Apoyo Social",
 	"placeholder.volunteer.description":
 		"Ej: Prestación de apoyo social a familias necesitadas, distribución de alimentos y ropa.",
 	"placeholder.volunteer.impact":
 		"Ej: Ayudó a más de 50 familias durante la pandemia, organizó campañas de recogida de donativos.",
-	"placeholder.activities":
-		"Describe tus responsabilidades (un elemento por línea)",
 	"placeholder.achievements":
 		"Ej: Reestructuré la arquitectura de la aplicación usando Next.js con SSR, lo que mejoró el SEO y aumentó la retención de usuarios en un 25%.",
 	"placeholder.education.description":
@@ -626,11 +529,6 @@ const esTranslations: Record<string, string> = {
 	"month.nov": "Nov",
 	"month.dec": "Dic",
 
-	// Countries
-	"country.portugal": "Portugal (+351)",
-	"country.brazil": "Brasil (+55)",
-	"country.spain": "España (+34)",
-
 	// Empty states
 	"empty.experience": "Ninguna experiencia añadida",
 	"empty.education": "Ninguna educación añadida",
@@ -679,33 +577,16 @@ const esTranslations: Record<string, string> = {
 		"Lista las tecnologías, lenguajes y herramientas que utilizaste (ej: Java, Git, SQL, Docker).",
 
 	// Template selector
-	"template.selector": "Seleccionar Plantilla",
 	"template.professional.name": "Professional",
-	"template.professional.description":
-		"Encabezado centrado con espaciado equilibrado",
 	"template.timeline.name": "Timeline",
-	"template.timeline.description": "Diseño tradicional y profesional",
 	"template.classic.name": "Classic",
-	"template.classic.description":
-		"Diseño de columna única, optimizado para sistemas ATS",
 	"template.modern.name": "Moderna",
-	"template.modern.description": "Diseño limpio y minimalista",
 	"template.creative.name": "Creativa",
-	"template.creative.description": "Diseño innovador y expresivo",
 	"template.minimal.name": "Minimalista",
-	"template.minimal.description": "Diseño limpio y enfocado en lo esencial",
 	"color.selector": "Seleccionar Color",
 
 	// Actions
 	actions: "Acciones",
-	"cv.actions": "Opciones del CV",
-	"extra.features.description": "Herramientas adicionales para mejorar tu CV",
-	"extra.features.job.analysis.description":
-		"Analiza ofertas de empleo para optimizar tu CV",
-	"extra.features.ats.tips.description":
-		"Aprende a optimizar tu CV para sistemas ATS",
-	"extra.features.ats.explanation.description":
-		"Comprende cómo funcionan los sistemas ATS",
 
 	// CV Type Selector
 	"cv.type.development": "Desarrollo/IT",
@@ -722,60 +603,6 @@ const esTranslations: Record<string, string> = {
 	// Footer
 	"footer.privacy": "Privacidad",
 	"footer.terms": "Términos",
-
-	// Job Analysis
-	"job.analysis.title": "Análisis de Vacantes",
-	"job.analysis.subtitle":
-		"Introduce el texto de la vacante para recibir consejos personalizados",
-	"job.analysis.input.label": "Texto de la Vacante",
-	"job.analysis.input.placeholder":
-		"Pega aquí el texto completo de la oferta de empleo...",
-	"job.analysis.analyze": "Analizar Vacante",
-	"job.analysis.analyzing": "Analizando...",
-	"job.analysis.clear": "Limpiar",
-	"job.analysis.results": "Resultados del Análisis",
-	"job.analysis.error": "Error al analizar la vacante. Inténtalo de nuevo.",
-	"job.analysis.tips.title": "Cómo usar esta funcionalidad",
-	"job.analysis.tips.content":
-		"Pega el texto completo de la oferta de empleo en el campo de arriba. El sistema analizará automáticamente las competencias requeridas, nivel de experiencia y tipo de contrato, proporcionando consejos personalizados para adaptar tu CV.",
-
-	// Job Analysis Results
-	"job.analysis.skills.title": "Competencias Identificadas",
-	"job.analysis.skills.found": "Competencias encontradas en la vacante",
-	"job.analysis.skills.advice":
-		"Asegúrate de incluir estas competencias en tu CV, especialmente en la sección de competencias técnicas y experiencias profesionales.",
-	"job.analysis.skills.notFound":
-		"No se identificaron competencias técnicas específicas. Considera incluir competencias generales relevantes para el área.",
-
-	"job.analysis.experience.title": "Nivel de Experiencia",
-	"job.analysis.experience.senior":
-		"Esta vacante requiere un nivel senior. Destaca experiencias de liderazgo, gestión de proyectos y responsabilidades estratégicas en tu CV.",
-	"job.analysis.experience.mid":
-		"Esta vacante requiere un nivel intermedio. Enfócate en experiencias prácticas y resultados cuantificables.",
-	"job.analysis.experience.entry":
-		"Esta vacante es adecuada para candidatos con poca experiencia. Destaca proyectos académicos, prácticas y competencias técnicas.",
-
-	"job.analysis.type.title": "Tipo de Contrato",
-	"job.analysis.type.remote":
-		"Esta vacante permite trabajo remoto. Destaca experiencias de trabajo autónomo y competencias de comunicación virtual.",
-	"job.analysis.type.partTime":
-		"Esta vacante es a tiempo parcial. Adapta tu CV para mostrar flexibilidad y gestión eficiente del tiempo.",
-	"job.analysis.type.fullTime":
-		"Esta vacante es a tiempo completo. Destaca compromiso y disponibilidad total para el proyecto.",
-
-	"job.analysis.general.title": "Consejos Generales",
-	"job.analysis.general.advice":
-		"Personaliza tu CV de acuerdo con este análisis. Utiliza palabras clave de la vacante, destaca experiencias relevantes y adapta el resumen profesional para alinear con los requisitos identificados.",
-
-	// Job Analysis Actions
-	"job.analysis.action.button": "Analizar Vacante",
-	"job.analysis.action.description":
-		"Analiza una oferta de empleo para recibir consejos personalizados",
-
-	// CV Tips Actions
-	"cv.tips.action.button": "Consejos CV",
-	"cv.tips.action.description":
-		"Consulta consejos para crear un CV que pase en sistemas ATS",
 
 	// ATS Explanation
 	"ats.explanation.title": "¿Qué son los Sistemas ATS?",
@@ -842,13 +669,6 @@ const esTranslations: Record<string, string> = {
 		"La página que buscas no existe o ha sido movida. Verifica la URL o navega de vuelta a la página inicial.",
 	"error.404.home.button": "Volver a la Página Inicial",
 	"error.404.builder.button": "Crear CV",
-	"error.404.helpful.title": "Páginas útiles",
-	"error.404.helpful.features.title": "Funcionalidades",
-	"error.404.helpful.features.description":
-		"Descubre todas las funcionalidades de EasyPeasyCV para crear tu CV profesional.",
-	"error.404.helpful.templates.title": "Plantillas",
-	"error.404.helpful.templates.description":
-		"Explora nuestras plantillas profesionales y personaliza tu CV.",
 
 	// Privacy Policy Page
 	"privacy.title": "Política de Privacidad",
@@ -959,9 +779,6 @@ const esTranslations: Record<string, string> = {
 	// Section Reordering
 	"section.move.up": "Mover sección arriba",
 	"section.move.down": "Mover sección abajo",
-
-	// View Project link
-	"view.project": "Ver Proyecto",
 
 	// Forms and validation
 	"search.placeholder": "Buscar...",
