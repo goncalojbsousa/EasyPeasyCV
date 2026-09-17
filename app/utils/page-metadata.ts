@@ -57,6 +57,7 @@ export function localizedPageMetadata(
 				pt: `/pt/${segment}`,
 				"pt-BR": `/br/${segment}`,
 				es: `/es/${segment}`,
+				"x-default": `/en/${segment}`,
 			},
 		},
 	};
