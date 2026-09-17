@@ -246,10 +246,10 @@ const esTranslations: Record<string, string> = {
 	"profile.rename": "Renombrar",
 	"profile.rename.save": "Guardar nombre",
 	"profile.rename.cancel": "Cancelar edición",
-	"profile.delete.title": "¿Eliminar perfil?",
+	"profile.delete.title": '¿Eliminar el perfil "{name}"?',
 	"profile.delete": "Eliminar",
-	"profile.delete.confirm": 'El perfil "{name}" se eliminará permanentemente.',
-	"profile.delete.warning": "Esta acción no se puede deshacer.",
+	"profile.delete.confirm":
+		"El currículum de este perfil se borra de este navegador. No se puede recuperar.",
 	"profile.delete.cancel": "Cancelar",
 	"profile.unnamed": "Perfil sin nombre",
 

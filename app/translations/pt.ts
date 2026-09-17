@@ -53,10 +53,10 @@ const ptTranslations: Record<string, string> = {
 	"profile.rename": "Renomear",
 	"profile.rename.save": "Guardar nome",
 	"profile.rename.cancel": "Cancelar edição",
-	"profile.delete.title": "Confirmar eliminação",
+	"profile.delete.title": 'Apagar o perfil "{name}"?',
 	"profile.delete": "Apagar",
-	"profile.delete.confirm": 'O perfil "{name}" será removido permanentemente.',
-	"profile.delete.warning": "Esta ação não pode ser anulada.",
+	"profile.delete.confirm":
+		"O CV deste perfil é apagado deste browser. Não é possível recuperá-lo.",
 	"profile.delete.cancel": "Cancelar",
 	"profile.unnamed": "Perfil sem nome",
 	"layout.controls.header.nameSection": "Nome e Cargo",
