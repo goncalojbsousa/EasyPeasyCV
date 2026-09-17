@@ -344,29 +344,13 @@ const brTranslations: Record<string, string> = {
 	"empty.volunteer": "Nenhum voluntariado adicionado",
 	"empty.project": "Nenhum projeto adicionado",
 
-	// CV Tips
-	"tips.title": "Dicas para um Currículo que Passe em Sistemas ATS",
-	"tips.subtitle":
-		"Siga estas recomendações para aumentar suas chances de ser selecionado",
-	"tips.extra.title": "Dica Extra",
-	"tips.extra.content":
-		"O currículo gerado por esta aplicação já segue estas boas práticas, mas certifique-se de personalizar o conteúdo de acordo com cada vaga específica.",
-
 	// Tip content
-	"tip.format.simple.title":
-		"Use um formato simples (sem gráficos nem tabelas)",
-	"tip.format.simple.desc":
-		"Os sistemas ATS têm dificuldade em ler elementos visuais. Utilize apenas texto com uma estrutura clara.",
 	"tip.keywords.title": "Use palavras-chave exatas da vaga",
 	"tip.keywords.desc":
 		"Copie os termos usados no anúncio da vaga (tecnologias, funções, competências). O ATS procura correspondências exatas.",
 	"tip.headers.title": "Evite cabeçalhos personalizados",
 	"tip.headers.desc":
 		"Use termos comuns como 'Experiência Profissional', 'Educação', 'Competências'.",
-	"tip.format.file.title":
-		"Salve o currículo em formato .docx ou .pdf (simples)",
-	"tip.format.file.desc":
-		"Alguns ATS têm problemas com PDFs mal formatados ou versões antigas do Word.",
 	"tip.acronyms.title": "Não use siglas sem escrever também o significado",
 	"tip.acronyms.desc":
 		"Exemplo: escreva 'JavaScript (JS)' ou 'Banco de Dados (BD)' para garantir que seja reconhecido.",
@@ -620,41 +604,6 @@ const brTranslations: Record<string, string> = {
 		"Ex: Desenvolvi projetos específicos da área\nImplementei processos e melhorias",
 	"other.placeholder.achievements":
 		"Ex: Alcançei objetivos específicos da área\nImplementei melhorias com resultados positivos",
-
-	// ATS Explanation
-	"ats.explanation.title": "O que são Sistemas ATS?",
-	"ats.explanation.subtitle":
-		"Entenda como funcionam e por que são importantes para o seu CV",
-	"ats.explanation.what.title": "O que é um Sistema ATS?",
-	"ats.explanation.what.description":
-		"ATS (Applicant Tracking System) é um software que as empresas usam para gerenciar candidaturas de emprego. Esses sistemas analisam automaticamente os CVs recebidos, procurando palavras-chave e critérios específicos antes de enviá-los para revisão humana.",
-	"ats.explanation.why.title": "Por que é importante?",
-	"ats.explanation.why.description":
-		"Mais de 75% das empresas usam sistemas ATS para filtrar candidaturas. Se o seu CV não estiver otimizado para esses sistemas, ele pode ser automaticamente rejeitado, mesmo que você tenha as qualificações necessárias.",
-	"ats.explanation.why.warning":
-		"Sem otimização ATS, seu CV pode ser rejeitado automaticamente, mesmo que você seja qualificado para a vaga!",
-	"ats.explanation.how.title": "Como otimizar seu CV para ATS",
-	"ats.explanation.how.description":
-		"Siga estas dicas para aumentar as chances do seu CV passar pelos filtros ATS:",
-	"ats.explanation.how.tip1": "Use palavras-chave exatas do anúncio da vaga",
-	"ats.explanation.how.tip2":
-		"Mantenha um formato simples, sem gráficos ou tabelas",
-	"ats.explanation.how.tip3":
-		'Use cabeçalhos padrão como "Experiência Profissional" e "Educação"',
-	"ats.explanation.how.tip4":
-		"Inclua uma seção de competências técnicas com tecnologias relevantes",
-	"ats.explanation.template.title": "Recomendação de Template",
-	"ats.explanation.template.description":
-		"Para máxima compatibilidade com sistemas ATS, recomendamos o template clássico, que foi especificamente projetado para passar pelos filtros automáticos.",
-	"ats.explanation.template.recommendation": "Template Clássico Recomendado",
-	"ats.explanation.extra.title": "Dica Importante",
-	"ats.explanation.extra.content":
-		"O template clássico deste OpenCVLab foi otimizado para sistemas ATS, mas sempre personalize o conteúdo de acordo com cada vaga específica.",
-
-	// ATS Explanation Actions
-	"ats.explanation.action.button": "Explicação ATS",
-	"ats.explanation.action.description":
-		"Aprenda sobre sistemas ATS e como otimizar seu CV",
 
 	// Calendar
 	"calendar.clear": "Limpar",
@@ -1037,6 +986,10 @@ const brTranslations: Record<string, string> = {
 	"home.final.title": "Pronto para começar?",
 	"home.final.subtitle": "Leva poucos minutos e você não precisa de cadastro.",
 	"home.styles.custom": "Personalizado",
+	"faq.tips.title": "Dicas para um bom currículo",
+	"faq.tips.subtitle":
+		"Pequenos cuidados que ajudam seu currículo a passar nos filtros automáticos e a ser lido por quem decide.",
+	"completeness.tipsLink": "Dicas para um bom currículo",
 };
 
 export default brTranslations;

@@ -2,13 +2,11 @@
 
 import { Plus } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AtsExplanation } from "../../components/ats_explanation";
 import {
 	BuilderToolbar,
 	type NavigatorSection,
 	SECTION_TITLE_KEYS,
 } from "../../components/builder/builder_toolbar";
-import { CVTips } from "../../components/cv_tips";
 import {
 	SectionStyleSheet,
 	type StyleTarget,
@@ -29,7 +27,7 @@ import { LivePdfPane } from "../../components/live_pdf_pane";
 import { PdfPreview } from "../../components/pdf/pdf_preview";
 import { BottomActionBar } from "../../components/ui/bottom_action_bar";
 import { FloatingActionBar } from "../../components/ui/floating_action_bar";
-import { useUndoToast } from "../../components/ui/undo_toast";
+import { useToast } from "../../components/ui/toast";
 import { useLanguage } from "../../contexts/LanguageContext";
 import type {
 	Certification,
@@ -137,12 +135,6 @@ export default function Builder() {
 	const projects = useListState<Project>(createEmptyProject);
 	const volunteers = useListState<Volunteer>(createEmptyVolunteer);
 
-	// ------------------------------------------------------------- Page notices
-	const [dataLoadedSource, setDataLoadedSource] = useState<
-		"local" | "xml" | null
-	>(null);
-	const [dataLoaded, setDataLoaded] = useState(false);
-	const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 	const [showPdfPreview, setShowPdfPreview] = useState(false);
 	/** The section whose style shortcut is open, if any */
 	const [styleTarget, setStyleTarget] = useState<StyleTarget | null>(null);
@@ -166,7 +158,7 @@ export default function Builder() {
 			return next;
 		});
 
-	const { showUndo, toast: undoToast } = useUndoToast();
+	const { showUndo, showNotice, toast } = useToast();
 
 	/** The complete CV: the single value passed to preview, export and storage. */
 	const cvData = useMemo<CvData>(
@@ -264,10 +256,10 @@ export default function Builder() {
 	const profiles = useCvProfiles({
 		data: cvData,
 		applyData: applyCvData,
-		onLoaded: useCallback(() => {
-			setDataLoaded(true);
-			setDataLoadedSource("local");
-		}, []),
+		onLoaded: useCallback(
+			() => showNotice(t("data.loaded.from.browser")),
+			[showNotice, t],
+		),
 		newProfileLabel: t("profile.new"),
 		unnamedLabel: t("profile.unnamed"),
 		copyLabel: useCallback(
@@ -303,26 +295,12 @@ export default function Builder() {
 	const handleImportXml = (xml: string) => {
 		try {
 			applyCvData(xmlToCvData(xml));
-			setDataLoaded(true);
-			setDataLoadedSource("xml");
+			showNotice(t("data.loaded.xml"));
 		} catch (e) {
 			console.error("XML import failed:", e);
 			alert(t("data.import.error"));
 		}
 	};
-
-	// ------------------------------------------------------------------- Notices
-	useEffect(() => {
-		if (!dataLoaded) return;
-		const timer = setTimeout(() => setDataLoaded(false), 5000);
-		return () => clearTimeout(timer);
-	}, [dataLoaded]);
-
-	useEffect(() => {
-		if (!showSuccessMessage) return;
-		const timer = setTimeout(() => setShowSuccessMessage(false), 3000);
-		return () => clearTimeout(timer);
-	}, [showSuccessMessage]);
 
 	// Preload the PDF renderer so the first download is not delayed
 	useEffect(() => {
@@ -719,17 +697,6 @@ export default function Builder() {
 							onExamplesTypeChange={setExamplesType}
 						/>
 
-						{dataLoaded && (
-							<Notice
-								message={
-									dataLoadedSource === "xml"
-										? t("data.loaded.xml")
-										: t("data.loaded.from.browser")
-								}
-							/>
-						)}
-						{showSuccessMessage && <Notice message={t("cv.generated")} />}
-
 						{/* Personal Information is always first and cannot be reordered */}
 						<div
 							ref={(el) => {
@@ -765,17 +732,15 @@ export default function Builder() {
 							</div>
 						))}
 
-						{/* Add custom section button */}
-						<div className="flex justify-start">
-							<button
-								onClick={handleAddCustomSection}
-								className="inline-flex items-center gap-2 bg-sky-600 text-white px-4 sm:px-6 py-3 rounded-lg font-semibold hover:bg-sky-700 transition-colors duration-300 shadow-sm"
-								type="button"
-							>
-								<Plus className="w-5 h-5" />
-								{t("custom.section.add")}
-							</button>
-						</div>
+						{/* Add a custom section: another block at the end of the list */}
+						<button
+							onClick={handleAddCustomSection}
+							className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-300 dark:border-zinc-700 px-4 py-4 font-semibold text-gray-600 dark:text-gray-300 hover:border-sky-400 hover:bg-sky-50 hover:text-sky-700 dark:hover:border-sky-600 dark:hover:bg-sky-900/10 dark:hover:text-sky-300 transition-colors"
+							type="button"
+						>
+							<Plus className="w-5 h-5" />
+							{t("custom.section.add")}
+						</button>
 
 						{/* Example data button (hidden in production) */}
 						{process.env.NODE_ENV !== "production" && (
@@ -789,19 +754,12 @@ export default function Builder() {
 								</button>
 							</div>
 						)}
-
-						<div className="w-full">
-							<AtsExplanation />
-						</div>
-
-						<div className="w-full">
-							<CVTips />
-						</div>
 					</div>
 
 					{/* Live PDF Preview (desktop; smaller screens use the preview modal) */}
 					<div className="hidden lg:block lg:col-span-6">
-						<div className="sticky top-24 h-[calc(100vh-7rem)]">
+						{/* Stops above the floating action bar so the page is never covered */}
+						<div className="sticky top-24 h-[calc(100vh-11rem)]">
 							<LivePdfPane
 								data={cvData}
 								lang={language}
@@ -822,7 +780,7 @@ export default function Builder() {
 				onEnableCompactMode={enableCompactMode}
 			/>
 
-			{undoToast}
+			{toast}
 
 			{/* Style options for one section, opened from its own header */}
 			<SectionStyleSheet
@@ -847,7 +805,7 @@ export default function Builder() {
 				onSettingsChange={setRenderSettings}
 				onResetSectionOrder={handleResetSectionOrder}
 				onGeneratePDF={handleGeneratePDF}
-				onShowSuccessMessage={() => setShowSuccessMessage(true)}
+				onShowSuccessMessage={() => showNotice(t("cv.generated"))}
 				onExportXml={handleExportXml}
 				onImportXml={handleImportXml}
 				hasAnyContent={hasAnyContent}
@@ -868,7 +826,7 @@ export default function Builder() {
 				onResetSectionOrder={handleResetSectionOrder}
 				onShowPdfPreview={handleShowPdfPreview}
 				onGeneratePDF={handleGeneratePDF}
-				onShowSuccessMessage={() => setShowSuccessMessage(true)}
+				onShowSuccessMessage={() => showNotice(t("cv.generated"))}
 				onExportXml={handleExportXml}
 				onImportXml={handleImportXml}
 				hasAnyContent={hasAnyContent}
@@ -880,15 +838,6 @@ export default function Builder() {
 				onRenameProfile={profiles.rename}
 				onDeleteProfile={profiles.remove}
 			/>
-		</div>
-	);
-}
-
-/** Transient green banner above the form. */
-function Notice({ message }: { message: string }) {
-	return (
-		<div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg shadow-sm transition-colors duration-300">
-			<p className="text-green-700 dark:text-green-400 text-sm">{message}</p>
 		</div>
 	);
 }

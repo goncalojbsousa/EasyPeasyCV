@@ -30,6 +30,17 @@ const FAQ_GROUPS: { titleKey: string; questions: string[] }[] = [
 	},
 ];
 
+/** Advice the visitor acts on themselves; formatting is already handled by the app. */
+const TIPS = [
+	"keywords",
+	"job.titles",
+	"headers",
+	"acronyms",
+	"chronological",
+	"technical.skills",
+	"spelling",
+];
+
 const CONTACT_LINKS: {
 	key: string;
 	href: string;
@@ -143,6 +154,35 @@ export default async function FaqPage({
 							</div>
 						</section>
 					))}
+
+					<section id="tips" className="scroll-mt-24">
+						<h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+							{t("faq.tips.title")}
+						</h2>
+						<p className="mt-2 text-gray-600 dark:text-gray-300">
+							{t("faq.tips.subtitle")}
+						</p>
+						<ol className="mt-6 space-y-5">
+							{TIPS.map((tip, index) => (
+								<li key={tip} className="flex gap-4">
+									<span
+										aria-hidden="true"
+										className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sky-100 dark:bg-sky-900/40 text-sm font-semibold text-sky-700 dark:text-sky-300"
+									>
+										{index + 1}
+									</span>
+									<div>
+										<h3 className="font-semibold text-gray-900 dark:text-white">
+											{t(`tip.${tip}.title`)}
+										</h3>
+										<p className="mt-1 text-gray-600 dark:text-gray-400">
+											{t(`tip.${tip}.desc`)}
+										</p>
+									</div>
+								</li>
+							))}
+						</ol>
+					</section>
 
 					<section
 						id="contact"
