@@ -1288,6 +1288,75 @@ const ptTranslations: Record<string, string> = {
 	"faq.contact.note":
 		"As issues no GitHub são públicas: não incluas dados pessoais nem o teu CV.",
 	"faq.contact.opensInNewTab": "(abre num novo separador)",
+	"home.cta": "Criar o meu CV",
+	"home.hero.eyebrow": "Gratuito e open source",
+	"home.hero.title": "Faz o teu CV em minutos",
+	"home.hero.subtitle":
+		"Escreves, vês o resultado ao lado e descarregas o PDF. Sem conta, sem pagar e sem marca de água.",
+	"home.hero.note":
+		"Não pedimos email. O teu CV fica guardado só no teu computador.",
+	"home.hero.media.alt":
+		"O construtor do EasyPeasyCV: o formulário à esquerda e o CV a atualizar à direita",
+	"home.result.title": "É isto que descarregas",
+	"home.result.subtitle":
+		"Um PDF limpo, pronto a enviar. O CV é teu do início ao fim.",
+	"home.result.watermark":
+		"Sem marca de água, sem o nosso logótipo e sem pagar no último passo.",
+	"home.result.ats":
+		"Fácil de ler pelos filtros automáticos que muitas empresas usam para triar CVs.",
+	"home.result.language":
+		"Descarrega o mesmo CV com os títulos em português, inglês ou espanhol.",
+	"home.compare.title": "Porque é diferente",
+	"home.compare.subtitle":
+		"Muitos sites de CV dizem que são grátis até carregares em descarregar.",
+	"home.compare.others": "Muitos sites de CV",
+	"home.compare.account.others": "Pedem email e obrigam a criar conta",
+	"home.compare.account.us": "Começas logo a escrever",
+	"home.compare.data.others": "Guardam o teu CV nos servidores deles",
+	"home.compare.data.us": "O CV fica no teu computador. Nós não o vemos.",
+	"home.compare.download.others": "Cobram ou põem marca de água no PDF",
+	"home.compare.download.us": "PDF grátis e limpo, sempre",
+	"home.compare.subscription.others": "Subscrições que se renovam sozinhas",
+	"home.compare.subscription.us": "Não há nada para pagar nem cancelar",
+	"home.styles.title": "Escolhe um estilo",
+	"home.styles.subtitle":
+		"Começa por um estilo base e ajusta as cores, a letra e cada secção.",
+	"home.styles.media.alt": "Exemplo de estilo de CV",
+	"home.styles.link": "Experimentar os estilos",
+	"home.details.title": "Pensado para o dia a dia",
+	"home.details.mobile.title": "Também no telemóvel",
+	"home.details.mobile.description":
+		"Dá para fazer o CV todo no telemóvel, sem instalar nada.",
+	"home.details.mobile.media.alt": "O EasyPeasyCV aberto num telemóvel",
+	"home.details.versions.title": "Um CV para cada candidatura",
+	"home.details.versions.description":
+		"Guarda várias versões e duplica uma para a adaptar a outra vaga.",
+	"home.details.autosave.title": "Guardado automaticamente",
+	"home.details.autosave.description":
+		"Fecha a página e continua mais tarde, no mesmo browser.",
+	"home.details.backup.title": "Cópia num ficheiro",
+	"home.details.backup.description":
+		"Guarda o teu CV num ficheiro e abre-o noutro computador.",
+	"home.details.languages.title": "Em 4 línguas",
+	"home.details.languages.description":
+		"Português de Portugal e do Brasil, inglês e espanhol.",
+	"home.details.ats.title": "Pronto para os filtros automáticos",
+	"home.details.ats.description":
+		"Texto real e uma estrutura simples, que os sistemas de recrutamento conseguem ler.",
+	"home.about.title": "Quem faz o EasyPeasyCV",
+	"home.about.p1":
+		"Olá! Criei o EasyPeasyCV porque fazer um CV não devia obrigar a criar conta, a entregar os teus dados ou a pagar no último passo.",
+	"home.about.p2":
+		"É um projeto pessoal e open source: o código está público e qualquer pessoa pode ver como funciona. Se te ajudou, podes apoiar o projeto ou deixar uma sugestão.",
+	"home.about.media.alt": "Foto de quem faz o EasyPeasyCV",
+	"home.about.github": "Ver o código no GitHub",
+	"home.about.support": "Apoiar o projeto",
+	"home.about.feedback": "Deixar uma sugestão",
+	"home.faq.title": "Perguntas frequentes",
+	"home.faq.link": "Ver todas as perguntas",
+	"home.final.title": "Pronto para começar?",
+	"home.final.subtitle": "Demora poucos minutos e não precisas de conta.",
+	"home.styles.custom": "Personalizado",
 };
 
 export default ptTranslations;
