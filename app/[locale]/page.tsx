@@ -18,7 +18,7 @@ import {
 } from "../components/landing/landing_media";
 import { StyleSwitcher } from "../components/landing/style_switcher";
 import { Footer } from "../components/layout/footer";
-import { Navbar } from "../components/layout/navbar";
+import { Navbar, PAGE_CTA_ID } from "../components/layout/navbar";
 import { getTranslations } from "../translations";
 
 const GITHUB_URL = "https://github.com/goncalojbsousa/EasyPeasyCV";
@@ -89,7 +89,7 @@ export default async function Home({
 
 	return (
 		<div className="min-h-screen bg-white dark:bg-zinc-900 transition-colors">
-			<Navbar />
+			<Navbar builderCta />
 
 			<main id="main-content">
 				{/* ------------------------------------------------------------ Hero */}
@@ -106,7 +106,9 @@ export default async function Home({
 								{t("home.hero.subtitle")}
 							</p>
 							<div className="mt-8 flex flex-col items-center gap-3">
-								<PrimaryCta href={builderHref}>{t("home.cta")}</PrimaryCta>
+								<div id={PAGE_CTA_ID}>
+									<PrimaryCta href={builderHref}>{t("home.cta")}</PrimaryCta>
+								</div>
 								<p className="text-sm text-gray-500 dark:text-gray-400">
 									{t("home.hero.note")}
 								</p>
