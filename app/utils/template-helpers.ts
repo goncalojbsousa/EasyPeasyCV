@@ -129,16 +129,6 @@ export function formatDateRange(
 }
 
 /**
- * Get initials from a name (e.g., "John Doe" -> "JD")
- */
-export function getInitials(name?: string): string {
-	if (!name) return "YOU";
-	const parts = name.trim().split(/\s+/).filter(Boolean);
-	if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
-	return `${parts[0].charAt(0)}${parts[parts.length - 1].charAt(0)}`.toUpperCase();
-}
-
-/**
  * Split text into lines (handles different line break formats)
  */
 export function splitLines(value?: string): string[] {

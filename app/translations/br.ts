@@ -2,7 +2,6 @@
 const brTranslations: Record<string, string> = {
 	// Header
 	"app.title": "EasyPeasyCV",
-	"app.subtitle": "Crie um currículo profissional em minutos",
 
 	// Landing Page - Legacy
 	"landing.view.github.button": "Ver no GitHub",
@@ -11,8 +10,6 @@ const brTranslations: Record<string, string> = {
 	"landing.opensource.support.button": "Apoiar o Projeto",
 
 	// CTA Section
-	"generate.cv": "Gerar CV",
-	"generate.resume": "Gerar Currículo",
 	"generate.ats.resume": "Gerar CV",
 	"data.xml.title": "Dados (XML)",
 	"data.xml.export": "Exportar XML",
@@ -22,8 +19,6 @@ const brTranslations: Record<string, string> = {
 	"pdf.download.error": "Erro ao gerar PDF. Por favor, tente novamente.",
 	"preview.cv": "Pré-visualização do CV",
 	preview: "Pré-visualização",
-	"live.preview.title": "Pré-visualização ao vivo",
-	"live.preview.refresh": "Atualizar",
 	"live.preview.loading": "Gerando pré-visualização…",
 	"live.preview.empty": "Sem conteúdo para pré-visualização.",
 	"pdf.preview.title": "Pré-visualização do PDF",
@@ -39,10 +34,7 @@ const brTranslations: Record<string, string> = {
 	"pdf.preview.error.generate": "Erro ao gerar PDF",
 	"pdf.preview.error.unknown": "Erro desconhecido",
 	"pdf.preview.error.loading": "Erro ao carregar PDF",
-	"layout.menu.title": "Layout",
-	"layout.menu.controls": "Controles de Layout",
 	"layout.controls.font.label": "Fonte",
-	"layout.controls.font.custom": "Personalizada",
 	"layout.controls.textScale.label": "Escala do texto",
 	"layout.controls.margins.title": "Margens",
 	"layout.controls.margins.top": "Superior",
@@ -51,7 +43,6 @@ const brTranslations: Record<string, string> = {
 	"layout.controls.margins.right": "Direita",
 	"layout.controls.lineSpacing.label": "Espaçamento de linha",
 	"layout.controls.sectionSpacing.label": "Espaçamento entre seções",
-	"layout.controls.columns.label": "Colunas",
 
 	// Profiles
 	"profile.selector": "Perfis de CV",
@@ -69,46 +60,31 @@ const brTranslations: Record<string, string> = {
 	"profile.delete.cancel": "Cancelar",
 	"profile.unnamed": "Perfil sem nome",
 
-	"layout.controls.header.title": "Cabeçalho",
 	"layout.controls.header.nameSection": "Nome e Cargo",
 	"layout.controls.header.nameSize": "Tamanho do nome",
 	"layout.controls.header.weight.label": "Peso",
 	"layout.controls.header.weight.normal": "Normal",
 	"layout.controls.header.weight.bold": "Bold",
 	"layout.controls.header.weight.heavy": "Heavy",
-	"layout.controls.header.iconSize": "Tamanho dos ícones",
 	"layout.controls.header.color": "Cor",
 	"layout.controls.header.titleStyle.label": "Estilo do título",
 	"layout.controls.header.titleStyle.normal": "Normal",
 	"layout.controls.header.titleStyle.italic": "Itálico",
 	"layout.controls.header.titleStyle.uppercase": "Maiúsculas",
-	"layout.controls.header.titlePosition.label": "Posição do título",
-	"layout.controls.header.titlePosition.above": "Acima do nome",
-	"layout.controls.header.titlePosition.below": "Abaixo do nome",
 	"layout.controls.header.divider.title": "Linha divisória",
 	"layout.controls.header.divider.thickness": "Espessura",
 	"layout.controls.header.divider.style.label": "Estilo",
 	"layout.controls.header.divider.style.solid": "Sólida",
 	"layout.controls.header.divider.style.dashed": "Tracejada",
-	"layout.controls.header.icons": "Ícones de Contato",
-	"layout.controls.header.iconSpacing": "Espaçamento de ícones",
-	"layout.controls.header.alignment.label": "Alinhamento",
-	"layout.controls.header.alignment.left": "Esquerda",
-	"layout.controls.header.alignment.center": "Centro",
-	"layout.controls.header.alignment.right": "Direita",
 	"layout.controls.photo.title": "Foto",
 	"layout.controls.photo.enable": "Ativar foto",
-	"layout.controls.photo.aspectRatio": "Proporção",
 	"layout.controls.photo.borderRadius.label": "Raio de Borda",
-	"layout.controls.photo.help":
-		"A foto será limitada a 20% da área do cabeçalho.",
 	"layout.controls.photo.choose": "Escolher foto",
 	"layout.controls.photo.atsWarning":
 		"A inclusão de foto não é recomendada. Sistemas ATS não a utilizam e, na triagem humana, pode introduzir vieses desnecessários.",
 	"layout.controls.links.useThemeColor.label": "Usar cor do tema nos links",
 	"layout.controls.links.useThemeColor.help":
 		"Desative para manter o azul padrão de hiperlink.",
-	"layout.controls.quickSettings": "Configurações Rápidas",
 	"layout.controls.density.label": "Densidade do Layout",
 	"layout.controls.density.compact": "Compacto",
 	"layout.controls.density.normal": "Normal",
@@ -121,11 +97,9 @@ const brTranslations: Record<string, string> = {
 	"layout.controls.textAlignment.label": "Alinhamento do Texto",
 	"layout.controls.textAlignment.left": "Esquerda",
 	"layout.controls.textAlignment.justify": "Justificado",
-	"layout.controls.sections.title": "Títulos das Seções",
 	"layout.controls.sections.titleColor": "Cor dos títulos",
 	"layout.controls.sections.titleSize": "Tamanho dos títulos",
 	"layout.controls.sections.dateFormat.label": "Formato de Data",
-	"layout.controls.sections.dateFormat.help": "Como as datas aparecem no CV",
 	"layout.controls.dateFormat.short": "Curto (01/2020)",
 	"layout.controls.dateFormat.medium": "Médio (Jan 2020)",
 	"layout.controls.dateFormat.long": "Longo (Janeiro 2020)",
@@ -140,16 +114,8 @@ const brTranslations: Record<string, string> = {
 	"data.loaded.xml": "Dados importados a partir de XML.",
 	"cv.generated":
 		"Currículo gerado com sucesso! O download deve começar automaticamente.",
-	"section.order.info.title": "Organize as seções do seu CV",
-	"section.order.info.description":
-		"Use as setas para cima e para baixo em cada seção para reorganizar a ordem",
 	"section.order.reset": "Restaurar Ordem Padrão do Template",
 	"fill.example": "Preencher com dados de exemplo",
-	"validation.required": "Por favor, preencha todos os campos obrigatórios:",
-	"validation.name": "Nome completo",
-	"validation.email": "E-mail",
-	"validation.role": "Cargo desejado",
-	"validation.resume": "Resumo profissional",
 
 	// Thank you modal
 	"thank.you.title": "Obrigado por usar o EasyPeasyCV!",
@@ -181,7 +147,6 @@ const brTranslations: Record<string, string> = {
 	"section.certifications": "Certificações e Cursos",
 	"section.volunteer": "Voluntariado",
 	"section.projects": "Projetos",
-	"section.custom": "Seção personalizada",
 	"custom.section.add": "Adicionar seção personalizada",
 	"custom.section.default": "Seção personalizada",
 	"custom.section.name": "Título da seção",
@@ -203,13 +168,10 @@ const brTranslations: Record<string, string> = {
 	"custom.field.current": "Atual",
 	"custom.field.center": "Centralizar conteúdo",
 	"custom.field.add": "Adicionar campo",
-	"custom.field.remove": "Remover campo",
 	"custom.field.default": "Campo",
-	"custom.field.reorder": "Reordenar campo",
 
 	// Personal Information
 	"field.full.name": "Nome completo",
-	"field.desired.role": "Cargo Desejado",
 	"field.postal.code": "CEP",
 	"field.city": "Cidade",
 	"field.email": "E-mail",
@@ -221,8 +183,6 @@ const brTranslations: Record<string, string> = {
 
 	// Professional Summary
 	"field.professional.summary": "Resumo Profissional",
-	"resume.placeholder":
-		"Desenvolvedor Fullstack com experiência no desenvolvimento de aplicações web escaláveis, responsivas e centradas no usuário. Trabalho com TypeScript, React, Next.js, Node.js, PostgreSQL e Prisma, com forte atenção à performance, usabilidade e qualidade do código...",
 
 	// Professional Experience
 	"field.role": "Cargo",
@@ -232,7 +192,6 @@ const brTranslations: Record<string, string> = {
 	"field.end.month": "Mês de Término",
 	"field.end.year": "Ano de Término",
 	"field.current": "Atual",
-	"field.technologies": "Tecnologias Utilizadas",
 	"field.activities": "Atividades Desenvolvidas",
 	"field.achievements.label": "Conquistas",
 	"field.achievements.helper": "com métricas",
@@ -263,14 +222,12 @@ const brTranslations: Record<string, string> = {
 	"education.option.none": "Não exibir",
 
 	// Technical Skills
-	"skills.placeholder": "Ex: JavaScript, React, Node.js, SQL",
 	"field.technical.skills.helper": "Separe as competências por vírgula",
 
 	// Languages
 	"field.language": "Idioma",
 	"field.level": "Nível",
 	"add.language": "Adicionar Idioma",
-	"language.title": "Idioma",
 
 	// Language levels - CEFR (Common European Framework of Reference for Languages)
 	"language.level.a1": "A1",
@@ -293,7 +250,6 @@ const brTranslations: Record<string, string> = {
 	// Projects
 	"field.project.name": "Nome do Projeto",
 	"field.year": "Ano",
-	"field.project.technologies": "Tecnologias",
 	"field.project.link": "Link",
 	"field.project.sourceCode": "Código-fonte",
 	"add.project": "Adicionar Projeto",
@@ -307,7 +263,6 @@ const brTranslations: Record<string, string> = {
 
 	// Placeholders
 	"placeholder.full.name": "Ex: Gonçalo Sousa",
-	"placeholder.desired.role": "Ex: Desenvolvedor Full Stack",
 	"placeholder.postal.code": "Ex: 12345-678",
 	"placeholder.city": "Ex: São Paulo",
 	"placeholder.email": "Ex: email@exemplo.com",
@@ -320,23 +275,16 @@ const brTranslations: Record<string, string> = {
 	"placeholder.issuer": "Ex: Udemy, Alura, AWS",
 	"placeholder.hours": "Ex: 40 horas",
 	"placeholder.validation.link": "Ex: www.certificate.institution.com/123456",
-	"placeholder.project.name": "Ex: Portfolio Website",
 	"placeholder.project.year": "Ex: 2023",
-	"placeholder.project.tech": "Ex: React, Node.js, MongoDB",
 	"placeholder.project.link": "Ex: www.meuprojeto.com",
 	"placeholder.project.sourceCode": "Ex: www.github.com/user/repo",
-	"placeholder.project.description":
-		"Breve descrição do projeto, objetivos, resultados...",
 	"placeholder.project.impact":
 		"Ex: Aumentou o engajamento dos usuários em 30% após o lançamento",
 	"placeholder.organization": "Ex: Cruz Vermelha Brasileira",
-	"placeholder.volunteer.role": "Ex: Voluntário de Apoio Social",
 	"placeholder.volunteer.description":
 		"Ex: Prestação de apoio social a famílias carentes, distribuição de alimentos e roupas.",
 	"placeholder.volunteer.impact":
 		"Ex: Ajudou mais de 50 famílias durante a pandemia, organizou campanhas de arrecadação de doações.",
-	"placeholder.activities":
-		"Descreva suas responsabilidades (um item por linha)",
 	"placeholder.achievements":
 		"Ex: Reestruturei a arquitetura da aplicação usando Next.js com SSR, o que melhorou o SEO e aumentou a retenção de usuários em 25%.",
 	"placeholder.education.description":
@@ -388,11 +336,6 @@ const brTranslations: Record<string, string> = {
 	"month.nov": "Nov",
 	"month.dec": "Dez",
 
-	// Countries
-	"country.portugal": "Portugal (+351)",
-	"country.brazil": "Brasil (+55)",
-	"country.spain": "Espanha (+34)",
-
 	// Empty states
 	"empty.experience": "Nenhuma experiência adicionada",
 	"empty.education": "Nenhuma formação adicionada",
@@ -442,28 +385,16 @@ const brTranslations: Record<string, string> = {
 		"Liste as tecnologias, linguagens e ferramentas que você utilizou (ex: Java, Git, SQL, Docker).",
 
 	// Template selector
-	"template.selector": "Selecionar Modelo",
 	"template.professional.name": "Professional",
-	"template.professional.description":
-		"Cabeçalho centralizado com espaçamento equilibrado",
 	"template.timeline.name": "Timeline",
-	"template.timeline.description": "Layout tradicional e profissional",
 	"template.classic.name": "Classic",
-	"template.classic.description":
-		"Layout em coluna única, otimizado para sistemas ATS",
 	"template.modern.name": "Moderno",
-	"template.modern.description": "Design limpo e minimalista",
 	"template.creative.name": "Criativo",
-	"template.creative.description": "Layout inovador e expressivo",
 	"template.minimal.name": "Minimalista",
-	"template.minimal.description": "Design limpo e focado no essencial",
-	"template.selected": "Selecionado",
 	"color.selector": "Selecionar Cor",
 
 	// Actions
 	actions: "Ações",
-	"cv.actions": "Opções do CV",
-	"extra.features": "Funcionalidades Extras",
 
 	// CV Type Selector
 	"cv.type.development": "Desenvolvimento/IT",
@@ -489,8 +420,6 @@ const brTranslations: Record<string, string> = {
 		"Ex: JavaScript, React, Node.js, SQL, Git, Docker",
 	"development.placeholder.professional.summary":
 		"Ex: Desenvolvedor Full Stack com 5 anos de experiência em desenvolvimento web, especializado em React, Node.js e bancos de dados. Apaixonado por criar soluções escaláveis e eficientes.",
-	"development.placeholder.experience.description":
-		"Ex: Desenvolvi e mantive aplicações web full-stack utilizando React, Node.js e PostgreSQL. Implementei funcionalidades de autenticação, APIs RESTful e integração com sistemas externos.",
 	"development.placeholder.project.description":
 		"Ex: Aplicação web full-stack para gestão de tarefas com autenticação, dashboard interativo e API RESTful. Utilizou React, Node.js e MongoDB.",
 	"development.placeholder.project.name": "Ex: Portfolio Website",
@@ -507,8 +436,6 @@ const brTranslations: Record<string, string> = {
 		"Ex: Google Analytics, Facebook Ads, SEO, Email Marketing",
 	"marketing.placeholder.professional.summary":
 		"Ex: Profissional de Marketing Digital com 4 anos de experiência em campanhas online, especializado em SEO, SEM e análise de dados. Experiência em gestão de redes sociais e email marketing.",
-	"marketing.placeholder.experience.description":
-		"Ex: Gerenciei campanhas de marketing digital para clientes B2B e B2C, aumentando o tráfego orgânico em 40% e melhorando a taxa de conversão em 25%.",
 	"marketing.placeholder.project.description":
 		"Ex: Campanha de marketing digital para lançamento de produto, incluindo estratégia de redes sociais, email marketing e publicidade paga. Resultado: aumento de 300% nas vendas.",
 	"marketing.placeholder.project.name": "Ex: Campanha de Marketing Digital",
@@ -525,8 +452,6 @@ const brTranslations: Record<string, string> = {
 		"Ex: CRM, Prospecção, Negociação, LinkedIn",
 	"sales.placeholder.professional.summary":
 		"Ex: Representante de Vendas com 6 anos de experiência em vendas B2B, especializado em prospecção de clientes e fechamento de negócios. Histórico comprovado de superação de metas de vendas.",
-	"sales.placeholder.experience.description":
-		"Ex: Desenvolvi e mantive um pipeline de vendas de R$500K, prospectando novos clientes e gerenciando relacionamentos com clientes existentes. Utilizei CRM para otimizar processos de vendas.",
 	"sales.placeholder.project.description":
 		"Ex: Campanha de vendas para novo produto SaaS, incluindo prospecção, demonstrações e negociação. Resultado: 15 novos clientes e R$150K em vendas.",
 	"sales.placeholder.project.name": "Ex: Campanha de Vendas B2B",
@@ -542,8 +467,6 @@ const brTranslations: Record<string, string> = {
 		"Ex: Recrutamento, Seleção, Workday, LinkedIn Recruiter",
 	"hr.placeholder.professional.summary":
 		"Ex: Profissional de Recursos Humanos com 5 anos de experiência em recrutamento e seleção, especializado em recrutamento técnico e gestão de talentos. Experiência em implementação de políticas de RH.",
-	"hr.placeholder.experience.description":
-		"Ex: Recrutei e selecionei candidatos para posições técnicas e de gestão, gerenciando todo o processo desde a prospecção até a integração. Utilizei ATS e redes sociais para sourcing.",
 	"hr.placeholder.project.description":
 		"Ex: Projeto de recrutamento para equipe de desenvolvimento, incluindo definição de perfis, sourcing e seleção. Resultado: 8 contratações em 3 meses.",
 	"hr.placeholder.project.name": "Ex: Projeto de Recrutamento",
@@ -559,8 +482,6 @@ const brTranslations: Record<string, string> = {
 		"Ex: SAP, Excel, Contabilidade, Análise Financeira",
 	"finance.placeholder.professional.summary":
 		"Ex: Contador com 7 anos de experiência em contabilidade empresarial, especializado em análise financeira e relatórios fiscais. Experiência em auditoria e controle interno.",
-	"finance.placeholder.experience.description":
-		"Ex: Gerenciei a contabilidade de 15 empresas, preparando relatórios mensais, trimestrais e anuais. Implementei processos de controle interno e otimizei fluxos de trabalho.",
 	"finance.placeholder.project.description":
 		"Ex: Projeto de implementação de sistema de contabilidade, incluindo migração de dados e treinamento de usuários. Resultado: redução de 30% no tempo de processamento.",
 	"finance.placeholder.project.name": "Ex: Projeto de Contabilidade",
@@ -576,8 +497,6 @@ const brTranslations: Record<string, string> = {
 		"Ex: Photoshop, Illustrator, Figma, Design Thinking",
 	"design.placeholder.professional.summary":
 		"Ex: Designer Gráfico com 6 anos de experiência em design digital e impressão, especializado em identidade visual e design de interfaces. Apaixonado por criar experiências visuais memoráveis.",
-	"design.placeholder.experience.description":
-		"Ex: Criei identidades visuais para mais de 20 marcas, incluindo logos, guidelines e materiais promocionais. Colaborei com equipes de marketing para desenvolver campanhas visuais.",
 	"design.placeholder.project.description":
 		"Ex: Redesign completo da identidade visual de uma startup, incluindo logo, website e materiais promocionais. Resultado: aumento de 50% no reconhecimento da marca.",
 	"design.placeholder.project.name": "Ex: Projeto de Design",
@@ -593,8 +512,6 @@ const brTranslations: Record<string, string> = {
 		"Ex: Gestão de Pacientes, Procedimentos Clínicos, Excel",
 	"health.placeholder.professional.summary":
 		"Ex: Enfermeiro com 8 anos de experiência em cuidados intensivos, especializado em gestão de pacientes críticos e coordenação de equipes. Experiência em treinamento de novos profissionais.",
-	"health.placeholder.experience.description":
-		"Ex: Prestei cuidados de enfermagem especializados a pacientes críticos em UTI, coordenando equipes de 6 enfermeiros e implementando protocolos de segurança.",
 	"health.placeholder.project.description":
 		"Ex: Projeto de implementação de protocolos de higiene hospitalar, incluindo treinamento de equipes e monitoramento de indicadores. Resultado: redução de 40% em infecções hospitalares.",
 	"health.placeholder.project.name": "Ex: Projeto de Saúde",
@@ -611,8 +528,6 @@ const brTranslations: Record<string, string> = {
 		"Ex: Moodle, Google Classroom, Metodologias de Ensino",
 	"education.placeholder.professional.summary":
 		"Ex: Professor com 10 anos de experiência no ensino médio, especializado em Matemática e Ciências. Experiência em coordenação pedagógica e desenvolvimento de currículos.",
-	"education.placeholder.experience.description":
-		"Ex: Lecionei Matemática e Ciências para turmas de 25-30 alunos, desenvolvendo planos de aula inovadores e utilizando tecnologias educacionais para melhorar o engajamento dos alunos.",
 	"education.placeholder.project.description":
 		"Ex: Projeto de implementação de ensino híbrido, incluindo desenvolvimento de recursos digitais e treinamento de professores. Resultado: melhoria de 25% no desempenho dos alunos.",
 	"education.placeholder.project.name": "Ex: Projeto Educacional",
@@ -628,8 +543,6 @@ const brTranslations: Record<string, string> = {
 		"Ex: Microsoft Office, SAP, Gestão de Documentos",
 	"admin.placeholder.professional.summary":
 		"Ex: Assistente Administrativo com 9 anos de experiência em gestão administrativa, especializado em organização de eventos e gestão de documentos. Experiência em coordenação de equipes.",
-	"admin.placeholder.experience.description":
-		"Ex: Gerenciei a administração de uma empresa com 50 funcionários, coordenando eventos corporativos, gestão de documentos e apoio à diretoria executiva.",
 	"admin.placeholder.project.description":
 		"Ex: Projeto de digitalização de processos administrativos, incluindo implementação de sistema de gestão documental e treinamento de equipes. Resultado: redução de 60% no tempo de processamento.",
 	"admin.placeholder.project.name": "Ex: Projeto Administrativo",
@@ -644,8 +557,6 @@ const brTranslations: Record<string, string> = {
 	"other.placeholder.technical.skills": "Ex: Competências específicas da área",
 	"other.placeholder.professional.summary":
 		"Ex: Profissional especializado com experiência na área, demonstrando competências relevantes e resultados comprovados. Adaptável e orientado a resultados.",
-	"other.placeholder.experience.description":
-		"Ex: Desenvolvi e implementei projetos na área, demonstrando competências técnicas e soft skills relevantes para o cargo.",
 	"other.placeholder.project.description":
 		"Ex: Projeto específico da área, incluindo objetivos, metodologia e resultados alcançados.",
 	"other.placeholder.project.name": "Ex: Projeto Específico",
@@ -709,60 +620,6 @@ const brTranslations: Record<string, string> = {
 		"Ex: Desenvolvi projetos específicos da área\nImplementei processos e melhorias",
 	"other.placeholder.achievements":
 		"Ex: Alcançei objetivos específicos da área\nImplementei melhorias com resultados positivos",
-
-	// Job Analysis
-	"job.analysis.title": "Análise de Vagas",
-	"job.analysis.subtitle":
-		"Insira o texto da vaga para receber conselhos personalizados",
-	"job.analysis.input.label": "Texto da Vaga",
-	"job.analysis.input.placeholder":
-		"Cole aqui o texto completo da oferta de emprego...",
-	"job.analysis.analyze": "Analisar Vaga",
-	"job.analysis.analyzing": "Analisando...",
-	"job.analysis.clear": "Limpar",
-	"job.analysis.results": "Resultados da Análise",
-	"job.analysis.error": "Erro ao analisar a vaga. Tente novamente.",
-	"job.analysis.tips.title": "Como usar esta funcionalidade",
-	"job.analysis.tips.content":
-		"Cole o texto completo da oferta de emprego no campo acima. O sistema irá analisar automaticamente as competências requeridas, nível de experiência e tipo de contrato, fornecendo conselhos personalizados para adaptar seu CV.",
-
-	// Job Analysis Results
-	"job.analysis.skills.title": "Competências Identificadas",
-	"job.analysis.skills.found": "Competências encontradas na vaga",
-	"job.analysis.skills.advice":
-		"Certifique-se de incluir estas competências no seu CV, especialmente na seção de competências técnicas e experiências profissionais.",
-	"job.analysis.skills.notFound":
-		"Não foram identificadas competências técnicas específicas. Considere incluir competências gerais relevantes para a área.",
-
-	"job.analysis.experience.title": "Nível de Experiência",
-	"job.analysis.experience.senior":
-		"Esta vaga requer um nível sênior. Destaque experiências de liderança, gestão de projetos e responsabilidades estratégicas no seu CV.",
-	"job.analysis.experience.mid":
-		"Esta vaga requer um nível intermediário. Foque-se em experiências práticas e resultados quantificáveis.",
-	"job.analysis.experience.entry":
-		"Esta vaga é adequada para candidatos com pouca experiência. Destaque projetos acadêmicos, estágios e competências técnicas.",
-
-	"job.analysis.type.title": "Tipo de Contrato",
-	"job.analysis.type.remote":
-		"Esta vaga permite trabalho remoto. Destaque experiências de trabalho autônomo e competências de comunicação virtual.",
-	"job.analysis.type.partTime":
-		"Esta vaga é de meio período. Adapte seu CV para mostrar flexibilidade e gestão eficiente do tempo.",
-	"job.analysis.type.fullTime":
-		"Esta vaga é de período integral. Destaque compromisso e disponibilidade total para o projeto.",
-
-	"job.analysis.general.title": "Conselhos Gerais",
-	"job.analysis.general.advice":
-		"Personalize seu CV de acordo com esta análise. Utilize palavras-chave da vaga, destaque experiências relevantes e adapte o resumo profissional para alinhar com os requisitos identificados.",
-
-	// Job Analysis Actions
-	"job.analysis.action.button": "Analisar Vaga",
-	"job.analysis.action.description":
-		"Analise uma oferta de emprego para receber conselhos personalizados",
-
-	// CV Tips Actions
-	"cv.tips.action.button": "Dicas de CV",
-	"cv.tips.action.description":
-		"Consulte dicas para criar um CV que passe em sistemas ATS",
 
 	// ATS Explanation
 	"ats.explanation.title": "O que são Sistemas ATS?",
@@ -828,13 +685,6 @@ const brTranslations: Record<string, string> = {
 		"A página que você procura não existe ou foi movida. Verifique o URL ou volte para a página inicial.",
 	"error.404.home.button": "Voltar à Página Inicial",
 	"error.404.builder.button": "Criar CV",
-	"error.404.helpful.title": "Páginas úteis",
-	"error.404.helpful.features.title": "Funcionalidades",
-	"error.404.helpful.features.description":
-		"Descubra todas as funcionalidades do EasyPeasyCV para criar seu CV profissional.",
-	"error.404.helpful.templates.title": "Templates",
-	"error.404.helpful.templates.description":
-		"Explore nossos templates profissionais e personalize seu CV.",
 
 	// Privacy Policy Page
 	"privacy.title": "Política de Privacidade",

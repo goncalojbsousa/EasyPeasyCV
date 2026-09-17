@@ -2,7 +2,6 @@
 const enTranslations: Record<string, string> = {
 	// Header
 	"app.title": "EasyPeasyCV",
-	"app.subtitle": "Create a professional resume in minutes",
 
 	// Landing Page - Legacy
 	"landing.view.github.button": "View on GitHub",
@@ -11,8 +10,6 @@ const enTranslations: Record<string, string> = {
 	"landing.opensource.support.button": "Support the Project",
 
 	// CTA Section
-	"generate.cv": "Generate CV",
-	"generate.resume": "Generate Resume",
 	"generate.ats.resume": "Generate CV",
 	"data.xml.title": "Data (XML)",
 	"data.xml.export": "Export XML",
@@ -22,8 +19,6 @@ const enTranslations: Record<string, string> = {
 	"pdf.download.error": "Error generating PDF. Please try again.",
 	"preview.cv": "CV Preview",
 	preview: "Preview",
-	"live.preview.title": "Live Preview",
-	"live.preview.refresh": "Refresh",
 	"live.preview.loading": "Generating preview…",
 	"live.preview.empty": "No content to preview.",
 	"pdf.preview.title": "PDF Preview",
@@ -38,10 +33,7 @@ const enTranslations: Record<string, string> = {
 	"pdf.preview.error.generate": "Error generating PDF",
 	"pdf.preview.error.unknown": "Unknown error",
 	"pdf.preview.error.loading": "Error loading PDF",
-	"layout.menu.title": "Layout",
-	"layout.menu.controls": "Layout Controls",
 	"layout.controls.font.label": "Font",
-	"layout.controls.font.custom": "Custom",
 	"layout.controls.textScale.label": "Text scale",
 	"layout.controls.margins.title": "Margins",
 	"layout.controls.margins.top": "Top",
@@ -50,7 +42,6 @@ const enTranslations: Record<string, string> = {
 	"layout.controls.margins.right": "Right",
 	"layout.controls.lineSpacing.label": "Line spacing",
 	"layout.controls.sectionSpacing.label": "Section spacing",
-	"layout.controls.columns.label": "Columns",
 
 	// Profiles
 	"profile.selector": "CV Profiles",
@@ -67,45 +58,31 @@ const enTranslations: Record<string, string> = {
 	"profile.delete.warning": "This action cannot be undone.",
 	"profile.delete.cancel": "Cancel",
 	"profile.unnamed": "Unnamed profile",
-	"layout.controls.header.title": "Header",
 	"layout.controls.header.nameSection": "Name and Title",
 	"layout.controls.header.nameSize": "Name size",
 	"layout.controls.header.weight.label": "Weight",
 	"layout.controls.header.weight.normal": "Normal",
 	"layout.controls.header.weight.bold": "Bold",
 	"layout.controls.header.weight.heavy": "Heavy",
-	"layout.controls.header.iconSize": "Icon size",
 	"layout.controls.header.color": "Color",
 	"layout.controls.header.titleStyle.label": "Title style",
 	"layout.controls.header.titleStyle.normal": "Normal",
 	"layout.controls.header.titleStyle.italic": "Italic",
 	"layout.controls.header.titleStyle.uppercase": "Uppercase",
-	"layout.controls.header.titlePosition.label": "Title position",
-	"layout.controls.header.titlePosition.above": "Above name",
-	"layout.controls.header.titlePosition.below": "Below name",
 	"layout.controls.header.divider.title": "Divider line",
 	"layout.controls.header.divider.thickness": "Thickness",
 	"layout.controls.header.divider.style.label": "Style",
 	"layout.controls.header.divider.style.solid": "Solid",
 	"layout.controls.header.divider.style.dashed": "Dashed",
-	"layout.controls.header.icons": "Contact Icons",
-	"layout.controls.header.iconSpacing": "Icon spacing",
-	"layout.controls.header.alignment.label": "Alignment",
-	"layout.controls.header.alignment.left": "Left",
-	"layout.controls.header.alignment.center": "Center",
-	"layout.controls.header.alignment.right": "Right",
 	"layout.controls.photo.title": "Photo",
 	"layout.controls.photo.enable": "Enable photo",
-	"layout.controls.photo.aspectRatio": "Aspect ratio",
 	"layout.controls.photo.borderRadius.label": "Border Radius",
-	"layout.controls.photo.help": "Photo is limited to 20% of header area.",
 	"layout.controls.photo.choose": "Choose photo",
 	"layout.controls.photo.atsWarning":
 		"Heads up: using a photo is not recommended. ATS systems ignore images, and at the human stage a photo can introduce bias against you.",
 	"layout.controls.links.useThemeColor.label": "Use theme color on links",
 	"layout.controls.links.useThemeColor.help":
 		"Turn off to keep the standard hyperlink blue.",
-	"layout.controls.quickSettings": "Quick Settings",
 	"layout.controls.density.label": "Layout Density",
 	"layout.controls.density.compact": "Compact",
 	"layout.controls.density.normal": "Normal",
@@ -118,16 +95,13 @@ const enTranslations: Record<string, string> = {
 	"layout.controls.textAlignment.label": "Text Alignment",
 	"layout.controls.textAlignment.left": "Left",
 	"layout.controls.textAlignment.justify": "Justify",
-	"layout.controls.sections.title": "Section Titles",
 	"layout.controls.sections.titleColor": "Title color",
 	"layout.controls.sections.titleSize": "Title size",
 	"layout.controls.sections.dateFormat.label": "Date Format",
-	"layout.controls.sections.dateFormat.help": "How dates appear in the CV",
 	"layout.controls.dateFormat.short": "Short (01/2020)",
 	"layout.controls.dateFormat.medium": "Medium (Jan 2020)",
 	"layout.controls.dateFormat.long": "Long (January 2020)",
 	"layout.controls.reset": "Reset layout to default",
-	"select.ui.language": "Choose language:",
 	"language.portuguese": "Português",
 	"language.english": "English",
 	"language.spanish": "Español",
@@ -138,16 +112,8 @@ const enTranslations: Record<string, string> = {
 	"data.loaded.xml": "Data imported from XML.",
 	"cv.generated":
 		"Resume generated successfully! Download should start automatically.",
-	"section.order.info.title": "Organize your CV sections",
-	"section.order.info.description":
-		"Use the up and down arrows on each section to reorder them",
 	"section.order.reset": "Restore Default Template Order",
 	"fill.example": "Fill with example data",
-	"validation.required": "Please fill in all required fields:",
-	"validation.name": "Full name",
-	"validation.email": "Email",
-	"validation.role": "Desired role",
-	"validation.resume": "Professional summary",
 
 	// Thank you modal
 	"thank.you.title": "Thank you for using EasyPeasyCV!",
@@ -179,7 +145,6 @@ const enTranslations: Record<string, string> = {
 	"section.certifications": "Certifications & Courses",
 	"section.volunteer": "Volunteer Work",
 	"section.projects": "Projects",
-	"section.custom": "Custom Section",
 	"custom.section.add": "Add custom section",
 	"custom.section.default": "Custom section",
 	"custom.section.name": "Section title",
@@ -201,13 +166,10 @@ const enTranslations: Record<string, string> = {
 	"custom.field.current": "Current",
 	"custom.field.center": "Center content",
 	"custom.field.add": "Add field",
-	"custom.field.remove": "Remove field",
 	"custom.field.default": "Field",
-	"custom.field.reorder": "Reorder field",
 
 	// Personal Information
 	"field.full.name": "Full name",
-	"field.desired.role": "Desired Role",
 	"field.postal.code": "ZIP code",
 	"field.city": "City",
 	"field.email": "Email",
@@ -219,8 +181,6 @@ const enTranslations: Record<string, string> = {
 
 	// Professional Summary
 	"field.professional.summary": "Professional Summary",
-	"resume.placeholder":
-		"Fullstack developer with experience in developing scalable, responsive, and user-centered web applications. I work with TypeScript, React, Next.js, Node.js, PostgreSQL and Prisma, with strong attention to performance, usability and code quality...",
 
 	// Professional Experience
 	"field.role": "Role",
@@ -230,7 +190,6 @@ const enTranslations: Record<string, string> = {
 	"field.end.month": "End Month",
 	"field.end.year": "End Year",
 	"field.current": "Current",
-	"field.technologies": "Technologies Used",
 	"field.activities": "Activities Developed",
 	"field.achievements.label": "Achievements",
 	"field.achievements.helper": "with metrics",
@@ -261,14 +220,12 @@ const enTranslations: Record<string, string> = {
 	"education.option.none": "Do not show",
 
 	// Technical Skills
-	"skills.placeholder": "e.g., JavaScript, React, Node.js, SQL",
 	"field.technical.skills.helper": "Separate skills by comma",
 
 	// Languages
 	"field.language": "Language",
 	"field.level": "Level",
 	"add.language": "Add Language",
-	"language.title": "Language",
 
 	// Language levels - CEFR (Common European Framework of Reference for Languages)
 	"language.level.a1": "A1",
@@ -291,7 +248,6 @@ const enTranslations: Record<string, string> = {
 	// Projects
 	"field.project.name": "Project Name",
 	"field.year": "Year",
-	"field.project.technologies": "Technologies",
 	"field.project.link": "Link",
 	"field.project.sourceCode": "Source Code",
 	"add.project": "Add Project",
@@ -305,7 +261,6 @@ const enTranslations: Record<string, string> = {
 
 	// Placeholders
 	"placeholder.full.name": "e.g., John Doe",
-	"placeholder.desired.role": "e.g., Full Stack Developer",
 	"placeholder.postal.code": "e.g., 12345",
 	"placeholder.city": "e.g., Lisbon",
 	"placeholder.email": "e.g., email@example.com",
@@ -319,23 +274,16 @@ const enTranslations: Record<string, string> = {
 	"placeholder.issuer": "e.g., Udemy, Alura, AWS",
 	"placeholder.hours": "e.g., 40 hours",
 	"placeholder.validation.link": "e.g., www.certificate.institution.com/123456",
-	"placeholder.project.name": "e.g., Portfolio Website",
 	"placeholder.project.year": "e.g., 2023",
-	"placeholder.project.tech": "e.g., React, Node.js, MongoDB",
 	"placeholder.project.link": "e.g., www.myproject.com",
 	"placeholder.project.sourceCode": "e.g., www.github.com/user/repo",
-	"placeholder.project.description":
-		"Brief project description, objectives, results...",
 	"placeholder.project.impact":
 		"e.g., Increased user engagement by 30% after launch",
 	"placeholder.organization": "e.g., Red Cross Portugal",
-	"placeholder.volunteer.role": "e.g., Social Support Volunteer",
 	"placeholder.volunteer.description":
 		"e.g., Providing social support to families in need, distributing food and clothing.",
 	"placeholder.volunteer.impact":
 		"e.g., Helped more than 50 families during the pandemic, organized donation campaigns.",
-	"placeholder.activities":
-		"Describe your responsibilities (one item per line)",
 	"placeholder.achievements":
 		"e.g., I restructured the application architecture using Next.js with SSR, which improved SEO and increased user retention by 25%.",
 	"placeholder.education.description":
@@ -387,11 +335,6 @@ const enTranslations: Record<string, string> = {
 	"month.nov": "Nov",
 	"month.dec": "Dec",
 
-	// Countries
-	"country.portugal": "Portugal (+351)",
-	"country.brazil": "Brazil (+55)",
-	"country.spain": "Spain (+34)",
-
 	// Empty states
 	"empty.experience": "No experience added",
 	"empty.education": "No education added",
@@ -438,27 +381,16 @@ const enTranslations: Record<string, string> = {
 		"List the technologies, languages and tools you used (e.g., Java, Git, SQL, Docker).",
 
 	// Template selector
-	"template.selector": "Select Template",
 	"template.professional.name": "Professional",
-	"template.professional.description": "Centered header with balanced spacing",
 	"template.timeline.name": "Timeline",
-	"template.timeline.description": "Traditional and professional layout",
 	"template.classic.name": "Classic",
-	"template.classic.description":
-		"Single column layout, optimized for ATS systems",
 	"template.modern.name": "Modern",
-	"template.modern.description": "Clean and minimalist design",
 	"template.creative.name": "Creative",
-	"template.creative.description": "Innovative and expressive layout",
 	"template.minimal.name": "Minimal",
-	"template.minimal.description": "Clean, essentials-first layout",
-	"template.selected": "Selected",
 	"color.selector": "Select Color",
 
 	// Actions
 	actions: "Actions",
-	"cv.actions": "CV Options",
-	"extra.features": "Extra Features",
 
 	// CV Type Selector
 	"cv.type.development": "Development/IT",
@@ -484,8 +416,6 @@ const enTranslations: Record<string, string> = {
 		"e.g., JavaScript, React, Node.js, SQL, Git, Docker",
 	"development.placeholder.professional.summary":
 		"e.g., Full Stack Developer with 5 years of experience in web development, specialized in React, Node.js and databases. Passionate about creating scalable and efficient solutions.",
-	"development.placeholder.experience.description":
-		"e.g., Developed and maintained full-stack web applications using React, Node.js and PostgreSQL. Implemented authentication features, RESTful APIs and external system integrations.",
 	"development.placeholder.project.description":
 		"e.g., Full-stack web application for task management with authentication, interactive dashboard and RESTful API. Used React, Node.js and MongoDB.",
 	"development.placeholder.project.name": "e.g., Portfolio Website",
@@ -502,8 +432,6 @@ const enTranslations: Record<string, string> = {
 		"e.g., Google Analytics, Facebook Ads, SEO, Email Marketing",
 	"marketing.placeholder.professional.summary":
 		"e.g., Digital Marketing Professional with 4 years of experience in online campaigns, specialized in SEO, SEM and data analysis. Experience in social media management and email marketing.",
-	"marketing.placeholder.experience.description":
-		"e.g., Managed digital marketing campaigns for B2B and B2C clients, increasing organic traffic by 40% and improving conversion rate by 25%.",
 	"marketing.placeholder.project.description":
 		"e.g., Digital marketing campaign for product launch, including social media strategy, email marketing and paid advertising. Result: 300% increase in sales.",
 	"marketing.placeholder.project.name": "e.g., Digital Marketing Campaign",
@@ -520,8 +448,6 @@ const enTranslations: Record<string, string> = {
 		"e.g., CRM, Prospecting, Negotiation, LinkedIn",
 	"sales.placeholder.professional.summary":
 		"e.g., Sales Representative with 6 years of B2B sales experience, specialized in client prospecting and deal closing. Proven track record of exceeding sales targets.",
-	"sales.placeholder.experience.description":
-		"e.g., Developed and maintained a €500K sales pipeline, prospecting new clients and managing relationships with existing clients. Used CRM to optimize sales processes.",
 	"sales.placeholder.project.description":
 		"e.g., Sales campaign for new SaaS product, including prospecting, demos and negotiation. Result: 15 new clients and €150K in sales.",
 	"sales.placeholder.project.name": "e.g., B2B Sales Campaign",
@@ -537,8 +463,6 @@ const enTranslations: Record<string, string> = {
 		"e.g., Recruitment, Selection, Workday, LinkedIn Recruiter",
 	"hr.placeholder.professional.summary":
 		"e.g., Human Resources Professional with 5 years of experience in recruitment and selection, specialized in technical recruitment and talent management. Experience in HR policy implementation.",
-	"hr.placeholder.experience.description":
-		"e.g., Recruited and selected candidates for technical and management positions, managing the entire process from prospecting to onboarding. Used ATS and social networks for sourcing.",
 	"hr.placeholder.project.description":
 		"e.g., Recruitment project for development team, including profile definition, sourcing and selection. Result: 8 hires in 3 months.",
 	"hr.placeholder.project.name": "e.g., Recruitment Project",
@@ -554,8 +478,6 @@ const enTranslations: Record<string, string> = {
 		"e.g., SAP, Excel, Accounting, Financial Analysis",
 	"finance.placeholder.professional.summary":
 		"e.g., Accountant with 7 years of business accounting experience, specialized in financial analysis and tax reporting. Experience in auditing and internal control.",
-	"finance.placeholder.experience.description":
-		"e.g., Managed accounting for 15 companies, preparing monthly, quarterly and annual reports. Implemented internal control processes and optimized workflows.",
 	"finance.placeholder.project.description":
 		"e.g., Accounting system implementation project, including data migration and user training. Result: 30% reduction in processing time.",
 	"finance.placeholder.project.name": "e.g., Accounting Project",
@@ -572,8 +494,6 @@ const enTranslations: Record<string, string> = {
 		"e.g., Photoshop, Illustrator, Figma, Design Thinking",
 	"design.placeholder.professional.summary":
 		"e.g., Graphic Designer with 6 years of experience in digital and print design, specialized in visual identity and interface design. Passionate about creating memorable visual experiences.",
-	"design.placeholder.experience.description":
-		"e.g., Created visual identities for 20+ brands, including logos, guidelines and promotional materials. Collaborated with marketing teams to develop visual campaigns.",
 	"design.placeholder.project.description":
 		"e.g., Complete visual identity redesign for a startup, including logo, website and promotional materials. Result: 50% increase in brand recognition.",
 	"design.placeholder.project.name": "e.g., Design Project",
@@ -589,8 +509,6 @@ const enTranslations: Record<string, string> = {
 		"e.g., Patient Management, Clinical Procedures, Excel",
 	"health.placeholder.professional.summary":
 		"e.g., Nurse with 8 years of intensive care experience, specialized in critical patient management and team coordination. Experience in training new professionals.",
-	"health.placeholder.experience.description":
-		"e.g., Provided specialized nursing care to critical patients in ICU, coordinating teams of 6 nurses and implementing safety protocols.",
 	"health.placeholder.project.description":
 		"e.g., Hospital hygiene protocol implementation project, including team training and indicator monitoring. Result: 40% reduction in hospital infections.",
 	"health.placeholder.project.name": "e.g., Healthcare Project",
@@ -607,8 +525,6 @@ const enTranslations: Record<string, string> = {
 		"e.g., Moodle, Google Classroom, Teaching Methodologies",
 	"education.placeholder.professional.summary":
 		"e.g., Teacher with 10 years of secondary education experience, specialized in Mathematics and Sciences. Experience in pedagogical coordination and curriculum development.",
-	"education.placeholder.experience.description":
-		"e.g., Taught Mathematics and Sciences to classes of 25-30 students, developing innovative lesson plans and using educational technologies to improve student engagement.",
 	"education.placeholder.project.description":
 		"e.g., Hybrid teaching implementation project, including digital resource development and teacher training. Result: 25% improvement in student performance.",
 	"education.placeholder.project.name": "e.g., Educational Project",
@@ -624,8 +540,6 @@ const enTranslations: Record<string, string> = {
 		"e.g., Microsoft Office, SAP, Document Management",
 	"admin.placeholder.professional.summary":
 		"e.g., Administrative Assistant with 9 years of administrative management experience, specialized in event organization and document management. Experience in team coordination.",
-	"admin.placeholder.experience.description":
-		"e.g., Managed administration for a company with 50 employees, coordinating events, document management and executive support.",
 	"admin.placeholder.project.description":
 		"e.g., Administrative process digitization project, including document management system implementation and team training. Result: 60% reduction in processing time.",
 	"admin.placeholder.project.name": "e.g., Administrative Project",
@@ -640,8 +554,6 @@ const enTranslations: Record<string, string> = {
 	"other.placeholder.technical.skills": "e.g., Area-specific skills",
 	"other.placeholder.professional.summary":
 		"e.g., Specialized professional with experience in the area, demonstrating relevant skills and proven results. Adaptable and results-oriented.",
-	"other.placeholder.experience.description":
-		"e.g., Developed and implemented projects in the area, demonstrating technical skills and soft skills relevant to the position.",
 	"other.placeholder.project.description":
 		"e.g., Area-specific project, including objectives, methodology and achieved results.",
 	"other.placeholder.project.name": "e.g., Specific Project",
@@ -705,60 +617,6 @@ const enTranslations: Record<string, string> = {
 		"e.g., Developed area-specific projects\nImplemented processes and improvements",
 	"other.placeholder.achievements":
 		"e.g., Achieved area-specific objectives\nImplemented improvements with positive results",
-
-	// Job Analysis
-	"job.analysis.title": "Job Analysis",
-	"job.analysis.subtitle":
-		"Enter job posting text to receive personalized advice",
-	"job.analysis.input.label": "Job Posting Text",
-	"job.analysis.input.placeholder":
-		"Paste the complete job posting text here...",
-	"job.analysis.analyze": "Analyze Job",
-	"job.analysis.analyzing": "Analyzing...",
-	"job.analysis.clear": "Clear",
-	"job.analysis.results": "Analysis Results",
-	"job.analysis.error": "Error analyzing job posting. Please try again.",
-	"job.analysis.tips.title": "How to use this feature",
-	"job.analysis.tips.content":
-		"Paste the complete job posting text in the field above. The system will automatically analyze required skills, experience level, and contract type, providing personalized advice to adapt your CV.",
-
-	// Job Analysis Results
-	"job.analysis.skills.title": "Identified Skills",
-	"job.analysis.skills.found": "Skills found in the job posting",
-	"job.analysis.skills.advice":
-		"Make sure to include these skills in your CV, especially in the technical skills section and professional experiences.",
-	"job.analysis.skills.notFound":
-		"No specific technical skills were identified. Consider including general skills relevant to the field.",
-
-	"job.analysis.experience.title": "Experience Level",
-	"job.analysis.experience.senior":
-		"This job requires a senior level. Highlight leadership experiences, project management, and strategic responsibilities in your CV.",
-	"job.analysis.experience.mid":
-		"This job requires a mid-level. Focus on practical experiences and quantifiable results.",
-	"job.analysis.experience.entry":
-		"This job is suitable for candidates with little experience. Highlight academic projects, internships, and technical skills.",
-
-	"job.analysis.type.title": "Contract Type",
-	"job.analysis.type.remote":
-		"This job allows remote work. Highlight autonomous work experiences and virtual communication skills.",
-	"job.analysis.type.partTime":
-		"This job is part-time. Adapt your CV to show flexibility and efficient time management.",
-	"job.analysis.type.fullTime":
-		"This job is full-time. Highlight commitment and full availability for the project.",
-
-	"job.analysis.general.title": "General Advice",
-	"job.analysis.general.advice":
-		"Personalize your CV according to this analysis. Use keywords from the job posting, highlight relevant experiences, and adapt the professional summary to align with the identified requirements.",
-
-	// Job Analysis Actions
-	"job.analysis.action.button": "Analyze Job",
-	"job.analysis.action.description":
-		"Analyze a job posting to receive personalized advice",
-
-	// CV Tips Actions
-	"cv.tips.action.button": "CV Tips",
-	"cv.tips.action.description":
-		"View tips for creating a CV that passes ATS systems",
 
 	// ATS Explanation
 	"ats.explanation.title": "What are ATS Systems?",
@@ -824,13 +682,6 @@ const enTranslations: Record<string, string> = {
 		"The page you are looking for does not exist or has been moved. Check the URL or navigate back to the home page.",
 	"error.404.home.button": "Back to Home",
 	"error.404.builder.button": "Create CV",
-	"error.404.helpful.title": "Helpful Pages",
-	"error.404.helpful.features.title": "Features",
-	"error.404.helpful.features.description":
-		"Discover all EasyPeasyCV features to create your professional CV.",
-	"error.404.helpful.templates.title": "Templates",
-	"error.404.helpful.templates.description":
-		"Explore our professional templates and customize your CV.",
 
 	// Privacy Policy Page
 	"privacy.title": "Privacy Policy",
