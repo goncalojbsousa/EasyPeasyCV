@@ -23,7 +23,7 @@ export function StyleSwitcher({
 	const [selected, setSelected] = useState(0);
 
 	return (
-		<div className="mx-auto w-full max-w-[480px]">
+		<div className="reveal mx-auto w-full max-w-[480px]">
 			<fieldset className="mb-5 flex flex-wrap justify-center gap-2">
 				<legend className="sr-only">{label}</legend>
 				{styles.map((style, index) => (
