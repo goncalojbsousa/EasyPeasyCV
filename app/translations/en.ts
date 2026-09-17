@@ -52,10 +52,10 @@ const enTranslations: Record<string, string> = {
 	"profile.rename": "Rename",
 	"profile.rename.save": "Save name",
 	"profile.rename.cancel": "Cancel edit",
-	"profile.delete.title": "Delete profile?",
+	"profile.delete.title": 'Delete the "{name}" profile?',
 	"profile.delete": "Delete",
-	"profile.delete.confirm": 'The profile "{name}" will be permanently removed.',
-	"profile.delete.warning": "This action cannot be undone.",
+	"profile.delete.confirm":
+		"This profile's CV is erased from this browser. It can't be recovered.",
 	"profile.delete.cancel": "Cancel",
 	"profile.unnamed": "Unnamed profile",
 	"layout.controls.header.nameSection": "Name and Title",
