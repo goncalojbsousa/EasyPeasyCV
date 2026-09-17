@@ -990,6 +990,7 @@ const brTranslations: Record<string, string> = {
 	"faq.tips.subtitle":
 		"Pequenos cuidados que ajudam seu currículo a passar nos filtros automáticos e a ser lido por quem decide.",
 	"completeness.tipsLink": "Dicas para um bom currículo",
+	"builder.heading": "Criar currículo",
 };
 
 export default brTranslations;

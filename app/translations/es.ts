@@ -973,6 +973,7 @@ const esTranslations: Record<string, string> = {
 	"faq.tips.subtitle":
 		"Pequeños detalles que ayudan a tu currículum a pasar los filtros automáticos y a que lo lea quien decide.",
 	"completeness.tipsLink": "Consejos para un buen currículum",
+	"builder.heading": "Crear currículum",
 };
 
 export default esTranslations;
