@@ -1,7 +1,8 @@
 import { ChevronDown } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useLanguage } from "../../contexts/LanguageContext";
 import type { CvColor } from "../../types/cv";
+import { useDismissable } from "../../utils/useDismissable";
 
 /**
  * Props for the ColorSelector component.
@@ -98,23 +99,7 @@ export function ColorSelector({
 	const { language } = useLanguage();
 	const containerRef = useRef<HTMLDivElement>(null);
 
-	// Effect to close dropdown when clicking outside
-	useEffect(() => {
-		if (!isOpen) return;
-
-		const handleClickOutside = (event: MouseEvent) => {
-			const target = event.target as Node;
-			if (containerRef.current && !containerRef.current.contains(target)) {
-				setIsOpen(false);
-			}
-		};
-
-		document.addEventListener("mousedown", handleClickOutside, true);
-
-		return () => {
-			document.removeEventListener("mousedown", handleClickOutside, true);
-		};
-	}, [isOpen]);
+	useDismissable(containerRef, isOpen, () => setIsOpen(false));
 
 	// Handles color selection and closes the dropdown
 	const handleColorSelect = (color: CvColor) => {

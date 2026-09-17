@@ -1,0 +1,301 @@
+/**
+ * Country dialling codes offered in the personal information form.
+ * The stored value is the Portuguese label plus dial code, kept as-is for
+ * backwards compatibility with previously saved profiles and XML exports.
+ */
+export const COUNTRY_CODES: readonly { label: string; value: string }[] = [
+	// Europe
+	{ label: "Portugal (+351)", value: "Portugal (+351)" },
+	{ label: "Espanha (+34)", value: "Espanha (+34)" },
+	{ label: "França (+33)", value: "França (+33)" },
+	{ label: "Alemanha (+49)", value: "Alemanha (+49)" },
+	{ label: "Itália (+39)", value: "Itália (+39)" },
+	{ label: "Irlanda (+353)", value: "Irlanda (+353)" },
+	{ label: "Reino Unido (+44)", value: "Reino Unido (+44)" },
+	{ label: "Países Baixos (+31)", value: "Países Baixos (+31)" },
+	{ label: "Bélgica (+32)", value: "Bélgica (+32)" },
+	{ label: "Luxemburgo (+352)", value: "Luxemburgo (+352)" },
+	{ label: "Suíça (+41)", value: "Suíça (+41)" },
+	{ label: "Áustria (+43)", value: "Áustria (+43)" },
+	{ label: "Suécia (+46)", value: "Suécia (+46)" },
+	{ label: "Noruega (+47)", value: "Noruega (+47)" },
+	{ label: "Dinamarca (+45)", value: "Dinamarca (+45)" },
+	{ label: "Finlândia (+358)", value: "Finlândia (+358)" },
+	{ label: "Polónia (+48)", value: "Polónia (+48)" },
+	{ label: "República Checa (+420)", value: "República Checa (+420)" },
+	{ label: "Eslováquia (+421)", value: "Eslováquia (+421)" },
+	{ label: "Hungria (+36)", value: "Hungria (+36)" },
+	{ label: "Roménia (+40)", value: "Roménia (+40)" },
+	{ label: "Bulgária (+359)", value: "Bulgária (+359)" },
+	{ label: "Grécia (+30)", value: "Grécia (+30)" },
+	{ label: "Croácia (+385)", value: "Croácia (+385)" },
+	{ label: "Eslovénia (+386)", value: "Eslovénia (+386)" },
+	{ label: "Sérvia (+381)", value: "Sérvia (+381)" },
+	{
+		label: "Bósnia e Herzegovina (+387)",
+		value: "Bósnia e Herzegovina (+387)",
+	},
+	{ label: "Macedónia do Norte (+389)", value: "Macedónia do Norte (+389)" },
+	{ label: "Montenegro (+382)", value: "Montenegro (+382)" },
+	{ label: "Kosovo (+383)", value: "Kosovo (+383)" },
+	{ label: "Albânia (+355)", value: "Albânia (+355)" },
+	{ label: "Estónia (+372)", value: "Estónia (+372)" },
+	{ label: "Letónia (+371)", value: "Letónia (+371)" },
+	{ label: "Lituânia (+370)", value: "Lituânia (+370)" },
+	{ label: "Islândia (+354)", value: "Islândia (+354)" },
+	{ label: "Malta (+356)", value: "Malta (+356)" },
+	{ label: "Chipre (+357)", value: "Chipre (+357)" },
+	{ label: "Moldávia (+373)", value: "Moldávia (+373)" },
+	{ label: "Bielorrússia (+375)", value: "Bielorrússia (+375)" },
+	{ label: "Ucrânia (+380)", value: "Ucrânia (+380)" },
+	{ label: "Rússia (+7)", value: "Rússia (+7)" },
+	{ label: "Geórgia (+995)", value: "Geórgia (+995)" },
+	{ label: "Arménia (+374)", value: "Arménia (+374)" },
+	{ label: "Azerbaijão (+994)", value: "Azerbaijão (+994)" },
+	{ label: "Andorra (+376)", value: "Andorra (+376)" },
+	{ label: "Mónaco (+377)", value: "Mónaco (+377)" },
+	{ label: "São Marino (+378)", value: "São Marino (+378)" },
+	{ label: "Liechtenstein (+423)", value: "Liechtenstein (+423)" },
+	{ label: "Gibraltar (+350)", value: "Gibraltar (+350)" },
+
+	// Americas
+	{ label: "Estados Unidos (+1)", value: "Estados Unidos (+1)" },
+	{ label: "Canadá (+1)", value: "Canadá (+1)" },
+	{ label: "México (+52)", value: "México (+52)" },
+	{ label: "Brasil (+55)", value: "Brasil (+55)" },
+	{ label: "Argentina (+54)", value: "Argentina (+54)" },
+	{ label: "Chile (+56)", value: "Chile (+56)" },
+	{ label: "Colômbia (+57)", value: "Colômbia (+57)" },
+	{ label: "Peru (+51)", value: "Peru (+51)" },
+	{ label: "Uruguai (+598)", value: "Uruguai (+598)" },
+	{ label: "Paraguai (+595)", value: "Paraguai (+595)" },
+	{ label: "Bolívia (+591)", value: "Bolívia (+591)" },
+	{ label: "Venezuela (+58)", value: "Venezuela (+58)" },
+	{ label: "Equador (+593)", value: "Equador (+593)" },
+	{ label: "Costa Rica (+506)", value: "Costa Rica (+506)" },
+	{ label: "Panamá (+507)", value: "Panamá (+507)" },
+	{ label: "Guatemala (+502)", value: "Guatemala (+502)" },
+	{ label: "Honduras (+504)", value: "Honduras (+504)" },
+	{ label: "El Salvador (+503)", value: "El Salvador (+503)" },
+	{ label: "Nicarágua (+505)", value: "Nicarágua (+505)" },
+	{ label: "República Dominicana (+1)", value: "República Dominicana (+1)" },
+	{ label: "Cuba (+53)", value: "Cuba (+53)" },
+
+	// Africa
+	{ label: "África do Sul (+27)", value: "África do Sul (+27)" },
+	{ label: "Marrocos (+212)", value: "Marrocos (+212)" },
+	{ label: "Argélia (+213)", value: "Argélia (+213)" },
+	{ label: "Tunísia (+216)", value: "Tunísia (+216)" },
+	{ label: "Egito (+20)", value: "Egito (+20)" },
+	{ label: "Nigéria (+234)", value: "Nigéria (+234)" },
+	{ label: "Gana (+233)", value: "Gana (+233)" },
+	{ label: "Quénia (+254)", value: "Quénia (+254)" },
+	{ label: "Etiópia (+251)", value: "Etiópia (+251)" },
+	{ label: "Tanzânia (+255)", value: "Tanzânia (+255)" },
+	{ label: "Angola (+244)", value: "Angola (+244)" },
+	{ label: "Moçambique (+258)", value: "Moçambique (+258)" },
+	{ label: "Cabo Verde (+238)", value: "Cabo Verde (+238)" },
+	{ label: "Guiné-Bissau (+245)", value: "Guiné-Bissau (+245)" },
+	{ label: "São Tomé e Príncipe (+239)", value: "São Tomé e Príncipe (+239)" },
+	{ label: "Ilha Reunião (+262)", value: "Ilha Reunião (+262)" },
+	{ label: "Maurícia (+230)", value: "Maurícia (+230)" },
+	{ label: "Seychelles (+248)", value: "Seychelles (+248)" },
+
+	// Asia & Middle East
+	{
+		label: "Emirados Árabes Unidos (+971)",
+		value: "Emirados Árabes Unidos (+971)",
+	},
+	{ label: "Arábia Saudita (+966)", value: "Arábia Saudita (+966)" },
+	{ label: "Catar (+974)", value: "Catar (+974)" },
+	{ label: "Kuwait (+965)", value: "Kuwait (+965)" },
+	{ label: "Omã (+968)", value: "Omã (+968)" },
+	{ label: "Bahrein (+973)", value: "Bahrein (+973)" },
+	{ label: "Israel (+972)", value: "Israel (+972)" },
+	{ label: "Líbano (+961)", value: "Líbano (+961)" },
+	{ label: "Jordânia (+962)", value: "Jordânia (+962)" },
+	{ label: "Índia (+91)", value: "Índia (+91)" },
+	{ label: "China (+86)", value: "China (+86)" },
+	{ label: "Japão (+81)", value: "Japão (+81)" },
+	{ label: "Coreia do Sul (+82)", value: "Coreia do Sul (+82)" },
+	{ label: "Singapura (+65)", value: "Singapura (+65)" },
+	{ label: "Malásia (+60)", value: "Malásia (+60)" },
+	{ label: "Indonésia (+62)", value: "Indonésia (+62)" },
+	{ label: "Filipinas (+63)", value: "Filipinas (+63)" },
+	{ label: "Tailândia (+66)", value: "Tailândia (+66)" },
+	{ label: "Vietname (+84)", value: "Vietname (+84)" },
+	{ label: "Taiwan (+886)", value: "Taiwan (+886)" },
+	{ label: "Hong Kong (+852)", value: "Hong Kong (+852)" },
+	{ label: "Macau (+853)", value: "Macau (+853)" },
+	{ label: "Cazaquistão (+7)", value: "Cazaquistão (+7)" },
+	{ label: "Paquistão (+92)", value: "Paquistão (+92)" },
+	{ label: "Bangladesh (+880)", value: "Bangladesh (+880)" },
+	{ label: "Sri Lanka (+94)", value: "Sri Lanka (+94)" },
+	{ label: "Nepal (+977)", value: "Nepal (+977)" },
+
+	// Oceania
+	{ label: "Austrália (+61)", value: "Austrália (+61)" },
+	{ label: "Nova Zelândia (+64)", value: "Nova Zelândia (+64)" },
+];
+
+const ENDONYMS: Record<string, string> = {
+	// Europe (selected common endonyms)
+	Portugal: "Portugal",
+	Espanha: "España",
+	França: "France",
+	Alemanha: "Deutschland",
+	Itália: "Italia",
+	Irlanda: "Ireland",
+	"Reino Unido": "United Kingdom",
+	"Países Baixos": "Nederland",
+	Bélgica: "Belgium",
+	Luxemburgo: "Lëtzebuerg",
+	Suíça: "Schweiz",
+	Áustria: "Österreich",
+	Suécia: "Sverige",
+	Noruega: "Norge",
+	Dinamarca: "Danmark",
+	Finlândia: "Suomi",
+	Polónia: "Polska",
+	"República Checa": "Česko",
+	Eslováquia: "Slovensko",
+	Hungria: "Magyarország",
+	Roménia: "România",
+	Bulgária: "България",
+	Grécia: "Ελλάδα",
+	Croácia: "Hrvatska",
+	Eslovénia: "Slovenija",
+	Sérvia: "Србија",
+	"Bósnia e Herzegovina": "Bosna i Hercegovina",
+	"Macedónia do Norte": "Северна Македонија",
+	Montenegro: "Crna Gora",
+	Kosovo: "Kosovë",
+	Albânia: "Shqipëria",
+	Estónia: "Eesti",
+	Letónia: "Latvija",
+	Lituânia: "Lietuva",
+	Islândia: "Ísland",
+	Malta: "Malta",
+	Chipre: "Κύπρος",
+	Moldávia: "Moldova",
+	Bielorrússia: "Беларусь",
+	Ucrânia: "Україна",
+	Rússia: "Россия",
+	Geórgia: "საქართველო",
+	Arménia: "Հայաստան",
+	Azerbaijão: "Azərbaycan",
+	Andorra: "Andorra",
+	Mónaco: "Monaco",
+	"São Marino": "San Marino",
+	Liechtenstein: "Liechtenstein",
+	Gibraltar: "Gibraltar",
+	// Americas
+	"Estados Unidos": "United States",
+	Canadá: "Canada",
+	México: "México",
+	Brasil: "Brasil",
+	Argentina: "Argentina",
+	Chile: "Chile",
+	Colômbia: "Colombia",
+	Peru: "Perú",
+	Uruguai: "Uruguay",
+	Paraguai: "Paraguay",
+	Bolívia: "Bolivia",
+	Venezuela: "Venezuela",
+	Equador: "Ecuador",
+	"Costa Rica": "Costa Rica",
+	Panamá: "Panamá",
+	Guatemala: "Guatemala",
+	Honduras: "Honduras",
+	"El Salvador": "El Salvador",
+	Nicarágua: "Nicaragua",
+	"República Dominicana": "República Dominicana",
+	Cuba: "Cuba",
+	// Africa
+	"África do Sul": "South Africa",
+	Marrocos: "المغرب",
+	Argélia: "الجزائر",
+	Tunísia: "تونس",
+	Egito: "مصر",
+	Nigéria: "Nigeria",
+	Gana: "Ghana",
+	Quénia: "Kenya",
+	Etiópia: "ኢትዮጵያ",
+	Tanzânia: "Tanzania",
+	Angola: "Angola",
+	Moçambique: "Moçambique",
+	"Cabo Verde": "Cabo Verde",
+	"Guiné-Bissau": "Guiné-Bissau",
+	"São Tomé e Príncipe": "São Tomé e Príncipe",
+	"Ilha Reunião": "La Réunion",
+	Maurícia: "Maurice",
+	Seychelles: "Seychelles",
+	// Asia & Middle East
+	"Emirados Árabes Unidos": "الإمارات العربية المتحدة",
+	"Arábia Saudita": "السعودية",
+	Catar: "قطر",
+	Kuwait: "الكويت",
+	Omã: "عُمان",
+	Bahrein: "البحرين",
+	Israel: "ישראל",
+	Líbano: "لبنان",
+	Jordânia: "الأردن",
+	Índia: "भारत",
+	China: "中国",
+	Japão: "日本",
+	"Coreia do Sul": "대한민국",
+	Singapura: "Singapore",
+	Malásia: "Malaysia",
+	Indonésia: "Indonesia",
+	Filipinas: "Pilipinas",
+	Tailândia: "ประเทศไทย",
+	Vietname: "Việt Nam",
+	Taiwan: "台灣",
+	"Hong Kong": "香港",
+	Macau: "澳門",
+	Cazaquistão: "Қазақстан",
+	Paquistão: "پاکستان",
+	Bangladesh: "বাংলাদেশ",
+	"Sri Lanka": "ශ්‍රී ලංකාව",
+	Nepal: "नेपाल",
+	// Oceania
+	Austrália: "Australia",
+	"Nova Zelândia": "Aotearoa New Zealand",
+};
+
+/** Strip the dial code from a country label, e.g. "Portugal (+351)" -> "Portugal". */
+function baseName(label: string): string {
+	return label.replace(/\s*\(\+.*\)$/, "").trim();
+}
+
+/** Dial code portion of a country label, e.g. "(+351)". */
+function dialCode(label: string): string {
+	return label.match(/\(\+.*\)/)?.[0] || "";
+}
+
+export interface CountryOption {
+	value: string;
+	label: string;
+	searchText: string;
+}
+
+/**
+ * Country options for the phone country-code select, labelled with each
+ * country's endonym so the list reads the same in every UI language, and
+ * sorted alphabetically by that name.
+ */
+export function getCountryOptions(): CountryOption[] {
+	return COUNTRY_CODES.map((country) => {
+		const name = ENDONYMS[baseName(country.label)] || baseName(country.label);
+		const dial = dialCode(country.label);
+		const label = `${name} ${dial}`.trim();
+		return {
+			value: country.value,
+			label,
+			searchText: label.toLowerCase(),
+			sortKey: name,
+		};
+	})
+		.sort((a, b) => a.sortKey.localeCompare(b.sortKey))
+		.map(({ value, label, searchText }) => ({ value, label, searchText }));
+}

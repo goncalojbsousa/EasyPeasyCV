@@ -35,7 +35,7 @@ export function Footer() {
 							<span>{t("landing.opensource.support.button")}</span>
 						</a>
 						<a
-							href="https://github.com/goncalojbsousa/cv-builder"
+							href="https://github.com/goncalojbsousa/EasyPeasyCV"
 							target="_blank"
 							rel="noopener noreferrer"
 							className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors duration-300 text-sm"
@@ -45,8 +45,14 @@ export function Footer() {
 						</a>
 					</div>
 
-					{/* Privacy and Terms links - Right */}
+					{/* Help, Privacy and Terms links - Right */}
 					<div className="flex items-center gap-4">
+						<Link
+							href={`/${language}/faq`}
+							className="text-gray-600 dark:text-gray-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-300 text-sm"
+						>
+							{t("footer.faq")}
+						</Link>
 						<Link
 							href={`/${language}/privacy`}
 							className="text-gray-600 dark:text-gray-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-300 text-sm"

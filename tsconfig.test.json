@@ -1,0 +1,20 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"allowJs": false,
+		"incremental": false,
+		"module": "CommonJS",
+		"moduleResolution": "node",
+		"noEmit": false,
+		"outDir": ".tmp/test-dist",
+		"rootDir": ".",
+		"types": ["node"]
+	},
+	"include": [
+		"app/types/**/*.ts",
+		"app/utils/cv-data.ts",
+		"app/utils/xml.ts",
+		"tests/**/*.ts"
+	],
+	"exclude": ["node_modules", ".next", ".tmp"]
+}

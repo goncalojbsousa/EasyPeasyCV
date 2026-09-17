@@ -2,7 +2,8 @@
 
 import { ChevronDown } from "lucide-react";
 import type { ReactNode } from "react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { useDismissable } from "../../utils/useDismissable";
 
 export interface SelectOption<T = string> {
 	value: T;
@@ -73,33 +74,11 @@ export function SelectMenu<T = string>({
 		});
 	}, [options, search, searchable, filterOption]);
 
-	useEffect(() => {
-		if (!isOpen) return;
-
-		const handleClickOutside = (event: MouseEvent) => {
-			const target = event.target as Node;
-			if (containerRef.current && !containerRef.current.contains(target)) {
-				setIsOpen(false);
-				setSearch("");
-			}
-		};
-
-		const handleEscape = (event: KeyboardEvent) => {
-			if (event.key === "Escape") {
-				setIsOpen(false);
-				setSearch("");
-			}
-		};
-
-		// Use capture phase to ensure we catch the event before other handlers
-		document.addEventListener("mousedown", handleClickOutside, true);
-		document.addEventListener("keydown", handleEscape);
-
-		return () => {
-			document.removeEventListener("mousedown", handleClickOutside, true);
-			document.removeEventListener("keydown", handleEscape);
-		};
-	}, [isOpen]);
+	const close = useCallback(() => {
+		setIsOpen(false);
+		setSearch("");
+	}, []);
+	useDismissable(containerRef, isOpen, close);
 
 	const alignmentClass = align === "right" ? "right-0" : "left-0";
 
@@ -152,8 +131,7 @@ export function SelectMenu<T = string>({
 									}`}
 									onClick={() => {
 										onSelect(opt.value);
-										setIsOpen(false);
-										setSearch("");
+										close();
 									}}
 								>
 									{renderOption ? renderOption(opt, isSelected) : opt.label}

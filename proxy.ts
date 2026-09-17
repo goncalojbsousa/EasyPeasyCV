@@ -1,14 +1,11 @@
 import createMiddleware from "next-intl/middleware";
+import { routing } from "./navigation";
 
-export default createMiddleware({
-	// A list of all locales that are supported
-	locales: ["en", "pt", "br", "es"],
-
-	// Used when no locale matches
-	defaultLocale: "en",
-});
+export default createMiddleware(routing);
 
 export const config = {
-	// Match only internationalized pathnames
+	// Match only internationalized pathnames.
+	// Next.js requires `matcher` to be static literals, so this list cannot be
+	// derived from `routing.locales` — keep the two in sync when adding a locale.
 	matcher: ["/", "/(en|pt|br|es)/:path*"],
 };

@@ -182,7 +182,9 @@ export interface CustomSection {
 }
 
 /**
- * Available CV template types
+ * Legacy closed themes. Superseded by the modular `CvStyleSettings`; kept only
+ * so CVs saved (or XML exported) before the modular system can be migrated.
+ * @deprecated use `CvRenderSettings.style`
  */
 export type CvTemplate = "professional" | "timeline" | "classic";
 
@@ -246,6 +248,14 @@ export interface CvData {
 	color?: CvColor;
 	/** Section order for CV sections */
 	sectionOrder?: SectionKey[];
+	/** Rendering and layout settings persisted with the CV */
+	settings?: CvRenderSettings;
+	/**
+	 * Professional area whose examples the form shows (placeholders and a few
+	 * field labels). Editor-only: it never changes the rendered CV. Unset on CVs
+	 * saved before it was stored per profile.
+	 */
+	cvType?: CVType;
 }
 
 export type FontFamilyOption = "Helvetica" | "Times-Roman" | "Arial" | "Custom";
@@ -307,4 +317,151 @@ export interface CvRenderSettings {
 	header: HeaderOptions;
 	photo: PhotoOptions;
 	sections: SectionOptions;
+	/**
+	 * Modular presentation choices. Optional so CVs saved before the modular
+	 * system still parse; `resolveStyle()` fills it in from the legacy
+	 * `CvData.template` in that case.
+	 */
+	style?: CvStyleSettings;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                          Modular style settings                            */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The visual system is split in two:
+ *
+ * - **Variants** (this block) — discrete, mutually exclusive presentation
+ *   choices, e.g. "draw section titles with a rule underneath". They live in
+ *   `CvRenderSettings.style`.
+ * - **Tokens** — continuous values such as colors, sizes and spacing. Those
+ *   stay in `layout` / `header` / `photo` / `sections`.
+ *
+ * Adding a new customisation option means adding a variant union plus a field
+ * here; no new "template" is ever needed.
+ */
+
+/** How every section heading is drawn. Global: applies to all sections. */
+export type SectionTitleVariant = "plain" | "ruled" | "inlineRule" | "block";
+
+/** Horizontal placement used by titles and the header. */
+export type BlockAlign = "left" | "center";
+
+/** Whether text is forced to upper case. */
+export type CaseTransform = "none" | "uppercase";
+
+/** How the contact details are laid out in the header. */
+export type ContactVariant = "inline" | "separated" | "stacked";
+
+/** How the entries of a list section are presented. */
+export type EntryVariant = "plain" | "card" | "timeline";
+
+/** Where an entry's date range sits relative to its title. */
+export type DatePlacement = "right" | "below";
+
+/** The marker used for bullet lines. */
+export type BulletVariant = "dot" | "dash" | "none";
+
+/** How language proficiency rows are presented. */
+export type LanguagesVariant = "inline" | "rows" | "leaders";
+
+/** How the skills text is presented. */
+export type SkillsVariant = "paragraph" | "centered" | "bulleted";
+
+/**
+ * Sections whose entries can each use a different presentation.
+ * `custom` covers every user-defined section.
+ */
+export type StyledSectionKey =
+	| "professional_experience"
+	| "academic_education"
+	| "certifications"
+	| "projects"
+	| "volunteer"
+	| "custom";
+
+export const STYLED_SECTION_KEYS: StyledSectionKey[] = [
+	"professional_experience",
+	"academic_education",
+	"certifications",
+	"projects",
+	"volunteer",
+	"custom",
+];
+
+/** Modular, combinable presentation choices for the rendered CV. */
+export interface CvStyleSettings {
+	/** Section headings — global by design, so the CV reads consistently */
+	sectionTitle: {
+		variant: SectionTitleVariant;
+		align: BlockAlign;
+		transform: CaseTransform;
+	};
+	/** Personal information block */
+	header: {
+		align: BlockAlign;
+		contact: ContactVariant;
+		/** Rule drawn between the header and the first section */
+		divider: boolean;
+	};
+	/** Date presentation — global, so entries never disagree with each other */
+	datePlacement: DatePlacement;
+	/** Bullet marker — global */
+	bullets: BulletVariant;
+	/**
+	 * Per-section entry presentation. `custom` is the default for every custom
+	 * section that has no style of its own in `customSectionEntries`.
+	 */
+	entries: Record<StyledSectionKey, EntryVariant>;
+	/**
+	 * Entry presentation chosen for an individual custom section, keyed by the
+	 * section's id. Kept here rather than on the section so that applying a
+	 * preset resets it together with every other style choice.
+	 */
+	customSectionEntries?: Record<string, EntryVariant>;
+	/** Languages section presentation */
+	languages: LanguagesVariant;
+	/** Skills section presentation */
+	skills: SkillsVariant;
+}
+
+/**
+ * Domain of the CV, used to pick role-specific placeholder/label translations.
+ * The concrete list of values lives in `utils/cv-types.ts`.
+ */
+export type CVType =
+	| "development"
+	| "marketing"
+	| "sales"
+	| "hr"
+	| "finance"
+	| "design"
+	| "health"
+	| "education"
+	| "admin"
+	| "other";
+
+/**
+ * The controls every form section's header can offer. The builder page owns
+ * this state so the section navigator and the sections stay in sync.
+ */
+export interface SectionControlProps {
+	/** Whether this section can be reordered (false for Personal Information) */
+	canReorder?: boolean;
+	/** Callback when the user chooses "move up" */
+	onMoveUp?: () => void;
+	/** Callback when the user chooses "move down" */
+	onMoveDown?: () => void;
+	/** Whether "move up" is available */
+	canMoveUp?: boolean;
+	/** Whether "move down" is available */
+	canMoveDown?: boolean;
+	/** Opens this section's style options, when it has any */
+	onOpenStyle?: () => void;
+	/** Removes the whole section (custom sections only) */
+	onRemove?: () => void;
+	/** Controlled collapsed state; the section manages it itself when omitted */
+	collapsed?: boolean;
+	onToggleCollapsed?: () => void;
 }

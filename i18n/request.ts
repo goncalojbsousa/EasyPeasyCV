@@ -1,24 +1,15 @@
 import { getRequestConfig } from "next-intl/server";
-
-// Can be imported from a shared config
-const locales = ["en", "pt", "br", "es"];
+import { getTranslations, isLocale } from "@/app/translations";
+import { routing } from "@/navigation";
 
 export default getRequestConfig(async ({ requestLocale }) => {
 	// This typically corresponds to the `[locale]` segment
-	let locale = await requestLocale;
-
-	// Ensure that a valid locale is used
-	if (!locale || !locales.includes(locale)) {
-		locale = "en"; // Default or handle notFound()
-	}
-
-	// Removed unused type alias MessagesModule
-
-	const rawMessages = (await import(`@/app/translations/${locale}.ts`)).default;
+	const requested = await requestLocale;
+	const locale = isLocale(requested) ? requested : routing.defaultLocale;
 
 	return {
 		locale,
-		messages: unflattenMessages(rawMessages),
+		messages: unflattenMessages(getTranslations(locale)),
 	};
 });
 

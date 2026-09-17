@@ -2,106 +2,32 @@
 
 import { AlertCircle, CheckCircle, Heart, Plus, X } from "lucide-react";
 import { useLanguage } from "../../../contexts/LanguageContext";
-import type { Education, Experience, PersonalInfo } from "../../../types/cv";
+import type { CvData } from "../../../types/cv";
+import { getRecommendedFields } from "../../../utils/cv-completeness";
 
-/**
- * Props interface for the ThankYouModal component
- */
 interface ThankYouModalProps {
 	/** Whether the modal is visible */
 	show: boolean;
 	/** Function to close the modal */
 	onClose: () => void;
-	/** Personal information to check for empty fields */
-	personalInfo?: PersonalInfo;
-	/** Professional experiences to check if empty */
-	experiences?: Experience[];
-	/** Education entries to check if empty */
-	education?: Education[];
+	/** The CV that was just generated, checked for missing recommended fields */
+	data: CvData;
 }
 
 /**
  * ThankYouModal component
- * Displays a thank you message, warnings for empty fields, and donation option after PDF generation
- * @param show - Whether the modal is visible
- * @param onClose - Function to close the modal
- * @param personalInfo - Personal information to check for empty fields
- * @param experiences - Professional experiences to check if empty
- * @param education - Education entries to check if empty
- * @returns JSX element representing the thank you modal
+ * Displays a thank you message, a reminder of any recommended fields still
+ * empty, and the donation option after PDF generation.
  */
-export function ThankYouModal({
-	show,
-	onClose,
-	personalInfo,
-	experiences,
-	education,
-}: ThankYouModalProps) {
-	const { t, language } = useLanguage();
+export function ThankYouModal({ show, onClose, data }: ThankYouModalProps) {
+	const { t } = useLanguage();
 
 	if (!show) return null;
 
-	// Determine which recommended fields are empty
-	const emptyFields: string[] = [];
-
-	if (personalInfo) {
-		if (!personalInfo.name.trim()) {
-			const fieldName =
-				language === "pt"
-					? "Nome Completo"
-					: language === "es"
-						? "Nombre Completo"
-						: "Full Name";
-			emptyFields.push(fieldName);
-		}
-		if (!personalInfo.email.trim()) {
-			const fieldName =
-				language === "pt"
-					? "Email"
-					: language === "es"
-						? "Correo Electrónico"
-						: "Email";
-			emptyFields.push(fieldName);
-		}
-		if (!personalInfo.phone.trim()) {
-			const fieldName =
-				language === "pt"
-					? "Telefone"
-					: language === "es"
-						? "Teléfono"
-						: "Phone";
-			emptyFields.push(fieldName);
-		}
-		if (!personalInfo.desiredRole.trim()) {
-			const fieldName =
-				language === "pt"
-					? "Cargo Desejado"
-					: language === "es"
-						? "Puesto Deseado"
-						: "Desired Role";
-			emptyFields.push(fieldName);
-		}
-	}
-
-	if (!experiences || experiences.length === 0) {
-		const fieldName =
-			language === "pt"
-				? "Experiência Profissional"
-				: language === "es"
-					? "Experiencia Profesional"
-					: "Professional Experience";
-		emptyFields.push(fieldName);
-	}
-
-	if (!education || education.length === 0) {
-		const fieldName =
-			language === "pt"
-				? "Educação"
-				: language === "es"
-					? "Educación"
-					: "Education";
-		emptyFields.push(fieldName);
-	}
+	// Same list the builder's completeness indicator shows while editing.
+	const emptyFields = getRecommendedFields(data)
+		.filter((field) => !field.done)
+		.map((field) => t(field.labelKey));
 
 	const handleDonationClick = () => {
 		window.open("https://ko-fi.com/easypeasycv", "_blank");
@@ -148,18 +74,10 @@ export function ThankYouModal({
 								<AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-500 flex-shrink-0 mt-0.5" />
 								<div className="text-left">
 									<h4 className="text-amber-900 dark:text-amber-200 font-medium text-sm mb-2">
-										{language === "pt"
-											? "Atenção: Campos Recomendados"
-											: language === "es"
-												? "Atención: Campos Recomendados"
-												: "Attention: Recommended Fields"}
+										{t("thank.you.recommended.title")}
 									</h4>
 									<p className="text-amber-800 dark:text-amber-300 text-xs mb-3">
-										{language === "pt"
-											? "Recomendamos preencher os seguintes campos para um CV mais completo:"
-											: language === "es"
-												? "Recomendamos rellenar los siguientes campos para un CV más completo:"
-												: "We recommend filling in the following fields for a more complete CV:"}
+										{t("thank.you.recommended.message")}
 									</p>
 									<ul className="text-amber-800 dark:text-amber-300 text-xs space-y-1">
 										{emptyFields.map((field) => (

@@ -3,102 +3,42 @@
 import { pdf } from "@react-pdf/renderer";
 import { useEffect, useMemo, useState } from "react";
 import { useLanguage } from "../contexts/LanguageContext";
-import type {
-	CvColor,
-	CvData,
-	CvRenderSettings,
-	CvTemplate,
-} from "../types/cv";
-import { CvDocument } from "./cv_document";
+import { BREAKPOINTS, useIsMobile } from "../utils/useIsMobile";
+import { CvDocument, type CvRenderProps } from "./cv_document";
+import { PageCount } from "./pdf/page_count";
 import { PdfCanvasViewer } from "./pdf/pdf_canvas_viewer";
 
-interface LivePdfPaneProps extends CvData {
-	lang?: string;
-	template?: CvTemplate;
-	color?: CvColor;
-	settings?: CvRenderSettings;
+interface LivePdfPaneProps extends CvRenderProps {
+	/** Turns on the Super Compact layout, offered when the CV spills onto more pages */
+	onEnableCompactMode?: () => void;
 }
 
+/**
+ * Live PDF preview rendered next to the form on desktop. Regenerates the PDF
+ * shortly after the CV stops changing.
+ */
 export function LivePdfPane({
-	personalInfo,
-	links,
-	resume,
-	experiences,
-	education,
-	skills,
-	languages,
-	certifications,
-	projects,
-	volunteers,
-	customSections,
-	lang = "pt",
-	template = "professional",
-	color = "blue",
-	settings,
-	sectionOrder,
+	data,
+	lang,
+	onEnableCompactMode,
 }: LivePdfPaneProps) {
 	const { t } = useLanguage();
-	const [isMobile, setIsMobile] = useState(false);
+	// The pane is only laid out from the `lg` breakpoint; below it, skip the
+	// (expensive) rendering entirely. Smaller screens use the preview modal.
+	const hidden = useIsMobile(BREAKPOINTS.lg);
 	const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
+	const [pageCount, setPageCount] = useState<number | null>(null);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
-	useEffect(() => {
-		const check = () => setIsMobile(window.innerWidth < 1024);
-
-		check();
-		window.addEventListener("resize", check);
-		return () => {
-			window.removeEventListener("resize", check);
-		};
-	}, []);
-
 	const doc = useMemo(
-		() => (
-			<CvDocument
-				personalInfo={personalInfo}
-				links={links}
-				resume={resume}
-				experiences={experiences}
-				education={education}
-				skills={skills}
-				languages={languages}
-				certifications={certifications}
-				projects={projects}
-				volunteers={volunteers}
-				customSections={customSections}
-				lang={lang}
-				template={template}
-				color={color}
-				settings={settings}
-				sectionOrder={sectionOrder}
-			/>
-		),
-		[
-			personalInfo,
-			links,
-			resume,
-			experiences,
-			education,
-			skills,
-			languages,
-			certifications,
-			projects,
-			volunteers,
-			customSections,
-			lang,
-			template,
-			color,
-			settings,
-			sectionOrder,
-		],
+		() => <CvDocument data={data} lang={lang} />,
+		[data, lang],
 	);
 
 	// Generate a PDF blob whenever debounced data changes
 	useEffect(() => {
-		if (isMobile) {
-			return;
-		}
+		if (hidden) return;
 
 		let canceled = false;
 		const timeoutId = window.setTimeout(() => {
@@ -113,7 +53,7 @@ export function LivePdfPane({
 					console.error("PDF preview generation error:", e);
 					if (!canceled) {
 						const msg = e instanceof Error ? e.message : JSON.stringify(e);
-						setError(`"PDF preview generation error: ${msg}`);
+						setError(`PDF preview generation error: ${msg}`);
 					}
 				} finally {
 					if (!canceled) setLoading(false);
@@ -127,22 +67,31 @@ export function LivePdfPane({
 			canceled = true;
 			window.clearTimeout(timeoutId);
 		};
-	}, [doc, isMobile]);
+	}, [doc, hidden]);
 
-	if (isMobile) {
-		return (
-			<div className="w-full h-full flex items-center justify-center rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
-				<div className="text-center p-4">
-					<p className="text-sm text-gray-600 dark:text-gray-300">
-						{t("live.preview.desktop.only")}
-					</p>
-				</div>
-			</div>
-		);
-	}
+	if (hidden) return null;
 
 	return (
 		<div className="w-full h-full rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden flex flex-col">
+			{pdfBlob && (
+				<div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-gray-200 dark:border-zinc-800">
+					<PageCount
+						pageCount={pageCount}
+						compactMode={data.settings?.layout.singlePageMode}
+						onEnableCompactMode={onEnableCompactMode}
+					/>
+					{loading && (
+						<output className="inline-flex">
+							<span
+								aria-hidden="true"
+								className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-sky-600 border-t-transparent"
+							/>
+							<span className="sr-only">{t("live.preview.loading")}</span>
+						</output>
+					)}
+				</div>
+			)}
+
 			<div className="flex-1 min-h-0">
 				{!pdfBlob && loading ? (
 					<div className="w-full h-full flex items-center justify-center">
@@ -159,7 +108,11 @@ export function LivePdfPane({
 					</div>
 				) : pdfBlob ? (
 					<div className="w-full h-full overflow-hidden bg-transparent">
-						<PdfCanvasViewer blob={pdfBlob} scale={1.0} />
+						<PdfCanvasViewer
+							blob={pdfBlob}
+							scale={1.0}
+							onPageCount={setPageCount}
+						/>
 					</div>
 				) : (
 					<div className="w-full h-full flex items-center justify-center">

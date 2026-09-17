@@ -5,12 +5,21 @@ import { useEffect, useRef, useState } from "react";
 interface PdfCanvasViewerProps {
 	blob: Blob | null;
 	scale?: number;
+	/** Reports how many pages the rendered document has */
+	onPageCount?: (pageCount: number) => void;
 }
 
-export function PdfCanvasViewer({ blob, scale = 1 }: PdfCanvasViewerProps) {
+export function PdfCanvasViewer({
+	blob,
+	scale = 1,
+	onPageCount,
+}: PdfCanvasViewerProps) {
 	const containerRef = useRef<HTMLDivElement | null>(null);
 	const newContainerRef = useRef<HTMLDivElement | null>(null);
 	const [containerWidth, setContainerWidth] = useState<number>(0);
+	// Kept in a ref so a new callback identity does not re-render the PDF.
+	const onPageCountRef = useRef(onPageCount);
+	onPageCountRef.current = onPageCount;
 
 	// Preserve scroll position
 	const scrollPosition = useRef<{ top: number; left: number }>({
@@ -113,6 +122,7 @@ export function PdfCanvasViewer({ blob, scale = 1 }: PdfCanvasViewerProps) {
 				// Restore scroll position
 				container.scrollTop = scrollPosition.current.top;
 				container.scrollLeft = scrollPosition.current.left;
+				onPageCountRef.current?.(pdf.numPages);
 			}
 		}
 

@@ -1,95 +1,53 @@
 import { Font } from "@react-pdf/renderer";
-import type {
-	CvColor,
-	CvData,
-	CvRenderSettings,
-	CvTemplate,
-} from "../types/cv";
-import { ClassicTemplate } from "./cv_templates/classic_template";
-import { ProfessionalTemplate } from "./cv_templates/professional_template";
-import { TimelineTemplate } from "./cv_templates/timeline_template";
+import type { CvData, CvRenderSettings } from "../types/cv";
+import { resolveStyle } from "../utils/style-presets";
+import { CvRenderer } from "./cv_templates/cv_renderer";
 
 /**
- * Props interface for the CvDocument component
+ * Props for every component that renders a CV: the CV itself plus the language
+ * it should be rendered in. Presentation choices travel inside
+ * `CvData.settings.style`, so the whole PDF pipeline shares one prop shape.
  */
-interface CvDocumentProps extends CvData {
-	/** Language for the document (pt or en) */
+export interface CvRenderProps {
+	data: CvData;
+	/** Language for the document (pt, br, en or es) */
 	lang?: string;
-	/** Color theme for the template */
-	color?: CvColor;
-	/** Render settings for layout/header/photo */
-	settings?: CvRenderSettings;
-	/** Template selection */
-	template?: CvTemplate;
 }
 
 /**
- * Main CV Document component
- * Selects and renders the appropriate template based on the template prop
- * @param props - Component props including all CV data, language, and template selection
- * @returns JSX element representing the selected CV template
+ * A custom uploaded font must be registered with @react-pdf before any
+ * style references it by name.
  */
-export function CvDocument({
-	personalInfo,
-	links,
-	resume,
-	experiences,
-	education,
-	skills,
-	languages,
-	certifications,
-	projects,
-	volunteers,
-	customSections,
-	lang,
-	color = "blue",
-	settings,
-	template = "professional",
-	sectionOrder,
-}: CvDocumentProps) {
-	const registerCustomFont = () => {
-		if (
-			settings?.layout.fontFamily === "Custom" &&
-			settings.layout.customFont?.dataUrl &&
-			settings.layout.customFont?.name
-		) {
-			try {
-				Font.register({
-					family: settings.layout.customFont.name,
-					src: settings.layout.customFont.dataUrl,
-					fontStyle: "normal",
-					fontWeight: "normal",
-				});
-			} catch {}
-		}
-	};
-	registerCustomFont();
+function registerCustomFont(settings?: CvRenderSettings) {
+	if (settings?.layout.fontFamily !== "Custom") return;
+	const customFont = settings.layout.customFont;
+	if (!customFont?.dataUrl || !customFont?.name) return;
 
-	const commonProps = {
-		personalInfo,
-		links,
-		resume,
-		experiences,
-		education,
-		skills,
-		languages,
-		certifications,
-		projects,
-		volunteers,
-		customSections,
-		color,
-		settings,
-		lang,
-		sectionOrder,
-	};
-
-	// For PDF generation we must return a @react-pdf/renderer Document
-	switch (template) {
-		case "timeline":
-			return <TimelineTemplate {...commonProps} />;
-		case "classic":
-			return <ClassicTemplate {...commonProps} />;
-		default:
-			return <ProfessionalTemplate {...commonProps} />;
+	try {
+		Font.register({
+			family: customFont.name,
+			src: customFont.dataUrl,
+			fontStyle: "normal",
+			fontWeight: "normal",
+		});
+	} catch {
+		// A failed registration falls back to the default font
 	}
+}
+
+/**
+ * Main CV Document component.
+ * Resolves the modular style (migrating CVs saved with a legacy theme) and
+ * hands it to the renderer.
+ */
+export function CvDocument({ data, lang }: CvRenderProps) {
+	registerCustomFont(data.settings);
+
+	return (
+		<CvRenderer
+			data={data}
+			lang={lang || "pt"}
+			style={resolveStyle(data.settings, data.template)}
+		/>
+	);
 }
