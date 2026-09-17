@@ -55,7 +55,7 @@ export function Navbar() {
 						<Heart className="w-5 h-5" fill="currentColor" />
 					</a>
 					<a
-						href="https://github.com/goncalojbsousa/cv-builder"
+						href="https://github.com/goncalojbsousa/EasyPeasyCV"
 						target="_blank"
 						rel="noopener noreferrer"
 						className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900"
